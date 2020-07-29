@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>审核</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/price_adjustment.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16">调价详情</div>
+    </header>
+    <div class="listWrap">
+        <ul class="priceList">
+            <!-- <li class="aui-border-b">
+                <span class="first">货号</span>
+                <span class="second">现价</span>
+                <span class="second">原价</span>
+            </li>
+            <li class="list_Pr aui-border-b">
+                <div class="first">
+
+                    <span class="list_Num">A566464</span>
+                </div>
+                <div class="list_cost second">199</div>
+                <div class="list_cost second">20</div>
+            </li>
+
+            <li>
+                <span>01.15 16:00</span>
+            </li> -->
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/common/my_common.js"></script>
+
+<script type="text/javascript">
+   function renderList(){
+    //  var url = "http://192.168.2.127:8080/interface//order/app/adjustPrice/selectAdjustPriceByMessageSeq";
+     var url = window.myServerUrl+"/order/app/adjustPrice/selectAdjustPriceByMessageSeq";
+    //  url += "?messageSeq=" +3;
+     url += "?messageSeq=" +api.pageParam.messageSeq;
+     console.log("获取调价详情接口数据-->url:" + url);
+     _ajax(url, "price_adjustment", function(ret, err) {
+         if (ret) {
+             console.log("获取调价详情接口数据-->url:" + $api.jsonToStr(ret));
+             if (ret.code == 0) {
+                 messageData = ret.result.result;
+                 var messageStr = "";
+                 messageStr +="<li class='aui-border-b'>";
+                 messageStr+="<span class='first'>货号</span>";
+                 messageStr+="<span class='second'>现价</span>";
+                 messageStr+="<span class='second'>原价</span>";
+                 messageStr+="</li>";
+                 for(var i in messageData){
+                    messageStr+="<li class='list_Pr aui-border-b'>";
+                    messageStr+="<div class='first'>";
+                    messageStr+="<span class='list_Num'>"+messageData[i].shoesId+"</span>";
+                    messageStr+="</div>";
+                    messageStr+="<div class='list_cost second'>"+messageData[i].currentPrice+"</div>";
+                    messageStr+="<div class='list_cost second'>"+messageData[i].previousPrice+"</div>";
+                    messageStr+="</li>";
+                 }
+                 messageStr +="<li>";
+                 messageStr+="<span>"+_getShortTimeByTimeStr(api.pageParam.messageTime)+"</span>";
+                 messageStr+="</li>";
+                 $api.html($api.dom('.priceList'), messageStr);
+
+             } else {
+                 _toast(ret.msg);
+             }
+         } else {
+             console.log("获取调价详情接口数据-->err:" + $api.jsonToStr(err));
+             _toast(window.ajaxErrorMessage);
+         }
+         //callback();
+     });
+   }
+    var apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        renderList();
+        console.log($api.jsonToStr(api.pageParam));
+    }
+</script>
+
+</html>

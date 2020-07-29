@@ -1,0 +1,109 @@
+{
+  "groups": [
+    {
+      "name": "base-app",
+      "type": "io.nuite.modules.sr_base.utils.ConfigUtils",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "esmart",
+      "type": "io.nuite.modules.sr_base.utils.ESmartConfig",
+      "sourceType": "io.nuite.modules.sr_base.utils.ESmartConfig"
+    },
+    {
+      "name": "nuite.jwt",
+      "type": "io.nuite.common.utils.JwtUtils",
+      "sourceType": "io.nuite.common.utils.JwtUtils"
+    },
+    {
+      "name": "spring.datasource.druid.quartz",
+      "type": "javax.sql.DataSource",
+      "sourceType": "io.nuite.datasources.DynamicDataSourceConfig",
+      "sourceMethod": "quartzDataSource()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "base-app.base-brand",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.base-dir",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.base-user",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.goods-shoes",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.order-platform-app",
+      "type": "io.nuite.modules.order_platform_app.utils.OrderPlatformConfigUtils",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.picture-base-upload-project",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.picture-base-url",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.shop-image",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.sowing-map",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.websocket-host",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.websocket-port",
+      "type": "java.lang.Integer",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "base-app.ytgz-companyseq",
+      "type": "java.lang.Integer",
+      "sourceType": "io.nuite.modules.sr_base.utils.ConfigUtils"
+    },
+    {
+      "name": "esmart.url",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.modules.sr_base.utils.ESmartConfig"
+    },
+    {
+      "name": "nuite.jwt.expire",
+      "type": "java.lang.Long",
+      "sourceType": "io.nuite.common.utils.JwtUtils",
+      "defaultValue": 0
+    },
+    {
+      "name": "nuite.jwt.header",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.common.utils.JwtUtils"
+    },
+    {
+      "name": "nuite.jwt.secret",
+      "type": "java.lang.String",
+      "sourceType": "io.nuite.common.utils.JwtUtils"
+    }
+  ],
+  "hints": []
+}

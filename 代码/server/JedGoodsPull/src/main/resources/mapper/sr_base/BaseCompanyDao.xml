@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.BaseCompanyDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+  <resultMap type="io.nuite.modules.sr_base.entity.BaseCompanyEntity" id="baseCompanyMap">
+    <result property="seq" column="Seq"/>
+    <result property="name" column="Name"/>
+    <result property="address" column="Address"/>
+    <result property="parentSeq" column="ParentSeq"/>
+    <result property="lat" column="Lat"/>
+    <result property="lng" column="Lng"/>
+    <result property="companyTypeSeq" column="CompanyType_Seq"/>
+    <result property="remark" column="Remark"/>
+    <result property="del" column="Del"/>
+  </resultMap>
+
+  <select id="selectOne" resultType="io.nuite.modules.sr_base.entity.BaseCompanyEntity">
+    select bc.*
+     from
+        [JedSmartRetail].[dbo].YHSR_Base_Company bc
+        LEFT JOIN
+      [JedSmartRetail].[dbo].YHSR_Base_User bu on bc.Seq = bu.Company_Seq
+    where bu.Seq = #{userSeq} and bc.Name = #{companyName}
+    </select>
+</mapper>

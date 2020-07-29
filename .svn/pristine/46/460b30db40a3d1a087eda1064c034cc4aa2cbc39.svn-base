@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>发货清单</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/common/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/common/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/order/order_detail/fill_order_deliver_pop.css"/>
+		<style type="text/css">
+		</style>
+	</head>
+	<body class="flex-wrap flex-vertical">
+		<div class="dark-bg flex-con" tapmode onclick="api.closeFrame();"></div>
+		<div class="content flex-wrap flex-vertical aui-">
+			<header class="popTitle flex-wrap aui-margin-15">
+				<div class="flex-con box-wrap box-vertical-center box-horizontal-center aui-font-size-16" >
+					<span>发货清单</span>
+				</div>
+			</header>		
+			<!--****** 发货清单  ******-->
+			<section class="aui-content flex-con" style="margin-bottom: 2.5rem !important;">
+				<div class="aui-padded-l-10 aui-padded-r-10">
+					<div class="aui-collapse-item">
+						<div class="aui-collapse-content aui-padded-0 aui-show">
+							<div class="flex-con flex-wrap aui-font-size-14" style="background-color: #f5f5f5;height: 1.6rem; border-radius: 0.2rem;">
+								<div class="flex-4 box-wrap box-horizontal-center box-vertical-center">
+									货号
+								</div>
+								<div class="flex-2 box-wrap box-horizontal-center box-vertical-center">
+									颜色
+								</div>
+								<div class="flex-1 box-wrap box-horizontal-center box-vertical-center">
+									尺码
+								</div>
+								<div class="flex-5 box-wrap box-horizontal-center box-vertical-center">
+									数量
+								</div>
+							</div>
+						</div>
+					</div>
+					<ul class="selected-list aui-list aui-media-list aui-list-noborder aui-font-size-14">
+					
+						<!--<li class="aui-list-item flex-wrap" id="li1" data-order-products-seq="110" tapmode>
+							<div class="aui-list-item-inner flex-wrap">
+								<div class="aui-text-center flex-4">FCVB5655</div>
+								<div class="aui-text-center flex-2">黑色</div>
+								<div class="list-1 count aui-text-center flex-1">38</div>
+								<div class="aui-text-center flex-5">
+									<div class="aui-bar aui-bar-btn aui-bar-btn-sm" >
+										<span class="aui-bar-btn-item aui-bg-gray" id="minus1" tapmode onclick="minus(this, 1)"><i class="aui-iconfont aui-icon-minus"></i></span>
+										<span class="aui-bar-btn-item">
+											<input type="number" class="aui-input aui-text-center" id="count1" data-count-max="100" oninput="countChange(this, 1, true)" value="0">
+										</span>
+										<span class="aui-bar-btn-item" id="plus1" tapmode onclick="plus(this, 1)"><i class="aui-iconfont aui-icon-plus"></i></span>
+									</div>
+								</div>
+							</div>
+						</li>-->		
+						
+					</ul>
+				</div>
+			</section>
+			<footer class="aui-bar aui-bar-tab aui-border-t">
+				<div class="aui-bar-tab-item edit-preivew aui-font-size-14" style="width: auto;">
+					共发货：<span id="deliverTotal">0</span><span class="aui-font-size-14 aui-margin-l-5">双</span>
+				</div>
+				<div class="aui-bar-tab-item aui-font-size-16 btn-sure" tapmode onclick="sure()" style="width: auto;">
+					确定
+				</div>
+			</footer>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+	<!--<script type="text/javascript" src="../../../script/common/alert_tips.js"></script>-->
+	<!--<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js" ></script>-->
+	<script type="text/javascript">
+		
+		function sure(){
+			if(parseInt($api.text($api.byId("deliverTotal"))) != 0){
+				$api.setStorage("productsNumArrKey", productsNumArr);
+				_execScript(api.winName, "order_detail_frm", "orderDeliverGoods()");//确认发货			
+			}else{
+				_toast("未选择发货量！");
+			}
+		}
+			
+		var isInput;
+		//是否是手动输入(数量)
+		//减(数量)
+		function minus(obj, index) {
+			isInput = false;
+			var valueInput = document.getElementById("count"+index).value
+			var countMax = $api.attr($api.byId("count"+index), "data-count-max");
+			if (valueInput != "") {
+				var count = parseInt(document.getElementById("count"+index).value);
+				if (count > 0) {
+					document.getElementById("count"+index).value = count-1;
+					if (count == 1) {
+						if (!$api.hasCls(obj, "aui-bg-gray")) {
+							$api.addCls(obj, "aui-bg-gray");
+						}
+					}
+				}
+				isValid = true;
+				//改变发货清单
+				changeCount();
+			} else {
+				isValid = false;
+			}
+		}
+
+		var tempValue = "0";
+		//临时存放输入前的值;
+		//input的值改变时触发
+		function countChange(obj, index, isInput) {
+			if (isInput) {//手动输入
+				var countMax = $api.attr(obj, "data-count-max");
+				var value = $api.val(obj);
+				var count;
+				if (_isStringNull(value)) {//为空
+					$api.val(obj, value);
+				} else {
+					if (isValidInteger(value)) {
+						count = parseInt(value);
+						console.log("手动输入--->countMax为:"+countMax+"手动输入的值为:" + count);
+						var minus = $api.byId("minus"+index);
+						if (count == 0 && !$api.hasCls(minus, "aui-bg-gray")) {
+							$api.addCls(minus, "aui-bg-gray");
+						} else {
+							$api.removeCls(minus, "aui-bg-gray");
+						}
+						if (count > parseInt(countMax)) {
+							isValid = false;
+							_toast("超出最大发货量("+countMax+")", 2000, "bottom", function() {
+							});
+							$api.val(obj, countMax);
+							//改变发货清单
+							changeCount();
+						} else {
+							isValid = true;
+							//改变发货清单
+							changeCount();
+						}
+					} else {//非法字符(如:"+", "-"等), 会忽略小数点"."
+						isValid = false;
+						_toast("数量无效！", 2000, "bottom", function() {
+						});
+						//改变发货清单
+						changeCount();
+					}
+				}
+			}
+		}
+
+		//加
+		function plus(obj, index){
+		    console.log("第"+(index+1)+"个===>加");
+			isInput = false;
+			var valueInput = document.getElementById("count"+index).value
+			var countMax = $api.attr($api.byId("count"+index), "data-count-max");
+			if (valueInput != "") {
+				var count = parseInt(valueInput);		
+			    if(count >= parseInt(countMax)){
+			    	isValid = false;
+					_toast("超出最大发货量("+countMax+")！", 2000, "bottom", function() {
+					});
+			    }else{
+			    	document.getElementById("count"+index).value = count+1;	
+			    	var minus = $api.byId("minus"+index);
+					$api.removeCls(minus, "aui-bg-gray");
+			    	isValid = true;	 
+			    	//改变发货清单
+					changeCount();   	
+			    }
+			}else{
+				isValid = false;
+			}		
+		}
+		
+		//改变发货清单
+		function changeCount(){
+			productsNumArr = [];
+			var totalCount = 0;
+			var listObjs = $api.domAll(".selected-list li");
+			if (listObjs.length != 0) {
+				for (var i = 0; i < listObjs.length; i++) {
+					var indexNum = $api.val($api.byId("count"+i));
+					if(parseInt(indexNum) != 0){//数量为0时, 则发货清单里清除该款鞋子
+						var indexOrderProductsSeq = $api.attr($api.byId("li"+i), "data-order-products-seq");
+						console.log("订单商品序号orderProductsSeq:" + indexOrderProductsSeq + ", 发货数量num:" + indexNum);
+						productsNumArr.push({orderProductsSeq : parseInt(indexOrderProductsSeq), num : parseInt(indexNum)});					
+						totalCount += parseInt(indexNum);
+					}
+				}
+				$api.html($api.byId("deliverTotal"), totalCount);
+			} else {
+				$api.html($api.byId("deliverTotal"), 0);
+			}
+		}
+		
+		function initUI(goodsOrderList) {
+			console.log("initUI.goodsOrderList:"+$api.jsonToStr(goodsOrderList));		
+			var htmlStr = '';			
+			for(var i = 0; i < goodsOrderList.length; i++){			
+				htmlStr += '<li class="aui-list-item flex-wrap" id="li'+i+'" data-order-products-seq="'+goodsOrderList[i].orderProductsSeq+'" tapmode>';
+				htmlStr += '<div class="aui-list-item-inner flex-wrap">';
+				htmlStr += '<div class="aui-text-center flex-4">'+goodsOrderList[i].goodId+'</div>';
+				htmlStr += '<div class="aui-text-center flex-2">'+goodsOrderList[i].colorName+'</div>';
+				htmlStr += '<div class="list-1 count aui-text-center flex-1">'+goodsOrderList[i].size+'</div>';
+				htmlStr += '<div class="aui-text-center flex-5">';
+				htmlStr += '<div class="aui-bar aui-bar-btn aui-bar-btn-sm" >';
+				htmlStr += '<span class="aui-bar-btn-item aui-bg-gray" id="minus'+i+'" tapmode onclick="minus(this,'+i+')"><i class="aui-iconfont aui-icon-minus"></i></span>';
+				htmlStr += '<span class="aui-bar-btn-item">';
+				var countMax =  goodsOrderList[i].buyCount - goodsOrderList[i].deliverNum;//可发货的最大数量(总数量-已发货量)
+				htmlStr += '<input type="number" class="aui-input aui-text-center" id="count'+i+'" data-count-max="'+countMax+'" oninput="countChange(this, '+i+', true)" value="0">';
+				htmlStr += '</span>';
+				htmlStr += '<span class="aui-bar-btn-item" id="plus'+i+'" tapmode onclick="plus(this,'+i+')"><i class="aui-iconfont aui-icon-plus"></i></span>';
+				htmlStr += '</div>';
+				htmlStr += '</div>';
+				htmlStr += '</div>';
+				htmlStr += '</li>';
+			}			
+			$api.prepend($api.dom("ul.selected-list"), htmlStr);
+			
+		}
+
+		function initData() {
+			token = $api.getStorage("tokenKey");
+			goodsOrderList = api.pageParam.goodsOrderList;
+			$api.setStorage("productsNumArrKey", []);	
+		}
+
+		var token;
+		var goodsOrderList = new Array();//订单中商品数据
+		var productsNumArr = new Array();; //发货时需要之参数
+		apiready = function() {
+			initData();
+			
+			initUI(goodsOrderList);
+		}
+	</script>
+</html>

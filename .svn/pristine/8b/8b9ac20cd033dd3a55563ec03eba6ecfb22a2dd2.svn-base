@@ -1,0 +1,365 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/replenishment/replenishment_list_frm.css" />
+    <style>
+
+    </style>
+</head>
+
+<body class="aui-hide">
+    <div class="aui-timeline">
+        <!-- <div class="list flex-wrap flex-vertical">
+            <div class="flex-wrap time-wrap">
+                <div class="time-ico"></div>
+                <div class="aui-timeline-item-header">2017年1月8日</div>
+            </div>
+            <div class="aui-timeline-item">
+                <div class="aui-timeline-item-inner">
+                    <div class="aui-card-list">
+                        <div class="list-top flex-wrap">
+                            <img data-src="" src="../../image/load_img_middle.png" alt="">
+                            <div class="flex-con flex-vertical flex-wrap">
+                                <div class="flex-wrap good-id aui-padded-l-10 flex">
+                                    8246GU-91501FY黑白
+                                </div>
+                                <div class="flex-wrap aui-padded-l-10 style-li flex">
+                                    <span>补货数量:</span>
+                                    <span class="aui-margin-l-5 spe">9999</span>
+                                    <span>双</span>
+                                </div>
+                                <div class="flex-wrap aui-padded-l-10 style-li flex">
+                                    <span>预计到货:</span>
+                                    <span class="aui-margin-l-5">11月11日</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-bottom flex-wrap flex-vertical">
+                            <div class="flex-wrap">
+                                <div class="flex-wrap aui-padded-l-10 style-li flex flex-6">
+                                    <span>最后入库:</span>
+                                    <span class="aui-margin-l-5">11</span>
+                                    <span>月</span>
+                                    <span>223</span>
+                                    <span>日</span>
+                                </div>
+                                <div class="flex-wrap style-li flex flex-6">
+                                    <span>入库总量:</span>
+                                    <span class="aui-margin-l-5">9999双</span>
+                                </div>
+                            </div>
+                            <div class="flex-wrap">
+                                <div class="flex-wrap aui-padded-l-10 style-li flex flex-6">
+                                    <span>总仓库存量:</span>
+                                    <span class="aui-margin-l-5">99999双</span>
+                                </div>
+
+                                <div class="flex-wrap style-li flex flex-6">
+                                    <span>门店库存总量:</span>
+                                    <span class="aui-margin-l-5">99999双</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> -->
+
+
+    </div>
+
+
+    <!-- 悬浮按钮 -->
+    <div class="top aui-hide">
+        <img id="topArrow" src="../../image/back_top.png" />
+    </div>
+
+    <div class='footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+        到底了<i class='aui-iconfont aui-icon-activity aui-font-size-12'></i>
+    </div>
+    <div class='footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+        暂无数据
+    </div>
+    <div class='footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+        <i class='aui-iconfont aui-icon-refresh refreshing aui-font-size-12 aui-margin-r-5'></i>加载更多
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript">
+    //获取所点击商品的详细信息, 参数isSearch:是否搜索(0:不是, 1:是)
+    function toGoodsDetailWin(_seq) {
+        var pageParam = {
+            seq: _seq,
+            isSearch: 0,
+        };
+        api.openDrawerLayout({
+            name: "goods_detail_win",
+            url: "../goods/detail/goods_detail_win.html",
+            pageParam: pageParam,
+            animation: {
+                type: "push", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            softInputMode: "resize",
+            softInputBarEnabled: false,
+            overScrollMode: "always",
+            slidToOpenPane: false,
+            slidToClosePane: false,
+            rightPane: {
+                edge: 60,
+                pageParam: pageParam,
+                softInputMode: "resize",
+                softInputBarEnabled: false,
+                name: 'filter_sale_graph_win',
+                url: '../goods/detail/filter_sale_graph_win.html'
+            }
+        });
+    }
+
+    function initUI(data) {
+        var htmlStrList = "";
+        var replenishTime = [];
+        var arrivedTime = [];
+        if (!_isArrayNull(data)) {
+            for (var i = 0; i < data.length; i++) {
+                htmlStrList += "<div class='list flex-wrap flex-vertical'>";
+                htmlStrList += "<div class='flex-wrap time-wrap'>";
+                htmlStrList += "<div class='time-ico'></div>";
+                htmlStrList += "<div class='aui-timeline-item-header'>" + data[i].replenishTime + "</div>";
+                htmlStrList += "</div>";
+                if (!_isArrayNull(data[i].replenishList)) {
+                    for (var j = 0; j < data[i].replenishList.length; j++) {
+                        htmlStrList += "<div class='aui-timeline-item' tapmode onclick='toGoodsDetailWin(" + data[i].replenishList[j].goodSeq + ")'>";
+                        htmlStrList += "<div class='aui-timeline-item-inner'>";
+                        htmlStrList += "<div class='aui-card-list'>";
+                        htmlStrList += "<div class='list-top flex-wrap'>";
+                        htmlStrList += "<img data-src='" + data[i].replenishList[j].img + "' src='../../image/load_img_middle.png' alt=''>";
+                        htmlStrList += "<div class='flex-con flex-vertical flex-wrap'>";
+                        htmlStrList += "<div class='flex-wrap good-id aui-padded-l-15 flex'>" + data[i].replenishList[j].goodID + "</div>";
+                        htmlStrList += "<div class='flex-wrap aui-padded-l-15 style-li flex'>";
+                        htmlStrList += "<span>补货数量:</span>";
+                        htmlStrList += "<span class='aui-margin-l-5 spe'>" + data[i].replenishList[j].replenishNum + "</span>";
+                        htmlStrList += "<span>双</span>";
+                        htmlStrList += "</div>";
+                        htmlStrList += "<div class='flex-wrap aui-padded-l-15 style-li flex'>";
+                        // htmlStrList += "<span>预计到货:</span>";
+                        // if(!_isStringNull(data[i].replenishList[j].replenishTime)){
+                        //   replenishTime  = data[i].replenishList[j].replenishTime.split('-');
+                        // htmlStrList += "<span class='aui-margin-l-5 spe'>"+replenishTime[1]+"</span>";
+                        // htmlStrList +="<span>月</span>";
+                        // htmlStrList +="<span class='spe'>"+replenishTime[2]+"</span>";
+                        // htmlStrList +="<span>日</span>";
+                        // }else {
+                        //   htmlStrList += "<span class='aui-margin-l-5'>————</span>";
+                        // }
+                        htmlStrList += "</div>";
+                        htmlStrList += "</div>";
+                        htmlStrList += "</div>";
+                        htmlStrList += "<div class='list-bottom flex-wrap flex-vertical'>";
+                        htmlStrList += "<div class='flex-wrap'>";
+
+                        if (!_isStringNull(data[i].replenishList[j].arrivedTime)) {
+                            arrivedTime = data[i].replenishList[j].arrivedTime.split('-');
+                            htmlStrList += "<div class='flex-wrap aui-padded-l-15 style-li flex flex-6'>";
+                            htmlStrList += "<span>最后入库:</span>";
+                            htmlStrList += "<span class='aui-margin-l-5 spe1'>" + arrivedTime[1] + "</span>";
+                            htmlStrList += "<span>月</span>";
+                            htmlStrList += "<span class='spe1'>" + arrivedTime[2] + "</span>";
+                            htmlStrList += "<span>日</span>";
+                            htmlStrList += "</div>";
+                            htmlStrList += "<div class='flex-wrap style-li flex flex-6'>";
+                            htmlStrList += "<span>入库总量:</span>";
+                            htmlStrList += "<span class='aui-margin-l-5 spe1'>" + data[i].replenishList[j].arrivedNum + "</span>";
+                            htmlStrList += "<span>双</span>";
+                            htmlStrList += "</div>";
+                        } else {
+                            htmlStrList += "<div class='flex-wrap aui-padded-l-15 style-li flex flex-6'>";
+                            htmlStrList += "<span>最后入库:</span>";
+                            htmlStrList += "<span class='aui-margin-l-5'>----</span>";
+                            htmlStrList += "</div>";
+                            htmlStrList += "<div class='flex-wrap style-li flex flex-6'>";
+                            htmlStrList += "<span>入库总量:</span>";
+                            htmlStrList += "<span class='aui-margin-l-5'>----</span>";
+                            htmlStrList += "</div>";
+                        }
+                        htmlStrList += "</div>";
+                        htmlStrList += "<div class='flex-wrap'>";
+                        htmlStrList += "<div class='flex-wrap aui-padded-l-15 style-li flex flex-6'>";
+                        htmlStrList += "<span>总仓库存量:</span>";
+                        if (_isStringNull(data[i].replenishList[j].StockS)) {
+                            htmlStrList += "<span class='aui-margin-l-5'>0双</span>";
+                        } else {
+                            htmlStrList += "<span class='aui-margin-l-5 spe1'>" + data[i].replenishList[j].StockS + "</span>";
+                            htmlStrList += "<span>双</span>";
+                        }
+                        htmlStrList += "</div>";
+                        htmlStrList += "<div class='flex-wrap style-li flex flex-6'>";
+                        htmlStrList += "<span>门店库存总量:</span>";
+                        if (_isStringNull(data[i].replenishList[j].ShopStock)) {
+                            htmlStrList += "<span class='aui-margin-l-5'>----</span>";
+                        } else {
+                            htmlStrList += "<span class='aui-margin-l-5 spe1'>" + data[i].replenishList[j].ShopStock + "</span>";
+                            htmlStrList += "<span>双</span>";
+                        }
+                        htmlStrList += "</div>";
+                        htmlStrList += "</div>";
+                        htmlStrList += "<div class='flex-wrap'>";
+                        var replenishList = data[i].replenishList[j].shoesReplenishDetailEntities
+
+                        if (!_isArrayNull(replenishList)) {
+                            htmlStrList += "<div class='flex-wrap aui-padded-l-15 style-li flex flex-12'>";
+                            htmlStrList += "<span>补货详情:</span>";
+                            htmlStrList += "<span class='aui-margin-l-5 '>";
+                            for (var k = 0; k < replenishList.length; k++) {
+                                if (k == replenishList.length - 1) {
+                                    htmlStrList += replenishList[k].sizeName + "码补了" + replenishList[k].replenishNum + "双"
+                                } else {
+                                    htmlStrList += replenishList[k].sizeName + "码补了" + replenishList[k].replenishNum + "双,"
+                                }
+
+                            }
+                            htmlStrList += "</span></div>";
+                        }
+
+
+
+                        htmlStrList += "</div>";
+
+                        htmlStrList += "</div>";
+                        htmlStrList += "</div>";
+                        htmlStrList += "</div>";
+                        htmlStrList += "</div>";
+                    }
+                }
+                htmlStrList += "</div>";
+            }
+        }
+        $api.html($api.dom('.aui-timeline'), htmlStrList);
+        new auiLazyload({
+            errorImage: "../../image/error_img_middle.png"
+        });
+        api.parseTapmode();
+        setTimeout(function() {
+            if ($api.hasCls($api.dom("body"), "aui-hide")) {
+                $api.removeCls($api.dom("body"), "aui-hide");
+            }
+            closeUILoading();
+            api.refreshHeaderLoadDone();
+        }, window.refreshLoadDoneTimeOut);
+    }
+
+    function getDatas(call) {
+        var url = window.myServerUrl + "/order/app/shoesreplenish/replenishList";
+        console.log("获取补货动态数据-->url:" + url);
+        _ajax(url, "shoesList", function(ret, err) {
+            var tempGoodsList = [];
+            if (ret) {
+                console.log("获取补货动态数据-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    tempGoodsList = ret.result;
+                    //list数组
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("获取补货动态数据-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            call(tempGoodsList);
+        });
+    }
+    //会到顶部
+    var topArrow = $api.dom('.top');
+    topArrow.onclick = function() {
+        document.scrollTop = document.body.scrollTop = 0;
+    }
+
+    function closeUILoading() {
+        UILoading.closeKeyFrame();
+    }
+
+    function openUILoading() {
+        UILoading.keyFrame({
+            rect: {
+                w: 102,
+                h: 102
+            },
+            styles: {
+                bg: 'rgba(0,0,0,0)',
+                corner: 5,
+                interval: 50,
+                frame: {
+                    w: 102,
+                    h: 102
+                }
+            },
+            //				content : [{
+            //					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+            //				}, {
+            //					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+            //				}],
+            mask: "rgba(255,0,0,0)"
+        }, function(ret) {
+            //								alert(JSON.stringify(ret));
+            console.log(12345);
+        });
+    }
+
+    function initData() {
+        UILoading = api.require('UILoading')
+    }
+    var UILoading;
+    var apiready = function() {
+        initData();
+        api.setRefreshHeaderInfo({
+            loadingImg: 'widget://image/loading_more.gif',
+            bgColor: 'rgba(255,255,255,0)',
+            textColor: '#212121',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...'
+        }, function(ret, err) {
+            //在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+            getDatas(function(ret) {
+                initUI(ret);
+            });
+        });
+        //设置下拉刷新延迟时间
+        setTimeout(function() {
+            openUILoading();
+            getDatas(function(ret) {
+                initUI(ret);
+            });
+        }, 150);
+        window.onscroll = function() {
+            var sTop = document.documentElement.scrollTop || document.body.scrollTop;
+            if (sTop >= api.frameHeight * 1) {
+                //                  console.log("显示按钮");
+                if ($api.hasCls($api.dom(".top"), "aui-hide")) {
+                    $api.removeCls($api.dom(".top"), "aui-hide");
+                }
+            } else {
+                //                  console.log("隐藏按钮");
+                if (!$api.hasCls($api.dom(".top"), "aui-hide")) {
+                    $api.addCls($api.dom(".top"), "aui-hide");
+                }
+            }
+        }
+
+    }
+</script>
+
+</html>

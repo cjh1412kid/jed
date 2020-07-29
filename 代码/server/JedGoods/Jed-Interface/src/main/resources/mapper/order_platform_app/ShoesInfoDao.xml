@@ -1,0 +1,860 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.ShoesInfoDao">
+	
+	<!-- 定义全部鞋款列表的resultMap，type为HashMap -->
+	<resultMap id="shoesSeqListMap" type="java.util.HashMap">
+		<id column="Seq" property="seq" jdbcType="INTEGER"/>
+	    <result column="Img1" property="img" jdbcType="VARCHAR"/>
+	    <result column="GoodName" property="goodName" jdbcType="VARCHAR"/>
+	    <result column="GoodID" property="goodId" jdbcType="VARCHAR"/>
+	    <result column="Introduce" property="introduce" jdbcType="VARCHAR"/>
+	    <result column="InputTime" property="inputTime" jdbcType="TIMESTAMP"/>
+	    
+	   	<result column="TagPrice1" property="tagPrice1" jdbcType="DECIMAL" />
+	   	<result column="TagPrice2" property="tagPrice2" jdbcType="DECIMAL" />
+	   	<result column="TagPrice3" property="tagPrice3" jdbcType="DECIMAL" />
+	    <result column="DealPrice1" property="dealPrice1" jdbcType="DECIMAL" />
+	    <result column="DealPrice2" property="dealPrice2" jdbcType="DECIMAL" />
+	    <result column="DealPrice3" property="dealPrice3" jdbcType="DECIMAL" />
+	    <result column="WholesalePrice1" property="wholesalePrice1" jdbcType="DECIMAL" />
+	    <result column="WholesalePrice2" property="wholesalePrice2" jdbcType="DECIMAL" />
+	    <result column="WholesalePrice3" property="wholesalePrice3" jdbcType="DECIMAL" />
+
+	    <result column="Num" property="num" jdbcType="INTEGER"/>
+	    <result column="Stock" property="stock" jdbcType="INTEGER"/>
+	    <result column="SalesNum" property="salesNum" jdbcType="INTEGER"/>
+	    <result column="SelloutRate" property="selloutRate" jdbcType="INTEGER"/>
+	    <result column="Score" property="score" jdbcType="FLOAT"/>
+	    <result column="SaleCount" property="saleCount" jdbcType="INTEGER"/>
+	</resultMap>
+
+
+	<!-- 定义鞋款的货号的resultMap，type为HashMap -->
+	<resultMap id="goodIdsMap" type="java.util.HashMap">
+		<id column="Seq" property="seq" jdbcType="INTEGER"/>
+	    <result column="GoodID" property="goodId" jdbcType="VARCHAR"/>
+	    <result column="Category_Seq" property="categorySeq" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="insertShoesInfo" parameterType="java.util.List">
+		INSERT INTO
+		JedOrderPlatform.dbo.YHSR_OP_ShoesInfo(Shoes_Seq,DealPrice1,DealPrice2,DealPrice3,OnSale,Del)
+		VALUES
+		<foreach collection="list" index="index" item="item" open="" close="" separator=",">
+			(#{item.shoesSeq},#{item.dealPrice1},#{item.dealPrice2},#{item.dealPrice3},#{item.onSale},0)
+		</foreach>
+	</insert>
+
+	<update id="updateShoesInfo" parameterType="java.util.List">
+		<foreach collection="list" index="index" item="item" open="" close="" separator=";">
+			UPDATE
+			JedOrderPlatform.dbo.YHSR_OP_ShoesInfo
+			SET
+			DealPrice1 = #{item.dealPrice1},
+			DealPrice2 = #{item.dealPrice2},
+			DealPrice3 = #{item.dealPrice3}
+			WHERE Seq = #{item.seq}
+		</foreach>
+	</update>
+
+
+	
+	
+	
+	<!-- 全部鞋款列表  (销售时间区间范围内) -->
+	<select id="getHqAndShopShoesListOnSaleTime" resultMap="shoesSeqListMap">
+		SELECT
+			A.Seq, A.Img1, A.GoodName, A.GoodID, A.Introduce, A.InputTime,
+			B.TagPrice1, B.TagPrice2,B.TagPrice3, B.DealPrice1, B.DealPrice2, B.DealPrice3, B.WholesalePrice1, B.WholesalePrice2, B.WholesalePrice3,
+			B.IsMainpush AS companyPush,
+			B.IsNewest AS newGood,
+			C.Stock,
+			D.Score,
+			E.SaleCount AS SalesNum, 
+			ROUND(E.AvgSalePrice, 0) AS AvgSalePrice,
+			E.SaleCount
+			<if test="orderBy==3"> 
+			,ROUND(CAST((E.SaleCount) AS Float)/NULLIF((isnull(F.InNum,0) - isnull(I.OutNum,0)), 0) * 100, 2) AS selloutRate
+			</if>
+			<if test="requestFromType==1">
+			,
+			C.Stock AS webtotalNum,
+			J.HqStock AS webtotalStockNum,
+			K.allShopStock AS webtotalShopNum
+			</if>
+		FROM
+			JedSmartRetail.dbo.YHSR_Goods_Shoes A
+			
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B ON A.Seq = B.Shoes_Seq 
+		
+		LEFT JOIN (
+			SELECT 
+				Shoes_Seq, SUM (Stock) AS Stock 
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData 
+			WHERE 
+				Del = 0  
+			<if test="shopSeqList != null and shopSeqList.size() > 0">
+				AND Shop_Seq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+			</if> 
+			GROUP BY Shoes_Seq
+		) AS C ON A.Seq = C.Shoes_Seq
+		
+		<if test="requestFromType==1 or orderBy==6 or orderBy==7">
+			LEFT JOIN (
+				SELECT 
+					Shoes_Seq, SUM (Stock) AS HqStock 
+				FROM 
+					JedOrderPlatform.dbo.YHSR_OP_ShoesData 
+				WHERE 
+					Del = 0  
+					AND (Shop_Seq = 0 OR Shop_Seq = -1)
+				GROUP BY Shoes_Seq
+			) AS J ON A.Seq = J.Shoes_Seq
+			
+			LEFT JOIN (
+				SELECT 
+					Shoes_Seq, SUM (Stock) AS allShopStock 
+				FROM 
+					JedOrderPlatform.dbo.YHSR_OP_ShoesData 
+				WHERE 
+					Del = 0  
+					AND (Shop_Seq != 0 AND Shop_Seq != -1)
+				GROUP BY Shoes_Seq
+			) AS K ON A.Seq = K.Shoes_Seq
+		</if>
+		
+	  	LEFT JOIN (SELECT Shoes_Seq, CONVERT(DECIMAL(5,1), AVG(Score)) AS Score FROM JedOrderPlatform.dbo.YHSR_OP_ShoesValuate WHERE Del = 0 AND Score != 0 GROUP BY Shoes_Seq) AS D ON A.Seq = D.Shoes_Seq
+		
+	  	LEFT JOIN (
+		  	SELECT 
+		  		ShoeSeq, SUM(SaleCount) AS SaleCount, SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE
+				ShoeSeq IN (${shoesSeqs}) 
+				<if test="shopSeqList != null and shopSeqList.size() > 0">
+					AND ShopSeq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+				</if>
+				AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+	  		GROUP BY ShoeSeq 
+	  	) AS E ON A.Seq = E.ShoeSeq
+	  	
+	  	<if test="orderBy==3">
+		  	LEFT JOIN (
+				SELECT
+					Shoes_Seq, ISNULL(SUM (Count), 0) AS InNum
+				FROM
+					JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+				WHERE
+					Shoes_Seq IN (${shoesSeqs})
+					<if test="shopSeqList != null and shopSeqList.size() > 0">
+						AND Shop_Seq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+					</if>
+					AND (Type = 0 OR Type = 1)
+				GROUP BY
+					Shoes_Seq
+		  	) AS F ON A.Seq = F.Shoes_Seq
+		  	
+	 		LEFT JOIN (
+				SELECT
+					Shoes_Seq, ISNULL(SUM (Count), 0) AS OutNum
+				FROM
+					JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+				WHERE
+					Shoes_Seq IN (${shoesSeqs}) 
+					<if test="shopSeqList != null and shopSeqList.size() > 0">
+						AND Shop_Seq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+					</if>
+					AND (Type = 2 OR Type = 4)
+				GROUP BY
+					Shoes_Seq
+			) AS I ON A.Seq = I.Shoes_Seq
+		</if>
+		
+		
+		LEFT JOIN (
+			SELECT 
+				MIN(UpdateTime) AS UpdateTime, Shoes_Seq 
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail 
+			WHERE 
+				Type = 0 
+				<if test="shopSeqList != null and shopSeqList.size() > 0">
+					AND Shop_Seq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+				</if>
+			GROUP BY 
+				Shoes_Seq
+		) AS G ON G.Shoes_Seq = A.Seq
+		
+<!-- 		LEFT JOIN (
+			SELECT 
+				ShoeSeq,ROUND((SUM(CAST(isnull(SaleCount,0) AS FLOAT))/DATEDIFF(DAY,#{saleTimeStart},#{saleTimeEnd})),2) AS salesDayAvg 
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail 
+			WHERE 
+				Del = 0 AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd} 
+				<if test="shopSeqList != null and shopSeqList.size() > 0">
+					AND ShopSeq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+				</if>
+			GROUP BY ShoeSeq
+		) AS H ON H.ShoeSeq = A.Seq -->
+		
+		WHERE
+			A.Del = 0
+			AND B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0)
+			<if test="shoesSeqs!=null and shoesSeqs!=''">
+			    AND A.Seq IN (${shoesSeqs})
+			</if>
+			<if test="stockMinNum!=null and stockMinNum!=''">
+				AND C.Stock >= #{stockMinNum}
+			</if>
+			<if test="stockMaxNum!=null and stockMaxNum!=''">
+				AND C.Stock &lt;= #{stockMaxNum}
+			</if>
+		ORDER BY 
+            <if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:日平均销量 5:总库存 6:总仓库存 7:门店总库存 -->
+			    E.SaleCount
+			</if>
+			<if test="orderBy==2">
+			    C.Stock
+			</if>
+			<if test="orderBy==3">
+				CAST((E.SaleCount) AS Float)/NULLIF(isnull(F.InNum,0) - isnull(I.OutNum,0), 0)
+			</if>
+			<if test="orderBy==4">
+				E.SaleCount
+			</if>
+			<if test="orderBy==5">
+				C.Stock
+			</if>
+			<if test="orderBy==6">
+				J.HqStock
+			</if>
+			<if test="orderBy==7">
+				K.allShopStock
+			</if>
+			<if test="orderDir==0">
+			    DESC
+			</if>
+			<if test="orderDir==1">
+			    ASC
+			</if>
+            , G.UpdateTime DESC
+	</select>
+	
+	
+
+
+
+	
+	
+	
+	
+	<!-- 本店鞋款列表 (销售时间区间范围内) -->
+	<select id="getShopShoesListOnSaleTime" resultMap="shoesSeqListMap">
+		SELECT
+			A.Seq, A.Img1, A.GoodName, A.GoodID, A.Introduce, A.InputTime,
+			B.TagPrice1, B.TagPrice2,B.TagPrice3, B.DealPrice1, B.DealPrice2, B.DealPrice3, B.WholesalePrice1, B.WholesalePrice2, B.WholesalePrice3,
+			B.IsMainpush AS companyPush,
+			B.IsNewest AS newGood,
+			C.Stock,
+			D.Score,
+			E.SaleCount AS SalesNum, ROUND(E.AvgSalePrice, 0) AS AvgSalePrice,
+			F.InNum AS Num,
+			ROUND(CAST((E.SaleCount) AS Float)/NULLIF((isnull(F.InNum,0) - isnull(I.OutNum,0)), 0) * 100, 2) AS SelloutRate
+		FROM
+			JedSmartRetail.dbo.YHSR_Goods_Shoes A
+			
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B ON A.Seq = B.Shoes_Seq 
+		
+		LEFT JOIN (
+			SELECT 
+				Shoes_Seq, SUM (Stock) AS Stock 
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData 
+			WHERE 
+				Del = 0 
+			<if test="shopSeqList == null">AND Shop_Seq = #{shopSeq}</if> 
+			<if test="shopSeqList != null and shopSeqList.size() > 0">
+				AND Shop_Seq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+			</if>
+			GROUP BY Shoes_Seq
+		) AS C ON A.Seq = C.Shoes_Seq
+		
+	  	LEFT JOIN (
+	  		SELECT 
+	  			Shoes_Seq, CONVERT(DECIMAL(5,1), AVG(Score)) AS Score 
+	  		FROM 
+	  			JedOrderPlatform.dbo.YHSR_OP_ShoesValuate 
+	  		WHERE 
+	  			Del = 0 AND Score != 0 
+	  		GROUP BY Shoes_Seq
+	  	) AS D ON A.Seq = D.Shoes_Seq
+		
+	  	LEFT JOIN (
+		  	SELECT 
+		  		ShoeSeq, SUM(SaleCount) AS SaleCount, SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE
+			<if test="shopSeqList == null">ShopSeq = #{shopSeq}</if> 
+			<if test="shopSeqList != null and shopSeqList.size() > 0">
+				ShopSeq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+			</if> 
+			AND ShoeSeq IN (${shoesSeqs}) AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+	  		GROUP BY ShoeSeq 
+	  	) AS E ON A.Seq = E.ShoeSeq
+	  	
+	  	LEFT JOIN (
+			SELECT 
+				Shoes_Seq, ISNULL(SUM (Count), 0) AS InNum
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE
+			<if test="shopSeqList == null">Shop_Seq = #{shopSeq}</if> 
+			<if test="shopSeqList != null">
+				Shop_Seq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+			</if> 
+			AND Shoes_Seq IN (${shoesSeqs}) AND (Type = 0 OR Type = 1)
+			GROUP BY Shoes_Seq
+	  	) AS F ON A.Seq = F.Shoes_Seq
+	  	
+		LEFT JOIN (
+			SELECT
+				Shoes_Seq, ISNULL(SUM (Count), 0) AS OutNum
+			FROM
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE
+			<if test="shopSeqList == null">Shop_Seq = #{shopSeq}</if> 
+			<if test="shopSeqList != null">
+				Shop_Seq IN  <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+			</if>
+				AND Shoes_Seq IN (${shoesSeqs}) AND (Type = 2 OR Type = 4)
+			GROUP BY Shoes_Seq
+		) AS I ON A.Seq = I.Shoes_Seq
+		
+<!-- 		LEFT JOIN (
+			SELECT 
+				ShoeSeq, ROUND((SUM(CAST(isnull(SaleCount,0) AS FLOAT))/DATEDIFF(DAY,#{saleTimeStart},#{saleTimeEnd})),2) AS salesDayAvg 
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail 
+			WHERE 
+				Del = 0 
+				<if test="shopSeqList == null">AND ShopSeq = #{shopSeq}</if> 
+				<if test="shopSeqList != null">
+					AND ShopSeq IN <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach> 
+				</if> 
+				AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd} 
+			GROUP BY ShoeSeq
+		) AS H ON H.ShoeSeq = A.Seq -->
+		
+		WHERE
+			A.Del = 0
+			AND B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0)
+			<if test="shoesSeqs!=null and shoesSeqs!=''">
+			    AND A.Seq IN (${shoesSeqs})
+			</if>
+			<if test="stockMinNum!=null and stockMinNum!=''">
+				AND C.Stock >= #{stockMinNum}
+			</if>
+			<if test="stockMaxNum!=null and stockMaxNum!=''">
+				AND C.Stock &lt;= #{stockMaxNum}
+			</if>
+		
+		ORDER BY 
+            <if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:日平均销量 -->
+			    E.SaleCount
+			</if>
+			<if test="orderBy==2">
+			    C.Stock
+			</if>
+			<if test="orderBy==3">
+				CAST((E.SaleCount) AS Float)/NULLIF((isnull(F.InNum,0) - isnull(I.OutNum,0), 0)
+			</if>
+			<if test="orderBy==4">
+				E.SaleCount
+			</if>
+			<if test="orderDir==0">
+			    DESC
+			</if>
+			<if test="orderDir==1">
+			    ASC
+			</if>
+            , A.Seq DESC
+	</select>
+	
+	
+	
+	
+	
+	<!-- 后台的货品门店调拨列表 -->
+	<select id="getShopShoesOnSaleTime" resultMap="shoesSeqListMap">
+		SELECT
+			A.Seq, A.Img1, A.GoodName, A.GoodID, A.Introduce, A.InputTime,
+			B.TagPrice1, B.TagPrice2,B.TagPrice3, B.DealPrice1, B.DealPrice2, B.DealPrice3, B.WholesalePrice1, B.WholesalePrice2, B.WholesalePrice3,
+			B.IsMainpush AS companyPush,
+			B.IsNewest AS newGood,
+			C.Stock,
+			D.Score,
+			E.SaleCount AS SalesNum, ROUND(E.AvgSalePrice, 0) AS AvgSalePrice,
+			E.SaleCount
+		FROM
+			JedSmartRetail.dbo.YHSR_Goods_Shoes A
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B ON A.Seq = B.Shoes_Seq 
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Stock) AS Stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0  GROUP BY Shoes_Seq) AS C ON A.Seq = C.Shoes_Seq
+	  	LEFT JOIN (SELECT Shoes_Seq, CONVERT(DECIMAL(5,1), AVG(Score)) AS Score FROM JedOrderPlatform.dbo.YHSR_OP_ShoesValuate WHERE Del = 0 AND Score != 0 GROUP BY Shoes_Seq) AS D ON A.Seq = D.Shoes_Seq
+		
+	  	LEFT JOIN (
+		  	SELECT 
+		  		ShoeSeq, SUM(SaleCount) AS SaleCount, SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE
+				ShoeSeq  = #{shoesSeq}
+				AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+	  		GROUP BY ShoeSeq 
+	  	) AS E ON A.Seq = E.ShoeSeq
+	  	
+	  	LEFT JOIN (
+			SELECT
+				Shoes_Seq, SUM (Count) AS InNum
+			FROM
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE
+				Shoes_Seq  = #{shoesSeq}
+			AND (Type = 0 OR Type = 1)
+			GROUP BY
+				Shoes_Seq
+	  	) AS F ON A.Seq = F.Shoes_Seq
+	  	
+		LEFT JOIN (
+			SELECT
+				Shoes_Seq, SUM (Count) AS OutNum
+			FROM
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE
+				Shoes_Seq = #{shoesSeq} AND (Type = 2 OR Type = 4)
+			GROUP BY
+				Shoes_Seq
+		) AS I ON A.Seq = I.Shoes_Seq
+		
+		LEFT JOIN (SELECT MIN(UpdateTime) AS UpdateTime,Shoes_Seq FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail WHERE Type = 0 GROUP BY Shoes_Seq) AS G ON G.Shoes_Seq = A.Seq
+		LEFT JOIN (SELECT ShoeSeq,ROUND((SUM(CAST(isnull(SaleCount,0) AS FLOAT))/DATEDIFF(DAY,#{saleTimeStart},#{saleTimeEnd})),2) AS salesDayAvg FROM JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail WHERE Del = 0 AND SaleDate >= #{saleTimeStart} AND SaleDate <![CDATA[ <= ]]> #{saleTimeEnd} GROUP BY ShoeSeq) AS H ON H.ShoeSeq = A.Seq
+		
+		WHERE
+			A.Del = 0 
+			AND B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) 
+			AND A.Seq =#{shoesSeq}
+	</select>
+	
+	
+	
+	
+	<resultMap id="shopsSeqListMap" type="java.util.HashMap">
+		<id column="Seq" property="seq" jdbcType="INTEGER"/>
+	    <result column="Name" property="name" jdbcType="VARCHAR"/>
+	    <result column="Num" property="num" jdbcType="INTEGER"/>
+	    <result column="Stock" property="stock" jdbcType="INTEGER"/>
+	    <result column="SalesNum" property="salesNum" jdbcType="INTEGER"/>
+	    <result column="SelloutRate" property="selloutRate" jdbcType="INTEGER"/>
+	    <result column="Score" property="score" jdbcType="FLOAT"/>
+	    <result column="SaleCount" property="saleCount" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	
+	<select id="getShoeOnSaleTimeOnShop" resultMap="shopsSeqListMap">
+		SELECT  
+			A.Seq, A.Name,
+			C.Stock,
+			isnull(E.SaleCount, 0) AS SalesNum, 
+			isnull(ROUND(E.AvgSalePrice, 0), 0) AS AvgSalePrice,
+			isnull(E.SaleCount, 0) as SaleCount
+		FROM 
+			JedSmartRetail.dbo.YHSR_Base_Shop A 
+			
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B ON B.Shoes_Seq =#{shoesSeq}
+		
+		LEFT JOIN (SELECT Shop_Seq,Shoes_Seq, SUM (Stock) AS Stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0  GROUP BY Shop_Seq,Shoes_Seq) AS C ON C.Shoes_Seq =#{shoesSeq} AND C.Shop_Seq=A.Seq
+		
+		LEFT JOIN (
+		  	SELECT 
+		  		ShopSeq, ShoeSeq, SUM(SaleCount) AS SaleCount, SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE
+				ShoeSeq  = #{shoesSeq}
+				AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+	  		GROUP BY ShopSeq, ShoeSeq 
+	  	) AS E ON E.ShoeSeq = #{shoesSeq} AND E.ShopSeq = A.Seq
+		
+		LEFT JOIN (
+			SELECT 
+				Shop_Seq, Shoes_Seq, SUM (Count) AS InNum
+			FROM
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE
+				Shoes_Seq  = #{shoesSeq}
+				AND (Type = 0 OR Type = 1)
+			GROUP BY 
+				Shop_Seq, Shoes_Seq
+	  	) AS F ON  F.Shoes_Seq = #{shoesSeq} AND F.Shop_Seq = A.Seq
+		
+		LEFT JOIN (
+			SELECT 
+				Shop_Seq, Shoes_Seq, SUM (Count) AS OutNum
+			FROM
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE
+				Shoes_Seq = #{shoesSeq}
+				AND (Type = 2 OR Type = 4)
+			GROUP BY 
+				Shop_Seq, Shoes_Seq
+		) AS I ON  I.Shoes_Seq = #{shoesSeq} AND I.Shop_Seq = A.Seq
+		
+		LEFT JOIN (SELECT MIN(UpdateTime) AS UpdateTime,Shoes_Seq,Shop_Seq FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail WHERE Type = 0 GROUP BY Shop_Seq,Shoes_Seq) AS G ON G.Shop_Seq = A.Seq AND G.Shoes_Seq=#{shoesSeq}
+		
+		LEFT JOIN (SELECT ShopSeq,ShoeSeq,ROUND((SUM(CAST(isnull(SaleCount,0) AS FLOAT))/DATEDIFF(DAY,#{saleTimeStart},#{saleTimeEnd})),2) AS salesDayAvg FROM JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail WHERE Del = 0 AND SaleDate >= #{saleTimeStart} AND SaleDate <![CDATA[ <= ]]> #{saleTimeEnd} GROUP BY ShopSeq,ShoeSeq) AS H ON H.ShopSeq = A.Seq AND H.ShoeSeq=#{shoesSeq}
+		
+		WHERE
+			A.Del = 0 AND A.Is_Active=1
+			AND B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) 
+			
+		ORDER BY   
+			<if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:评分 -->
+			    E.SaleCount
+			</if>
+			<if test="orderBy==2">
+			    C.Stock
+			</if>
+			<if test="orderDir==0">
+			    DESC
+			</if>
+			<if test="orderDir==1">
+			    ASC
+			</if>
+            , A.Seq DESC
+	
+	</select>
+	
+	
+
+	<select id="getHeadOnSaleTime" resultType="java.util.Map">
+		SELECT  
+			0 AS seq, '总店' AS name,
+			C.Stock AS stock,
+			isnull(E.SaleCount,0) AS salesNum, isnull(ROUND(E.AvgSalePrice, 0),0) AS avgSalePrice,
+			isnull(E.SaleCount,0) as saleCount
+		FROM  JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B
+		LEFT JOIN (SELECT Shop_Seq,Shoes_Seq, SUM (Stock) AS Stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0  GROUP BY Shop_Seq,Shoes_Seq) AS C ON C.Shoes_Seq =#{shoesSeq} AND C.Shop_Seq=0
+		
+		LEFT JOIN (
+		  	SELECT ShopSeq,
+		  		ShoeSeq, SUM(SaleCount) AS SaleCount, SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE
+				ShoeSeq  = #{shoesSeq}
+				AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+	  		GROUP BY ShopSeq,ShoeSeq 
+	  	) AS E ON E.ShoeSeq =#{shoesSeq} AND E.ShopSeq=0
+		
+		LEFT JOIN (
+			SELECT Shop_Seq,
+				Shoes_Seq, SUM (Count) AS InNum
+			FROM
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE
+				Shoes_Seq  = #{shoesSeq}
+			AND (Type = 0 OR Type = 1)
+			GROUP BY Shop_Seq,
+				Shoes_Seq
+	  	) AS F ON  F.Shoes_Seq=#{shoesSeq} AND F.Shop_Seq=0
+		
+		LEFT JOIN (
+			SELECT Shop_Seq,
+				Shoes_Seq, SUM (Count) AS OutNum
+			FROM
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE
+				Shoes_Seq = #{shoesSeq}
+				AND (Type = 2 OR Type = 4)
+			GROUP BY Shop_Seq,
+				Shoes_Seq
+		) AS I ON  I.Shoes_Seq=#{shoesSeq} AND I.Shop_Seq=0
+		
+		LEFT JOIN (SELECT MIN(UpdateTime) AS UpdateTime,Shoes_Seq,Shop_Seq FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail WHERE Type = 0 GROUP BY Shop_Seq,Shoes_Seq) AS G ON G.Shop_Seq = 0 AND G.Shoes_Seq=#{shoesSeq}
+		
+		LEFT JOIN (SELECT ShopSeq,ShoeSeq,ROUND((SUM(CAST(isnull(SaleCount,0) AS FLOAT))/DATEDIFF(DAY,#{saleTimeStart},#{saleTimeEnd})),2) AS salesDayAvg FROM JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail WHERE Del = 0 AND SaleDate >= #{saleTimeStart} AND SaleDate <![CDATA[ <= ]]> #{saleTimeEnd} GROUP BY ShopSeq,ShoeSeq) AS H ON H.ShopSeq =0 AND H.ShoeSeq=#{shoesSeq}
+		
+		WHERE
+			 B.Shoes_Seq =#{shoesSeq}
+			AND B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) 
+		ORDER BY   E.SaleCount DESC
+	</select>
+
+	<select id="getAllSizeStock" resultType="java.util.Map">
+		SELECT Size_Seq as sizeSeq,SUM(Stock) as stock,SUM(Stock) as total,SUM(Stock) as returnTotal,0 as returnNum FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData where
+		Shoes_Seq=#{shoesSeq} 
+		AND Shop_Seq=#{shopSeq}
+		  group by Size_Seq order by Size_Seq asc
+	</select>
+
+	<select id="getSizeStock" resultType="java.util.Map">
+		SELECT Size_Seq as sizeSeq,SUM(Stock) as stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData where
+		Shoes_Seq=#{shoesSeq} AND Shop_Seq!=-1
+		  group by Size_Seq order by Size_Seq asc
+	</select>
+
+  	<update id="deleteByShoesSeq">
+      UPDATE [JedOrderPlatform].[dbo].YHSR_OP_ShoesInfo SET
+        Del = 1 WHERE Shoes_Seq = #{seq}
+    </update>
+
+  	<update id="updateOnSale">
+		UPDATE [JedOrderPlatform].[dbo].YHSR_OP_ShoesInfo SET
+        OnSale=#{onSale} WHERE Shoes_Seq = #{goodsSeq}
+	</update>
+
+
+
+	<select id="selectMainPushShoes" parameterType="java.util.Map" resultType="java.util.Map">
+		<if test="categorySeqList != null and categorySeqList.size() > 0">
+			;WITH CategoryTree AS
+			(
+			SELECT * FROM [JedSmartRetail].[dbo].[YHSR_Goods_Category]  WHERE Seq IN
+			<foreach collection="categorySeqList" index="index" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+			UNION ALL
+			SELECT gc.* FROM CategoryTree
+			JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Category] gc on CategoryTree.Seq = gc.ParentSeq
+			)
+		</if>
+		SELECT
+	        gs.Seq AS seq,
+	        gs.GoodID AS goodId,
+	        gs.Img1 AS img,
+	        sm.number,
+	        ssd.dealPrice,
+	        ISNULL(ssd.saleCount,0) AS salesNum,
+	        sdd.stock,
+	        ssd.salesDayAvg
+        FROM
+			[JedOrderPlatform].[dbo].[YHSR_OP_ShoesInfo] si
+			
+		LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs ON gs.Seq = si.Shoes_Seq
+		
+		LEFT JOIN
+        	(SELECT Shoes_Seq,COUNT(Seq) AS number FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShopMainpush]
+			<where>
+				<if test="shopSeqList != null and shopSeqList.size() > 0">
+					Shop_Seq IN
+					<foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+				</if>
+			</where>
+			GROUP BY Shoes_Seq) sm ON sm.Shoes_Seq = si.Shoes_Seq
+        
+		LEFT JOIN
+	        (SELECT ShoeSeq,SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS dealPrice,SUM (CAST(SaleCount AS DECIMAL)) / (DATEDIFF(DAY,(CASE WHEN DATEDIFF(DAY,#{saleTimeStart},MIN(SaleDate)) > 0 THEN MIN(SaleDate) ELSE #{saleTimeStart} END) ,#{saleTimeEnd}) + 1) AS salesDayAvg,SUM (SaleCount) AS saleCount,MIN(SaleDate) AS saleDate FROM [JedOrderPlatform].[dbo].[YHSR_OP_SaleShoesDetail] WHERE CONVERT(varchar(100),SaleDate,23) >= CONVERT(varchar(100),#{saleTimeStart},23) AND CONVERT(varchar(100),SaleDate,23) &lt;= CONVERT(varchar(100),#{saleTimeEnd},23)
+			<if test="shopSeqList != null and shopSeqList.size() > 0">
+				AND ShopSeq IN
+				<foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			GROUP BY ShoeSeq) ssd ON ssd.ShoeSeq = si.Shoes_Seq
+        
+        LEFT JOIN
+	        (SELECT Shoes_Seq,SUM(Stock) AS stock FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData]
+			<where>
+				<if test="shopSeqList != null and shopSeqList.size() > 0">
+					Shop_Seq IN
+					<foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+				</if>
+			</where>
+			GROUP BY Shoes_Seq) sdd ON sdd.Shoes_Seq = si.Shoes_Seq
+        
+		WHERE 
+			si.Del = 0 AND gs.Company_Seq = #{companySeq} AND si.IsMainpush = 1
+			<if test="shopSeqList != null and shopSeqList.size() > 0">
+				AND EXISTS
+				(
+					SELECT Seq FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShopMainpush] WHERE Shoes_Seq = si.Shoes_Seq AND Shop_Seq IN
+					<foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+				)
+			</if>
+			AND EXISTS
+			(
+				SELECT Seq FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gss WHERE gss.Del = 0 AND gss.Seq = si.Shoes_Seq
+	            AND gss.Company_Seq = #{companySeq}
+				<if test="categorySeqList != null and categorySeqList.size() > 0">
+					AND gss.Category_Seq IN
+					(SELECT Seq FROM CategoryTree)
+				</if>
+			)
+			
+        ORDER BY
+	        <if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:日均销量 -->
+	            ssd.saleCount
+	        </if>
+	        <if test="orderBy==2">
+	            sdd.stock
+	        </if>
+	        <if test="orderBy==4">
+				ssd.salesDayAvg
+	        </if>
+	        <if test="orderDir==0">
+	            DESC
+	        </if>
+	        <if test="orderDir==1">
+	            ASC
+	        </if>
+
+	</select>
+
+	<select id="selectOldShoes" parameterType="java.util.Map" resultType="java.util.Map">
+		<if test="categorySeqList != null and categorySeqList.size() > 0">
+			;WITH CategoryTree AS
+			(
+			SELECT * FROM [JedSmartRetail].[dbo].[YHSR_Goods_Category]  WHERE Seq IN
+			<foreach collection="categorySeqList" index="index" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+			UNION ALL
+			SELECT gc.* FROM CategoryTree
+			JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Category] gc on CategoryTree.Seq = gc.ParentSeq
+			)
+		</if>
+		SELECT
+			gs.Seq AS seq,
+			gs.GoodID AS goodId,
+			gs.Img1 AS img,
+			sm.number,
+			ssd.dealPrice,
+			ISNULL(ssd.saleCount,0) AS salesNum,
+			sdd.stock,
+			ssd.salesDayAvg
+		FROM
+			[JedOrderPlatform].[dbo].[YHSR_OP_ShoesInfo] si
+			
+		LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs ON gs.Seq = si.Shoes_Seq
+		
+		LEFT JOIN
+			(SELECT Shoes_Seq,COUNT(Seq) AS number FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShopMainpush]
+			<where>
+				<if test="shopSeqList != null and shopSeqList.size() > 0">
+					Shop_Seq IN
+					<foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+				</if>
+			</where>
+			GROUP BY Shoes_Seq) sm ON sm.Shoes_Seq = si.Shoes_Seq
+		
+		LEFT JOIN
+			(SELECT ShoeSeq,SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS dealPrice,SUM (CAST(SaleCount AS DECIMAL)) / (DATEDIFF(DAY,(CASE WHEN DATEDIFF(DAY,#{saleTimeStart},MIN(SaleDate)) > 0 THEN MIN(SaleDate) ELSE #{saleTimeStart} END) ,#{saleTimeEnd}) + 1) AS salesDayAvg,SUM (SaleCount) AS saleCount,MIN(SaleDate) AS saleDate FROM [JedOrderPlatform].[dbo].[YHSR_OP_SaleShoesDetail] WHERE CONVERT(varchar(100),SaleDate,23) >= CONVERT(varchar(100),#{saleTimeStart},23) AND CONVERT(varchar(100),SaleDate,23) &lt;= CONVERT(varchar(100),#{saleTimeEnd},23)
+			<if test="shopSeqList != null and shopSeqList.size() > 0">
+				AND ShopSeq IN
+				<foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			GROUP BY ShoeSeq) ssd ON ssd.ShoeSeq = si.Shoes_Seq
+		
+		LEFT JOIN
+			(SELECT Shoes_Seq,SUM(Stock) AS stock FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData]
+			<where>
+				<if test="shopSeqList != null and shopSeqList.size() > 0">
+					Shop_Seq IN
+					<foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+				</if>
+			</where>
+			GROUP BY Shoes_Seq) sdd ON sdd.Shoes_Seq = si.Shoes_Seq
+		
+		WHERE 
+			si.Del = 0 AND gs.Company_Seq = #{companySeq} AND gs.Year &lt; DATEPART(yyyy,GETDATE()) 
+			AND EXISTS
+				(
+				SELECT Seq FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData] sd WHERE sd.Del = 0 AND sd.Shoes_Seq = si.Shoes_Seq
+				<if test="shopSeqList != null and shopSeqList.size() > 0">
+					AND sd.Shop_Seq IN
+					<foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+				</if>
+				)
+			AND EXISTS
+				(
+	            SELECT Seq FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gss WHERE gss.Del = 0 AND gss.Seq = si.Shoes_Seq
+	            AND gss.Company_Seq = #{companySeq}
+	            <if test="yearList != null and yearList.size() > 0">
+	                AND gss.Year IN
+	                <foreach collection="yearList" index="index" item="item" open="(" close=")" separator=",">
+	                    #{item}
+	                </foreach>
+	            </if>
+	            <if test="seasonSeqList != null and seasonSeqList.size() > 0">
+	                AND gss.Season_Seq IN
+	                <foreach collection="seasonSeqList" index="index" item="item" open="(" close=")" separator=",">
+	                    #{item}
+	                </foreach>
+	            </if>
+	            <if test="categorySeqList != null and categorySeqList.size() > 0">
+	                AND gss.Category_Seq IN
+	                (SELECT Seq FROM CategoryTree)
+	            </if>
+				)
+	</select>
+
+
+
+
+
+	<select id="selectBreakOrAbsenceShoes" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			gs.Seq AS seq,
+	        gs.Img1 AS img,
+	        gs.GoodID AS goodId,
+	        sd.stock AS stock
+		FROM
+			[JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs
+			
+        LEFT JOIN (SELECT Shoes_Seq,SUM(stock) AS stock FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData] WHERE Del = 0 GROUP BY Shoes_Seq) sd ON sd.Shoes_Seq = gs.Seq
+		
+		WHERE gs.Del = 0 AND gs.Seq IN ${shoesSeqs}
+        <if test="shopSeqList != null and shopSeqList.size() > 0">
+            AND EXISTS
+            (
+                SELECT Seq FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData] WHERE Del = 0 AND Shoes_Seq = gs.Seq
+                AND Shop_Seq IN
+                <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            )
+        </if>
+	</select>
+	
+	
+	
+	<select id="getShopStock" resultType="java.lang.Integer">
+		SELECT 
+			SUM(Stock) as stock 
+		FROM 
+			JedOrderPlatform.dbo.YHSR_OP_ShoesData 
+		WHERE
+		 	Shop_Seq = #{shopSeq} AND Del=0
+	</select>
+	
+	
+</mapper>

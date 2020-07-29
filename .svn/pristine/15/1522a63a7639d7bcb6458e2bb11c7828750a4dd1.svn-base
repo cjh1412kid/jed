@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>订货计划明细</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<style type="text/css">
+		body {
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+
+		.title {
+			height: 3.2rem;
+			font-size: 0.8rem;
+			font-family: PingFangSC-Regular;
+			font-weight: 400;
+			color: rgba(80, 80, 80, 1);
+		}
+
+		.shop-num {
+			color: red;
+		}
+
+		.content {
+			width: -webkit-calc(100% - 1.0rem);
+			height: 40%;
+			position: absolute;
+			top: 30%;
+			left: 0.5rem;
+			background-color: #ffffff;
+			border-radius: 0.5rem;
+			/*				overflow-y: scroll;
+				-webkit-overflow-scrolling: touch;*/
+		}
+
+		.sub-header,
+		.content-item {
+			background-color: white;
+			height: 1.3rem;
+			line-height: 1.3rem;
+			font-size: 0.6rem;
+			font-family: PingFangSC-Regular;
+			font-weight: 400;
+			color: rgba(155, 155, 155, 1);
+		}
+
+		.sub-header {
+			background: rgba(255, 247, 242, 1);
+		}
+
+		.content-wrap {
+			overflow-y: scroll;
+		}
+
+		.content-wrap::-webkit-scrollbar {
+			width: 0;
+			height: 0;
+			visibility: hidden;
+		}
+
+		.dark-bg1 {
+			width: 100%;
+			height: 30%;
+			position: absolute;
+		}
+
+		.dark-bg2 {
+			width: 100%;
+			height: 30%;
+			position: absolute;
+			top: 70%
+		}
+
+		.distribute-category {
+			width: 2.45rem;
+		}
+
+		.plan-category {
+			width: 2.45rem;
+		}
+
+		.distribute-num {
+			width: 2.45rem;
+		}
+
+		.plan-num {
+			width: 2.45rem;
+		}
+
+		#no-detail {
+			color: #bc9761;
+			font-size: 0.8rem;
+		}
+	</style>
+</head>
+
+<body class="">
+	<div class="dark-bg1" tapmode onclick="api.closeFrame();"></div>
+	<div class="content flex-wrap flex-vertical">
+		<div class="title box-wrap box-vertical-center box-horizontal-center">分配明细</div>
+		<div class="sub-header flex-wrap aui-padded-l-5 aui-padded-r-5">
+			<div class="shop-name flex-con box-wrap box-vertical-start box-horizontal-center">店名</div>
+			<div class="distribute-category box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">分配款数</div>
+			<div class="plan-category box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">计划款数</div>
+			<div class="distribute-num box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">分配数量</div>
+			<div class="plan-num box-wrap box-vertical-end box-horizontal-center aui-margin-l-5">计划数量</div>
+		</div>
+		<div class="content-wrap flex-con">
+			<div class="content-item flex-wrap aui-padded-l-5 aui-padded-r-5">
+				<div class="shop-name flex-con box-wrap box-vertical-start box-horizontal-center">宁波石浦</div>
+				<div class="distribute-category box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">12</div>
+				<div class="plan-category box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">23</div>
+				<div class="distribute-num box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">123</div>
+				<div class="plan-num box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">456</div>
+			</div>
+		</div>
+	</div>
+	<div class="dark-bg2" tapmode onclick="api.closeFrame();"></div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript">
+	function initUI() {
+		var datas = api.pageParam;
+		var htmlStr = "";
+		for (var i = 0; i < datas.length; i++) {
+			htmlStr += '<div class="content-item flex-wrap aui-padded-l-5 aui-padded-r-5">';
+			htmlStr += '<div class="shop-name flex-con box-wrap box-vertical-start box-horizontal-center">' + datas[i].shopName + '</div>';
+			htmlStr += '<div class="distribute-category box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">' + datas[i].distributeGoodIds + '</div>';
+			htmlStr += '<div class="plan-category box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">' + datas[i].planGoodsIDs + '</div>';
+			htmlStr += '<div class="distribute-num box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">' + datas[i].distributeNum + '</div>';
+			htmlStr += '<div class="plan-num box-wrap box-vertical-center box-horizontal-center aui-margin-l-5">' + datas[i].planNum + '</div>';
+			htmlStr += '</div>';
+		}
+		$api.html($api.dom(".content-wrap"), htmlStr);
+	}
+
+	function initData() {
+		pageParam = api.pageParam;
+		console.log("pageParam:" + $api.jsonToStr(pageParam));
+	}
+
+	var pageParam;
+	var apiready = function() {
+		initData();
+		initUI();
+	}
+</script>
+
+</html>

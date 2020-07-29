@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.MeetingOrderDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.MeetingOrderEntity" id="meetingOrderMap">
+        <result property="seq" column="Seq"/>
+        <result property="companySeq" column="Company_Seq"/>
+        <result property="year" column="Year"/>
+        <result property="seasonSeq" column="Season_Seq"/>
+        <result property="shopSeq" column="Shop_Seq"/>
+        <result property="categorySeq" column="Category_Seq"/>
+        <result property="orderNum" column="OrderNum"/>
+        <result property="orderStatus" column="OrderStatus"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+	 <!-- 定义订单汇总返回的resultMap，type为HashMap -->
+	 <resultMap id="orderMap" type="java.util.HashMap">
+	    <id column="shopAllotOrderSeq" property="shopAllotOrderSeq" jdbcType="INTEGER"/>
+	    <result column="count" property="allotCount" jdbcType="INTEGER"/>
+	    <result column="silevePlateDistributeSeq" property="silevePlateDistributeSeq" jdbcType="INTEGER"/>
+	    <result column="goodID" property="goodId" jdbcType="VARCHAR"/>
+	    <result column="distributeNum" property="distributeNum" jdbcType="INTEGER"/>
+	    <result column="orderShoesSeq" property="orderShoesSeq" jdbcType="INTEGER"/>
+	    <result column="categorySeq" property="categorySeq" jdbcType="INTEGER"/>
+	 </resultMap>
+  
+  
+  
+
+
+    <!-- 查询总部所有用户 -->
+    <select id="getHqUserList" resultType="io.nuite.modules.sr_base.entity.BaseUserEntity">
+		SELECT
+			A.*
+		FROM
+			JedSmartRetail.dbo.YHSR_Base_User A 
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Base_User_Role B ON A.Seq = B.User_Seq 
+		WHERE (B.Role_Seq = 1 OR B.Role_Seq = 2) AND A.Company_Seq = #{companySeq}
+		
+	</select>
+	
+	
+	<!-- 查询总部所有用户 -->
+    <select id="getShopMeetingOrderList" resultMap="orderMap">
+		SELECT 
+			A.Seq AS shopAllotOrderSeq, A.[Count] AS [count], 
+			B.Seq AS silevePlateDistributeSeq, B.GoodID AS goodID, B.distributeNum, B.OrderShoes_Seq AS orderShoesSeq, B.Category_Seq AS categorySeq 
+		FROM 
+			JedOrderPlatform.dbo.YHSR_OP_ShopAllotOrder A 
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_SievePlateDistribute B ON A.SilevePlateDistributeSeq = B.Seq 
+		WHERE A.Del = 0 
+			AND B.Company_Seq = #{companySeq} AND B.Year = #{year}
+		<if test="seasonSeqList != null and seasonSeqList.size() > 0">
+			AND B.Season_Seq IN
+			<foreach collection="seasonSeqList" index="index" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+
+			AND Shop_Seq = #{shopSeq}
+	</select>
+	
+	
+
+</mapper>

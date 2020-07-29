@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title></title>
+		<!--AUI样式框架-->
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui_slide.css" />
+		<style type="text/css">
+			html {
+				height: 100%;
+				background-color: #fff;
+			}
+			body {
+				padding: 0;
+				margin: 0;
+				height: 100%;
+				background-image: url(../../image/welcome/page_11.png);
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: cover;
+				position: relative;
+			}
+			.skip-btn {
+				position: absolute;
+				width: 80px;
+				height: 30px;
+				line-height: 30px;
+				font-size: 14px;
+				border-radius: 5px;
+				color: #FFFFFF;
+				right: -webkit-calc(50% - 40px);
+				bottom: 35px;
+				text-align: center;
+				background-color: rgba(80,80,80,0.6);
+				z-index: 999;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="skip-btn aui-hide1" onclick="toLoginWin()">
+			立即体验
+		</div>
+		<div id="aui-slide3">
+			<div class="aui-slide-wrap" >
+				<div class="aui-slide-node bg-dark">
+					<img src="../../image/welcome/page_11.png" />
+				</div>
+				<div class="aui-slide-node bg-dark">
+					<img src="../../image/welcome/page_22.png" />
+				</div>
+				<div class="aui-slide-node bg-dark">
+					<img src="../../image/welcome/page_33.png" />
+				</div>
+			</div>
+			<div class="aui-slide-page-wrap">
+				<!--分页容器-->
+			</div>
+		</div>
+	</body>
+	<!--APICloud自带前端脚本-->
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_slide.js"></script>
+	<script type="text/javascript">
+		/**
+		 * 跳转到登录界面
+		 */
+		function toLoginWin() {
+			// 存储是否第一次标识信息
+			$api.setStorage("isFirstLaunch", "False");
+			//			//第一次启动app，进入登录界面
+			//			_openWin("login_win", "../login/login_win.html");
+			// //自动进行游客登录
+			// $api.setStorage("accountNameKey", "visitor");
+			// $api.setStorage("passwordKey", "123");
+			// _execScript("root", "", "loginAction('welcom_win','');");
+			//不登录直接进入首页
+			_execScript("root", "", "openTabWin();");
+			setTimeout(function() {
+				api.closeWin({
+				});
+			}, 100);
+		}
+
+		apiready = function() {
+			api.setFullScreen({
+				fullScreen : true
+			});
+			// 双击退出应用
+			_twoClickCloseApp();
+			var slide = new auiSlide({
+				container : $api.byId("aui-slide3"),
+				"width" : api.winWidth,
+				"height" : api.winHeight,
+				"speed" : 300,
+				"autoPlay" : 0, //自动播放
+				"pageShow" : true,
+				"loop" : false,
+				"pageStyle" : 'dot',
+				'dotPosition' : 'center',
+				"PageCount" : true,
+				friction : 0.8, //阻力
+			}, function(_index) {
+				if (_index == $api.domAll(".aui-slide-node").length - 1) {
+					if ($api.hasCls($api.dom(".skip-btn"), "aui-hide")) {
+						$api.removeCls($api.dom(".skip-btn"), "aui-hide");
+					}
+				} else {
+					$api.addCls($api.dom(".skip-btn"), "aui-hide");
+				}
+			});
+		};
+	</script>
+</html>

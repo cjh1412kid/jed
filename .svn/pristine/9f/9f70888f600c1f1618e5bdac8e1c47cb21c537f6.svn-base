@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>销售分析</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui_slide.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/sale/sale_analysis.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-pull-right aui-btn" tapmode onclick="openDrawerPane();"><img src="../../image/icon_filter.png" /></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16" tapmode onclick="openSearchWin();">门店销售分析</div>
+    </header>
+    <div class="anaWrap">
+        <div class="anaTittle ana_flex">
+            <span>排序</span>
+            <span class="ana_all1">货号</span>
+            <span class="hot ana_all2">销量<span class="ana_ico">▼</span></span>
+            <span class="ana_all3">库存<span class="ana_ico">▼</span></span>
+            <span class="ana_all4">售罄率<span class="ana_ico">▼</span></span>
+            <span class="ana_all5">平均售<span class="ana_ico">▼</span></span>
+        </div>
+        <div class="shopMes">
+            <div class="shopMesTittle">
+                <span>吉尔达A店</span>
+                <span>销售分析汇总</span>
+            </div>
+            <div class="shopMesCon">
+                <div class="Con_L ana_flex1">
+                    <div class="Con_Lspe ana_flex1">
+                        <span class="ana_flex2">本店销售排名</span>
+                        <span class="ana_flex2">TOP5</span>
+                    </div>
+                    <div class="Con_list">
+                        <span class="Con_item ana_flex2">平均售价: </span>
+                        <span class="Con_num ana_flex2 spe">¥149</span>
+                    </div>
+                </div>
+                <div class="Con_M ana_flex1">
+                    <div class="Con_list">
+                        <span class="Con_item ana_flex2">销量: </span>
+                        <span class="Con_num ana_flex2">400</span>
+                    </div>
+                    <div class="Con_list">
+                        <span class="Con_item ana_flex2">库存: </span>
+                        <span class="Con_num ana_flex2">1200</span>
+                    </div>
+                    <div class="Con_list">
+                        <span class="Con_item ana_flex2">售罄率:</span>
+                        <span class="Con_num ana_flex2">33%</span>
+                    </div>
+                </div>
+                <div class="Con_R">
+                    <div id="mychart">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ul class="anaList">
+            <li class="ana_flex aui-border-b">
+                <div class="ana_item">1</div>
+                <div class="item_spes">
+                    <img src="" alt="">
+                    <div class="item_spe">HKJ125<br>369258</div>
+                </div>
+                <div class="item_nor">20</div>
+                <div class="item_nor">30</div>
+                <div class="item_nor">40</div>
+                <div class="item_nor">129</div>
+                <div class="aui-iconfont aui-icon-right aui-collapse-arrow"></div>
+            </li>
+            <li class="ana_flex aui-border-b">
+                <div class="ana_item">1</div>
+                <div class="item_spes">
+                    <img src="" alt="">
+                    <div class="item_spe">HKJ125<br>369258</div>
+                </div>
+                <div class="item_nor">20</div>
+                <div class="item_nor">30</div>
+                <div class="item_nor">40</div>
+                <div class="item_nor">129</div>
+                <div class="aui-iconfont aui-icon-right aui-collapse-arrow"></div>
+            </li>
+            <li class="ana_flex aui-border-b">
+                <div class="ana_item">1</div>
+                <div class="item_spes">
+                    <img src="" alt="">
+                    <div class="item_spe">HKJ125<br>369258</div>
+                </div>
+                <div class="item_nor">20</div>
+                <div class="item_nor">30</div>
+                <div class="item_nor">40</div>
+                <div class="item_nor">129</div>
+                <div class="aui-iconfont aui-icon-right aui-collapse-arrow"></div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_toast.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_slide.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript" src="../../script/common/echarts_min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+
+
+
+    }
+    var myChart = echarts.init(document.getElementById('mychart'));
+
+    // 指定图表的配置项和数据
+    option = {
+        color: ['#288CFF', '#FFCD8B'],
+
+        series: [{
+            name: '访问来源',
+            type: 'pie',
+            selectedOffset: 0,
+            startAngle: 180,
+            // roseType :'redius',
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data: [{
+
+                    value: 33,
+                    selected: true,
+                    label: {
+                        position: 'inside',
+                        fontWeight: 900,
+                        fontSize: 14,
+                        fontFamily: 'Arial-Black',
+                        itemStyle: {
+                            normal: {
+                                color: '#288CFF',
+                            }
+                        },
+                        formatter: '{d}%',
+                    }
+
+                }, {
+                    value: 67,
+                    label: {
+                        position: 'inside',
+                        fontWeight: 900,
+                        fontSize: 14,
+                        fontFamily: 'Arial-Black',
+                        itemStyle: {
+                            color: '#FFCD8B',
+                        },
+
+                    }
+
+                },
+
+            ]
+        }]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+
+</html>

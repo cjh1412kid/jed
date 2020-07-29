@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.nuite.modules.system.dao.order_platform.GoodsAllotOrderDao">
+
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="io.nuite.modules.system.entity.order_platform.GoodsAllotOrderEntity">
+    <id column="Seq" property="seq"/>
+    <result column="GoodID" property="goodID"/>
+    <result column="Total" property="total"/>
+    <result column="PlanCount" property="planCount"/>
+    <result column="TemplateSeq" property="templateSeq"/>
+    <result column="CompanySeq" property="companySeq"/>
+    <result column="CategorySeq" property="categorySeq"/>
+    <result column="Year" property="year"/>
+    <result column="SeasonSeq" property="seasonSeq"/>
+    <result column="InputTime" property="inputTime"/>
+    <result column="Del" property="del"/>
+
+    <collection property="details" column="Seq"
+                ofType="io.nuite.modules.system.entity.order_platform.GoodsAllotOrderDetailEntity"
+                select="selectGoodsAllotOrderDetail"></collection>
+  </resultMap>
+
+  <!-- 通用查询结果列 -->
+  <sql id="Base_Column_List">
+        Seq AS seq, GoodID AS goodID, Total AS total, PlanCount AS planCount,
+         TemplateSeq AS templateSeq,CategorySeq AS categorySeq,CompanySeq AS companySeq, Year AS year,
+         SeasonSeq AS seasonSeq, InputTime AS inputTime, Del AS del
+    </sql>
+
+
+  <select id="selectGoodsAllotOrderDetail"
+          resultType="io.nuite.modules.system.entity.order_platform.GoodsAllotOrderDetailEntity" parameterType="int">
+  SELECT [OrderSeq] as orderSeq
+        ,[Size] as size
+        ,[Count] as count
+        ,[Yu] as yu
+    FROM [JedOrderPlatform].[dbo].[YHSR_OP_GoodsAllotOrderDetail] where OrderSeq=#{Seq}
+  </select>
+
+  <select id="downloadGoodsAllotExcel" resultMap="BaseResultMap">
+    select A.*
+    ,B.SeasonName as seasonName
+    ,C.Name as categoryName
+    from (SELECT [Seq]
+    ,[GoodID]
+    ,[Total]
+    ,[PlanCount]
+    ,[TemplateSeq]
+    ,[CompanySeq]
+    ,[Year]
+    ,[CategorySeq]
+    ,[SeasonSeq]
+    ,[InputTime]
+    ,[Del]
+    FROM [JedOrderPlatform].[dbo].[YHSR_OP_GoodsAllotOrder]
+    where Del=0 and CompanySeq=#{companySeq}
+    <if test="year != null and year != -1">
+      and Year=#{year}
+    </if>
+    <if test="seasonSeq != null and seasonSeq != -1">
+      and SeasonSeq=#{seasonSeq}
+    </if>
+    ) A
+    left join [JedSmartRetail].[dbo].[YHSR_Goods_Season] B on B.Seq =A.SeasonSeq
+    left join [JedSmartRetail].[dbo].[YHSR_Goods_Category] C on c.Seq=A.CategorySeq
+    order by A.GoodID desc
+  </select>
+
+  <select id="selectGoodsAllotOrder"
+          resultMap="BaseResultMap">
+    select top 1
+    A.*
+    ,B.SeasonName as seasonName
+    ,C.Name as categoryName
+    from (SELECT [Seq]
+    ,[GoodID]
+    ,[Total]
+    ,[PlanCount]
+    ,[TemplateSeq]
+    ,[CompanySeq]
+    ,[Year]
+    ,[CategorySeq]
+    ,[SeasonSeq]
+    ,[InputTime]
+    ,[Del]
+    FROM [JedOrderPlatform].[dbo].[YHSR_OP_GoodsAllotOrder]
+    where Del=0 and CompanySeq=#{companySeq} and GoodID=#{goodID}
+    <if test="year != null and year != -1">
+      and YEAR=#{year}
+    </if>
+    <if test="seasonSeq != null and seasonSeq != -1">
+      and SeasonSeq=#{seasonSeq}
+    </if>
+    ) A
+    left join [JedSmartRetail].[dbo].[YHSR_Goods_Season] B on B.Seq =A.SeasonSeq
+    left join [JedSmartRetail].[dbo].[YHSR_Goods_Category] C on c.Seq=A.CategorySeq
+    order by A.InputTime desc
+  </select>
+
+
+  <select id="selectGoodsAllotOrder2" resultMap="BaseResultMap">
+    SELECT *
+    FROM [JedOrderPlatform].[dbo].[YHSR_OP_GoodsAllotOrder]
+    where Del=0 and Seq =#{seq}
+    order by InputTime desc
+  </select>
+
+  <select id="selectMaxAndMinSize" resultType="java.util.Map">
+    SELECT MAX(Size) as maxSize,MIN(Size) as minSize
+    FROM [JedOrderPlatform].[dbo].[YHSR_OP_GoodsAllotOrderDetail]
+    where OrderSeq in (
+    SELECT Seq from [JedOrderPlatform].[dbo].[YHSR_OP_GoodsAllotOrder]
+    where Del=0 and CompanySeq=#{companySeq}
+    <if test="year != null and year != -1">
+      and Year=#{year}
+    </if>
+    <if test="seasonSeq != null and seasonSeq != -1">
+      and SeasonSeq=#{seasonSeq}
+    </if>
+    )
+  </select>
+
+
+  <select id="selectAllotShopName" resultType="java.lang.String">
+    SELECT
+      [Name]
+    FROM [JedSmartRetail].[dbo].[YHSR_Base_Shop]
+
+    where Seq in (
+    SELECT
+   distinct
+   B.Shop_Seq as shopSeq
+
+    FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShopAllotOrder] A,[JedOrderPlatform].[dbo].[YHSR_OP_SievePlateDistribute] B
+    where A.Del=0 and B.Del=0 and A.SilevePlateDistributeSeq=B.Seq
+    and B.Company_Seq=#{companySeq} and B.GoodID=#{goodID} and   Year=#{year} and Season_Seq=#{seasonSeq}
+
+    )
+  </select>
+
+  <select id="selectShopAllotSeq" resultType="java.lang.Integer">
+     SELECT
+       A.Seq
+      FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShopAllotOrder] A,[JedOrderPlatform].[dbo].[YHSR_OP_SievePlateDistribute] B
+      where A.Del=0 and B.Del=0 and A.SilevePlateDistributeSeq=B.Seq
+      and B.Company_Seq=#{companySeq} and B.GoodID=#{goodID} and   Year=#{year} and Season_Seq=#{seasonSeq}
+  </select>
+
+
+  <update id="deleteShopAllot">
+     update [JedOrderPlatform].[dbo].[YHSR_OP_ShopAllotOrder]
+     set Del=1
+    where Seq in (
+    SELECT
+       A.Seq
+      FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShopAllotOrder] A,[JedOrderPlatform].[dbo].[YHSR_OP_SievePlateDistribute] B
+      where A.Del=0 and B.Del=0 and A.SilevePlateDistributeSeq=B.Seq
+      and B.Company_Seq=#{companySeq} and B.GoodID=#{goodID} and   Year=#{year} and Season_Seq=#{seasonSeq}
+    )
+  </update>
+
+
+
+</mapper>

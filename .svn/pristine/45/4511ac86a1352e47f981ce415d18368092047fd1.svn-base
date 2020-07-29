@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<title>title</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<style>
+		.aui-bar-nav {
+			background-color: transparent;
+		}
+
+		.aui-iconfont {
+			font-weight: bold !important;
+		}
+
+		.aui-bar-nav .aui-searchbar-input {
+			background-color: transparent;
+		}
+
+		.aui-bar-light .aui-searchbar-input {
+			background: rgba(240, 240, 240, 1);
+		}
+
+		.aui-searchbar-input {
+			/*border-radius: 15px;*/
+		}
+
+		#search-input {
+			color: #666666;
+			width: 80%;
+			padding: 0;
+			margin: 0;
+			height: 1.4 rem;
+			line-height: normal;
+			border: 0;
+			-webkit-appearance: none;
+			font-size: 0.7 rem;
+		}
+	</style>
+</head>
+
+<body>
+	<header id="aui-header" class="search aui-bar aui-bar-nav aui-bar-light aui-bg-white">
+		<a class="aui-pull-left aui-btn" tapmode='' onclick=""> <span class="aui-iconfont"></span> </a>
+		<div class="aui-title" style="left:0; right: 0;">
+			<div class="aui-searchbar aui-bg-white" id="search">
+				<div class="aui-searchbar-input aui-border-radius aui-padded-0">
+					<i class="aui-iconfont aui-icon-search aui-font-size-14 aui-margin-l-10"></i>
+					<div id="search-input"></div>
+					<div class="aui-searchbar-clear-btn" tapmode=''>
+						<i class="aui-iconfont aui-icon-close"></i>
+					</div>
+				</div>
+				<div class="aui-searchbar-btn aui-margin-r-0" tapmode onclick="closeWin(this);" style="color:#505050">
+					取消
+				</div>
+			</div>
+		</div>
+	</header>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript">
+	/*
+	 *打开商品列表界面
+	 *_rangeType：0公司 ，1本店
+	 *_dataType：0全部货品 ，1新品推荐 ，2主推款
+	 *_categorySeqList：默认为-1，否则为分类seq,多个以逗号隔开
+	 *_name：名称
+	 */
+	function toGoodsListWin(_rangeType, _dataType, _categorySeqs, _name) {
+    console.log($api.jsonToStr(pageParam))
+    pageParam.shopSeqList =[];
+		pageParam.stockMinNum='';
+		pageParam.stockMaxNum='';
+		api.openDrawerLayout({
+			name: "list_win",
+			url: "../goods/goods_list_win.html",
+			pageParam: pageParam,
+			animation: {
+				type: 'push'
+			},
+			softInputMode: "resize",
+			softInputBarEnabled: false,
+			overScrollMode: "always",
+			slidToOpenPane: false,
+			slidToClosePane: false,
+			rightPane: {
+				edge: 60,
+				pageParam: pageParam,
+				softInputMode: "resize",
+				softInputBarEnabled: false,
+				name: 'filter_win',
+				url: '../filter_win.html'
+			}
+		});
+
+
+	}
+
+	function closeWin(obj) {
+		if ($api.trimAll($api.text(obj)) == '取消') {
+			api.closeWin({
+				name: api.winName
+			});
+		} else {
+			if (_isStringNull(pageParam.fuzzySearchParam)) {
+				_toast('请输入查询内容!');
+			} else {
+				_sendEvent('query_filter_changed_event', pageParam);
+				if (pageParam.searchType == 'tab_content_1') {
+					toGoodsListWin(0, 0, 0, '全部商品');
+
+				} else {
+					api.closeWin({
+						name: api.winName
+					});
+				}
+
+
+			}
+		}
+		api.setStatusBarStyle({
+			style: 'dark',
+			animated: true,
+			color: "rgba(255,255,255,0)"
+		});
+
+	}
+	var pageParam;
+	apiready = function() {
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		pageParam = api.pageParam;
+		console.log($api.jsonToStr(pageParam));
+		// return;
+		var UIInput = api.require('UIInput');
+		setTimeout(function() {
+			UIInput.open({
+				rect: {
+					x: $api.offset($api.byId("search-input")).l,
+					y: $api.offset($api.byId("search-input")).t + 5,
+					w: $api.offset($api.byId("search-input")).w,
+					h: $api.offset($api.byId("search-input")).h - 10
+				},
+				styles: {
+					bgColor: 'rgba(0,0,0,0)',
+					size: 14,
+					color: '#212121',
+					placeholder: {
+						color: '#aaa'
+					}
+				},
+				autoFocus: true,
+				maxRows: 1,
+				placeholder: '请输入鞋子编号',
+				keyboardType: 'search',
+				// fixedOn: api.frameName,
+				fixed: true
+			}, function(ret) {
+				//					console.log("open.ret:" + JSON.stringify(ret));
+				if (ret.eventType == 'show') { //模块打开成功
+					UIInput.addEventListener({
+						id: ret.id,
+						name: 'resignFirstResponder' //输入框失去焦点事件
+					}, function(ret) {
+						console.log("addEventListener.ret:" + JSON.stringify(ret));
+
+					});
+				} else if (ret.eventType == 'change') { //输入框内容改变
+					UIInput.value({ //获取或设置输入框的内容
+						id: ret.id,
+					}, function(ret) {
+						if (ret) {
+							if (_isStringNull(ret.msg)) {
+								//  将右上角的按钮变成取消
+								$api.text($api.dom('.aui-searchbar-btn'), '取消');
+							} else {
+								console.log("value.ret:" + JSON.stringify(ret.msg));
+								pageParam.fuzzySearchParam = ret.msg;
+
+								//将右上角的按钮变成确定
+
+								$api.text($api.dom('.aui-searchbar-btn'), '确定');
+							}
+						} else {
+
+						}
+					});
+				} else if (ret.eventType == 'search') { //点击键盘的发送按钮，暂仅支持ios平台
+					UIInput.value({ //获取或设置输入框的内容
+						id: ret.id,
+					}, function(ret) {
+						if (ret) {
+							console.log("value.ret:" + JSON.stringify(ret));
+							api.pageParam.fuzzySearchParam = ret.msg;
+							_sendEvent('query_filter_changed_event', pageParam)
+						}
+					});
+				}
+			});
+		}, 150);
+		api.setStatusBarStyle({
+			style: 'dark',
+			animated: true,
+			color: "rgba(255,255,255,0)"
+		});
+	};
+</script>
+
+</html>

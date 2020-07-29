@@ -1,0 +1,181 @@
+.group-name{
+	position: fixed;
+	width: 100%;
+	z-index: 999;
+	top: 0;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:1.5) {
+	.aui-list {
+		border: none;
+        background-size: 100% 0px;
+		background-repeat: no-repeat;
+		background-position: top;
+        background-image: linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);
+	}
+	.aui-list .aui-list-item {
+		border: none;
+        background-size: 100% 0px;
+		background-repeat: no-repeat;
+		background-position: bottom;
+        background-image: linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);
+        background-image: -webkit-linear-gradient(90deg,#dddddd,#dddddd 50%,transparent 50%);
+	}
+	.aui-list.aui-list-in .aui-list-item {
+		border: none;
+        background-size: 100% 0px;
+		background-repeat: no-repeat;
+		background-position: 0.75rem bottom;
+        background-image: linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);
+        background-image: -webkit-linear-gradient(90deg,#dddddd,#dddddd 50%,transparent 50%);
+	}
+	.aui-list.aui-list-in .aui-list-item:last-child {
+		background-position: bottom;
+	}
+	.aui-list.aui-list-noborder,
+	.aui-list.aui-list-noborder .aui-list-item:last-child {
+		border: none;
+        background-size: 100% 0;
+        background-image: none;
+	}
+}
+@media screen and (-webkit-min-device-pixel-ratio:1.5) {
+    .aui-collapse-content .aui-list-item:last-child {
+        background-position: bottom;
+    }
+    .aui-list.aui-collapse.aui-list-noborder,
+    .aui-list.aui-collapse.aui-list-noborder .aui-collapse-content:last-child .aui-list-item:last-child {
+        border: none;
+        background-size: 100% 0px;
+        background-repeat: no-repeat;
+        background-position: 0 bottom;
+        background-image: linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);
+        background-image: -webkit-linear-gradient(90deg,#dddddd,#dddddd 50%,transparent 50%);
+    }
+    .aui-list.aui-collapse.aui-list-noborder,
+    .aui-list.aui-collapse.aui-list-noborder .aui-collapse-item:last-child .aui-list-item:last-child {
+        border: none;
+        background-size: 100% 0;
+        background-image: none;
+    }
+    .aui-list.aui-collapse.aui-list-noborder .aui-collapse-item:last-child .aui-list-item.aui-collapse-header,
+    .aui-list.aui-collapse.aui-list-noborder .aui-collapse-content .aui-list-item:last-child  {
+        border: none;
+        background-size: 100% 0;
+        background-image: none;
+    }
+}
+
+/*折叠菜单*/
+.aui-collapse-header.aui-active {
+    background: #ffffff!important;
+}
+.aui-collapse .aui-list-item:active{
+    background: #ffffff;
+}
+.aui-collapse-item .aui-collapse-header{
+	min-height: 1.2rem!important;
+	background-color: #dddddd;
+}
+.aui-collapse-item .aui-collapse-header:active{
+	background-color: #dddddd;
+}
+.aui-collapse-header .aui-list-item-inner {
+	height: 1.2rem!important;
+	min-height: 1.2rem!important;
+}
+.aui-list .aui-list-item-inner {
+    position: relative;
+    min-height: 2.2rem;
+	padding-right: 0.75rem;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    		box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-flex: 1;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+			justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+			align-items: center;
+}
+.aui-list .aui-list-item-input {
+	width: 1.5rem;
+	position: relative;
+    padding: 0.5rem 0;
+    padding-right: 0.75rem;
+    display: inherit;
+    -webkit-flex-shrink: 0;
+    		flex-shrink: 0;
+    -webkit-flex-wrap: nowrap;
+    		flex-wrap: nowrap;
+   -webkit-box-pack: center;
+	box-pack: center;
+   -webkit-box-align: center;
+	box-align: center;
+    -webkit-align-items: center;
+            align-items: center;
+}
+.aui-collapse-header .aui-list-item-title {
+    font-size: 0.7rem;
+    position: relative;
+    max-width: 100%;
+    color: #999999!important;
+}
+.aui-list .aui-list-item-title {
+    font-size: 0.7rem;
+    position: relative;
+    max-width: 100%;
+}
+.aui-list .aui-list-item-media {
+	width: 3.0rem;
+	position: relative;
+    padding: 0.5rem 0;
+    padding-right: 0.75rem;
+    display: inherit;
+    -webkit-flex-shrink: 0;
+    		flex-shrink: 0;
+    -webkit-flex-wrap: nowrap;
+    		flex-wrap: nowrap;
+    -webkit-box-align: center;
+    -webkit-align-items: flex-start;
+            align-items: flex-start;
+}
+.aui-list .aui-list-item-media img {
+	width: 100%;
+    display: block;
+}
+.aui-media-list-item-inner{
+	width:100%; 
+}
+
+/*自定义radio,checkbox大小,位置*/
+.aui-radio,
+.aui-checkbox {   
+    width: 0.9rem;
+    height: 0.9rem;
+	vertical-align: sub;
+//	position: relative;
+//  margin-top: 0.15rem;
+}
+/* 自定义选中状态下radio,checkbox背景色 */
+.aui-radio:checked,
+.aui-radio.aui-checked,
+.aui-checkbox:checked,
+.aui-checkbox.aui-checked {
+    background-color: #bc9761;
+    border: solid 0px #bc9761;
+    text-align: center;
+    background-clip: padding-box;
+}
+/* 自定义禁用状态下radio,checkbox背景色 */
+.aui-radio:disabled,
+.aui-radio.aui-disabled,
+.aui-checkbox:disabled,
+.aui-checkbox.aui-disabled {
+    background-color: #FFFFFF;
+    border: solid 1px #dddddd;
+}

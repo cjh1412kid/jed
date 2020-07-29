@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.SievePlateDistributeDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+  <resultMap type="io.nuite.modules.order_platform_app.entity.SievePlateDistributeEntity" id="sievePlateDistributeMap">
+    <result property="seq" column="Seq"/>
+    <result property="companySeq" column="Company_Seq"/>
+    <result property="year" column="Year"/>
+    <result property="seasonSeq" column="Season_Seq"/>
+    <result property="goodID" column="GoodID"/>
+    <result property="shopSeq" column="Shop_Seq"/>
+    <result property="distributeNum" column="distributeNum"/>
+    <result property="orderShoesSeq" column="OrderShoes_Seq"/>
+    <result property="categorySeq" column="Category_Seq"/>
+    <result property="inputTime" column="InputTime"/>
+    <result property="del" column="Del"/>
+  </resultMap>
+
+  <select id="listByCondition" resultMap="sievePlateDistributeMap">
+    SELECT A.*
+    ,C.Name as shopName
+    ,B.SeasonName as seasonName
+    ,D.Name as categoryName
+    ,F.Seq as shopAllotSeq
+    FROM (select * from [JedOrderPlatform].[dbo].[YHSR_OP_SievePlateDistribute]
+    where Del=0
+    and Company_Seq=#{companySeq}
+    <if test="year != null and year != -1">
+      and Year=#{year}
+    </if>
+    <if test="seasonSeq != null and seasonSeq != -1">
+      and Season_Seq=#{seasonSeq}
+    </if>
+    <if test="shopSeq != null and shopSeq != -1">
+      and Shop_Seq=#{shopSeq}
+    </if>
+    ) A
+    LEFT JOIN [JedOrderPlatform].[dbo].[YHSR_OP_ShopAllotOrder] F on F.SilevePlateDistributeSeq=A.Seq and F.Del=0
+    LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Season] B ON A.Season_Seq=B.Seq
+    LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Base_Shop] C ON A.Shop_Seq =C.Seq
+    LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Category] D ON A.Category_Seq=D.Seq
+    ORDER BY A.Shop_Seq,A.GoodID,A.InputTime DESC
+  </select>
+
+  <select id="selectShopsByCompanySeq" resultType="java.util.Map">
+    SELECT
+      Seq as seq
+      ,Name as shopName
+      FROM [JedSmartRetail].[dbo].[YHSR_Base_Shop]
+      where Seq in (SELECT
+      distinct Shop_Seq
+    FROM [JedOrderPlatform].[dbo].[YHSR_OP_SievePlateDistribute]
+    where Company_Seq= #{companySeq} and Del=0)
+  </select>
+
+  <select id="selectYearsByCompanySeq" resultType="java.lang.Integer">
+    SELECT
+      distinct Year
+        FROM [JedOrderPlatform].[dbo].[YHSR_OP_SievePlateDistribute]
+        where Company_Seq= #{companySeq} and Del=0
+    order by Year desc
+  </select>
+
+  <select id="selectSeaSonsByCompanySeq" resultType="java.util.Map">
+    select Seq seq
+    ,SeasonName seasonName
+    from [JedSmartRetail].[dbo].[YHSR_Goods_Season]
+    where Seq in (
+    select distinct Season_Seq
+    from [JedOrderPlatform].[dbo].[YHSR_OP_SievePlateDistribute]
+     where Company_Seq=  #{companySeq} and Del=0
+    )
+  </select>
+
+  <select id="listByGoodID" resultType="io.nuite.modules.system.from.GoodsAllotForm">
+    select
+    AA.goodID,
+    AA.categoryName,
+    AA.categorySeq,
+    SUM(AA.distributeNum) as total
+    from
+    (SELECT
+    A.GoodID as goodID
+    ,A.distributeNum
+    ,D.Name as categoryName
+    ,D.Seq as categorySeq
+    FROM (select * from [JedOrderPlatform].[dbo].[YHSR_OP_SievePlateDistribute]
+    where Del=0 and Company_Seq= #{companySeq}
+    <if test="year != null and year != -1">
+      and Year=#{year}
+    </if>
+    <if test="seasonSeq != null and seasonSeq != -1">
+      and Season_Seq=#{seasonSeq}
+    </if>
+    ) A
+    left JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Category] D ON A.Category_Seq=D.Seq
+    ) AA
+    group by AA.goodID, AA.categorySeq, AA.categoryName
+  </select>
+
+
+</mapper>

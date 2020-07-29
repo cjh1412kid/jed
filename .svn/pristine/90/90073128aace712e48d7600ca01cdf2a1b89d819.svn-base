@@ -1,0 +1,77 @@
+body {
+    background-color: white!important;
+}
+
+.aui-iconfont {
+    font-weight: bold!important;
+    color: #505050!important;
+}
+
+.aui-bar-tab {
+    z-index: 999;
+}
+
+
+.bottom-btn-cart {
+    background-image: linear-gradient( #ff877e, #ff877e), linear-gradient( #ff877e, #ff877e);
+    background-blend-mode: normal, normal;
+}
+
+.bottom-btn-xn {
+    background-color: #FF5100;
+}
+
+.bottom-btn-fk {
+    background-color: #FF5100;
+}
+
+.submit {
+    background-color: #E1E1E1;
+    color: #999999;
+}
+
+.submit.active {
+    background-color: #f08a58;
+    color: #ffffff;
+}
+
+.edit-preivew {
+    background-color: #FF5100;
+    color: #FFFFFF;
+}
+
+.suggest .aui-bar-tab-item.active {
+    width: auto;
+    background-color: #FF5100;
+}
+
+.suggest .aui-bar-tab-item {
+    width: auto;
+    background-color: #dddddd;
+}
+
+.bottom-btn {}
+
+.bottom-btn:active {
+    opacity: 0.9;
+}
+
+.call-in {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFB151;
+    height: 100%;
+}
+
+.call-out {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: #ED4F42;
+  }
+.font2{
+  font-size: .6rem!important;
+}

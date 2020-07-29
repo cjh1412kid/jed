@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/order/order_detail_win.css" />
+	<style>
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+	<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+		<div class="aui-title text-header-title aui-text-default aui-font-size-16">XX订货明细</div>
+	</header>
+	<div class="sub-header flex-wrap">
+		<div class="size flex-con">尺码</div>
+		<div class="oeder-num flex-con">定量</div>
+		<div class="send flex-con">已发</div>
+		<div class="unsend flex-con">未发</div>
+	</div>
+	<div class="content flex-con">
+		<div class="content-item flex-wrap">
+			<div class="size flex-con">35</div>
+			<div class="oeder-num flex-con">54</div>
+			<div class="send flex-con">56</div>
+			<div class="unsend flex-con">33</div>
+		</div>
+		<div class="content-item flex-wrap">
+			<div class="size flex-con">35</div>
+			<div class="oeder-num flex-con">54</div>
+			<div class="send flex-con">56</div>
+			<div class="unsend flex-con">33</div>
+		</div>
+		<div class="content-item flex-wrap">
+			<div class="size flex-con">35</div>
+			<div class="oeder-num flex-con">54</div>
+			<div class="send flex-con">56</div>
+			<div class="unsend flex-con">33</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript">
+	function initUI(datas) {
+		console.log("datas:" + $api.jsonToStr(datas));
+		var htmlStr = "";
+		if (!_isArrayNull(datas)) {
+			for (var i = 0; i < row; i++) {
+				htmlStr + '<div class="content-item flex-wrap">';
+				htmlStr + '<div class="size flex-con">35</div>">';
+				htmlStr + '<div class="oeder-num flex-con">54</div>">';
+				htmlStr + '<div class="send flex-con">56</div>">';
+				htmlStr + '<div class="unsend flex-con">33</div>">';
+				htmlStr + '</div>">';
+			}
+		} else {}
+		console.log("htmlStr:" + htmlStr);
+		$api.append($api.dom(".invWrap"), htmlStr);
+	}
+
+	var pageParam;
+	apiready = function() {
+		pageParam = api.pageParam;
+		console.log("pageParam:" + $api.jsonToStr(pageParam));
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		$api.fixTabBar($api.dom("body"));
+		$api.text($api.dom(".aui-title"), pageParam.goodsId+"订货明细");
+		// initUI();
+	};
+</script>
+
+</html>

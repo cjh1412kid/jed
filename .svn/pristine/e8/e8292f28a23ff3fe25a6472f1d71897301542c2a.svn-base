@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.nuite.modules.system.dao.order_platform.AllocateTransferFactoryDao">
+
+ <resultMap id="BaseResultMap" type="io.nuite.modules.system.entity.order_platform.AllocateTransferFactoryEntity">
+    <id column="Seq" property="seq"/>
+    <result column="Shoes_Seq" property="shoesSeq"/>
+    <result column="Size_Seq" property="sizeSeq"/>
+    <result column="InShop_Seq" property="inShopSeq"/>
+    <result column="Num" property="num"/>
+    <result column="OutShop_Seq" property="outShopSeq"/>
+    <result column="CreateUser_Seq" property="createUserSeq"/>
+    <result column="InputTime" property="inputTime"/>
+    <result column="Del" property="del"/>
+  </resultMap>
+	<select id="getDate" resultType="java.util.Map">
+	select distinct CONVERT(varchar(10) ,InputTime , 120) as allocateDate from [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_Factory] where Del=0 
+	<if test="date != null">
+	AND convert(varchar(10) ,InputTime , 120)=#{date}
+	</if>
+	</select>
+	<select id="getShoes" resultType="java.util.Map">
+	select distinct Shoes_Seq as shoesSeq from [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_Factory] where 
+	convert(varchar(10) ,InputTime , 120 )=#{date} AND Del=0
+	</select>
+	<select id="getTime" resultType="java.util.Map">
+	select distinct CONVERT(varchar(5) ,InputTime ,108 ) AS allocateTime from [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_Factory] where 
+	convert(varchar(10) ,InputTime , 120 )=#{date} and Shoes_Seq=#{shoesSeq} AND Del=0
+	</select>
+	<select id="getShops" resultType="java.util.Map">
+	select af.InShop_Seq as inShopSeq,af.OutShop_Seq as outShopSeq,isnull(bs.Name,'总店') as inShopName,isnull(bt.Name,'总店') as outShopName  from [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_Factory] af
+	left join [JedSmartRetail].[dbo].[YHSR_Base_Shop] bs on af.InShop_Seq=bs.Seq
+	left join [JedSmartRetail].[dbo].[YHSR_Base_Shop] bt on af.OutShop_Seq=bt.Seq
+	 where 
+	convert(varchar(10) ,af.InputTime , 120)=#{date} 
+	AND af.Del=0
+	<if test="shoesSeq != null and shoesSeq !='' ">
+	and af.Shoes_Seq=#{shoesSeq}
+	</if>
+	<if test="time != null and time!='' ">
+	and convert(varchar(5) ,af.InputTime ,108) =#{time}
+	</if>
+	GROUP BY af.InShop_Seq,af.OutShop_Seq,bs.Name,bt.Name
+	</select>
+	<select id="getAllRecords" resultType="java.util.Map">
+	select af.seq as seq,af.InShop_Seq as inShopSeq,af.OutShop_Seq as outShopSeq,af.Num as num,isnull(bs.Name,'总店') as inShopName,isnull(bt.Name,'总店') as outShopName,gz.SizeName as size,gs.GoodID as goodID,af.InputTime as inputTime  from [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_Factory] af
+	left join [JedSmartRetail].[dbo].[YHSR_Base_Shop] bs on af.InShop_Seq=bs.Seq
+	left join [JedSmartRetail].[dbo].[YHSR_Base_Shop] bt on af.OutShop_Seq=bt.Seq
+	left join [JedSmartRetail].[dbo].[YHSR_Goods_Size] gz on af.Size_Seq=gz.Seq
+	left join [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs on af.Shoes_Seq=gs.Seq
+	 where 
+	convert(varchar(10) ,af.InputTime , 120)=#{date} 
+	AND af.Del=0
+	<if test="shoesSeq != null and shoesSeq !='' ">
+	and af.Shoes_Seq=#{shoesSeq}
+	</if>
+	<if test="goodId != null and goodId !='' ">
+	and gs.GoodID like '%${goodId}%'
+	</if>
+	<if test="time != null and time!='' ">
+	and convert(varchar(5) ,af.InputTime ,108) =#{time}
+	</if>
+	</select>
+	<select id="getAllShoes" resultType="java.util.Map">
+	select A.* from	(select  af.Shoes_Seq as shoesSeq,convert(varchar(10) ,af.InputTime , 120 ) as allocateDate, CONVERT(varchar(5) ,af.InputTime ,108 ) as allocateTime from [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_Factory] af
+	left join [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs on af.Shoes_Seq=gs.Seq
+	 where af.Del=0 AND af.Company_Seq=#{companySeq}
+	<if test="startDate != null and startDate != '' ">
+		AND convert(varchar(10) ,af.InputTime , 120 ) >= #{startDate}
+	</if>
+	<if test="endDate != null and endDate != ''">
+		 AND convert(varchar(10) ,af.InputTime , 120 ) &lt;= #{endDate} 
+	</if>
+	 <if test="goodId != null and goodId !='' ">
+		and gs.GoodID like '%${goodId}%'
+	</if>
+	group by convert(varchar(10) ,af.InputTime , 120 ),Shoes_Seq, CONVERT(varchar(5) ,af.InputTime ,108 )) A  order by A.allocateDate desc, A.allocateTime desc
+	</select>
+	<update id="deleteRecords">
+	update  af set af.Del= 1 
+	from [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_Factory] af
+	left join [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs on af.Shoes_Seq=gs.Seq
+	 where 
+	convert(varchar(10) ,af.InputTime , 120)=#{date} 
+	<if test="shoesSeq != null and shoesSeq !='' ">
+	and af.Shoes_Seq=#{shoesSeq}
+	</if>
+	<if test="time != null and time!='' ">
+	and convert(varchar(5) ,af.InputTime ,108) =#{time}
+	</if>
+	</update>
+	<select id="getMsgByParams" resultType="java.util.Map">
+	SELECT af.Seq as applicationSeq,om.Seq as msgSeq FROM  [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_Factory] af
+	 JOIN [JedOrderPlatform].[dbo].[YHSR_OP_Message] om ON om.Type=5 AND om.Application_Seq=af.Seq
+	 where 
+	convert(varchar(10) ,af.InputTime , 120)=#{date} and af.Shoes_Seq=#{shoesSeq} and convert(varchar(5) ,af.InputTime ,108) =#{time}
+	</select>
+	<select id="getRecords" resultType="java.util.Map">
+		select af.Num as num,gz.SizeName as size,gs.GoodID as goodID,isnull(bs.Name,'总店') as inShopName,isnull(bt.Name,'总店') as outShopName,af.InputTime as inputTime  from [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_Factory] af
+		LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Size] gz ON af.Size_Seq =gz.Seq
+		LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs ON af.Shoes_Seq=gs.Seq
+		left join [JedSmartRetail].[dbo].[YHSR_Base_Shop] bs on af.InShop_Seq=bs.Seq
+		left join [JedSmartRetail].[dbo].[YHSR_Base_Shop] bt on af.OutShop_Seq=bt.Seq
+		WHERE convert(varchar(10) ,af.InputTime , 120)=#{date} and af.Shoes_Seq=#{shoesSeq}
+		 and convert(varchar(5) ,af.InputTime ,108) =#{time} and af.InShop_Seq=#{inShopSeq}
+		 and af.OutShop_Seq=#{outShopSeq}
+	
+	</select>
+</mapper>

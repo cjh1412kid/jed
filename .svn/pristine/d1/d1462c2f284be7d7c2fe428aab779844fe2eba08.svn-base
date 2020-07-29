@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>扫码订</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/ordermetting/order_metting_win.css" />
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+	<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+		<a class="aui-pull-right aui-btn" tapmode onclick="openDrawerPane();"><img src="../../image/icon_filter.png" /></a>
+		<div class="aui-title text-header-title aui-text-default aui-font-size-16" tapmode onclick="openSearchWin();">订货会</div>
+	</header>
+	<div class="flex-con content"></div>
+	<footer class="box-wrap box-horizontal-center box-vertical-center">
+		<div class="btns flex-wrap">
+			<div class="btn sure flex-con box-wrap box-vertical-center box-horizontal-center" tapmode onclick="openScanner()">扫码订</div>
+		</div>
+	</footer>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript">
+	function openScanner() {
+		var FNScanner = api.require('FNScanner');
+		FNScanner.open({
+			autorotation: false, // 描述:可选项, 扫描页面是否自动旋转(横竖屏默认值：false)
+			encoding:1,
+		}, function(ret, err) {
+			if (ret) {
+				console.log(JSON.stringify(ret));
+				//1. eventType: 'cancel',   //字符串类型；扫码事件类型:show（模块显示）  cameraError（访问摄像头失败）   albumError（访问相册失败）  cancel（用户取消扫码）     selectImage（用户从系统相册选取二维码图片）    success（识别二维码/条码图片成功）   7.fail（扫码失败）
+				//2. imgPath: '',       //字符串类型；需要保存的二维码图片绝对路径（自定义路径）
+				//3. albumPath: '',     //字符串类型；需要保存的二维码图片绝对路径（相册路径）
+				//4. content: ''        //扫描的二维码/条形码信息
+				if (ret.eventType == "cameraError") {
+					_toast("访问摄像头失败", 3000, "bottom", function() {});
+				} else if (ret.eventType == "fail") {
+					_toast("扫码失败", 3000, "bottom", function() {});
+				} else if (ret.eventType == "success") {
+					//						console.log("扫描到鞋子货号:" + ret.content);
+					var dialogBox = api.require('dialogBox');
+					dialogBox.taskPlan({
+						rect: {
+							w: 200
+						},
+						texts: {
+							mainTitle: '货号',
+							// subTitle: '今天没有获得任务次数奖励呢',
+							content: [{
+								text: ret.content
+							}],
+							btnTitle: '加入筛板'
+						},
+						styles: {
+							bg: '#fff',
+							main: {
+								marginT: 20,
+								color: '#505050',
+								size: 13,
+								bold: false,
+							},
+							content: [{
+								// bg: '#f00',
+								marginT: 20,
+								w: 180,
+								h: 30,
+								align: 'center',
+								color: '#505050',
+								size: 16,
+								bold: true,
+							}],
+							ok: {
+								bg: '#F5A623',
+								marginT: 20,
+								w: 100,
+								h: 35,
+								marginL: 50,
+								marginR: 40,
+								marginB: 20,
+								align: 'center',
+								color: '#fff',
+								size: 13,
+								corner: 0.5
+							}
+						}
+					}, function(rets) {
+						// alert(JSON.stringify(ret));
+
+						if (rets.eventType == 'ok') {
+							dialogBox.close(
+								{
+									dialogName:'taskPlan'
+								}
+							);
+							console.log($api.jsonToStr(rets));
+							 var url = window.myServerUrl+"order/app/sievePlate/addToSievePlate"
+							 //url+="?goodId="+ret.content
+							 var data={
+								 values:{
+									 goodId:ret.content
+								 }
+
+							 }
+							 var method = 'post'
+							 console.log(url);
+							_ajax(url, "addList", function(ret, err) {
+								  console.log(ret);
+			            console.log("添加货号-->ret:" + $api.jsonToStr(ret));
+			            if (ret) {
+			                if (ret.code == 0) {
+			                _toast(ret.msg);
+											_sendEvent("query_filter_sure_event");
+			                } else if (ret.code==500) {
+			                	_toast(ret.msg);
+			                };
+			            } else {
+                     _toast(window.ajaxErrorMessage);
+			            };
+			        }, method,data, "json");
+						};
+					});
+				}
+			} else {
+				console.log(JSON.stringify(err));
+			}
+		});
+	}
+
+	function openDrawerPane() {
+		api.openDrawerPane({
+			type: 'right'
+		});
+	}
+
+	function closeWin() {
+		api.closeWin();
+	}
+
+	function initData() {
+		userInfo = $api.getStorage("userInfoKey");
+		//			console.log($api.jsonToStr(userInfo));
+	}
+
+	var userInfo;
+	apiready = function() {
+		api.parseTapmode();
+		initData();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		$api.fixTabBar($api.dom("body"));
+		$api.attr($api.dom('.btns'), 'style', 'margin-top:' + (api.safeArea.bottom / 2) + "px");
+
+		var headerPos = $api.offset(header);
+		//			var body_h = $api.offset($api.dom('body')).h;
+		var rect = {
+			x: 0,
+			y: 0,
+			w: 'auto',
+			h: 'auto',
+			marginLeft: 0, //相对父 window 左外边距的距离
+			marginTop: headerPos.h, //相对父 window 上外边距的距离
+			marginBottom: $api.offset($api.dom("footer")).h + api.safeArea.bottom, //相对父 window 下外边距的距离
+			marginRight: 0 //相对父 window 右外边距的距离
+		};
+		var bounces = false;
+		var reload = true;
+		var allowEdit = false;
+		var animation = {
+			type: "fade", //动画类型（详见动画类型常量）
+			subType: "from_right", //动画子类型（详见动画子类型常量）
+			duration: 0 //动画过渡时间，默认300毫秒
+		};
+		_openFrame("order_metting_frm", "order_metting_frm.html", rect, api.pageParam, bounces, reload, allowEdit, animation);
+		_addEventListener("query_filter_changed_event", function(ret) {
+			console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+		});
+	};
+</script>
+
+</html>

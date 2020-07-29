@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>商品调价</title>
+  <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../../plugins/ztree/css/metroStyle/metroStyle.css">
+  <link rel="stylesheet" href="../../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet" href="../../../css/main.css">
+
+  <script src="../../../libs/jquery.min.js"></script>
+  <script src="../../../libs/jquery.form.js"></script>
+  <script src="../../../plugins/layer/layer.js"></script>
+  <script src="../../../libs/bootstrap.min.js"></script>
+  <script src="../../../libs/vue.min.js"></script>
+  <script src="../../../plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script src="../../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../../js/common.js"></script>
+  <style>
+    #rMenu {
+      position: absolute;
+      visibility: hidden;
+      width: 150px;
+      top: 0;
+      background-color: #0d6aad;
+      text-align: left;
+      padding: 2px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid" id="app">
+  <div>
+    <div class="col-md-4">
+      <div style="margin-bottom: 30px;padding-top: 15px">
+        <a href="../../../media/adjustPrice.xlsx" style="margin-left: 10px;" download="商品调价-导入模板">
+          下载导入模板
+        </a>
+      </div>
+      <div style="background: #eee;padding: 30px 15px;width: 90%">
+        <ul id="tree1" class="ztree"></ul>
+      </div>
+
+    </div>
+    <div class="col-md-8 container">
+      <table id="jqGrid"></table>
+      <div id="jqGridPager"></div>
+
+<!--      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>门店</th>
+          <th>货号</th>
+          <th>现价</th>
+          <th>原价</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in tableData">
+          <td>{{item.shoName}}</td>
+          <td>{{item.goodID}}</td>
+          <td>{{item.currentPrice}}</td>
+          <td>{{item.previousPrice}}</td>
+        </tr>
+        </tbody>
+      </table>-->
+
+    </div>
+  </div>
+
+  <div id="rMenu">
+    <a class="list-group-item" onclick="createNewTemplate()" v-show="!isShowMenu">新建调价</a>
+    <a class="list-group-item" @click="importExcel" v-show="isShowMenu">导入商品调价表格</a>
+  </div>
+
+
+  <!--导入excel表格-->
+  <div style="display: none">
+    <form id="uploadExcelForm" method="post" enctype="multipart/form-data">
+      <!--<input type="hidden" name="treeNodeName"/>-->
+      <input id="fileSelect" type="file" @change="uploadExcel($event)"  name="excelFile"
+             accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+    </form>
+  </div>
+</div>
+
+</body>
+<!-- 配置文件 -->
+<script src="../../../plugins/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script src="../../../plugins/ueditor/ueditor.all.js"></script>
+<script src="../../../plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<script src="../../../js/modules/system/order_platform/adjust_price.js"></script>
+</html>

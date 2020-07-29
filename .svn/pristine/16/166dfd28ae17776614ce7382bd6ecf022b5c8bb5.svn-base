@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>欢迎页</title>
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="panel-heading">基本信息</div>
+		<div style="padding: 10px 0 20px 10px;">
+			<p><span style="font-weight: bold">商品零售管家：</span>旨在提高公司货品管理人员及门店店长商品管理能力，掌握当前货品库存、当前库存门店及尺码分布情况、货品销量情况、销售分布门店情况，门店可及时进行货品调拨管理；
+			协助公司营运管理人员及门店店长进行营运数据分析，提高营运管理效率，加强公司及门店销售指标管理及门店导购销售目标管理；提供公司货品及营运管理员便捷的报表服务；</p>
+		</div>
+		
+	</div>
+</body>
+</html>

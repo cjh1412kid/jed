@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>订货会初步订单</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../../plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="../../../plugins/datepicker/datepicker3.css">
+  <link rel="stylesheet" href="../../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet" href="../../../css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../../../css/all-skins.min.css">
+  <link rel="stylesheet" href="../../../css/main.css">
+  <script src="../../../libs/jquery.min.js"></script>
+  <script src="../../../libs/jquery.form.js"></script>
+  <script src="../../../plugins/layer/layer.js"></script>
+  <script src="../../../libs/bootstrap.min.js"></script>
+  <script src="../../../libs/vue.min.js"></script>
+  <script src="../../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../../js/common.js"></script>
+
+
+  <style>
+
+    .select-wrapper {
+      display: inline-block;
+      /*font-size: 16px;*/
+    }
+
+    .select-wrapper span {
+      color: #3c8dbc;
+    }
+
+    .select-wrapper select {
+      background-color: #eee;
+      width: 160px;
+      height: 30px;
+      margin-right: 20px;
+    }
+
+    .table-title td {
+      font-weight: bold;
+    }
+
+    .goodsAllot i {
+      cursor: pointer;
+    }
+
+    .size-bound-wrap input {
+      width: 80px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="form-group">
+    <div class="grid-btn">
+      <button class="btn" :style="tableType?'background:#3c8dbc;color:white':''" @click="changeBtnActive(1)">按门店汇总
+      </button>
+      <button class="btn" :style="tableType?'':'background:#3c8dbc;color:white'" @click="changeBtnActive(0)">按货品汇总
+      </button>
+      <button type="button" class="btn btn-link" @click="exportExcel">{{tableType?'下载门店配码单':'下载货品配码单'}}</button>
+      <div style="float:right;margin-right: 50px">
+
+        <div class="select-wrapper" v-show="tableType">
+          <span>门店选择:</span>&nbsp;&nbsp;
+          <select v-model="shopSeq" @change="search">
+            <option value="-1">所有门店</option>
+            <option v-for="item in shopList" :value="item.seq">{{item.shopName}}</option>
+          </select>
+        </div>
+
+        <div class="select-wrapper">
+          <span>年份选择:</span>&nbsp;&nbsp;
+          <select v-model="year" @change="search">
+            <option value="-1">所有年份</option>
+            <option v-for="item in yearList" :value="item">{{item}}</option>
+          </select>
+        </div>
+
+        <div class="select-wrapper">
+          <span>季节选择:</span>&nbsp;&nbsp;
+          <select v-model="seasonSeq" @change="search">
+            <option value="-1">所有季节</option>
+            <option v-for="item in seasonList" :value="item.seq">{{item.seasonName}}</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div v-show="tableType">
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+  </div>
+  <div v-show="!tableType">
+    <table id="jqGrid2"></table>
+    <div id="jqGridPager2"></div>
+  </div>
+
+  <!-- 门店配码弹窗 -->
+  <div id="shop_size_allot" style="display: none;">
+    <div class="row">
+      <div class="col-md-4">
+        <label>货号：</label>{{shopAllot.goodID}}
+      </div>
+      <div class="col-lg-3">
+        <label>订：</label>{{shopAllot.count}} <label>&nbsp;双</label>
+      </div>
+      <div class="col-lg-5">
+        <label>门店：</label>{{shopAllot.shopName}}
+      </div>
+    </div>
+    <div class="row">
+      <label>工厂生产:</label>&nbsp;&nbsp;(总量/剩余)
+      <div style="padding: 5px 15px 15px">
+        <span v-for="item in shopAllot.refer"><b>{{item.size}}:</b> {{item.count}}&nbsp;<b>/</b>&nbsp;{{item.yu}} &nbsp;&nbsp;&nbsp;</span>
+      </div>
+    </div>
+    <div class="row">
+      <label>配码</label>
+      <table class="table table-bordered" style="background: #fff">
+        <tbody>
+        <tr class="table-title">
+          <td>尺码</td>
+          <td v-for="item in shopAllot.details">{{item.size}}</td>
+        </tr>
+        <tr>
+          <td style="min-width: 30px;font-weight: bold">数量</td>
+          <td v-for="(item,index) in shopAllot.details">
+            <input v-model.number.trim="item.count" style="width: 100%;" @focus="focusSizeCount($event,item.size)"
+                   @change="changeShopSizeCount($event,item.size,index)">
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div style="color: red;">
+        {{tip}}
+      </div>
+    </div>
+  </div>
+
+  <!--货号配码弹窗-->
+  <div id="goods_size_allot" style="display: none;">
+    <div class="row">
+      <div class="col-md-4">
+        <label>货号：</label>&nbsp;&nbsp;{{goodsAllot.goodID}}
+      </div>
+      <div class="col-lg-3">
+        <label>订：</label>&nbsp;&nbsp;{{goodsAllot.count}} <label>&nbsp;双</label>
+      </div>
+    </div>
+    <div class="row" style="height: 300px;overflow: auto">
+      <label class="col-sm-4">配码模版：</label>
+      <div class="col-sm-8 size-bound-wrap">
+        <input type="number" placeholder="最小尺码" v-model.number="minSize">
+        -
+        <input type="number" placeholder="最大尺码" v-model.number="maxSize">
+        <button class="btn btn-primary btn-sm" @click="setSizeBound">自定义尺码范围</button>
+      </div>
+      <table class="table table-bordered">
+        <tbody>
+        <tr v-for="(item,index) in sizeAllotTemplates">
+          <td><input type="radio" v-model="selectTemplateIndex" :value="index" @click="selectTemplate"></td>
+          <td style="min-width: 100px;font-weight: bold;">{{item.name}}</td>
+          <td>
+            <table class="table table-bordered">
+              <tbody>
+              <tr class="table-title">
+                <td>尺码</td>
+                <td v-for="item2 in item.details">{{item2.size}}</td>
+              </tr>
+              <tr>
+                <td style="min-width: 50px; font-weight: bold;">数量</td>
+                <td v-for="item2 in item.details" style="color: #0d6aad">{{item2.per}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <div style="width: 80%;float: left">
+        <table class="table table-bordered" style="background: #fff">
+          <tbody>
+          <tr class="table-title">
+            <td>尺码</td>
+            <td v-for="item in goodsAllot.details">{{item.size}}</td>
+          </tr>
+          <tr>
+            <td style="min-width: 30px;font-weight: bold">数量</td>
+            <td v-for="item in goodsAllot.details">
+              <input v-model.number="item.count" style="width: 100%;" @change="changeSizeCount($event)"></td>
+          </tr>
+
+          </tbody>
+        </table>
+      </div>
+      <div style="width: 20%;float: left;padding-left: 10px">
+        <div class="goodsAllot">
+          <i class="fa fa-minus" @click.prevent="minusMultiple"></i>&nbsp;&nbsp;
+          <input type="number" v-model="multiple" style="width: 60px" @change="changeMulti($event)">&nbsp;&nbsp;
+          <i class="fa fa-plus" @click.prevent="plusMultiple"></i>&nbsp;&nbsp;(件)
+        </div>
+        <div style="margin-top: 5px;">总计：&nbsp;{{multipleCount}}&nbsp;双</div>
+        <div style="color: red;">{{tip}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!--下载配码单-->
+  <div style="display: none;">
+    <form id="exportOrderExcelForm" method="POST">
+      <input type="hidden" name="token">
+      <input type="hidden" name="shopSeq">
+      <input type="hidden" name="year">
+      <input type="hidden" name="seasonSeq">
+    </form>
+  </div>
+</div>
+</body>
+<script src="../../../js/modules/system/order_platform/meeting_order.js"></script>
+</html>

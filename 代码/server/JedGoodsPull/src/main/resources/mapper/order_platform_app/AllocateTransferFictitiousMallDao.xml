@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.AllocateTransferFictitiousMallDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.AllocateTransferFictitiousMallEntity" id="allocateTransferFictitiousMallMap">
+        <result property="seq" column="Seq"/>
+        <result property="shopSeq" column="Shop_Seq"/>
+        <result property="shoesSeq" column="Shoes_Seq"/>
+        <result property="colorSeq" column="Color_Seq"/>
+        <result property="sizeSeq" column="Size_Seq"/>
+        <result property="transferOutNum" column="TransferOutNum"/>
+        <result property="transferOutType" column="TransferOutType"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+    <select id="selectExportOutShoes" parameterType="java.util.Map" resultType="java.util.Map">
+        <if test="categorySeqList != null and categorySeqList.size() > 0">
+            ;WITH CategoryTree AS
+            (
+            SELECT * FROM [JedSmartRetail].[dbo].[YHSR_Goods_Category]  WHERE Seq IN
+            <foreach collection="categorySeqList" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            UNION ALL
+            SELECT gc.* FROM CategoryTree
+            JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Category] gc on CategoryTree.Seq = gc.ParentSeq
+            )
+        </if>
+        SELECT
+        gs.Seq AS seq,
+        gs.GoodID AS goodId,
+        gs.Img1 AS img,
+        ssd.dealPrice,
+        ssd.saleCount AS salesNum,
+        sdd.stock,
+        ssd.salesDayAvg
+        FROM
+        [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs
+        LEFT JOIN
+        (SELECT ShoeSeq,SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS dealPrice,SUM (CAST(SaleCount AS DECIMAL)) / (DATEDIFF(DAY,(CASE WHEN DATEDIFF(DAY,#{saleTimeStart},MIN(SaleDate)) > 0 THEN MIN(SaleDate) ELSE #{saleTimeStart} END) ,#{saleTimeEnd}) + 1) AS salesDayAvg,SUM (SaleCount) AS saleCount,MIN(SaleDate) AS saleDate FROM [JedOrderPlatform].[dbo].[YHSR_OP_SaleShoesDetail] WHERE CONVERT(varchar(100),SaleDate,23) >= CONVERT(varchar(100),#{saleTimeStart},23) AND CONVERT(varchar(100),SaleDate,23) &lt;= CONVERT(varchar(100),#{saleTimeEnd},23)
+        GROUP BY ShoeSeq) ssd
+        ON ssd.ShoeSeq = gs.Seq
+        LEFT JOIN
+        (SELECT Shoes_Seq,SUM(Stock) AS stock FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData]
+        GROUP BY Shoes_Seq) sdd
+        ON sdd.Shoes_Seq = gs.Seq
+        WHERE gs.Del = 0 AND gs.Company_Seq = #{companySeq} 
+        <if test="yearList != null and yearList.size() > 0">
+            AND gs.Year IN
+            <foreach collection="yearList" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="seasonSeqList != null and seasonSeqList.size() > 0">
+            AND gs.Season_Seq IN
+            <foreach collection="seasonSeqList" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="categorySeqList != null and categorySeqList.size() > 0">
+            AND gs.Category_Seq IN
+            (SELECT Seq FROM CategoryTree)
+        </if>
+        AND EXISTS
+        (
+            SELECT Seq FROM [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_FictitiousMall]
+            WHERE Del = 0 AND Shoes_Seq = gs.Seq
+            <if test="isTransferOut == 1">
+            	and Shop_Seq = #{shopSeq}
+            </if>
+            <if test="isTransferOut == 0">
+                and Shop_Seq != #{shopSeq}
+            </if>
+        )
+        ORDER BY
+        <if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:日均销量 -->
+            ssd.saleCount
+        </if>
+        <if test="orderBy==2">
+            sdd.stock
+        </if>
+        <if test="orderBy==4">
+            ssd.salesDayAvg
+        </if>
+        <if test="orderDir==0">
+            DESC
+        </if>
+        <if test="orderDir==1">
+            ASC
+        </if>
+    </select>
+
+    <select id="selectShopAndExportSize" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT s.* FROM (SELECT
+        Size_Seq
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData]
+        WHERE Del = 0 AND Shop_Seq = #{shopSeq} AND Shoes_Seq = #{shoesSeq}
+        GROUP BY Size_Seq
+        UNION ALL
+        SELECT
+        Size_Seq
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_FictitiousMall]
+        WHERE Del = 0 AND Shop_Seq = #{shopSeq} AND Shoes_Seq = #{shoesSeq}
+        GROUP BY Size_Seq)s
+        GROUP BY s.Size_Seq
+        ORDER BY s.Size_Seq ASC
+    </select>
+
+    <select id="selectExportShop" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        bs.Seq AS shopSeq,
+        bs.Name AS shopName,
+        gs.SizeName AS size,
+        fm.TransferOutNum AS transferOutNum
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_FictitiousMall] fm
+        LEFT JOIN
+        [JedSmartRetail].[dbo].[YHSR_Base_Shop] bs
+        ON bs.Seq = fm.Shop_Seq
+        LEFT JOIN
+        [JedSmartRetail].[dbo].[YHSR_Goods_Size] gs
+        ON gs.Seq = fm.Size_Seq
+        WHERE fm.Del = 0 AND fm.Shoes_Seq = #{shoesSeq}
+        ORDER BY gs.SizeName ASC
+    </select>
+
+    <select id="selectExportShopNum" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(s.Shop_Seq) FROM (SELECT
+        Shop_Seq
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_FictitiousMall]
+        WHERE Shoes_Seq = #{shoesSeq}
+        GROUP BY Shop_Seq)s
+    </select>
+
+    <select id="selectExportShoesNum" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT
+        SUM(TransferOutNum)
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_FictitiousMall]
+        WHERE Shoes_Seq = #{shoesSeq}
+    </select>
+     <select id="selectExportShoesNumByShopSeq" resultType="java.lang.Integer">
+     	 SELECT
+        SUM(TransferOutNum)
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_FictitiousMall]
+        WHERE Shoes_Seq = #{shoesSeq} 
+        <if test="shopSeq != null">
+        	AND Shop_Seq=#{shopSeq}
+        </if>
+     </select>
+
+    <delete id="deleteShoesByNumIsZero" parameterType="java.util.Map">
+        DELETE FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_FictitiousMall]
+        WHERE TransferOutNum &lt;= 0
+    </delete>
+
+    <delete id="deleteShoesByShopSeqAndShoesSeq" parameterType="java.util.Map">
+        DELETE FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_FictitiousMall]
+        WHERE TransferOutType = 0
+    </delete>
+
+    <delete id="deleteShoesBySeq" parameterType="java.lang.Integer">
+        DELETE FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_FictitiousMall]
+        WHERE Seq = #{seq}
+    </delete>
+</mapper>

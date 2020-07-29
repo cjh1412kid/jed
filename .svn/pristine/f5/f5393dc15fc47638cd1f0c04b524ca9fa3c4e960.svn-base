@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/goods/goods_list_win.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-pull-right aui-btn" tapmode onclick="openRightPane();"><img src="../../image/icon_filter.png" /></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16">
+            <div class="aui-tab" id="tab">
+                <div class="aui-tab-item aui-active">
+                    品类维度
+                </div>
+                <div class="aui-tab-item">
+                    门店维度
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- <div class="sub-header flex-wrap aui-border-b">
+        <div class="sort-btns flex-con flex-wrap">
+            <div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center active active-sort" data-orderBy="1" tapmode onclick="sort(this)">
+                <div class="sort-name">
+                    销售
+                </div>
+                <img data-orderDir="0" src="../../image/goods/icon_sort_21.png" />
+            </div>
+            <div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center" data-orderBy="2" tapmode onclick="sort(this)">
+                <div class="sort-name">
+                    库存
+                </div>
+                <img data-orderDir="0" src="../../image/goods/icon_sort_d.png" />
+            </div>
+            <div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center finish-box" data-orderBy="3" tapmode onclick="sort(this)">
+                <div class="sort-name">
+                    存销比
+                </div>
+                <img data-orderDir="0" src="../../image/goods/icon_sort_d.png" />
+            </div>
+        </div>
+
+    </div> -->
+
+    <div class="content flex-wrap flex-vertical"></div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript">
+    function openRightPane() {
+        api.openDrawerPane({
+            type: 'right'
+        });
+    }
+
+    var tab = new auiTab({
+        element: document.getElementById("tab"),
+    }, function(ret) {
+
+        _sendEvent('choseSellTypeEvent',ret.index - 1);
+        api.setFrameGroupIndex({
+            name: 'goods_sellandinventory_group',
+            index: ret.index - 1
+        });
+        if (ret.index==2) {
+         setTimeout(function(){
+           console.log($api.jsonToStr(pageParam));
+           _execScript('','goods_sellandinventory_frm','changepageParam('+$api.jsonToStr(pageParam)+')');
+         },300)
+        }
+
+    });
+    //商品排序
+    function sort(_obj) {
+        pageParam.orderBy = $api.attr(_obj, "data-orderBy");
+        if ($api.hasCls(_obj, "active")) {
+            if ($api.hasCls(_obj, "active-sort")) {
+                $api.attr($api.dom(_obj, "img"), "src", "../../image/goods/icon_sort_12.png");
+                $api.removeCls(_obj, "active-sort");
+                pageParam.orderDir = 1;
+            } else {
+                $api.addCls(_obj, "active-sort");
+                $api.attr($api.dom(_obj, "img"), "src", "../../image/goods/icon_sort_21.png");
+                pageParam.orderDir = 0;
+            }
+        } else {
+            $api.attr($api.dom($api.dom(".sort-btn.active"), "img"), "src", "../../image/goods/icon_sort_d.png");
+            $api.removeCls($api.dom(".sort-btn.active"), "active-sort");
+            $api.attr($api.dom(_obj, "img"), "src", "../../image/goods/icon_sort_21.png");
+            $api.addCls(_obj, "active-sort");
+            pageParam.orderDir = 0;
+            $api.removeCls($api.dom(".sort-btn.active"), "active");
+            $api.addCls(_obj, "active");
+        }
+        //广播
+        _sendEvent("query_filter_changed_event", pageParam);
+    }
+
+    /*
+     *改变商品布局(1.列表list, 2.网格grid)
+     */
+
+    var userInfo = $api.getStorage('userInfoKey');
+    var pageParam;
+    apiready = function() {
+
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom(".content"));
+        pageParam = api.pageParam;
+        console.log("pageParam:" + $api.jsonToStr(pageParam));
+        var headerPos = $api.offset(header);
+        var rect = {
+            x: 0,
+            y: 0,
+            w: 'auto',
+            h: 'auto',
+            marginLeft: 0, //相对父 window 左外边距的距离
+            marginTop: headerPos.h, //相对父 window 上外边距的距离
+            marginBottom: 0, //相对父 window 下外边距的距离
+            marginRight: 0 //相对父 window 右外边距的距离
+        };
+        var bounces = true;
+        var reload = true;
+        var allowEdit = false;
+        var animation = {
+            type: "none", //动画类型（详见动画类型常量）
+            //			subType : "from_right", //动画子类型（详见动画子类型常量）
+            duration: 0 //动画过渡时间，默认300毫秒
+        };
+        var frames = [{
+            name: 'goods_sellandinventory_frm_1',
+            url: 'goods_sellandinventory_frm_1.html',
+            bounces: true,
+            pageParam: pageParam
+        },{
+            name: 'goods_sellandinventory_frm',
+            url: 'goods_sellandinventory_frm.html',
+            bounces: false,
+            pageParam: pageParam
+        } ];
+        _openFrameGroup("goods_sellandinventory_group", frames, function(ret, err) {
+
+            				console.log("_openFrameGroup.ret:" + $api.jsonToStr(ret));
+
+
+            tab.setActive(ret.index + 1);
+        }, "", false, rect, 0, 0);
+
+        console.log($api.jsonToStr(pageParam));
+        _addEventListener("query_filter_changed_event", function(ret) {
+            console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+            pageParam = ret.value;
+        });
+        _addEventListener("pause", function(ret) {
+            // console.log("pause");
+            // alert('pause')
+        });
+        _addEventListener("viewappear", function(ret) {
+            // console.log("pause");
+            // alert('viewappear')
+            // _execScript('','goods_list_frm','refreshData();')
+        });
+        _addEventListener("viewdisappear", function(ret) {
+            // console.log("pause");
+            // alert('viewdisappear')
+        });
+        _addEventListener("query_filter_changed_event", function(ret) {
+
+            pageParam = ret.value;
+
+
+        });
+    };
+</script>
+
+</html>

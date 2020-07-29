@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property name="logDir" value="D:\\java\\log\\"/>
+
+  <!-- 配置文件轮转 -->
+  <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--<Encoding>UTF-8</Encoding>-->
+    <File>${logDir}/jed-interface.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>${logDir}\\history\\jed-interface.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+      <maxHistory>10</maxHistory>
+    </rollingPolicy>
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <pattern>%date [%thread] %-5level %logger{50}:%L - %msg%n</pattern>
+    </layout>
+  </appender>
+
+  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+  <logger name="org.springframework.web" level="INFO"/>
+  <logger name="org.springboot.sample" level="TRACE"/>
+
+  <!-- 开发环境 -->
+  <springProfile name="dev">
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.springboot.sample" level="INFO"/>
+    <logger name="io.nuite" level="DEBUG"/>
+    <logger name="io.nuite" level="DEBUG"/>
+  </springProfile>
+
+  <!-- 本地测试环境 -->
+  <springProfile name="localtest">
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.springboot.sample" level="INFO"/>
+    <logger name="io.nuite" level="DEBUG"/>
+    <logger name="io.nuite" level="DEBUG"/>
+    <root level="INFO">
+      <appender-ref ref="logfile"/>
+    </root>
+  </springProfile>
+
+  <!-- 测试环境 -->
+  <springProfile name="test">
+    <logger name="org.springframework.web" level="ERROR"/>
+    <logger name="org.springboot.sample" level="ERROR"/>
+    <logger name="io.nuite" level="INFO"/>
+    <logger name="io.nuite" level="INFO"/>
+    <root level="INFO">
+      <appender-ref ref="logfile"/>
+    </root>
+  </springProfile>
+
+  <!-- 生产环境 -->
+  <springProfile name="prod">
+    <logger name="org.springframework.web" level="ERROR"/>
+    <logger name="org.springboot.sample" level="ERROR"/>
+    <logger name="io.nuite" level="INFO"/>
+    <logger name="io.nuite" level="INFO"/>
+    <root level="INFO">
+      <appender-ref ref="logfile"/>
+    </root>
+  </springProfile>
+
+</configuration>

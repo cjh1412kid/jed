@@ -1,0 +1,487 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+	<!-- <link rel="stylesheet" type="text/css" href="../css/aui1x2x1/aui_iconfont.css"/> -->
+	<link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../css/tab_content_allot.css" />
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+	<header class="aui-bar aui-bar-nav aui-bg-theme aui-hide1" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick=""></a>
+		<div class="aui-title aui-text-default aui-font-size-16">
+			调拨
+		</div>
+	</header>
+	<div class="filter-row">
+		<div class="filter-item allot-type active" data-name="allot-type" data-value="1" data tapmode onclick="openDropPop(this)"><span class="value">调入</span><span class="indicator">‣</span></div>
+		<div class="filter-item allot-status active" data-name="allot-status" data-value="-1" tapmode onclick="openDropPop(this)"><span class="value">全部</span><span class="indicator">‣</span></div>
+		<div class="filter-item allot-date active aui-hide1" data-name="allot-date" data-value="" tapmode onclick="openDropPop(this)"><span class="value">日期</span><span class="indicator">‣</span></div>
+	</div>
+	<div class="content flex-con ">
+		<ul class="aui-list aui-collapse aui-list-noborder aui-margin-t-5">
+			<!-- <div class='aui-collapse-item'>
+				<li class='aui-list-item aui-collapse-header' tapmode>
+					<div class='aui-list-item-inner'>
+						<div class='aui-list-item-title '>
+							今天
+						</div>
+						<div class='aui-list-item-right aui-hide'>
+							<i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>
+						</div>
+					</div>
+				</li>
+				<div class='aui-collapse-content aui-show aui-border-b'>
+					<li class='aui-list-item aui-padded-0' data-shoes-seq='1' data-seq='60' tapmode onclick='itemClick(this)'>
+						<div class='aui-media-list-item-inner'>
+							<div class='aui-list-item-input aui-hide box-wrap box-horizontal-center box-vertical-center'>
+								<label class='aui-font-size-12 aui-margin-l-10'>
+									<input class='aui-radio' type='checkbox' name='radio'>
+								</label>
+							</div>
+							<div class='aui-list-item-media aui-margin-l-5 aui-padded-0 aui-margin-t-5 aui-margin-b-5'>
+								<img src='../../image/load_small_img.png'>
+							</div>
+							<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-margin-l-5 aui-border-t' style='display: block;'>
+								<div class='aui-list-item-text aui-margin-t-5'>
+									<div class='aui-list-item-title goods-title'>
+										带有媒体的列表二
+									</div>
+									<div class='status'>已完成</div>
+								</div>
+								<div class='aui-list-item-text aui-margin-t-5'>
+									<div class='aui-ellipsis-1 aui-font-size-12'>
+										<span class='attr-name'>货号：</span><span class='attr-value'>A54641635161</span>
+									</div>
+									<div class='aui-ellipsis-1 aui-font-size-12'><span class='attr-name'>已下架</span></div>
+								</div>
+								<div class='aui-info aui-font-size-12 aui-padded-0'>
+									<div class='aui-info-item'>
+										<div class='goods-price aui-text-left aui-text-theme'>
+											<span class='price-name aui-font-size-12 aui-margin-t-5'>￥</span><span class='price-value-left aui-font-size-18'>223</span><span class='price-value-right aui-font-size-12 aui-margin-t-5'>.00</span>
+										</div>
+									</div>
+									<div class='aui-info-item aui-hide'>
+										<i class='aui-iconfont aui-icon-cart aui-text-danger' data-contentSeq='1' tapmode onclick='laudAction(this)'></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li class='aui-list-item aui-padded-0' data-shoes-seq='2' data-seq='61' tapmode onclick='itemClick(this)'>
+						<div class='aui-media-list-item-inner'>
+							<div class='aui-list-item-input aui-hide box-wrap box-horizontal-center box-vertical-center'>
+								<label class='aui-font-size-12 aui-margin-l-10'>
+									<input class='aui-radio' type='checkbox' name='radio'>
+								</label>
+							</div>
+							<div class='aui-list-item-media aui-margin-l-5 aui-padded-0 aui-margin-t-5 aui-margin-b-5'>
+								<img src='../../image/load_small_img.png'>
+							</div>
+							<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-margin-l-5 aui-border-t' style='display: block;'>
+								<div class='aui-list-item-text aui-margin-t-5'>
+									<div class='aui-list-item-title goods-title'>
+										带有媒体的
+									</div>
+									<div class='status'>已完成</div>
+								</div>
+								<div class='aui-list-item-text aui-margin-t-5'>
+									<div class='aui-ellipsis-1 aui-font-size-12'>
+										<span class='attr-name'>货号：</span><span class='attr-value'>A54641635161</span>
+									</div>
+									<div class='aui-ellipsis-1 aui-font-size-12'><span class='attr-name'>已下架</span></div>
+								</div>
+								<div class='aui-info aui-font-size-12 aui-padded-0'>
+									<div class='aui-info-item'>
+										<div class='goods-price aui-text-left aui-text-theme'>
+											<span class='price-name aui-font-size-12 aui-margin-t-5'>￥</span><span class='price-value-left aui-font-size-18'>223</span><span class='price-value-right aui-font-size-12 aui-margin-t-5'>.00</span>
+										</div>
+									</div>
+									<div class='aui-info-item aui-hide'>
+										<i class='aui-iconfont aui-icon-cart aui-text-danger' data-contentSeq='1' tapmode onclick='laudAction(this)'></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</div>
+			</div> -->
+		</ul>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript">
+	function openDropPop(_obj) {
+		if ($api.hasCls(_obj, "opened")) {
+			$api.removeCls(_obj, 'opened');
+			api.closeFrame({
+				name: 'drop_filter'
+			});
+		} else {
+			if ($api.dom(".filter-item.opened")) {
+				$api.removeCls($api.dom(".filter-item.opened"), 'opened');
+			}
+			$api.addCls(_obj, 'opened');
+			var dataTypeName = $api.attr(_obj, "data-name");
+			var dataValue = $api.attr(_obj, "data-value");
+			api.openFrame({
+				name: 'drop_filter',
+				url: 'drop_filter.html',
+				rect: rect,
+				pageParam: {
+					pageName: api.frameName,
+					conditionName: dataTypeName,
+					conditionValue: {
+						name: $api.text($api.dom(_obj, ".value")),
+						value: dataValue
+					},
+					allotType: $api.attr($api.dom(".allot-type"), "data-value")
+				},
+				bounces: false,
+				bgColor: 'rgba(0, 0, 0, 0.54)',
+				reload: true,
+			});
+		}
+	}
+
+	function closeDropPop() {
+		api.closeFrame({
+			name: 'drop_filter'
+		});
+		if ($api.dom(".filter-item.opened")) {
+			$api.removeCls($api.dom(".filter-item.opened"), 'opened');
+		}
+	}
+
+	function _back() {
+		if (api.pageParam.flag == "main_frm" || api.pageParam.flag == "my_win") {
+			api.closeWin();
+		}
+		api.closeToWin({
+			name: 'selected_win'
+		});
+		_sendEvent('closeWinEvent');
+	}
+
+	function getStatusName(code) {
+		var name = "";
+		switch (code) {
+			case 0:
+				name = "待处理";
+				break;
+			case 1:
+				name = "已完成";
+				break;
+			case 2:
+				name = "已作废";
+				break;
+			default:
+		}
+		return name;
+	}
+
+	function itemClick(_obj) {
+		var i = $api.attr(_obj, 'data-parent-index');
+		var j = $api.attr(_obj, 'data-myself-index');
+		var goods = datas[i].shoeIdSizeNumList[j];
+		console.log("goods:" + $api.jsonToStr(goods));
+		var pageParam = {
+			list: goods,
+			type: type,
+			state: state
+		}
+		_openWin('allot_detail_win', 'allot_detail_win.html', pageParam)
+	}
+
+	function getItemHtmlStr(shoeIdSizeNumList, parentIndex) {
+		var htmlStr = "";
+		for (var i = 0; i < shoeIdSizeNumList.length; i++) {
+			var data = shoeIdSizeNumList[i];
+			htmlStr += "<li class='aui-list-item aui-padded-0' data-parent-index='" + parentIndex + "' data-myself-index='" + i + "' tapmode onclick='itemClick(this)'>";
+			htmlStr += "<div class='aui-media-list-item-inner'>";
+			htmlStr += "<div class='aui-list-item-input aui-hide box-wrap box-horizontal-center box-vertical-center'>";
+			htmlStr += "<label class='aui-font-size-12 aui-margin-l-10'>";
+			htmlStr += "<input class='aui-radio' type='checkbox' name='radio' onclick='return false;'>";
+			htmlStr += "</label>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-media aui-margin-l-5 aui-padded-0 aui-margin-t-5 aui-margin-b-5'>";
+			// htmlStr += "<img src='../image/load_small_img.png' data-src='" + data.img + "'>";
+			htmlStr += "<img src='" + data.img + "'>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-margin-l-5 aui-border-b' style='display: block;'>";
+
+			//货号 状态
+			htmlStr += "<div class='aui-list-item-text aui-margin-t-5 aui-margin-b-5'>";
+			htmlStr += "<div class='aui-list-item-title aui-font-size-14  goods-title'>";
+			htmlStr += data.goodId;
+			htmlStr += "</div>";
+			htmlStr += "<div class='status status-" + data.state + "'>" + getStatusName(data.state) + "</div>";
+			htmlStr += "</div>";
+
+			//尺码数量
+			htmlStr += "<div class='aui-list-item-text aui-size-num aui-font-size-12 flex-wrap'>";
+			htmlStr += "<div class='name'>尺码/数量：</div>";
+			htmlStr += "<div class='value flex-con'>";
+			var sizeTotalNumMap = data.sizeTotalNumMap;
+			for (var variable in sizeTotalNumMap) {
+				if (sizeTotalNumMap.hasOwnProperty(variable)) {
+					htmlStr += "<div class='aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center'>";
+					htmlStr += variable + "/" + sizeTotalNumMap[variable];
+					htmlStr += "</div>";
+				}
+			}
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			//总量
+			htmlStr += "<div class='aui-info aui-font-size-12 aui-padded-0'>";
+			htmlStr += "<div class='aui-info-item total-num'>";
+			htmlStr += "<span class='name'>总量：</span>";
+			htmlStr += "<span class='value'>" + data.allTotalNum + "</span>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</li>";
+		}
+		return htmlStr;
+	}
+
+	function getHtmlStr() {
+		// console.log("datas:" + $api.jsonToStr(datas));
+		var htmlStr = "";
+		for (var i = 0; i < datas.length; i++) {
+			var browseTime = datas[i].date;
+			var browseDate = _getFormatedDate(browseTime, "MM月dd日");
+			//				console.log("browseDate:" + browseDate);
+			htmlStr += "<div class='aui-collapse-item'>";
+			htmlStr += "<li class='aui-list-item aui-collapse-header' tapmode>";
+			htmlStr += "<div class='aui-list-item-inner aui-border-b'>";
+			htmlStr += "<div class='aui-list-item-title'>";
+			htmlStr += browseDate;
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-right aui-hide'>";
+			htmlStr += "<i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</li>";
+			htmlStr += "<div class='aui-collapse-content aui-show'>";
+			htmlStr += getItemHtmlStr(datas[i].shoeIdSizeNumList, i);
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+		}
+		return htmlStr;
+	}
+
+	function initUI() {
+		var htmlStr = "";
+		if (!_isArrayNull(datas)) {
+			htmlStr +='<ul class="aui-list aui-collapse aui-list-noborder aui-margin-t-5">';
+			htmlStr += getHtmlStr();
+			htmlStr+='</ul>';
+			//			console.log("htmlStr:" + htmlStr);
+		} else {
+			htmlStr += '<div class="no-data">暂无数据</div>';
+		}
+		$api.html($api.dom(".content"), htmlStr);
+		setTimeout(function() {
+			api.parseTapmode();
+			api.refreshHeaderLoadDone();
+			if ($api.hasCls($api.dom("body"), "aui-hide")) {
+				$api.removeCls($api.dom("body"), "aui-hide");
+			}
+			// new auiLazyload({
+			// 	errorImage: "../image/error_small_img.png"
+			// });
+			closeUILoading();
+		}, window.refreshLoadDoneTimeOut);
+	}
+
+	function reDatas(_datas) {
+		if (!_isArrayNull(_datas)) {
+			for (var i = 0; i < _datas.length; i++) {
+				if (!_isArrayNull(_datas[i].shoeIdSizeNumList)) {
+					datas.push(_datas[i]);
+				}
+			}
+		}
+	}
+	//调拨列表
+	function getDatas() {
+		datas = [];
+		var url = window.myServerUrl + "order/app/allocateTransferInApplication/transferInOutList";
+		url += "?type=" + type;
+		url += "&state=" + state;
+		// url += "&start=" + start;
+		// url += "&num=" + num;
+		url += "&startDate=" + startDateStr;
+		url += "&endDate=" + endDateStr;
+		console.log("获取调拨列表-->url:" + url);
+		isAjaxing = true;
+		_ajax(url, "transferInOutList", function(ret, err) {
+			var _datas = [];
+			if (ret) {
+				console.log("获取调拨列表-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					_datas = ret.result;
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("获取调拨列表-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			reDatas(_datas);
+			initUI();
+		});
+	}
+
+	function closeUILoading() {
+		UILoading.closeKeyFrame();
+	}
+
+	function openUILoading() {
+		UILoading.keyFrame({
+			rect: {
+				w: 102,
+				h: 102
+			},
+			styles: {
+				bg: 'rgba(0,0,0,0)',
+				corner: 5,
+				interval: 50,
+				frame: {
+					w: 102,
+					h: 102
+				}
+			},
+			//				content : [{
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}, {
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}],
+			mask: "rgba(255,0,0,0)"
+		}, function(ret) {
+			//								alert(JSON.stringify(ret));
+			console.log(12345);
+		});
+	}
+
+	//初始化数据
+	function initData() {
+		pageParam = {
+			pageName: api.frameName,
+			conditionName: "allot-type",
+			conditionValue: {
+				name: "调入",
+				value: "1"
+			},
+			allotType: "1"
+		};
+		datas = [];
+		start = 1;
+		num = 10;
+		UILoading = api.require('UILoading');
+	}
+
+	var rect;
+	var pageParam;
+	var datas = new Array();
+	var start;
+	var num;
+	var startDateStr, endDateStr;
+	var isAjaxing = false;
+	var tempBrowseDate = "";
+	var isSelectedAll = false;
+	var UILoading;
+	var type = 1;
+	var state = -1;
+	apiready = function() {
+		var header = $api.byId('aui-header');
+		// var header = $api.dom(".filter-row");
+		$api.fixStatusBar(header);
+		var headerPos = $api.offset(header);
+		initData();
+		// if (pageParam.conditionName == "allot-type" && pageParam.conditionValue.value == "2") {
+		// 	if (!$api.hasCls($api.dom(".allot-status"), 'aui-hide')) {
+		// 		$api.addCls($api.dom(".allot-status"), 'aui-hide');
+		// 	}
+		// } else {
+		// 	if ($api.hasCls($api.dom(".allot-status"), 'aui-hide')) {
+		// 		$api.removeCls($api.dom(".allot-status"), 'aui-hide');
+		// 	}
+		// }
+		$api.text($api.dom("." + pageParam.conditionName + " .value"), pageParam.conditionValue.name);
+		$api.attr($api.dom("." + pageParam.conditionName), 'data-value', pageParam.conditionValue.value);
+
+		var endDate = new Date();
+		endDateStr = _getFormatedDate(endDate, 'yyyy/MM/dd');
+		var startDate = new Date(endDate).setDate(endDate.getDate() - 7);
+		startDateStr = _getFormatedDate(startDate, 'yyyy/MM/dd');
+		$api.text($api.dom(".allot-date .value"), _getFormatedDate(startDate, 'MM月dd日') + "至" + _getFormatedDate(endDate, 'MM月dd日'));
+		$api.attr($api.dom(".allot-date"), 'data-value', startDate + ';' + endDate);
+		rect = {
+			x: 0, //左上角x坐标
+			y: 0, //左上角y坐标
+			w: 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+			h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+			marginLeft: 0, //相对父window左外边距的距离
+			marginTop: headerPos.h + $api.offset($api.dom(".filter-row")).h + 1, //相对父window上外边距的距离
+			marginBottom: 0, //相对父window下外边距的距离
+			marginRight: 0 //相对父window右外边距的距离
+		}; //类型：JSON对象,默认值：充满整个父页面,描述：（可选项）frameGroup的位置和大小，设置margin后，在不同手机上面会保持与父页面的各方向边距一致，而中间区域会自动扩充。
+		setTimeout(function() {
+			openUILoading();
+			getDatas();
+		}, 150);
+		api.parseTapmode();
+		_addEventListener("filter_sure_event", function(ret) {
+			if (ret.value.pageName != api.frameName) {
+				return;
+			}
+			pageParam = ret.value;
+			console.log("pageParam:" + $api.jsonToStr(pageParam));
+			// if (pageParam.conditionName == "allot-type" && pageParam.conditionValue.value == "2") {
+			// 	if (!$api.hasCls($api.dom(".allot-status"), 'aui-hide')) {
+			// 		$api.addCls($api.dom(".allot-status"), 'aui-hide');
+			// 	}
+			// } else {
+			// 	if ($api.hasCls($api.dom(".allot-status"), 'aui-hide')) {
+			// 		$api.removeCls($api.dom(".allot-status"), 'aui-hide');
+			// 	}
+			// }
+			$api.text($api.dom("." + pageParam.conditionName + " .value"), pageParam.conditionValue.name);
+			$api.attr($api.dom("." + pageParam.conditionName), 'data-value', pageParam.conditionValue.value);
+			switch (pageParam.conditionName) {
+				case 'allot-type':
+					type = pageParam.conditionValue.value;
+					break;
+				case 'allot-status':
+					state = pageParam.conditionValue.value;
+					break;
+				case 'allot-date':
+					startDateStr = pageParam.conditionValue.value.split(';')[0];
+					endDateStr = pageParam.conditionValue.value.split(';')[1];
+					break;
+				default:
+			}
+			getDatas();
+		});
+		_addEventListener("refreshMessageListEvent", function(ret) {
+			getDatas();
+		})
+	};
+</script>
+
+</html>

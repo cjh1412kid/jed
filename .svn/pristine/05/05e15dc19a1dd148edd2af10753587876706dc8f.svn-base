@@ -1,0 +1,422 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>审核</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/cargo_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16">调货明细</div>
+    </header>
+    <div class="listWrap flex-con">
+        <div class="card flex-wrap flex-vertical">
+            <div class="icon-img flex-con flex-wrap aui-margin-t-10">
+                <div class="from aui-margin-l-10 aui-margin-r-10 ">
+                    <div class="icon"></div>
+                </div>
+                <div class="goods-image flex-con box-wrap box-vertical-center box-horizontal-center">
+                    <img src="" alt="">
+                </div>
+                <div class="to aui-margin-l-10 aui-margin-r-10 ">
+                    <div class="icon"></div>
+                </div>
+            </div>
+            <div class="dirction flex-wrap">
+                <div class="from aui-margin-l-10 aui-margin-r-10">
+                    <div class="name from-shop"></div>
+                </div>
+                <div class="arrow-detail flex-con flex-vertical">
+                    <div class="goods-id"></div>
+                    <div class="arrow-icon flex-wrap">
+                        <div class="line-horizontal flex-con"></div>
+                        <div class="line-oblique"></div>
+                    </div>
+                    <div class="goods-num"></div>
+                </div>
+                <div class="to aui-margin-l-10 aui-margin-r-10">
+                    <div class="name to-shop"></div>
+                </div>
+            </div>
+        </div>
+        <ul class="priceList aui-margin-t-10">
+            <!-- <li class="item">
+                <div class="title flex-wrap">
+                    <div class="font flex-2">货号</div>
+                    <div class="font1 good-id flex-3">A566464</div>
+                    <div class="font flex-2">调出总数</div>
+                    <div class="font1 flex-3">10</div>
+                </div>
+                <div class="content">
+                    <div class="size-item">
+                        <div class="items">
+                            <div class="font2 spe">尺码</div>
+                            <div class="font2 spe">调出数量</div>
+                        </div>
+                        <div class="items">
+                            <div class="font3">36</div>
+                            <div class="font1">1</div>
+                        </div>
+                    </div>
+                    <div class="address">
+                        <div class="address-item">
+                          <div class="shopname">火车站店</div>
+                          <div class="shoptype">调出方</div>
+                        </div>
+                        <div class="address-item">
+                          <div class="img-name">调至</div>
+                          <img src="../image/arrows.jpg" alt="">
+                        </div>
+                        <div class="address-item">
+                          <div class="shopname">石浦店</div>
+                          <div class="shoptype">调入方</div>
+                        </div>
+                    </div>
+                    <div class="time">
+                        <div class="font2">08.15 16:00</div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="kind1 flex-wrap">
+                        <input type="text" placeholder="输入调货说明">
+                        <div class="refuse flex-style ">拒绝</div>
+                        <div class="agree flex-style ">同意</div>
+                    </div>
+                    <div class="kind1 flex-wrap">
+                      <div class="flex-style">
+                        <div class="font4">已拒绝</div>
+                        <div class="font5">(调货说明:<span>暂时没货</span>)</div>
+                      </div>
+                      <div class="font2">11.11</div>
+                    </div>
+                    <div></div>
+                </div>
+            </li> -->
+        </ul>
+        <div class="extra flex-wrap flex-vertical aui-margin-t-10">
+            <div class="extra-item flex-wrap">
+                <div class="name">ERP单号</div>
+                <div class="flex-con aui-border-b">
+                    <input class="erp-order-num" type="text" name="" value="" readonly="" placeholder="请输入ERP单号">
+                </div>
+                <div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">
+                </div>
+            </div>
+            <div class="extra-item extra-item-express-company flex-wrap">
+                <div class="name">物流公司</div>
+                <div class="flex-con aui-border-b">
+                    <input class="express-company" data-seq="" type="text" name="" value="" placeholder="请选择物流公司" readonly="" onclick="selectCompany(this)">
+                </div>
+                <div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">
+                </div>
+            </div>
+            <div class="extra-item flex-wrap">
+                <div class="name">物流单号</div>
+                <div class="flex-con aui-border-b">
+                    <input class="express-num" type="text" name="" value="" readonly="" placeholder="请输入物流单号">
+                </div>
+                <div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">
+                </div>
+            </div>
+            <div class="extra-item flex-wrap">
+                <div class="name">执行数量</div>
+                <div class="aui-border-b">
+                    <input class="express-carrynum" type="number" name="" value="" readonly="" placeholder="请输入执行数量" oninput="changeCarrynum(this)">
+                </div>
+                <div class="flex-con reasons aui-border-b" tapmode onclick="choseReason(this)">
+                  <div class="reason">
+                    <div class="reason-title" data-type="0">请选择原因</div>
+                    <div class="aui-iconfont aui-icon-down aui-margin-l-10"></div>
+                  </div>
+                  <div class="reason-content aui-hide">
+                    <div class="aui-border-b" data-type="1" tapmode onclick="choseReasonType(this)">无库存</div>
+                    <div class="aui-border-b" data-type="2" tapmode onclick="choseReasonType(this)">已销售</div>
+                    <div data-type="3" tapmode onclick="choseReasonType(this)">串码</div>
+                  </div>
+                </div>
+                <div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="aui-bar aui-bar-tab aui-margin-t-15 aui-hide">
+        <div class="aui-bar-tab-item agree aui-font-size-16 aui-hide" data-type="1" tapmode style="width: auto;" onclick="btnClick(this)">同意</div>
+        <div class="aui-bar-tab-item refuse aui-font-size-16 aui-hide" data-type="2" tapmode style="width: auto;" onclick="btnClick(this)">拒绝</div>
+        <div class="aui-bar-tab-item edit aui-font-size-16 aui-hide" data-type="1" tapmode style="width: auto;" onclick="btnClick(this)">保存修改</div>
+    </footer>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/common/my_common.js"></script>
+<script type="text/javascript" src="../script/common/jquery_min.js"></script>
+<script type="text/javascript">
+    function changeCarrynum(obj){
+      if (parseInt($(obj).val())==datas.totalNum) {
+        $('.reasons').addClass('aui-hide');
+      }else if (parseInt($(obj).val())>datas.totalNum) {
+        $(obj).val(datas.totalNum);
+        $('.reasons').addClass('aui-hide');
+      }else {
+        $('.reasons').removeClass('aui-hide');
+      }
+    }
+    function choseReasonType(obj){
+        $('.reason-title').text($(obj).text());
+        $('.reason-title').attr('data-type',$(obj).attr('data-type'));
+        $('.reason-content').animate({opticy: '0'}, "slow");
+        $('.reason-content').addClass('aui-hide');
+    }
+    function choseReason(obj){
+      if (applicationState==2||applicationType==1) {
+        return;
+      }
+      if (!$(obj).hasClass('hot')) {
+        $(obj).addClass('hot');
+        $($(obj).find('.aui-iconfont')).css({'transform':'rotate(180deg)'});
+        $('.reason-content').animate({opticy: '1'}, "slow");
+        $('.reason-content').removeClass('aui-hide');
+      }else {
+        $(obj).removeClass('hot');
+        $($(obj).find('.aui-iconfont')).css({'transform':'rotate(0)'});
+        $('.reason-content').animate({opticy: '0'}, "slow");
+        $('.reason-content').addClass('aui-hide');
+      }
+    }
+    function selectCompany(_obj) {
+        if ($api.hasCls($api.dom(".extra-item-express-company .aui-iconfont"), "aui-invisible")) {
+            return;
+        }
+        _openWin("logistics_win", "logistics_win.html", {
+            type: "cargo_win"
+        });
+    }
+
+    function handleTransferApplication(_state) {
+        var url = window.myServerUrl + "order/app/allocateTransfer/handleTransferApplication";
+        var erpOrderNum = $api.trim($api.val($api.dom(".erp-order-num")));
+        var expressCompanySeq = $api.attr($api.dom(".express-company"), "data-seq");
+        var expressNum = $api.trim($api.val($api.dom(".express-num")));
+        var carryNum = $api.trim($('.express-carrynum').val());
+        var reasonType = $('.reason-title').attr('data-type');
+        var remark = '';
+        if (_isStringNull($('.express-carrynum').val())) {
+          _toast('执行数量为必填');
+          return;
+        }else {
+          if (carryNum==datas.totalNum) {
+            remark = carryNum
+          }else if (carryNum<datas.totalNum) {
+            if (reasonType=='0') {
+              _toast('执行数量与原因为必填');
+              return;
+            }
+            remark = carryNum+','+reasonType
+          }
+        }
+        if (_state == "1") {
+            if (erpOrderNum == datas.erpOrderNum && expressCompanySeq == datas.expressCompanySeq && expressNum == datas.expressNum&&remark==datas.remark) {
+                if (!_isStringNull(erpOrderNum) || !_isStringNull(expressCompanySeq) || !_isStringNull(expressNum)||!_isStringNull(remark)) {
+                    _toast("未做任何修改");
+                    return;
+                }
+            }
+        }
+        var _data = {
+            values: {
+                applicationSeq: applicationSeq,
+                state: _state,
+                erpOrderNum: erpOrderNum,
+                expressCompanySeq: expressCompanySeq,
+                expressNum: expressNum,
+                remark:remark
+            }
+        };
+        console.log("处理调货申请（同意、拒绝）:" + url);
+        console.log("处理调货申请（同意、拒绝）._data:" + $api.jsonToStr(_data));
+
+        _ajax(url, "handleTransferApplication", function(ret, err) {
+            if (ret.code == 0) {
+                console.log("处理调货申请（同意、拒绝）.ret:" + $api.jsonToStr(ret));
+                _myAlert1("操作成功", "确定", function(ret,err) {
+                  _sendEvent('refreshMessageEvent');
+                  api.closeWin();
+
+                });
+
+            } else {
+                _toast(window.ajaxErrorMessage);
+            }
+        }, "post", _data);
+    }
+
+    function btnClick(obj) {
+        var state = $(obj).attr('data-type');
+        if (state == "2") {
+            //拒绝
+            _confirm("提示", "拒绝后无法修改，您确认要拒绝吗？", ["取消", "确定"], function(ret, err) {
+                if (ret.buttonIndex == 2) {
+                    handleTransferApplication(state);
+                }
+            });
+        } else {
+            handleTransferApplication(state);
+        }
+    }
+
+    function getLogistics(_seq) {
+        for (var i = 0; i < logisticsList.length; i++) {
+            if (logisticsList[i].seq == _seq) {
+                return logisticsList[i].name;
+            }
+        }
+        return "";
+    }
+
+    function initUI() {
+        if (_isObjectNull(datas)) {
+            return;
+        }
+        $api.text($api.dom(".from-shop"), datas.outShopName);
+        $api.text($api.dom(".to-shop"), datas.inShopName);
+        $api.text($api.dom(".goods-id"), datas.applicationGoodID);
+        $api.html($api.dom(".goods-num"), datas.totalNum + "<span class='num-unit aui-margin-l-5'>双</span>");
+        $api.attr($api.dom(".goods-image img"), 'src', datas.img);
+
+        $api.val($api.dom(".erp-order-num"), datas.erpOrderNum);
+        $api.val($api.dom(".express-company"), getLogistics(datas.expressCompanySeq));
+        $api.val($api.dom(".express-num"), datas.expressNum);
+
+
+        var remarkList=[];
+        if (datas.remark.length==1) {
+          $('.express-carrynum').val(datas.remark);
+          $('.reasons').addClass('aui-hide');
+        }else if (datas.remark.length>1) {
+            remarkList= datas.remark.split(',');
+            $api.val($api.dom(".express-carrynum"), remarkList[0]);
+            if (remarkList[1]=='1') {
+              $('.reason-title').text('无库存');
+              $('.reason-title').attr('data-type','1');
+            }else if (remarkList[1]=='2') {
+              $('.reason-title').text('已销售');
+              $('.reason-title').attr('data-type','2');
+            }else if(remarkList[1]=='3'){
+              $('.reason-title').text('串码');
+              $('.reason-title').attr('data-type','3');
+            }
+
+        }
+
+       if (_isStringNull($('.express-carrynum').val())) {
+         $('.reasons').addClass('aui-hide')
+       }
+
+        var sizeList = datas.everySizeNum;
+        if (_isArrayNull(sizeList)) {
+            return;
+        }
+        var str = '';
+        str += '<li class="item">';
+        str += '<div class="content">';
+        str += '<div class="size-item">';
+        for (var i = 0; i < sizeList.length; i++) {
+            if (i % 4 == 0) {
+                str += '<div class="items">';
+                str += '<div class="font2 spe">尺码</div>';
+                str += '<div class="font2 spe">调出数量</div>';
+                str += '</div>';
+            }
+            str += '<div class="items">';
+            str += '<div class="font3">' + sizeList[i].sizeSeq + '</div>';
+            str += '<div class="font1">' + sizeList[i].num + '</div>';
+            str += '</div>';
+        }
+        str += '</div>';
+        str += '<div class="time">';
+        var time = _getFormatedDate(datas.inputTime, 'yyyy年MM月dd日  HH时mm分');
+        str += '<div>' + time + '</div>';
+        str += '</div>';
+        str += '</div>';
+        str += '</li>';
+        $api.html($api.dom('.priceList'), str);
+    }
+
+    /**
+     *调货消息详情
+     */
+    function getDatas() {
+        var url = window.myServerUrl + "order/app/allocateTransfer/getTransferMessageDetail";
+        url += "?applicationSeq=" + applicationSeq;
+        console.log("调货消息详情-->url:" + url);
+        _ajax(url, "getTransferMessageDetail", function(ret, err) {
+            if (ret) {
+                console.log("调货消息详情-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    datas = ret.result[0];
+                }
+            } else {
+                console.log("调货消息详情-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            initUI();
+        });
+    }
+
+    function initData() {
+        var pageParam = api.pageParam;
+        console.log("pageParam:" + $api.jsonToStr(pageParam));
+        applicationType = pageParam.applicationType;
+        applicationSeq = pageParam.applicationSeq;
+        applicationState = pageParam.applicationState;
+        logisticsList = $api.getStorage("logisticsListKey");
+    }
+
+
+    var applicationType; //1调入、2调出
+    var datas = [];
+    var applicationSeq;
+    var applicationState;
+    var logisticsList = [];
+    var apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        initData();
+        if (applicationType == 2 && applicationState != 2) {
+            $api.removeCls($api.dom(".aui-bar-tab"), 'aui-hide');
+            $api.removeAttr($api.dom(".erp-order-num"), 'readonly');
+            $api.removeAttr($api.dom(".express-num"), 'readonly');
+            $api.removeAttr($api.dom(".express-carrynum"), 'readonly');
+            $api.removeCls($api.dom(".extra-item-express-company .aui-iconfont"), 'aui-invisible');
+
+            if (applicationState == 0) {
+                //待处理
+                $api.removeCls($api.dom(".aui-bar-tab-item.agree"), 'aui-hide');
+                $api.removeCls($api.dom(".aui-bar-tab-item.refuse"), 'aui-hide');
+            } else if (applicationState == 1) {
+                //已同意
+                $api.removeCls($api.dom(".aui-bar-tab-item.edit"), 'aui-hide');
+            }
+        }
+        getDatas();
+        //选择物流
+        _addEventListener("choseLogisticsEvent", function(ret) {
+            $api.val($api.dom(".express-company"), ret.value.name);
+            $api.attr($api.dom(".express-company"), 'data-seq', ret.value.seq);
+        })
+    }
+</script>
+
+</html>

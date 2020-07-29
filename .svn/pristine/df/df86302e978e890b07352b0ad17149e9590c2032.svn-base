@@ -1,0 +1,49 @@
+.aui-btn img{
+	width: 1.05rem;
+	height: 1.05rem;
+}
+.aui-iconfont{
+	font-weight: bold!important;
+	color: #505050!important;
+}
+.sub-header{
+	background-color:#FFFFFF;
+//	margin-top:0.05rem;
+	height: 1.75rem;
+	font-size: 0.65rem;
+	color: #505050;
+}
+.sort-btn{
+	font-size: 0.7rem;
+}
+.sort-btn.active{
+	font-size: 0.7rem;
+	color: rgba(255,81,0,1);
+}
+.sort-name{
+	margin-top:0.1rem;
+	margin-right:0.1rem;
+	line-height:0.7rem;
+	height: 0.7rem;
+}
+.sort-btn img{
+	width: 0.45rem;
+	display: block;
+}
+.style-btn{
+	width: 2.0rem;
+	height: 1.3rem;
+}
+.style-btn img{
+	width:0.7rem;
+	height: 0.7rem;
+}
+.order-metting-tips {
+    height: 1.4rem;
+    background: #e2e7e0;
+    opacity: 0.9;
+    font-size: 0.6rem;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    color: rgba(80, 80, 80, 1);
+}

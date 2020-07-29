@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="closeWin()"><span class="aui-iconfont aui-icon-left aui-text-default"></span></a>
+			<a class="aui-btn aui-pull-right" tapmode onclick="toAddAccountWin()"><span class="aui-iconfont aui-icon-plus aui-text-default"></span></a>
+			<div class="aui-title aui-text-default">
+				帐号管理
+			</div>
+		</header>
+	</body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../script/common/common.js"></script>
+	<script type="text/javascript">
+		function toAddAccountWin() {
+	
+				_openWin('add_account_win', 'add_account/add_account_win.html');
+
+		}
+
+		function closeWin() {
+			api.closeWin({
+			});
+		}
+
+		var accountNumData;
+		apiready = function() {
+			api.parseTapmode();
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			$api.fixTabBar($api.dom("body"));
+			var headerPos = $api.offset(header);
+			var rect = {
+				x : 0,
+				y : headerPos.h,
+				w : 'auto',
+				h : 'auto'
+			}
+			var animation = {
+				type : "none", //动画类型（详见动画类型常量）
+				subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 0 //动画过渡时间，默认300毫秒
+			}
+			_openFrame("authority_frm", "authority_frm.html", rect, {}, true, false, false, animation);
+			_addEventListener("accountNumDataEvent", function(ret) {
+				console.log("accountNumDataEvent.ret:" + $api.jsonToStr(ret));
+				accountNumData = ret.value;
+			});
+		};
+	</script>
+</html>

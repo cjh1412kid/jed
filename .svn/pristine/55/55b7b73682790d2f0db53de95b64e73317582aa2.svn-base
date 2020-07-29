@@ -1,0 +1,258 @@
+<!-- 品牌管理页面 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>货品管理</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet" href="../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../../css/AdminLTE.min.css">
+<link rel="stylesheet" href="../../../css/all-skins.min.css">
+<link rel="stylesheet"
+	href="../../../plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet"
+	href="../../../plugins/datepicker/datepicker3.css">
+<link rel="stylesheet"
+	href="../../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet"
+	href="../../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../../css/main.css">
+<script src="../../../libs/jquery.min.js"></script>
+<script src="../../../libs/jquery.form.js"></script>
+<script src="../../../plugins/layer/layer.js"></script>
+<script src="../../../libs/bootstrap.min.js"></script>
+<script src="../../../libs/vue.min.js"></script>
+<script src="../../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../../plugins/daterangepicker/moment.min.js"></script>
+<script src="../../../plugins/daterangepicker/daterangepicker.js"></script>
+<script src="../../../plugins/datepicker/bootstrap-datepicker.js"></script>
+<script
+	src="../../../plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="../../../js/common.js"></script>
+<script src="../../../plugins/laydate/laydate.js"></script>
+<style>
+.ztree li a.curSelectedNode {
+	background-color: #337ab7;
+	color: white;
+}
+
+.form-horizontal {
+	width: 600px;
+}
+
+.platform-check-text {
+	line-height: 32px;
+	font-size: 16px;
+	font-weight: bold;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+.form-horizontal .box.box-primary {
+	padding-top: 10px;
+	padding-bottom: 5px;
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.thumbnail.image {
+	width: 100px;
+	height: 100px;
+	margin-left: 10px;
+	float: left;
+	position: relative;
+}
+
+.thumbnail.image .fa-remove {
+	cursor: pointer;
+	color: red;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.choose-image {
+	float: left;
+	width: 100%;
+	height: 100%;
+	font-size: 0;
+}
+
+input.choose-image::-webkit-file-upload-button {
+	background: rgba(0, 0, 0, .5);
+	border: 0;
+	padding: 38px 16px;
+	font-size: 15px;
+	color: #ffffff;
+}
+
+.dropdown-menu a {
+	cursor: pointer;
+}
+
+div#rMenu {
+	position: absolute;
+	visibility: hidden;
+	top: 0;
+	background-color: #eee;
+	text-align: left;
+	padding: 2px;
+}
+
+div#rMenu ul li {
+	margin: 1px 0;
+	padding: 0 5px;
+	cursor: pointer;
+	list-style: none outside none;
+	background-color: #DFDFDF;
+}
+
+#rMenu a {
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+	<div id="rrapp">
+		<!-- <div class="col-md-2  col-sm-5" style="background-color: #eee">
+			<ul id="SXTree" class="ztree"></ul>
+			<div id="rMenu">
+				<a id="m_add" class="list-group-item" onclick="addTreeNode();">增加补单时间</a>
+				<a id="m_reset" class="list-group-item" onclick="beforeEditName();">修改补单时间</a>
+				<a id="m_del" class="list-group-item" onclick="removeTreeNode();">删除补单时间</a>
+			</div>
+		</div> -->
+		<div class="col-md-12 col-sm-6" v-show="showList" >
+		<div class="form-group col-sm-3">
+					<div class="col-sm-4 control-label" style="top: 10px">补单时间:</div>
+					<div class="col-sm-7">
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right"
+								id="inDatePicker" readonly="readonly"
+								v-model="inDateTime">
+						</div>
+					</div>
+				</div>
+					<div class="form-group col-sm-1">
+					<div class="col-xs-3 control-label">
+						<a class="btn btn-primary" @click="search"> 查询 </a>
+					</div>
+				</div>
+					<div class="grid-btn" style="height: 30px">
+						<div class="form-group col-sm-1">
+							<div class="col-xs-3 control-label">
+								<a class="btn btn-primary" @click="exportRecord"> 批量导出</a>
+							</div>
+						</div>
+					</div>
+					<div style="display: none;">
+						<form id="exportQRCodeForm" method="get">
+							<input type="hidden" name="token"> <input type="hidden"
+								name="seqs">
+						</form>
+					</div>
+			<table id="jqGrid"></table>
+			<div id="jqGridPager"></div>
+		</div>
+	<div id="replenishDetail" style="display: none; padding: 5px;">
+		<div style="text-align: center;">{{shoesReplenishEntity.goodID}}</div>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>尺码</th>
+					<th v-for="detail in replenishDetail">{{detail.sizeName}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>补单数量</th>
+					<th v-for="detail in replenishDetail">{{detail.replenishNum}}</th>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="replenishPlanWindow" style="display: none; padding: 5px;">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th style="width: 200px;">到货时间</th>
+					<th>到货数量</th>
+					<th>创建时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="item in replenishPlans">
+					<td>{{item.arrivedTime}}</td>
+					<td>{{item.arrivedNum}}</td>
+					<td>{{item.inputTime}}</td>
+				</tr>
+			</tbody>
+			<tr v-show="surplus>0">
+				<td><input type="text" id="replenishTime"
+					v-model="ReplenishTime" placeholder="到货时间(2019/04/05 12:00)" /></td>
+				<td><input type="number" v-model="ReplenishNum"
+					placeholder="到货数量" /></td>
+				<td><input type="button" value="保存" @click="save" /></td>
+			</tr>
+		</table>
+
+	</div>
+
+	<div v-show="!showList" class="col-md-9 col-sm-6">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">货号</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="goodID"
+						v-model="replenish.goodID" placeholder="货号">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">预计到货时间</div>
+				<div class="col-sm-10">
+					<div class="input-group date">
+						<div class="input-group-addon">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control pull-right"
+							id="saleDatePicker" readonly="readonly"
+							v-model="replenish.replenishTime">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">补货数量</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control"
+						v-model="replenish.replenishNum" placeholder="补货数量" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-1 control-label"></div>
+				<div class="col-sm-2 control-label">
+					<input type="button" class="btn btn-primary" @click="saveOrUpdate"
+						value="确定" />
+				</div>
+				<div class="col-sm-2 control-label">
+					<input type="button" class="btn btn-warning" @click="reload"
+						value="返回" />
+				</div>
+			</div>
+		</form>
+	</div>
+	</div>
+
+	<script src="../../../js/modules/system/order_platform/replenishs.js"></script>
+</body>
+</html>

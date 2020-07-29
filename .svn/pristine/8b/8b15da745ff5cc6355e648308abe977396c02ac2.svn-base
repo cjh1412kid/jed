@@ -1,0 +1,28 @@
+html, body {
+    height: 100%;
+}
+.aui-iconfont {
+    font-weight: bold!important;
+    color: #505050!important;
+}
+.aui-bar-nav .aui-title {
+	min-height: 2.25rem;
+	position: absolute;
+	margin: 0;
+	text-align: center;
+	white-space: nowrap;
+	right: 5.0rem;
+	left: 5.0rem;
+	width: auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	z-index: 2;
+}
+.aui-tab-item {
+	font-size: 0.8rem;
+}
+
+.aui-btn img {
+    width: 1.05rem;
+    height: 1.05rem;
+}

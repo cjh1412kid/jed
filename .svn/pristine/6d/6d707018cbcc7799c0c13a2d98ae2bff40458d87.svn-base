@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>商品详情</title>
+
+	<link rel="stylesheet" type="text/css" href="../../css/swiper_min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/sale/single_time_frm.css" />
+	<style>
+
+	</style>
+</head>
+<body class="flex-wrap flex-vertical">
+  <div class="flex-con" tapmode onclick="api.closeFrame();"></div>
+  <ul class="btns flex-wrap flex-vertical">
+    <li class=" aui-border-b  flex-style time" >选择时间</li>
+    <li class=" aui-border-b flex-style flex-style time-text" data-type="time-range" data-value="1" tapmode onclick="changeTime(this);">近1日</li>
+    <li class=" aui-border-b flex-style time-text" data-type="time-range" data-value="7" tapmode onclick="changeTime(this);">近7天</li>
+    <li class=" aui-border-b flex-style time-text" data-type="time-range" data-value="15" tapmode onclick="changeTime(this);">近15日</li>
+    <li class=" aui-border-b flex-style time-text" data-type="time-range" data-value="30" tapmode onclick="changeTime(this);">近30天</li>
+    <li class=" aui-border-b flex-style time-text" data-type="time-range" data-value="0" tapmode onclick="changeTime(this);">本月</li>
+    <li class=" flex-style del" tapmode onclick="api.closeFrame();">取消</li>
+  </ul>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+
+<script type="text/javascript">
+ function changeTime(_obj){
+	var now  = new Date().setDate(1);
+	var dataValue = $api.attr(_obj,'data-value');
+  if ($api.attr(_obj,'data-value')=='0') {
+		pageParam.timeRange='0';
+		if(new Date().getDate()==1){
+			pageParam.saleTimeStart= _getFormatedDate(now,"yyyy/MM/dd");
+			pageParam.saleTimeEnd= _getFormatedDate(now, "yyyy/MM/dd");
+		}else {
+			pageParam.saleTimeStart= _getFormatedDate(now,"yyyy/MM/dd");
+			pageParam.saleTimeEnd= _getFormatedDate("", "yyyy/MM/dd");
+		}
+
+	}else {
+		pageParam.timeRange = dataValue;
+		pageParam.saleTimeStart = _getStartDateByNum(dataValue);
+	}
+	_sendEvent("query_filter_changed_event", pageParam);
+	api.closeFrame();
+}
+  function initData(){
+		 pageParam = api.pageParam;
+	}
+
+
+  var pageParam
+	var apiready = function() {
+initData();
+
+	}
+</script>
+
+</html>

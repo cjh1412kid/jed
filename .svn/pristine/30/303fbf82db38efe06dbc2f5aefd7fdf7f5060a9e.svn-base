@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>货品属性管理</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../plugins/ContextMenu/css/context.standalone.css">
+  <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+  <link rel="stylesheet" href="../../css/main.css">
+
+  <style>
+    #rMenu {
+      position: absolute;
+      background-color: #fff;
+      text-align: left;
+      padding: 0px;
+      width: 100px;
+      z-index: 6;
+      visibility: hidden;
+    }
+
+    #rMenu a {
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="rrapp">
+  <div v-show="!showPanel">
+    <!--    <div class="grid-btn">
+          <a class="btn btn-primary" style="margin-left: 10px;" v-if="hasPermission('platform:sync:erp')"
+             @click="syncFromErp">
+            <i class="fa fa-plus"></i>&nbsp;ERP同步
+          </a>
+        </div>-->
+
+    <div class="col-md-4  col-sm-5" style="background-color: #eee">
+      <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="editPage()">编辑属性</button>
+      <ul id="SXTree" class="ztree"></ul>
+
+      <!--属性树的右键菜单-->
+      <div id="rMenu">
+        <a class="list-group-item" onclick="updateSXVisible()">{{SXVisibleUpdateTitle}}</a>
+      </div>
+    </div>
+
+    <div class="col-md-5 col-sm-6 col-sm-offset-1 col-md-offset-1" style="background-color: #eee">
+      <button type="button" class="btn btn-primary" style="margin-top: 10px" onclick="addOpt()">新增选项</button>
+      <ul id="optTree" class="ztree"></ul>
+    </div>
+  </div>
+
+  <div v-show="showPanel" class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">编辑属性名称</h3>
+    </div>
+    <div class="panel-body form-horizontal">
+      <div class="form-group">
+        <label for="SX1" class="col-sm-2 control-label">属性1：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX1" placeholder="请输入属性名称" v-model="SX1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX2" class="col-sm-2 control-label">属性2：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX2" placeholder="请输入属性名称" v-model="SX2">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX3" class="col-sm-2 control-label">属性3：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX3" placeholder="请输入属性名称" v-model="SX3">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX4" class="col-sm-2 control-label">属性4：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX4" placeholder="请输入属性名称" v-model="SX4">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX5" class="col-sm-2 control-label">属性5：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX5" placeholder="请输入属性名称" v-model="SX5">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX6" class="col-sm-2 control-label">属性6：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX6" placeholder="请输入属性名称" v-model="SX6">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX7" class="col-sm-2 control-label">属性7：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX7" placeholder="请输入属性名称" v-model="SX7">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX8" class="col-sm-2 control-label">属性8：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX8" placeholder="请输入属性名称" v-model="SX8">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX9" class="col-sm-2 control-label">属性9：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX9" placeholder="请输入属性名称" v-model="SX9">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX10" class="col-sm-2 control-label">属性10：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX10" placeholder="请输入属性名称" v-model="SX10">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX11" class="col-sm-2 control-label">属性11：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX11" placeholder="请输入属性名称" v-model="SX11">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX12" class="col-sm-2 control-label">属性12：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX12" placeholder="请输入属性名称" v-model="SX12">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX13" class="col-sm-2 control-label">属性13：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX13" placeholder="请输入属性名称" v-model="SX13">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX14" class="col-sm-2 control-label">属性14：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX14" placeholder="请输入属性名称" v-model="SX14">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX5" class="col-sm-2 control-label">属性15：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX15" placeholder="请输入属性名称" v-model="SX15">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX16" class="col-sm-2 control-label">属性16：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX16" placeholder="请输入属性名称" v-model="SX16">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX17" class="col-sm-2 control-label">属性17：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX17" placeholder="请输入属性名称" v-model="SX17">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX18" class="col-sm-2 control-label">属性18：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX18" placeholder="请输入属性名称" v-model="SX18">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX19" class="col-sm-2 control-label">属性19：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX19" placeholder="请输入属性名称" v-model="SX19">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SX20" class="col-sm-2 control-label">属性20：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="SX20" placeholder="请输入属性名称" v-model="SX20">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 col-sm-offset-2">
+          <input type="button" class="btn btn-primary" @click="saveOrUpdateSX" value="确定"/>
+        </div>
+        <div class="col-sm-2 col-sm-offset-2">
+          <input type="button" class="btn btn-warning" @click="quitEdit" value="返回"/>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 模态框（Modal） -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">新增选项</h4>
+        </div>
+        <div class="modal-body form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">属性</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" v-model="sxName" disabled>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">选项编号</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" v-model.trim="optCode" @blur="isExistOptCode" @focus="clearMsg(1)"
+                     placeholder="请输入选项编号">
+            </div>
+          </div>
+
+          <div class="form-group" v-if="optCodeMsg">
+            <label class="col-sm-2"></label>
+            <div class="col-sm-10">
+              <span class="alert alert-danger">{{optCodeMsg}}</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">选项名称</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" v-model.trim="optName" @blur="isExistOptName" @focus="clearMsg(2)"
+                     placeholder="请输入选项名称">
+            </div>
+          </div>
+
+          <div class="form-group" v-if="optNameMsg">
+            <label class="col-sm-2"></label>
+            <div class="col-sm-10">
+              <span class="alert alert-danger">{{optNameMsg}}</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" onclick="saveOpt()">创建</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+  </div>
+
+</div> <!--div#rrapp-->
+
+</body>
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../plugins/ContextMenu/js/context.js"></script>
+<script src="../../js/common.js"></script>
+<script src="../../js/modules/system/goods_sx.js"></script>
+</html>

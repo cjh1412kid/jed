@@ -1,0 +1,1089 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>商品详情</title>
+	<link rel="stylesheet" type="text/css" href="../../css/swiper_min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui_slide.css" />
+
+	<link rel="stylesheet" type="text/css" href="../../css/sale/single_product_frm.css" />
+	<style>
+
+	</style>
+</head>
+
+<body class="aui-hide1">
+	<div class="banner aui-padded-10">
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide flex-wrap flex-vertical aui-padded-10">
+					<div class="banner-tittle flex-wrap flex-style">
+						<div class="tittle-text aui-margin-r-5">品类销量分析</div>
+						<div class="tittle-text1 change-time" tapmode onclick="selectTime()"></div>
+					</div>
+					<div class="flex-con flex-wrap aui-padded-t-10">
+						<div class="chart flex-wrap">
+							<div class="" id="myChart">
+
+							</div>
+						</div>
+						<div class="flex-con list-right">
+							<div class="text-list flex-style1 aui-margin-b-10">
+								<span class="text-style">销量:</span>
+								<span class="text-style1 total_saleCount"></span>
+								<span class="text-style">双</span>
+							</div>
+							<div class="text-list flex-style1 aui-margin-b-10">
+								<span class="text-style">同比:</span>
+								<span class="text-style2 ShopsSaleNumYearPercent"></span>
+								<span class="text-style">%</span>
+								<span class=" ShopsSaleNumYearPercent1 text-style3"></span>
+								<span class="text-style2 ShopsSaleNumYear"></span>
+								<span class="text-style">双</span>
+							</div>
+							<div class="text-list flex-style1 aui-margin-b-10">
+								<span class="text-style">环比:</span>
+								<span class="text-style2 ShopsSaleNumMonthPercent"></span>
+								<span class="text-style">%</span>
+								<span class=" ShopsSaleNumMonthPercent1 text-style3"></span>
+								<span class="text-style2 ShopsSaleNumMonth"></span>
+								<span class="text-style">双</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide flex-wrap flex-vertical aui-padded-10">
+					<div class="banner-tittle flex-wrap flex-style">
+						<div class="tittle-text aui-margin-r-5">品类销售金额分析</div>
+						<div class="tittle-text1 change-time1" tapmode onclick="selectTime()"></div>
+					</div>
+					<div class="flex-con flex-wrap aui-padded-t-10">
+						<div class="chart flex-wrap">
+							<div class="flex-con" id="myChart1">
+
+							</div>
+						</div>
+						<div class="flex-con list-right">
+							<div class="text-list flex-style1 aui-margin-b-10">
+								<span class="text-style">金额:</span>
+								<span class="text-style1 total_salePrice"></span>
+								<span class="text-style">万</span>
+							</div>
+							<div class="text-list flex-style1 aui-margin-b-10">
+								<span class="text-style">同比:</span>
+								<span class="text-style2 ShopSalePriceYearPercent"></span>
+								<span class="text-style">%</span>
+								<span class=" ShopSalePriceYearPercent1 text-style3"></span>
+								<span class="text-style2 ShopSalePriceYear"></span>
+								<span class="text-style">万</span>
+							</div>
+							<div class="text-list flex-style1 aui-margin-b-10">
+								<span class="text-style">环比:</span>
+								<span class="text-style2 ShopSalePriceMonthPercent"></span>
+								<span class="text-style">%</span>
+								<span class=" ShopSalePriceMonthPercent1 text-style3"></span>
+								<span class="text-style2 ShopSalePriceMonth"></span>
+								<span class="text-style">万</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide flex-wrap flex-vertical aui-padded-10">
+					<div class="banner-tittle flex-wrap flex-style">
+						<div class="tittle-text aui-margin-r-5">品类SKU量分析</div>
+						<div class="tittle-text1 change-time2" tapmode onclick="selectTime()"></div>
+					</div>
+					<div class="flex-con flex-wrap aui-padded-t-10">
+						<div class="chart flex-wrap">
+							<div class="flex-con" id="myChart2">
+
+							</div>
+						</div>
+						<div class="flex-con list-right">
+							<div class="text-list flex-style1 aui-margin-b-10">
+								<span class="text-style">SKU量:</span>
+								<span class="text-style1 total_saleGood"></span>
+								<span class="text-style">个</span>
+							</div>
+							<div class="text-list flex-style1 aui-margin-b-10">
+								<span class="text-style">同比:</span>
+								<span class="text-style2 ShopsSaleGoodsYearPercent"></span>
+								<span class="text-style">%</span>
+								<span class=" ShopsSaleGoodsYearPercent1 text-style3"></span>
+								<span class="text-style2 ShopsSaleGoodsYear"></span>
+								<span class="text-style">个</span>
+							</div>
+							<div class="text-list flex-style1 aui-margin-b-10">
+								<span class="text-style">环比:</span>
+								<span class="text-style2 ShopsSaleGoodsMonthPercent"></span>
+								<span class="text-style">%</span>
+								<span class=" ShopsSaleGoodsMonthPercent1 text-style3"></span>
+								<span class="text-style2 ShopsSaleGoodsMonth"></span>
+								<span class="text-style">个</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 分页器 -->
+			<div class="swiper-pagination"></div>
+		</div>
+	</div>
+
+	<div class="sub-header flex-wrap aui-padded-l-5 aui-margin-r-10 aui-margin-l-10">
+		<div class="box-wrap box-horizontal-center box-vertical-start index">
+			排序
+		</div>
+		<div class="box-wrap box-horizontal-center box-vertical-center goods-id flex-con">
+			货号
+		</div>
+		<div class="sort-btns flex-wrap">
+			<div class="sort-btn  box-wrap box-horizontal-center box-vertical-center active sale-icon" data-orderBy="1" tapmode onclick="sort(this)">
+				销量<span>▼</span>
+			</div>
+			<div class="sort-btn  box-wrap box-horizontal-center box-vertical-center sale-icon1" data-orderBy="2" tapmode onclick="sort(this)">
+				库存<span>▼</span>
+			</div>
+			<div class="sort-btn  box-wrap box-horizontal-center box-vertical-center spe-btn sale-icon2" data-orderBy="3" tapmode onclick="sort(this)">
+				日均销量<span>▲</span>
+			</div>
+			<div class="sort-btn  box-wrap box-horizontal-center box-vertical-center sale-icon3" data-orderBy="4" tapmode onclick="sort(this)">
+				平均售价<span>▲</span>
+			</div>
+		</div>
+		<i class="aui-iconfont aui-icon-right aui-invisible"></i>
+	</div>
+	<!-- <div class="count aui-bg-dange flex-wrap flex-vertical aui-hide">
+		<div class="title"><span class="shop-company-name"></span>销售分析汇总</div>
+		<div class="flex-con flex-wrap">
+			<div class="img"></div>
+			<div class="flex-con aui-margin-10 aui-margin-l-0 flex-wrap flex-vertical">
+				<div class="flex-con flex-wrap">
+					<div class="flex-con box-wrap box-vertical-start box-horizontal-center">
+						<div class="count-name">销量：</div>
+						<div class="count-value total_saleCount"></div>
+					</div>
+					<div class="flex-con box-wrap box-vertical-start box-horizontal-center">
+						<div class="count-name">平均售价：</div>
+						<div class="count-value total_avgSalePrice"></div>
+					</div>
+				</div>
+				<div class="flex-con flex-wrap">
+					<div class="flex-con box-wrap box-vertical-start box-horizontal-center">
+						<div class="count-name">库存：</div>
+						<div class="count-value total_stock"></div>
+					</div>
+					<div class="flex-con box-wrap box-vertical-start box-horizontal-center">
+						<div class="count-name">售罄率：</div>
+						<div class="count-value total_sellOutRate"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ground"></div>
+	</div> -->
+	<div class="list-content">
+		<!-- <div class="list-item flex-wrap aui-padded-l-10 aui-padded-r-10" tapmode onclick="goInv(this, 1)">
+			<div class="box-wrap box-horizontal-center box-vertical-start index">
+				1
+			</div>
+			<div class="box-wrap box-horizontal-center box-vertical-center goods-id">
+				YCA333333
+			</div>
+			<div class="sort-btns flex-con flex-wrap">
+				<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center active">
+					23
+				</div>
+				<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center">
+					45
+				</div>
+				<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center">
+					66%
+				</div>
+				<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center">
+					54
+				</div>
+			</div>
+			<i class="aui-iconfont aui-icon-right"></i>
+		</div> -->
+		<!-- <div class="list-item flex-wrap aui-padded-l-10 aui-padded-r-10" tapmode onclick="goInv(this, 1)">
+			<div class="box-wrap box-horizontal-center box-vertical-start index">
+				1
+			</div>
+			<div class="box-wrap box-horizontal-center box-vertical-center goods-id">
+				YCA333333
+			</div>
+			<div class="sort-btns flex-con flex-wrap">
+				<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center active">
+					23
+				</div>
+				<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center">
+					45
+				</div>
+				<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center">
+					66%
+				</div>
+				<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center">
+					54
+				</div>
+			</div>
+			<i class="aui-iconfont aui-icon-right"></i>
+		</div> -->
+	</div>
+	<div class='footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		到底了<i class='aui-iconfont aui-icon-activity aui-font-size-12'></i>
+	</div>
+	<div class='footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		暂无数据
+	</div>
+	<div class='footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		加载更多<i class='aui-iconfont aui-icon-more aui-font-size-12'></i>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_slide.js"></script>
+<script type="text/javascript" src="../../script/common/swiper_min.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript" src="../../script/common/echarts_min.js"></script>
+<script type="text/javascript">
+	//  swiper = new Swiper('.swiper-container', {
+	// 	pagination: {
+	// 		el: '.swiper-pagination',
+	// 	},
+	// 	on: {
+	// 		slideChangeTransitionEnd: function() {
+	// 			alert(this.activeIndex); //切换结束时，告诉我现在是第几个slide
+	// 		},
+	// 	},
+	// });
+	function initChart() {
+		myChart = echarts.init(document.getElementById('myChart'));
+		option = {
+			color: ['#FFC353', '#36E2DF', '#7990FF', '#FF8844', '#FFAC53', '#FF6914', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+			dataset: {
+				source: [
+					[]
+				]
+			},
+			series: [{
+				hoverOffset: 3,
+				labelLine: {
+					show: true,
+					length: 2,
+					length2: 3,
+				},
+				type: 'pie',
+				radius: 50,
+				center: ["52%", "50%"]
+					// No encode specified, by default, it is '2012'.
+			}]
+		};
+		myChart.setOption(option);
+		myChart.on('click', function(params) {
+      pageParam.categorys=	pageParam.categorySeqList
+			pageParam.categorySeqList = [params.data[2]]
+			start = 1;
+			goodsList = [];
+			getDatas(function(ret) {
+				goodsList = ret;
+				initUI(ret, "down");
+			},false);
+				pageParam.categorySeqList =pageParam.categorys
+		}
+	);
+
+
+	}
+
+	function initChart1() {
+		myChart1 = echarts.init(document.getElementById('myChart1'));
+		option1 = {
+			color: ['#FFC353', '#36E2DF', '#7990FF', '#FF8844', '#FFAC53', '#FF6914', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+			dataset: {
+				source: [
+					[
+
+					]
+				]
+			},
+			series: [{
+				hoverOffset: 3,
+				labelLine: {
+					show: true,
+					length: 2,
+					length2: 3,
+				},
+				type: 'pie',
+				radius: 50,
+				center: ["52%", "50%"]
+					// No encode specified, by default, it is '2012'.
+			}]
+		};
+		myChart1.on('click', function(params) {
+			pageParam.categorys=	pageParam.categorySeqList
+			pageParam.categorySeqList = [params.data[2]]
+			start = 1;
+			goodsList = [];
+			getDatas(function(ret) {
+				goodsList = ret;
+				initUI(ret, "down");
+			},false);
+				pageParam.categorySeqList =pageParam.categorys
+		});
+		myChart1.setOption(option1);
+	}
+
+	function initChart2() {
+		myChart2 = echarts.init(document.getElementById('myChart2'));
+		option2 = {
+			color: ['#FFC353', '#36E2DF', '#7990FF', '#FF8844', '#FFAC53', '#FF6914', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+			dataset: {
+				source: [
+					[]
+				]
+			},
+			series: [{
+				hoverOffset: 3,
+				labelLine: {
+					show: true,
+					length: 2,
+					length2: 3,
+				},
+				type: 'pie',
+				radius: 50,
+				center: ["52%", "50%"]
+					// No encode specified, by default, it is '2012'.
+			}]
+		};
+		myChart2.on('click', function(params) {
+		pageParam.categorys=	pageParam.categorySeqList
+			pageParam.categorySeqList = [params.data[2]]
+			start = 1;
+			goodsList = [];
+			getDatas(function(ret) {
+				goodsList = ret;
+				initUI(ret, "down");
+			},false);
+				pageParam.categorySeqList =pageParam.categorys
+		});
+		myChart2.setOption(option2);
+	}
+
+	function selectTime() {
+		var rect = {
+			x: 0, //左上角x坐标
+			y: 0, //左上角y坐标
+			w: "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+			h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+			marginLeft: 0, //相对父 window 左外边距的距离
+			marginTop: 0, //相对父 window 上外边距的距离
+			marginBottom: 0, //相对父 window 下外边距的距离
+			marginRight: 0 //相对父 window 右外边距的距离
+		};
+		var animation = {
+			type: "movein", //动画类型（详见动画类型常量）
+			subType: "from_bottom", //动画子类型（详见动画子类型常量）
+			duration: 300
+		};
+		_openFrame("single_time_frm", "single_time_frm.html", rect, pageParam, false, true, false, animation);
+	}
+
+	//商品排序
+	function sort(_obj) {
+		pageParam.orderBy = $api.attr(_obj, "data-orderBy");
+		if ($api.hasCls(_obj, "active")) {
+			if ($api.hasCls(_obj, "active-sort")) {
+				$api.text($api.dom(_obj, "span"), '▲');
+				$api.removeCls(_obj, "active-sort");
+				pageParam.orderDir = 1;
+			} else {
+				$api.addCls(_obj, "active-sort");
+				$api.text($api.dom(_obj, "span"), '▼');
+				pageParam.orderDir = 0;
+			}
+		} else {
+			$api.removeCls($api.dom(".sort-btn.active"), "active-sort");
+			$api.text($api.dom($api.dom(".sort-btn.active"), "span"), "▼");
+			$api.text($api.dom(_obj, "span"), '▼');
+			$api.addCls(_obj, "active-sort");
+			pageParam.orderDir = 0;
+			$api.removeCls($api.dom(".sort-btn.active"), "active");
+			$api.addCls(_obj, "active");
+		}
+		//下拉刷新重新获取数据
+		// api.refreshHeaderLoading();
+		start = 1;
+		goodsList = [];
+		getDatas(function(ret) {
+			goodsList = ret;
+			initUI(ret, "down");
+		},false);
+	}
+	/**
+	 *shoesSeq:鞋子序号
+	 */
+	function toGoodsDetailWin(_seq) {
+		var pageParam = {
+			seq: _seq,
+			isSearch: 0,
+		};
+		api.openDrawerLayout({
+			name: "goods_detail_win",
+			url: "../goods/detail/goods_detail_win.html",
+			pageParam: pageParam,
+			animation: {
+				type: "push", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			},
+			softInputMode: "resize",
+			softInputBarEnabled: false,
+			overScrollMode: "always",
+			slidToOpenPane: false,
+			slidToClosePane: false,
+			rightPane: {
+				edge: 60,
+				pageParam: pageParam,
+				softInputMode: "resize",
+				softInputBarEnabled: false,
+				name: 'filter_sale_graph_win',
+				url: '../goods/detail/filter_sale_graph_win.html'
+			}
+		});
+	}
+	// function goInv(_obj, _shoesSeq) {
+	// 	var _pageParam = {
+	// 		flg: api.frameName,
+	// 		shopName: pageParam.shopName,
+	// 		shoesSeq: _shoesSeq,
+	// 		shopSeq: pageParam.shopSeq,
+	// 		startDate: (pageParam.timeRange == 0 ? pageParam.saleTimeStart : _getStartDateByNum(pageParam.timeRange)),
+	// 		endDate: (pageParam.timeRange == 0 ? pageParam.saleTimeEnd : _getFormatedDate("", "yyyy/MM/dd"))
+	// 	};
+	// 	console.log("_pageParam:" + $api.jsonToStr(_pageParam));
+	// 	_openWin('inventory_detail_win', '../goods/detail/inventory_detail_win.html', _pageParam)
+	// }
+
+	function getGoodsHTML(data) {
+		var htmlStr = "";
+		for (var i = 0; i < data.length; i++) {
+			//htmlStr
+			htmlStr += '<div class="list-item flex-wrap aui-padded-l-10 aui-padded-r-10" tapmode onclick="toGoodsDetailWin( ' + data[i].seq + ')">';
+			htmlStr += '<div class="box-wrap box-horizontal-center box-vertical-start index1">';
+			if (start / 10 == 0.1) {
+				htmlStr += (i + 1);
+			} else {
+				htmlStr += (i + start);
+			}
+
+			htmlStr += '</div>';
+			// htmlStr += '<div class="box-wrap box-horizontal-center box-vertical-center goods-id ">';
+			// htmlStr += '<div>';
+			// htmlStr += data[i].goodId;
+			// htmlStr += '</div>';
+			// htmlStr += '</div>';
+			htmlStr += '<div class="box-wrap box-horizontal-center box-vertical-center goods-id flex-con">'
+			htmlStr += data[i].goodId;
+			htmlStr += '</div>'
+
+			htmlStr += '<div class="sort-btns flex-wrap">';
+			htmlStr += '<div class="sort-btn active list-width">';
+			htmlStr += _isStringNull(data[i].saleCount) ? "0" : data[i].saleCount;
+			htmlStr += '</div>';
+			htmlStr += '<div class="sort-btn  box-wrap box-horizontal-center box-vertical-center list-width1">';
+			htmlStr += _isStringNull(data[i].stock) ? "0" : data[i].stock;
+			htmlStr += '</div>';
+			htmlStr += '<div class="sort-btn  box-wrap box-horizontal-center box-vertical-center list-width2">';
+			if(pageParam.type=='2'){
+				htmlStr += _isStringNull(data[i].totalPrice) ? "¥0" : "¥"+data[i].totalPrice;
+			}else {
+				htmlStr += _isStringNull(data[i].salesDayAvg) ? "0" : data[i].salesDayAvg;
+			}
+			htmlStr += '</div>';
+			htmlStr += '<div class="sort-btn  box-wrap box-horizontal-center box-vertical-center list-width3">';
+			htmlStr += (_isStringNull(data[i].avgSalePrice) ? "¥0" : "¥" + (data[i].avgSalePrice.toFixed(0)));
+			htmlStr += '</div>';
+			htmlStr += '</div>';
+			htmlStr += '<i class="aui-iconfont aui-icon-right"></i>';
+			htmlStr += '</div>';
+		}
+		console.log("htmlStr:" + htmlStr);
+		return htmlStr;
+	}
+
+	function initUI(data, type) {
+		switch (type) {
+			case "down":
+				if (_isArrayNull(data)) {
+					//第一页没数据，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+					isAjaxing = true;
+					$api.html($api.dom(".list-content"), "");
+					showEmptyMsg(); //显示"暂无数据"
+				} else {
+					$api.html($api.dom(".list-content"), getGoodsHTML(data));
+					if (data.length < num) {
+						//第一页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						showOverMsg(); //显示"到底了"
+					} else {
+						//第一页数据等于每页总数，false，用户向上滑动就再次请求服务器获取后面页数的数据
+						isAjaxing = false;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+			case "up":
+				if (_isArrayNull(data)) {
+					//当前页没数据了，则将isAjaxing置为true，防止继续上滑频繁请求服务器
+					isAjaxing = true;
+					showOverMsg(); //显示"到底了"
+				} else {
+					$api.append($api.dom(".list-content"), getGoodsHTML(data));
+					if (data.length < num) {
+						//新获取页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						showOverMsg(); //显示"到底了"
+					} else {
+						isAjaxing = false;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+		}
+		api.parseTapmode();
+		setTimeout(function() {
+
+			closeUILoading();
+			api.refreshHeaderLoadDone();
+		}, window.refreshLoadDoneTimeOut);
+	}
+
+	/*
+	 *获取门店（公司）各个货品销量排行数据
+	 */
+	function getDatas(call,_flag) {
+		var url = "";
+		url = window.myServerUrl + "/order/app/saleShoesAnalysis/hqShoesCategoryList";
+		url += "?yearList=" + pageParam.yearList; //年份 数据类型：Array[integer]
+		url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+		url += "&categorySeqList=" + pageParam.categorySeqList; //分类 数据类型：Array[integer]
+		url += "&colorSeqList=" + pageParam.colorSeqList; //颜色 数据类型：Array[integer]
+		url += "&sXMap=" + pageParam.sXMap; //自定义属性 数据类型：string
+		url += "&orderBy=" + pageParam.orderBy; //排序字段(1:销量 2:库存 3:售罄率 4:评分) 数据类型：integer
+		url += "&orderDir=" + pageParam.orderDir; //排序方式(0:降序 1:升序) 数据类型：integer
+		url += "&oldOrNew=" + pageParam.oldOrNew; //新老款
+		url += "&startPrice=" + pageParam.startPrice; //起始价格
+		url += "&endPrice=" + pageParam.endPrice;
+		url += "&shopSeqList="+pageParam.shopSeqList;//店铺序号
+		url += "&start=" + start; //起始条数 数据类型：integer
+		url += "&num=" + num; //总条数 数据类型：integer
+		if(pageParam.timeRange=='0'){
+			url += "&saleTimeStart=" + pageParam.saleTimeStart; //销售时间区间：起始时间 数据类型：date-time
+			url += "&saleTimeEnd=" + pageParam.saleTimeEnd; //销售时间区间：结束时间 数据类型：date-time
+		}else {
+			url += "&saleTimeStart=" + _getStartDateByNum(pageParam.timeRange); //销售时间区间：起始时间 数据类型：date-time
+			url += "&saleTimeEnd=" + pageParam.saleTimeEnd; //销售时间区间：结束时间 数据类型：date-time
+		}
+
+
+		url +="&type=" +pageParam.type;
+		console.log("获取门店（公司）各个货品销量排行数据-->url:" + url);
+		_showProgress('加载中...');
+		isAjaxing = true;
+		if(_flag){
+			option.dataset.source = [];
+			option1.dataset.source = [];
+			option2.dataset.source = [];
+		}
+		if(_isStringNull(pageParam.saleTimeStart)){
+			console.log(pageParam.timeRange+"!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			$api.text($api.dom('.change-time'), _getFormatedDate(_getStartDateByNum(pageParam.timeRange), "yyyy年MM月dd日")+"至"+_getFormatedDate("", "yyyy年MM月dd日"));
+			$api.text($api.dom('.change-time1'), _getFormatedDate(_getStartDateByNum(pageParam.timeRange), "yyyy年MM月dd日")+"至"+_getFormatedDate("", "yyyy年MM月dd日"));
+			$api.text($api.dom('.change-time2'), _getFormatedDate(_getStartDateByNum(pageParam.timeRange), "yyyy年MM月dd日")+"至"+_getFormatedDate("", "yyyy年MM月dd日"));
+		}else {
+			if(_isStringNull(pageParam.saleTimeEnd)){
+				$api.text($api.dom('.change-time'), _getFormatedDate(pageParam.saleTimeStart, "yyyy年MM月dd日")+"至"+_getFormatedDate("", "yyyy年MM月dd日"));
+				$api.text($api.dom('.change-time1'), _getFormatedDate(pageParam.saleTimeStart, "yyyy年MM月dd日")+"至"+_getFormatedDate("", "yyyy年MM月dd日"));
+				$api.text($api.dom('.change-time2'), _getFormatedDate(pageParam.saleTimeStart, "yyyy年MM月dd日")+"至"+_getFormatedDate("", "yyyy年MM月dd日"));
+			}else {
+				$api.text($api.dom('.change-time'), _getFormatedDate(pageParam.saleTimeStart, "yyyy年MM月dd日")+"至"+_getFormatedDate(pageParam.saleTimeEnd, "yyyy年MM月dd日"));
+				$api.text($api.dom('.change-time1'), _getFormatedDate(pageParam.saleTimeStart, "yyyy年MM月dd日")+"至"+_getFormatedDate(pageParam.saleTimeEnd, "yyyy年MM月dd日"));
+				$api.text($api.dom('.change-time2'), _getFormatedDate(pageParam.saleTimeStart, "yyyy年MM月dd日")+"至"+_getFormatedDate(pageParam.saleTimeEnd, "yyyy年MM月dd日"));
+			}
+
+		}
+
+    // $api.text($api.dom('.change-time1'),  _getFormatedDate((pageParam.timeRange == 0 ? pageParam.saleTimeStart : _getStartDateByNum(pageParam.timeRange)), "yyyy年MM月dd日")+"至"+ (pageParam.timeRange == 0 ? pageParam.saleTimeEnd : _getFormatedDate(pageParam.saleTimeEnd, "yyyy年MM月dd日")));
+    // $api.text($api.dom('.change-time2'),  _getFormatedDate((pageParam.timeRange == 0 ? pageParam.saleTimeStart : _getStartDateByNum(pageParam.timeRange)), "yyyy年MM月dd日")+"至"+ (pageParam.timeRange == 0 ? pageParam.saleTimeEnd : _getFormatedDate(pageParam.saleTimeEnd, "yyyy年MM月dd日")));
+		_ajax(url, "shopShoesRankList", function(ret, err) {
+			api.hideProgress();
+			var tempGoodsList = [];
+			if (ret) {
+				console.log("获取门店（公司）各个货品销量排行数据-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					var result = ret.result;
+
+					// source: [
+					//
+					// 	['洞洞鞋\n52%', 24.1],
+					// 	['洞洞鞋\n51%', 55.2]
+					// ]
+					if (!_isArrayNull(result)) {
+						// console.log(_flag+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+						if(_flag){
+							if (!_isArrayNull(result[0].saleNumPercents)) {
+
+								for (var i = 0; i < result[0].saleNumPercents.length; i++) {
+                 if(_isStringNull(result[0].saleNumPercents[i].saleNumPercent)||result[0].saleNumPercents[i].saleNumPercent==0){
+									 // var saleArr=[];
+ 									continue;
+								 }else {
+								 	var saleArr = [result[0].saleNumPercents[i].categoryName+"\n"+(result[0].saleNumPercents[i].saleNumPercent*100).toFixed(0)+"%", result[0].saleNumPercents[i].saleNumPercent,result[0].saleNumPercents[i].CategorySeq];
+								 }
+									option.dataset.source.push(saleArr);
+								}
+							}
+
+							if (!_isArrayNull(result[0].salePricePercents)) {
+
+								for (var i = 0; i < result[0].salePricePercents.length; i++) {
+									if(_isStringNull(result[0].salePricePercents[i].salePricePercent)||result[0].salePricePercents[i].salePricePercent==0){
+										// var saleArr=[];
+										continue;
+									}else {
+										var saleArr = [result[0].salePricePercents[i].categoryName+"\n"+(result[0].salePricePercents[i].salePricePercent*100).toFixed(0)+"%", result[0].salePricePercents[i].salePricePercent,result[0].salePricePercents[i].CategorySeq];
+									}
+
+									option1.dataset.source.push(saleArr);
+								}
+							}
+							if (!_isArrayNull(result[0].saleGoodsPercents)) {
+
+								for (var i = 0; i < result[0].saleGoodsPercents.length; i++) {
+									if(_isStringNull(result[0].saleGoodsPercents[i].saleGoodsPercent)||result[0].saleGoodsPercents[i].saleGoodsPercent==0){
+                    // var saleArr=[];
+										continue;
+									}else {
+										var saleArr = [result[0].saleGoodsPercents[i].categoryName+"\n"+(result[0].saleGoodsPercents[i].saleGoodsPercent*100).toFixed(0)+"%", result[0].saleGoodsPercents[i].saleGoodsPercent,result[0].saleGoodsPercents[i].CategorySeq];
+									}
+
+									option2.dataset.source.push(saleArr);
+								}
+							}
+						}
+
+						if (!_isStringNull(result[0].total_saleCount)) {
+							$api.text($api.dom('.total_saleCount'), result[0].total_saleCount);
+						} else {
+							$api.text($api.dom('.total_saleCount'), '---');
+						}
+						if (!_isStringNull(result[0].ShopsSaleNumYearPercent)) {
+
+							if (result[0].ShopsSaleNumYearPercent > 0) {
+								$api.text($api.dom('.ShopsSaleNumYearPercent'), (result[0].ShopsSaleNumYearPercent * 100).toFixed(1));
+								if ($api.hasCls($api.dom('.ShopsSaleNumYearPercent1'), 'text-style4')) {
+									$api.removeCls($api.dom('.ShopsSaleNumYearPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopsSaleNumYearPercent1'), '↑');
+							} else {
+								$api.text($api.dom('.ShopsSaleNumYearPercent'), Math.abs(result[0].ShopsSaleNumYearPercent * 100).toFixed(1));
+								if (!$api.hasCls($api.dom('.ShopsSaleNumYearPercent1'), 'text-style4')) {
+									$api.addCls($api.dom('.ShopsSaleNumYearPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopsSaleNumYearPercent1'), '↓');
+							}
+						} else {
+							$api.text($api.dom('.ShopsSaleNumYearPercent'), '---');
+							$api.text($api.dom('.ShopsSaleNumYearPercent1'), '');
+						}
+						//1
+						$api.text($api.dom('.ShopsSaleNumYear'), Math.abs(result[0].ShopsSaleNumYear));
+
+						if (!_isStringNull(result[0].ShopsSaleNumMonthPercent)) {
+
+							if (result[0].ShopsSaleNumMonthPercent > 0) {
+								$api.text($api.dom('.ShopsSaleNumMonthPercent'), (result[0].ShopsSaleNumMonthPercent * 100).toFixed(1));
+								if ($api.hasCls($api.dom('.ShopsSaleNumMonthPercent1'), 'text-style4')) {
+									$api.removeCls($api.dom('.ShopsSaleNumMonthPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopsSaleNumMonthPercent1'), '↑');
+							} else {
+								$api.text($api.dom('.ShopsSaleNumMonthPercent'), Math.abs(result[0].ShopsSaleNumMonthPercent * 100).toFixed(1));
+								if (!$api.hasCls($api.dom('.ShopsSaleNumMonthPercent1'), 'text-style4')) {
+									$api.addCls($api.dom('.ShopsSaleNumMonthPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopsSaleNumMonthPercent1'), '↓');
+							}
+						} else {
+							$api.text($api.dom('.ShopsSaleNumMonthPercent'), '---');
+							$api.text($api.dom('.ShopsSaleNumMonthPercent1'), '');
+						}
+						//2
+						$api.text($api.dom('.ShopsSaleNumMonth'), Math.abs(result[0].ShopsSaleNumMonth));
+
+						if (!_isStringNull(result[0].total_salePrice)) {
+							$api.text($api.dom('.total_salePrice'), (result[0].total_salePrice / 10000).toFixed(1));
+						} else {
+							$api.text($api.dom('.total_salePrice'), '---');
+						}
+
+						if (!_isStringNull(result[0].ShopSalePriceYearPercent)) {
+							if (result[0].ShopSalePriceYearPercent > 0) {
+								$api.text($api.dom('.ShopSalePriceYearPercent'), (result[0].ShopSalePriceYearPercent * 100).toFixed(1));
+								if ($api.hasCls($api.dom('.ShopSalePriceYearPercent1'), 'text-style4')) {
+									$api.removeCls($api.dom('.ShopSalePriceYearPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopSalePriceYearPercent1'), '↑');
+							} else {
+								$api.text($api.dom('.ShopSalePriceYearPercent'), Math.abs(result[0].ShopSalePriceYearPercent * 100).toFixed(1));
+								if (!$api.hasCls($api.dom('.ShopSalePriceYearPercent1'), 'text-style4')) {
+									$api.addCls($api.dom('.ShopSalePriceYearPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopSalePriceYearPercent1'), '↓');
+							}
+						} else {
+							$api.text($api.dom('.ShopSalePriceYearPercent'), '---');
+							$api.text($api.dom('.ShopSalePriceYearPercent1'), '');
+						}
+           //3
+						$api.text($api.dom('.ShopSalePriceYear'), Math.abs(result[0].ShopSalePriceYear /10000).toFixed(1));
+
+						if (!_isStringNull(result[0].ShopSalePriceMonthPercent)) {
+
+							if (result[0].ShopSalePriceMonthPercent > 0) {
+								$api.text($api.dom('.ShopSalePriceMonthPercent'), (result[0].ShopSalePriceMonthPercent * 100).toFixed(1));
+								if ($api.hasCls($api.dom('.ShopSalePriceMonthPercent1'), 'text-style4')) {
+									$api.removeCls($api.dom('.ShopSalePriceMonthPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopSalePriceMonthPercent1'), '↑');
+							} else {
+								$api.text($api.dom('.ShopSalePriceMonthPercent'), Math.abs(result[0].ShopSalePriceMonthPercent * 100).toFixed(1));
+								if (!$api.hasCls($api.dom('.ShopSalePriceMonthPercent1'), 'text-style4')) {
+									$api.addCls($api.dom('.ShopSalePriceMonthPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopSalePriceMonthPercent1'), '↓');
+							}
+						} else {
+							$api.text($api.dom('.ShopSalePriceMonthPercent'), '---');
+							$api.text($api.dom('.ShopSalePriceMonthPercent1'), '');
+						}
+             //4
+						$api.text($api.dom('.ShopSalePriceMonth'), Math.abs(result[0].ShopSalePriceMonth /10000).toFixed(1));
+
+						if (!_isStringNull(result[0].total_saleGood)) {
+							$api.text($api.dom('.total_saleGood'), result[0].total_saleGood);
+						} else {
+							$api.text($api.dom('.total_saleGood'), '---');
+						}
+
+						if (!_isStringNull(result[0].ShopsSaleGoodsYearPercent)) {
+
+							if (result[0].ShopsSaleGoodsYearPercent > 0) {
+								$api.text($api.dom('.ShopsSaleGoodsYearPercent'), (result[0].ShopsSaleGoodsYearPercent * 100).toFixed(1));
+								if ($api.hasCls($api.dom('.ShopsSaleGoodsYearPercent1'), 'text-style4')) {
+									$api.removeCls($api.dom('.ShopsSaleGoodsYearPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopsSaleGoodsYearPercent1'), '↑');
+							} else {
+								$api.text($api.dom('.ShopsSaleGoodsYearPercent'), Math.abs(result[0].ShopsSaleGoodsYearPercent * 100).toFixed(1));
+								if (!$api.hasCls($api.dom('.ShopsSaleGoodsYearPercent1'), 'text-style4')) {
+									$api.addCls($api.dom('.ShopsSaleGoodsYearPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopsSaleGoodsYearPercent1'), '↓');
+							}
+						} else {
+							$api.text($api.dom('.ShopsSaleGoodsYearPercent'), '---');
+							$api.text($api.dom('.ShopsSaleGoodsYearPercent1'), '');
+						}
+//5
+						$api.text($api.dom('.ShopsSaleGoodsYear'), Math.abs(result[0].ShopsSaleGoodsYear));
+
+						if (!_isStringNull(result[0].ShopsSaleGoodsMonthPercent)) {
+
+							if (result[0].ShopsSaleGoodsMonthPercent > 0) {
+								$api.text($api.dom('.ShopsSaleGoodsMonthPercent'), (result[0].ShopsSaleGoodsMonthPercent * 100).toFixed(1));
+								if ($api.hasCls($api.dom('.ShopsSaleGoodsMonthPercent1'), 'text-style4')) {
+									$api.removeCls($api.dom('.ShopsSaleGoodsMonthPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopsSaleGoodsMonthPercent1'), '↑');
+							} else {
+								$api.text($api.dom('.ShopsSaleGoodsMonthPercent'), Math.abs(result[0].ShopsSaleGoodsMonthPercent * 100).toFixed(1));
+								if (!$api.hasCls($api.dom('.ShopsSaleGoodsMonthPercent1'), 'text-style4')) {
+									$api.addCls($api.dom('.ShopsSaleGoodsMonthPercent1'), 'text-style4');
+								}
+								$api.text($api.dom('.ShopsSaleGoodsMonthPercent1'), '↓');
+							}
+						} else {
+							$api.text($api.dom('.ShopsSaleGoodsMonthPercent'), '---');
+							$api.text($api.dom('.ShopsSaleGoodsMonthPercent1'), '');
+						}
+            //6
+						$api.text($api.dom('.ShopsSaleGoodsMonth'), Math.abs(result[0].ShopsSaleGoodsMonth));
+
+            if(pageParam.type=='1'){
+							tempGoodsList = result[0].shoesListBySale;
+						}else if (pageParam.type=='2') {
+							tempGoodsList = result[0].shoesListByMoney;
+						}else if (pageParam.type=='3') {
+							tempGoodsList = result[0].shoesListBySKU;
+						}
+
+					} else {
+						option.dataset.source = [[]];
+						option1.dataset.source = [[]];
+						option2.dataset.source = [[]];
+						$api.text($api.dom('.total_saleCount'), '---');
+						$api.text($api.dom('.ShopsSaleNumYearPercent'), '---');
+						$api.text($api.dom('.ShopsSaleNumYearPercent1'), '');
+						$api.text($api.dom('.ShopsSaleNumYear'), '0');
+						$api.text($api.dom('.ShopsSaleNumMonthPercent'), '---');
+						$api.text($api.dom('.ShopsSaleNumMonth'), '0');
+						$api.text($api.dom('.ShopsSaleNumMonthPercent1'), '');
+						$api.text($api.dom('.total_salePrice'), '---');
+						$api.text($api.dom('.ShopSalePriceYearPercent'), '---');
+						$api.text($api.dom('.ShopSalePriceYearPercent1'), '');
+						$api.text($api.dom('.ShopSalePriceYear'), '0');
+						$api.text($api.dom('.ShopSalePriceMonthPercent'), '---');
+						$api.text($api.dom('.ShopSalePriceMonth'), '0');
+						$api.text($api.dom('.ShopSalePriceMonthPercent1'), '');
+						$api.text($api.dom('.total_saleGood'), '---');
+						$api.text($api.dom('.ShopsSaleGoodsYearPercent'), '---');
+						$api.text($api.dom('.ShopsSaleGoodsYearPercent1'), '');
+						$api.text($api.dom('.ShopsSaleGoodsYear'), '0');
+						$api.text($api.dom('.ShopsSaleGoodsMonthPercent'), '---');
+						$api.text($api.dom('.ShopsSaleGoodsMonth'), '0');
+						$api.text($api.dom('.ShopsSaleGoodsMonthPercent1'), '');
+					}
+					console.log("销量饼子图" + $api.jsonToStr(option.dataset));
+					console.log("销售金额饼子图" + $api.jsonToStr(option1.dataset));
+					console.log("SKU饼子图" + $api.jsonToStr(option2.dataset));
+
+					if(_flag){
+						myChart.setOption(option);
+						myChart1.setOption(option1);
+						myChart2.setOption(option2);
+
+
+					}
+					//list数组
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("获取门店（公司）各个货品销量排行数据-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			call(tempGoodsList);
+		});
+	}
+
+	function closeUILoading() {
+		UILoading.closeKeyFrame();
+	}
+
+	function openUILoading() {
+		UILoading.keyFrame({
+			rect: {
+				w: 102,
+				h: 102
+			},
+			styles: {
+				bg: 'rgba(0,0,0,0)',
+				corner: 5,
+				interval: 50,
+				frame: {
+					w: 102,
+					h: 102
+				}
+			},
+			//				content : [{
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}, {
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}],
+			mask: "rgba(255,0,0,0)"
+		}, function(ret) {
+			//								alert(JSON.stringify(ret));
+			console.log(12345);
+		});
+	}
+
+	function initData() {
+		start = 1;
+		num = 10;
+		userInfo = $api.getStorage("userInfoKey");
+		UILoading = api.require('UILoading');
+		pageParam = api.pageParam;
+		console.log("pageParam:" + $api.jsonToStr(pageParam));
+		goodsList = [];
+	}
+	var userInfo;
+	var categorySeq; //0:全部鞋款, 其它:鞋子分类序号
+	var start;
+	var num;
+	var goodsList;
+	var isAjaxing = false;
+	var UILoading;
+	var pageParam;
+	var option;
+	var option1;
+	var option2;
+	var myChart;
+	var myChart1;
+	var myChart2;
+	var apiready = function() {
+
+		initData();
+		initChart();
+		initChart1();
+		initChart2();
+		//下拉刷新
+		// api.setRefreshHeaderInfo({
+		// 	loadingImg: 'widget://image/loading_more.gif',
+		// 	bgColor: 'rgba(255,255,255,0)',
+		// 	textColor: '#212121',
+		// 	textDown: '下拉刷新...',
+		// 	textUp: '松开刷新...'
+		// }, function(ret, err) {
+		// 	//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+		// 	start = 1;
+		// 	goodsList = [];
+		// 	getDatas(function(ret) {
+		// 		goodsList = ret;
+		// 		initUI(ret, "down");
+		// 	});
+		// });
+		setTimeout(function() {
+			getDatas(function(ret) {
+				openUILoading();
+				goodsList = ret;
+				initUI(ret, "down");
+			},true);
+		}, 150);
+		//设置下拉刷新延迟时间
+		if ($api.hasCls($api.dom("body"), "aui-hide")) {
+			$api.removeCls($api.dom("body"), "aui-hide");
+			var swiper = new Swiper('.swiper-container', {
+				pagination: {
+					el: '.swiper-pagination',
+				},
+				on: {
+					slideChangeTransitionEnd: function() {
+						//切换结束时，告诉我现在是第几个slide
+						var spanStr = ''
+						spanStr += "<span>▲</span>"
+						if (this.activeIndex == 0) {
+
+							$api.html($api.dom('.spe-btn'), '日均销量' + spanStr);
+							pageParam.type = 1;
+							start = 1;
+							goodsList = [];
+							getDatas(function(ret) {
+								goodsList = ret;
+								initUI(ret, "down");
+							},false);
+						} else if (this.activeIndex == 1) {
+							$api.html($api.dom('.spe-btn'), '金额' + spanStr);
+							pageParam.type = 2;
+							start = 1;
+							goodsList = [];
+							getDatas(function(ret) {
+								goodsList = ret;
+								initUI(ret, "down");
+							},false);
+						} else if (this.activeIndex == 2) {
+							$api.html($api.dom('.spe-btn'), '日均销量' + spanStr);
+							pageParam.type = 3;
+							start = 1;
+							goodsList = [];
+							getDatas(function(ret) {
+								goodsList = ret;
+								initUI(ret, "down");
+							},false);
+						}
+					},
+				},
+			});
+		}
+
+		//监听(广播)
+		api.addEventListener({
+			name: 'changeViewModeEvent',
+		}, function(ret, err) {
+			//				console.log("changeViewModeEvent.ret:" + $api.jsonToStr(ret));
+			console.log("商品布局为:" + ret.value.viewMode);
+			var viewMode = ret.value.viewMode;
+			if (viewMode == "list") {
+				//隐藏grid
+				if (!$api.hasCls($api.dom(".aui-grid"), "aui-hide")) {
+					$api.addCls($api.dom(".aui-grid"), "aui-hide");
+				}
+				//显示list
+				if ($api.hasCls($api.dom(".aui-list"), "aui-hide")) {
+					$api.removeCls($api.dom(".aui-list"), "aui-hide");
+				}
+			} else if (viewMode == "grid") {
+				//隐藏list
+				if (!$api.hasCls($api.dom(".aui-list"), "aui-hide")) {
+					$api.addCls($api.dom(".aui-list"), "aui-hide");
+				}
+				//显示grid
+				if ($api.hasCls($api.dom(".aui-grid"), "aui-hide")) {
+					$api.removeCls($api.dom(".aui-grid"), "aui-hide");
+				}
+			}
+		});
+
+		//上拉加载
+		api.addEventListener({
+			name: 'scrolltobottom',
+			extra: {
+				threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+			}
+		}, function(ret, err) {
+			console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+			if (!isAjaxing) {
+				start += num;
+					getDatas(function(ret) {
+						goodsList = goodsList.concat(ret);
+						setTimeout(function() {
+							initUI(ret, "up");
+						}, 100);
+					},false);
+
+
+
+			}
+		});
+		_addEventListener("query_filter_changed_event", function(ret) {
+			console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+			start = 1;
+			goodsList = [];
+			getDatas(function(ret) {
+				goodsList = ret;
+				initUI(ret, "down");
+			},true);
+		});
+		_addEventListener("refresh_single_product_frm_event", function(ret) {
+			console.log("refresh_single_product_frm_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+			start = 1;
+			goodsList = [];
+			getDatas(function(ret) {
+				goodsList = ret;
+				initUI(ret, "down");
+			},true);
+		});
+	}
+</script>
+
+</html>

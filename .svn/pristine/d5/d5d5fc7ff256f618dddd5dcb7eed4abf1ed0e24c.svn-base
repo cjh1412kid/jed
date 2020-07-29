@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>Hello APP</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/cashier/cashier_win.css" />
+		<style>
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="_closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+			<a class="aui-pull-right aui-btn aui-text-default" tapmode onclick="openOrderWin()"> 订单中心 </a>
+			<div class="aui-title text-header-title aui-text-default">
+				收银台
+			</div>
+		</header>
+		<div class="sub-header box-wrap box-vertical-end aui-padded-10 aui-font-size-14">
+			<span>需支付：</span><span class="aui-text-danger">2000.00元</span>
+		</div>
+		<div class="bottom-btns flex-wrap">
+			<div class="bottom-btn flex-con bottom-btn-fk" tapmode onclick="">
+				微信支付<span class="aui-font-size-16">20000.00</span>元
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_toast.js"></script>
+	<script type="text/javascript">
+		function _closeWin() {
+			api.closeWin();
+		}
+
+		function collectAction(_obj) {
+			if ($api.hasCls(_obj, "aui-text-default")) {
+				$api.removeCls(_obj, "aui-text-default");
+				if (!$api.hasCls(_obj, "aui-text-danger")) {
+					$api.addCls(_obj, "aui-text-danger");
+				}
+				new auiToast().custom({
+					title : "收藏成功",
+					html : '<i class="aui-iconfont aui-icon-info"></i>',
+					duration : 1000
+				});
+			} else {
+				if ($api.hasCls(_obj, "aui-text-danger")) {
+					$api.removeCls(_obj, "aui-text-danger");
+				}
+				$api.addCls(_obj, "aui-text-default");
+				new auiToast().custom({
+					title : "收藏已取消",
+					html : '<i class="aui-iconfont aui-icon-info"></i>',
+					duration : 1000
+				});
+			}
+			api.parseTapmode();
+		}
+
+		apiready = function() {
+			//			$api.text($api.dom(".aui-title"), api.pageParam.name);
+			api.parseTapmode();
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			var headerPos = $api.offset(header);
+			var rect = {
+				x : 0,
+				y : 0,
+				w : 'auto',
+				h : 'auto',
+				marginLeft : 0, //相对父 window 左外边距的距离
+				marginTop : headerPos.h, //相对父 window 上外边距的距离
+				marginBottom : $api.offset($api.dom(".bottom-btns")).h, //相对父 window 下外边距的距离
+				marginRight : 0 //相对父 window 右外边距的距离
+			};
+			var bounces = true;
+			var reload = true;
+			var allowEdit = false;
+			var animation = {
+				type : "none", //动画类型（详见动画类型常量）
+				//			subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 0 //动画过渡时间，默认300毫秒
+			};
+			_openFrame("cart_frm", "cart_frm.html", rect, api.pageParam, bounces, reload, allowEdit, animation);
+			//			_addEventListener("keyback", function(ret) {
+			//			});
+			_addEventListener("pause", function(ret) {
+				console.log("pause");
+				//				alert("pause");
+			});
+			_addEventListener("viewdisappear", function(ret) {
+			});
+		};
+	</script>
+</html>

@@ -1,0 +1,59 @@
+body{
+  background: rgba(0, 0, 0, 0.38);
+}
+.invWrap {
+    background: rgba(255, 255, 255, 1);
+    overflow-y: scroll;
+}
+.invWrap::-webkit-scrollbar{
+  width: 0px;
+	height: 0px;
+	visibility: hidden;
+}
+.invTittle {
+    height: 1.83rem;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(255, 81, 0, 1);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 0.5rem;
+}
+
+.invSize {
+    height: 2.0rem;
+    line-height: 2.0rem;
+    padding: 0 1rem;
+    background: rgba(255, 250, 248, 1);
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+}
+
+.repertory {
+    height: 2.1rem;
+    line-height: 2.1rem;
+    padding:0 1rem;
+    background: rgba(248, 252, 255, 1);
+    font-size: 0.7rem;
+    font-family: Arial-Black;
+    font-weight: 900;
+    color: rgba(151, 151, 151, 1);
+}
+
+.repertory div:first-child {
+    color: rgba(80, 80, 80, 1);
+    font-weight: 400;
+    font-family: PingFangSC-Regular;
+}
+.invChartWrap{
+  padding: .9rem .5rem 0 .5rem;
+}
+#invChart{
+  width: 17rem;
+  height:14.17rem;
+  margin: auto;
+}

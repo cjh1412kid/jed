@@ -1,0 +1,49 @@
+//订单颜色区分:
+// aui-text-red : 红色
+// aui-text-orange : 橙色
+// aui-text-black : 黑色
+// aui-text-brown : 棕色
+// aui-text-green : 绿色
+// aui-text-gray : 灰色
+//订单状态 
+//********************厂家******商家****
+// ORDSTATUS_ZERO(0, "待确认", "待确认"),
+// ORDSTATUS_ONE(1, "待收款", "待支付"),
+// ORDSTATUS_TWO(2, "未发货", "待发货"),
+// ORDSTATUS_THREE(3, "已发货", "已发货"),
+// ORDSTATUS_FOUR(4, "已到货", "已收货"),
+// ORDSTATUS_FIVE(5, "已取消", "已取消");
+//1.工厂方：待确认、待收款、未发货、已发货、已到货、已取消
+//var status_gc = [{"seq":0, "status":"待确认"},{"seq":1, "status":"待收款"},{"seq":2, "status":"未发货"},{"seq":3, "status":"已发货"},{"seq":4, "status":"已到货"},{"seq":5, "status":"已取消"}];
+//2.订货方：待确认、待支付、待发货、已发货、已收货、已取消
+//var status_dh = [{"seq":0, "status":"待确认"},{"seq":1, "status":"待支付"},{"seq":2, "status":"待发货"},{"seq":3, "status":"已发货"},{"seq":4, "status":"已收货"},{"seq":5, "status":"已取消"}];
+
+
+
+//(修改后)
+//订单颜色区分:
+// aui-text-red : 红色
+// aui-text-orange : 橙色
+// aui-text-black : 黑色
+// aui-text-blue : 蓝色
+// aui-text-purple : 紫色
+// aui-text-brown : 棕色
+// aui-text-green : 绿色
+// aui-text-gray : 灰色
+//订单状态 
+//********************厂家******商家****
+// ORDSTATUS_ZERO(0, "待确认", "待确认"),红   √
+// ORDSTATUS_ONE(1, "待审核", "待支付"),橙  √
+// ORDSTATUS_TWO(2, "待入库", "待入库"),黑  √
+// ORDSTATUS_THREE(3, "未发货", "待发货"),蓝	 √
+// ORDSTATUS_FOUR(4, "部分发货", "部分发货"),紫   √
+// ORDSTATUS_FIVE(5, "已发货", "已发货"),棕  √
+// ORDSTATUS_SIX(6, "已到货", "已收货"),绿
+// ORDSTATUS_SEVEN(7, "已取消", "已取消");灰
+//1.工厂方：待确认、待审核、待入库、未发货、部分发货、已发货、已到货、已取消
+var status_gc = [{"seq":0, "status":"待确认"},{"seq":1, "status":"待审核"},{"seq":2, "status":"待入库"},{"seq":3, "status":"未发货"},{"seq":4, "status":"部分发货"},{"seq":5, "status":"已发货"},{"seq":6, "status":"已到货"},{"seq":7, "status":"已取消"}];
+//2.订货方：待确认、待支付、待入库、待发货、部分发货、已发货、已收货、已取消
+var status_dh = [{"seq":0, "status":"待确认"},{"seq":1, "status":"待支付"},{"seq":2, "status":"待入库"},{"seq":3, "status":"待发货"},{"seq":4, "status":"部分发货"},{"seq":5, "status":"已发货"},{"seq":6, "status":"已收货"},{"seq":7, "status":"已取消"}];
+ 
+
+

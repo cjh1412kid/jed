@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/custom_picker_pop.css"/>
+		<style>
+		</style>
+	</head>
+	<body class="flex-wrap flex-vertical">
+		<div class="flex-con" tapmode onclick="cancel()"></div>
+		<div class="btns flex-wrap">
+			<div class="left-btn box-wrap box-horizontal-center box-vertical-center aui-text-white aui-padded-l-15 aui-font-size-12"  tapmode onclick="cancel()">
+				取消
+			</div>
+			<div class="title flex-con box-wrap box-horizontal-center box-vertical-center aui-text-white aui-font-size-16">
+				上下滑动选择
+			</div>
+			<div class="right-btn box-wrap box-horizontal-center box-vertical-center aui-text-white aui-padded-r-15 aui-font-size-12" tapmode onclick="sure()">
+				确定
+			</div>
+		</div>
+		<div class="picker flex-wrap flex-vertical">
+			<div class="top flex-con"></div>
+			<div class="center flex-con"></div>
+			<div class="bottom flex-con"></div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/common/common.js"></script>
+	<script type="text/javascript">
+		function cancel() {
+		    // if(api.pageParam.frameName !=  "assistant_frm"){
+    		//     _execScript("", api.pageParam.frameName, "closePop('" + api.pageParam.eleID + "')");
+		    // }
+			api.closeFrame({
+			});
+		}
+
+		function sure() {
+			console.log("eleID:" + api.pageParam.eleID + ", value:" + value);
+			var valid = true;
+			//默认选择的值有效
+			if (_isStringNull(value)) {
+				if (api.pageParam.eleID == "year") {
+					_toast("请选择年份");
+				} else if (api.pageParam.eleID == "month") {
+					_toast("请选择月份");
+				} else if (api.pageParam.eleID == "week") {
+					_toast("请选择第几周");
+				}else if (api.pageParam.eleID == "goal") {
+					_toast("请选择销售目标");
+				}
+				return;
+			} else if (value == "00月") {
+				_toast("请选择月份");
+				valid = false;
+			}else if (value == "0000万") {
+				_toast("请选择销售目标");
+				valid = false;
+			}
+			if (valid){
+				_execScript("", api.pageParam.frameName, "setItem('" + api.pageParam.eleID + "', '" + value + "')");
+				cancel();
+			}
+		}
+
+		var value;
+		//选择器的值
+		apiready = function() {
+			console.log("pageParam" + $api.jsonToStr(api.pageParam));
+			var pickerPos = $api.offset($api.dom(".picker"));
+			var UICustomPicker = api.require('UICustomPicker');
+			UICustomPicker.open({
+				rect : {
+					x : pickerPos.l, //（可选项）数字类型；模块左上角的 x 坐标（相对于所属的 Window 或 Frame）；默认：0
+					y : pickerPos.t, //（可选项）数字类型；模块左上角的 y 坐标（相对于所属的 Window 或 Frame）；默认：0
+					w : pickerPos.w, //（可选项）数字类型；模块的宽度；默认：所属的 Window 或 Frame 的宽度
+					h : pickerPos.h //（可选项）数字类型；模块的高度；默认：所属的 Window 或 Frame 的高度
+				},
+				styles : {
+					bg : 'rgba(152,114,249,0)',
+					normalColor : '#666666',
+					selectedColor : '#FFAA00',
+					selectedSize : 36,
+					tagColor : '#746EDA',
+					tagSize : 36
+				},
+				data : api.pageParam.data,
+				rows : 3, //描述：（可选项）滚动内容时可见的内容行数，只接受大于1的奇整数。默认值：3
+				autoHide : false, //描述：（可选项）选中内容时，上下选项是否自动隐藏, 默认值：true
+				fixedOn : api.frameName, //描述：（可选项）模块视图添加到指定 frame 的名字（只指 frame，传 window 无效）
+				fixed : false //描述：（可选项）模块是否随所属 window 或 frame 滚动
+			}, function(ret, err) {
+				if (ret) {
+//					console.log("UICustomPicker.ret:" + JSON.stringify(ret));
+					if (ret.eventType == "selected") {
+						value = ret.data.join('');
+					}
+				} else {
+					console.log("err:" + JSON.stringify(err));
+				}
+			});
+
+			var defaultValue = ["第一周"];
+            if(api.pageParam.frameName == "category_sales_analysis_frm"){ //品类销售及库存周环比/同期比分析管理
+                switch(api.pageParam.eleID){
+                    case 'year':
+                        defaultValue = api.pageParam.eleValues[0].split("");
+                    break
+                    case 'week':
+                        defaultValue = [api.pageParam.eleValues[1]];
+                    break
+                    case 'title':
+                        defaultValue = [api.pageParam.eleValues[2]];
+                    break
+                }
+            }else{
+                switch(api.pageParam.eleID){
+                    case 'year':
+                        defaultValue = api.pageParam.eleValues[0].split("");
+                    break
+                    case 'month':
+                        defaultValue = [api.pageParam.eleValues[1]];
+                    break
+                    case 'week':
+                        defaultValue = [api.pageParam.eleValues[2]];
+                    break
+                }
+            }
+            //设置选择器默认值 (当前年份, 当前月份, 第一周)
+            console.log("默认值:"+$api.jsonToStr(defaultValue));
+            UICustomPicker.setValue({
+                id: 0,
+                data: defaultValue
+            });
+		};
+	</script>
+</html>

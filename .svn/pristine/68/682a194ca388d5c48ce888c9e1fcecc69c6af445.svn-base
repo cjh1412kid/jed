@@ -1,0 +1,743 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/goods/goods_detail_win.css" />
+	<style>
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+	<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick="_closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+		<a class="aui-pull-right aui-btn" tapmode onclick="shareTo()"> <span class="aui-iconfont aui-icon-share aui-text-default"></span> </a>
+		<div class="aui-title text-header-title aui-text-default">
+			<div class="aui-tab" id="tab">
+				<div class="aui-tab-item aui-active">
+					商品
+				</div>
+				<div class="aui-tab-item aui-hide">
+					评价
+				</div>
+			</div>
+		</div>
+	</header>
+	<div class="content flex-con"></div>
+	<div class="bottom-button flex-wrap flex-vertical">
+		<!-- 卖家 -->
+		<footer class="distributor aui-bar aui-bar-tab flex-con aui-hide flex-wrap">
+			<div class="aui-bar-tab-item aui-text-default aui-border-t" tapmode onclick="getBaseUserInfoBySeqs()" style="width: 3rem;">
+				<i class="aui-iconfont aui-icon-comment aui-font-size-18"></i>
+				<div class="aui-bar-tab-label">
+					咨询
+				</div>
+			</div>
+			<div class="collect-btn aui-bar-tab-item aui-text-default aui-border-t" tapmode onclick="collectAction(this,true)" style="width: 3rem;">
+				<i class="aui-iconfont aui-icon-star aui-font-size-18"></i>
+				<div class="aui-bar-tab-label">
+					收藏
+				</div>
+			</div>
+			<div class="aui-text-white aui-font-size-16 bottom-btn flex-con flex-wrap" style="">
+				<div class="call-in flex-con aui-hide" tapmode onclick="callIn()">调入</div>
+				<div class="call-out flex-con aui-hide" tapmode onclick="callOut()">调出</div>
+			</div>
+		</footer>
+		<!-- 提建议 -->
+		<footer class="suggest aui-bar aui-bar-tab aui-hide flex-con">
+			<div class="aui-bar-tab-item aui-text-white aui-font-size-16 active" tapmode onclick="openSuggestPop(this)">
+				提建议
+			</div>
+		</footer>
+	</div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript">
+	function callIn() {
+		if (isTransferOut == 1) {
+			return;
+		}
+		if (goodSeq != undefined) {
+			var pageParam = {
+					// sizeList:sendInputList,
+					shoesSeq:goodSeq
+			};
+			var bounces = false;
+			var  reload = true;
+			_openWin("goods_detail_fold_win", "goods_detail_fold_win.html", pageParam, bounces, reload);
+
+		}
+
+	}
+
+
+
+	function callOut() {
+		if (isTransferOut == 1) {
+			_myAlert("确定撤销吗?", "取消", "确定", function() {
+			var url = window.myServerUrl + "order/app/allocateTransfer/cancelTransferOut?shoesSeq=" + seq ;
+			console.log("撤销调出-->url:" + url);
+			_ajax(url, "cancelTransferOut", function(ret, err) {
+
+					if (ret) {
+						console.log("撤销调出-->ret:" + $api.jsonToStr(ret));
+						if (ret.code == 0) {
+						   _toast('撤销成功!');
+               refreshData();
+						} else {
+							_toast(ret.msg, 3000, "bottom", function() {});
+						}
+					} else {
+						console.log("撤销调出-->err:" + $api.jsonToStr(err));
+						_toast(window.ajaxErrorMessage);
+					}
+			});
+		});
+		}else {
+			var rect = {
+				x: 0, //左上角x坐标
+				y: 0, //左上角y坐标
+				w: "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+				h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+				marginLeft: 0, //相对父 window 左外边距的距离
+				marginTop: 0, //相对父 window 上外边距的距离
+				marginBottom: 0, //相对父 window 下外边距的距离
+				marginRight: 0 //相对父 window 右外边距的距离
+			};
+			var animation = {
+				type: "none", //动画类型（详见动画类型常量）
+				subType: "from_bottom", //动画子类型（详见动画子类型常量）
+				duration: 0
+			};
+			if (goodSeq != undefined) {
+				var pageParam = {
+					goodSeq: goodSeq
+				};
+				_openFrame("goods_detail_callout_frm", "goods_detail_callout_frm.html", rect, pageParam, false, true, false, animation, "", "resize");
+
+
+			}
+		}
+
+
+	}
+
+	function _closeWin() {
+		api.closeWin();
+	}
+	//弹出"我的建议"对话框
+	function openSuggestPop(_obj) {
+		if (userInfo.accountName == "visitor") {
+			visitorAlert("../../");
+		} else {
+			if (!$api.hasCls(_obj, "active")) {
+				_toast("您已提交过建议了哟~o~");
+				return;
+			}
+			var _titleMarginT = 0;
+			var _titleH = 40;
+			if (api.systemType == "android") {
+				_titleMarginT = 10;
+				_titleH = 30;
+			}
+			_myInput('我的建议', '在此输入建议内容...', 'search', '取消', '提交', function(ret) {
+				console.log("input.ret:" + $api.jsonToStr(ret));
+				var suggest = ret.text;
+				//增加或修改"建议内容"
+				updateShoesValuate(suggest, "suggest");
+			});
+		}
+	}
+
+	//增加或修改建议表(value为值, 参数field为对应字段:1.suggest建议内容, 2.score我的评分, 3.isCollected是否收藏)
+	function updateShoesValuate(value, field) {
+		var url = window.myServerUrl + "order/app/goodsData/updateShoesValuate";
+		var msg = "";
+		var data; //存放参数
+		if (field == "score") {
+			msg = "评分";
+			data = {
+				values: {
+					"shoesSeq": seq,
+					"score": value,
+				}
+			};
+		} else if (field == "isCollected") {
+			msg = "收藏";
+			data = {
+				values: {
+					"shoesSeq": seq,
+					"isCollected": value,
+				}
+			};
+		} else if (field == "suggest") {
+			msg = "提交商品建议";
+			data = {
+				values: {
+					"shoesSeq": seq,
+					"suggest": value,
+				}
+			};
+		}
+		console.log("增加或修改建议表-->url:" + url);
+		console.log("增加或修改建议表-->data:" + $api.jsonToStr(data));
+		if (field == "suggest") {
+			_showProgress("正在提交商品建议", "", true);
+		}
+		_ajax(url, "updateShoesValuate", function(ret, err) {
+			api.hideProgress();
+			if (ret) {
+				console.log("增加或修改建议表-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+
+					if (field == "suggest") { //提建议
+						_toast(msg + "成功", 3000, "bottom", function() {});
+						setTimeout(function() {
+							_sendEvent("suggestListUpdateEndEvent");
+							if ($api.hasCls($api.dom(".suggest .aui-bar-tab-item"), "active")) {
+								$api.removeCls($api.dom(".suggest .aui-bar-tab-item"), "active");
+							}
+						}, 300);
+					} else if (field == "isCollected") { //收藏/取消收藏
+						_sendEvent("updateBrowseCollectedNum");
+					}
+				} else {
+					_toast(msg + "失败", 3000, "bottom", function() {});
+				}
+			} else {
+				console.log("增加或修改建议表-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+		}, "post", data);
+	}
+
+	/* 分享商品到XX */
+	function shareTo() {
+		wx = api.require('wx');
+		qq = api.require('QQPlus');
+		dialogBox.actionMenu({
+			rect: {
+				h: 150
+			},
+			texts: {
+				cancel: '取消'
+			},
+			items: [{
+				text: '微信',
+				icon: 'widget://image/share/wx.png'
+			}, {
+				text: '朋友圈',
+				icon: 'widget://image/share/wx_circle.png'
+			}, {
+				text: 'QQ好友',
+				icon: 'widget://image/share/qq.png'
+			}, {
+				text: 'QQ空间',
+				icon: 'widget://image/share/qzone.png'
+			}],
+			styles: {
+				bg: '#FFF',
+				column: 4,
+				itemText: {
+					color: '#000',
+					size: 12,
+					marginT: 8
+				},
+				itemIcon: {
+					size: 30
+				},
+				cancel: {
+					bg: 'fs://icon.png',
+					color: '#000',
+					h: 44,
+					size: 14
+				}
+			},
+			isCuttingLine: false,
+			tapClose: true,
+		}, function(ret) {
+			// console.log("actionMenu.ret:" + JSON.stringify(ret));
+			api.download({
+				url: data.imgList[0],
+				report: true,
+				cache: true,
+				allowResume: true
+			}, function(ret1, err1) {
+				if (ret1.state == 1) {
+					//下载成功
+					// alert(ret1.savePath)
+					if (ret.index == '0' || ret.index == '1') {
+						// alert('weixin')
+						wx.isInstalled(function(ret2, err2) {
+							if (ret2.installed) {
+								// alert("当前设备已安装微信客户端");
+								if (ret.index == '0') {
+									wx.shareImage({
+										apiKey: '',
+										scene: 'session',
+										thumb: 'widget://icon/icon192x192.png',
+										contentUrl: ret1.savePath
+											// contentUrl: 'widget://icon/icon150x150.png'
+									}, function(ret3, err3) {
+										console.log($api.jsonToStr(ret3));
+										console.log($api.jsonToStr(err3));
+										if (ret3.status) {
+											_toast('分享成功');
+										} else {
+											_toast('分享失败');
+										}
+									});
+								} else if (ret.index == '1') {
+									wx.shareImage({
+										apiKey: '',
+										scene: 'timeline',
+										thumb: 'widget://icon/icon192x192.png',
+										contentUrl: ret1.savePath
+											// contentUrl: 'widget://icon/icon150x150.png'
+									}, function(ret4, err4) {
+										console.log(err4);
+										if (ret4.status) {
+											_toast('分享成功');
+										} else {
+											_toast('分享失败');
+										}
+									});
+								}
+							} else {
+								_toast('当前设备未安装微信客户端');
+							}
+						});
+					} else if (ret.index == '2' || ret.index == '3') {
+						// alert('qq');
+						qq.installed(function(ret5, err5) {
+							if (ret5.status) {
+								if (ret.index == '2') {
+									qq.shareImage({
+										type: 'QFriend',
+										imgPath: ret1.savePath
+									}, function(ret4, err4) {
+										if (ret4.status) {
+											// alert("分享成功！");
+											_toast('分享成功')
+										} else {
+											// api.alert({
+											// 	msg: JSON.stringify(err)
+											// });
+											_toast('分享失败')
+										}
+									});
+								} else if (ret.index == '3') {
+									qq.shareImage({
+										type: 'QZone',
+										imgPath: ret1.savePath
+									}, function(ret6, err6) {
+										if (ret6.status) {
+											_toast('分享成功')
+										} else {
+											// api.alert({
+											// 	msg: JSON.stringify(err)
+											// });
+											_toast('分享失败')
+										}
+									});
+								}
+							} else {
+								_toast('当前设备未安装QQ客户端')
+							}
+						});
+					}
+				} else if (ret1.state == 2) {
+					_toast('图片未保存本地或本商品没有图片');
+				}
+			});
+			dialogBox.close({
+				dialogName: 'actionMenu'
+			});
+		});
+	}
+
+	//点击"收藏"
+	function collectAction(_obj, isHandle) {
+		if (userInfo.accountName == "visitor") {
+			visitorAlert("../../");
+		} else {
+			if ($api.hasCls(_obj, "aui-text-default")) {
+				$api.removeCls(_obj, "aui-text-default");
+				if (!$api.hasCls(_obj, "aui-text-danger")) {
+					$api.addCls(_obj, "aui-text-danger");
+				}
+				isCollected = 1;
+				//					$api.setStorage("collectionAreaListKey", collectionAreaList);
+				if (isHandle) {
+					_execScript("", currentFrmName, "showToast('收藏成功');");
+				}
+			} else {
+				if ($api.hasCls(_obj, "aui-text-danger")) {
+					$api.removeCls(_obj, "aui-text-danger");
+				}
+				$api.addCls(_obj, "aui-text-default");
+				isCollected = 0;
+				//					$api.setStorage("collectionAreaListKey", collectionAreaList);
+				if (isHandle) {
+					_execScript("", currentFrmName, "showToast('收藏已取消');");
+				}
+			}
+			if (isHandle) {
+				updateShoesValuate(isCollected, "isCollected");
+			}
+			//增加或修改"是否收藏"
+			api.parseTapmode();
+		}
+	}
+
+	/**
+	 *	初始化调出按钮
+	 */
+	function initCallOutUI() {
+
+		if (data.isMyShoes == 1) {
+			// //本店有这个鞋子，可以调出
+			// if ($api.hasCls($api.dom(".call-out"), "aui-hide")) {
+				$('.call-out').removeClass('aui-hide');
+			// }
+			if (data.isTransferOut == 1) {
+				//已调出
+					var str = '<div class="font2">(已调出)</div><div>撤销调出</div>'
+					$('.call-out').html(str);
+					isTransferOut = 1;
+			} else {
+				//未调出
+					$('.call-out').html('调出');
+					isTransferOut = 0;
+
+			}
+		}
+	}
+
+	/**
+	 *	初始化调入按钮
+	 */
+	function initCallInUI() {
+
+		 $('.call-in').removeClass('aui-hide');
+		 if (data.isTransferOut == 1) {
+		 	//已调出
+			$('.call-in').css("background","#CCCCCC");
+		}else {
+			$('.call-in').css("background","#FFB151");
+		}
+
+	}
+  function refreshData(){
+		var url = window.myServerUrl + "order/app/goodsData/getGoodData?shoesSeq=" + seq + "&isSearch=" + api.pageParam.isSearch;
+		console.log("获取商品详情-->url:" + url);
+		_ajax(url, "getGoodData", function(ret, err) {
+			setTimeout(function() {
+				if (ret) {
+					console.log("获取商品详情-->ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						data = ret.result[0];
+						initCallInUI();
+						initCallOutUI();
+
+
+					} else {
+						_toast("获取商品详情失败！", 3000, "bottom", function() {});
+					}
+				} else {
+					console.log("获取商品详情-->err:" + $api.jsonToStr(err));
+					_toast(window.ajaxErrorMessage);
+				}
+			}, 150);
+		});
+	}
+	//获取商品详情
+	function getGoodData(call) {
+		var url = window.myServerUrl + "order/app/goodsData/getGoodData?shoesSeq=" + seq + "&isSearch=" + api.pageParam.isSearch;
+		console.log("获取商品详情-->url:" + url);
+		_ajax(url, "getGoodData", function(ret, err) {
+			setTimeout(function() {
+				if (ret) {
+					console.log("获取商品详情-->ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						data = ret.result[0];
+						initCallOutUI();
+						initCallInUI();
+
+
+					} else {
+						_toast("获取商品详情失败！", 3000, "bottom", function() {});
+					}
+				} else {
+					console.log("获取商品详情-->err:" + $api.jsonToStr(err));
+					_toast(window.ajaxErrorMessage);
+				}
+				call(data);
+				closeUILoading();
+			}, 150);
+		});
+	}
+
+	/*点击"咨询", 根据用户seq（支持多个), 获取用户详细信息 */
+	function getBaseUserInfoBySeqs() {
+		if (userInfo.accountName == "visitor") {
+			visitorAlert("../../");
+		} else {
+			var url = window.myServerUrl + "order/app/onlineMessage/getBaseUserInfoBySeqs?userSeqs=" + userInfo.adminUserSeq;
+			console.log("ajax.url:" + url);
+			_ajax(url, "getBaseUserInfoBySeqs", function(ret, err) {
+				if (ret) {
+					console.log("ajax.getBaseUserInfoBySeqs.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						var data = ret.result;
+						if (_isArrayNull(data)) {
+							_toast("未获取到厂家信息，请稍后再试。");
+							return;
+						}
+						//关闭播放器
+						_execScript(api.winName, "goods_detail_1_frm", "closePlayer()");
+						var pageParam = {
+							conversationType: "PRIVATE",
+							targetId: data[0].seq,
+							targetName: data[0].userName,
+							framePage: "goods_detail_win",
+							goodsShortData: goodsShortData
+						};
+						_openWin("chat_win", "../../chat/chat_win.html", pageParam);
+					} else {
+						_toast(ret.msg, 3000, "bottom", function() {});
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			});
+		}
+	}
+
+	function initUi() {
+		if (userInfo.factoryUserFlag) {
+			//公司
+			if (!$api.hasCls($api.dom(".distributor"), "aui-hide")) {
+				$api.addCls($api.dom(".distributor"), "aui-hide");
+			}
+			$api.fixTabBar($api.dom(".distributor"));
+			footerPos = $api.offset($api.dom(".distributor"));
+		} else {
+			//店铺
+			if ($api.hasCls($api.dom(".distributor"), "aui-hide")) {
+				$api.removeCls($api.dom(".distributor"), "aui-hide");
+			}
+			$api.fixTabBar($api.dom(".distributor"));
+			$api.fixTabBar($api.dom(".suggest"));
+			footerPos = $api.offset($api.dom(".distributor"));
+		}
+	}
+
+	function closeUILoading() {
+		UILoading.closeKeyFrame();
+	}
+
+	function openUILoading() {
+		UILoading.keyFrame({
+			rect: {
+				w: 102,
+				h: 102
+			},
+			styles: {
+				bg: 'rgba(0,0,0,0)',
+				corner: 5,
+				interval: 50,
+				frame: {
+					w: 102,
+					h: 102
+				}
+			},
+			//				content : [{
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}, {
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}],
+			mask: "rgba(255,0,0,0)"
+		}, function(ret) {
+			//								alert(JSON.stringify(ret));
+			console.log(12345);
+		});
+	}
+
+	function initData() {
+		userInfo = $api.getStorage("userInfoKey");
+		dialogBox = api.require('dialogBox');
+		seq = api.pageParam.seq; //鞋子seq
+		timeRange = api.pageParam.timeRange;
+
+
+			startDate=api.pageParam.startDate;
+			endDate = api.pageParam.endDate;
+
+
+		UILoading = api.require('UILoading');
+	}
+
+	var tab = new auiTab({
+		element: document.getElementById("tab"),
+	}, function(ret) {
+		api.setFrameGroupIndex({
+			name: 'goods_detail_group',
+			index: ret.index - 1
+		});
+	});
+	var currentFrmName;
+	var seq; //鞋子seq
+	var userInfo;
+	var goodsShortData;
+	//初始购买价格
+	var dialogBox;
+	var footerPos;
+	var score;
+	//我的评分,默认为1 (代表1颗星)
+	var isCollected;
+	//是否收藏, 默认为0 (0:未收藏, 1:已收藏)
+	var UILoading;
+	//该款鞋子颜色,次吗,库存等信息
+	var wx;
+	var qqPlus;
+	var data;
+	var goodSeq;
+	var timeRange;
+	var startDate;
+	var endDate;
+	var isTransferOut = 0;
+	apiready = function() {
+		// console.log($api.jsonToStr(api.pageParam)+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		initData();
+		initUi();
+		setTimeout(function() {
+			openUILoading();
+			getGoodData(function(ret) { //获取:商品详情
+				if (ret.isCollected == 1) {
+					//已收藏
+					collectAction($api.dom(".collect-btn"), false);
+				}
+				goodsShortData = {
+					goodId: ret.goodId,
+					goodName: ret.goodName,
+					price: ret.dealPrice1,
+					image: ret.imgList[0],
+					introduce: ret.introduce,
+					seq: ret.seq,
+				};
+				var headerPos = $api.offset(header);
+				var rect = {
+					x: 0,
+					y: 0,
+					w: 'auto',
+					h: 'auto',
+					marginLeft: 0, //相对父 window 左外边距的距离
+					marginTop: headerPos.h, //相对父 window 上外边距的距离
+					marginBottom: footerPos.h, //相对父 window 下外边距的距离
+					marginRight: 0 //相对父 window 右外边距的距离
+				};
+				ret.shopSeqs = [];
+				console.log(ret.timeRange);
+				if (timeRange==undefined) {
+					ret.timeRange = '30';
+
+				}else {
+					ret.timeRange = timeRange;
+					ret.startDate = startDate;
+					ret.endDate=endDate;
+				}
+
+				if (userInfo.factoryUserFlag) {
+					//公司帐号
+					ret.shopSeqs.push($api.getStorage("allShopsKey")[0].seq);
+				} else {
+					//门店帐号
+					ret.shopSeqs.push(userInfo.shopSeq);
+				}
+				ret.avgSore = _isStringNull(api.pageParam.avgSore) ? '' : api.pageParam.avgSore
+				ret.pageName = api.pageParam.pageName
+				var frames = [{
+					name: 'goods_detail_frm',
+					url: 'goods_detail_frm.html',
+					bounces: false,
+					pageParam: ret
+				}, {
+					name: 'goods_suggest_frm',
+					url: 'goods_suggest_frm.html',
+					bounces: true,
+					pageParam: {
+						seq: seq,
+					}
+				}];
+				_openFrameGroup("goods_detail_group", frames, function(ret1, err) {
+					//				console.log("_openFrameGroup.ret1:" + $api.jsonToStr(ret1));
+					currentFrmName = ret1.name;
+					if (ret1.index == 1) {
+						setTimeout(function() {
+							_execScript("", "goods_suggest_frm", "clickSuggestTab()")
+						}, 50)
+					}
+					tab.setActive(ret1.index + 1);
+					if (!userInfo.factoryUserFlag) {
+						//门店
+						if (ret1.index == 1) { //点击"建议"时
+							if (!$api.hasCls($api.dom(".distributor"), "aui-hide")) {
+								$api.addCls($api.dom(".distributor"), "aui-hide");
+							}
+							if ($api.hasCls($api.dom(".suggest"), "aui-hide")) {
+								$api.removeCls($api.dom(".suggest"), "aui-hide");
+							}
+							if (ret.suggest == 1) {
+								//建议过
+								if ($api.hasCls($api.dom(".suggest .aui-bar-tab-item"), "active")) {
+									$api.removeCls($api.dom(".suggest .aui-bar-tab-item"), "active");
+								}
+							}
+						} else {
+							if (!$api.hasCls($api.dom(".suggest"), "aui-hide")) {
+								$api.addCls($api.dom(".suggest"), "aui-hide");
+							}
+							if ($api.hasCls($api.dom(".distributor"), "aui-hide")) {
+								$api.removeCls($api.dom(".distributor"), "aui-hide");
+							}
+						}
+					}
+					closeUILoading();
+				}, "", false, rect, 0, 1);
+			});
+		}, 300);
+		_addEventListener("userInfoUpdateKey", function(ret) {
+			userInfo = $api.getStorage("userInfoKey");
+		}, {});
+		_addEventListener("pause", function(ret) {
+			console.log("pause");
+		});
+		_addEventListener("viewdisappear", function(ret) {
+			api.closeFrame({
+				name: 'goods_detail_callin_frm'
+			});
+
+		});
+		_addEventListener("getgoodSeqEvent", function(ret) {
+			goodSeq = ret.value
+		});
+	};
+</script>
+
+</html>

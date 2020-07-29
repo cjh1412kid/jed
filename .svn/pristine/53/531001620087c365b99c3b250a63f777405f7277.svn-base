@@ -1,0 +1,1365 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>门店销售分析</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui_slide.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/sale/sale_indicator_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16"><span></span>销售指标分析</div>
+    </header>
+    <div class="salWrap flex-con flex-wrap flex-vertical">
+        <div class="tabWrap">
+            <div class="aui-tab" id="tab">
+                <!-- <div class="aui-tab-item" month="0">全年</div>
+                <div class="aui-tab-item" month="1">一月</div>
+                <div class="aui-tab-item" month="2">二月</div>
+                <div class="aui-tab-item" month="3">三月</div>
+                <div class="aui-tab-item" month="4">四月</div>
+                <div class="aui-tab-item" month="5">五月</div>
+                <div class="aui-tab-item" month="6">六月</div>
+                <div class="aui-tab-item" month="7">七月</div>
+                <div class="aui-tab-item" month="8">八月</div>
+                <div class="aui-tab-item" month="9">九月</div>
+                <div class="aui-tab-item" month="10">十月</div>
+                <div class="aui-tab-item" month="11">十一月</div>
+                <div class="aui-tab-item" month="12">十二月</div> -->
+            </div>
+        </div>
+        <div class="salMes">
+          <div class="salTittle flex-wrap flex-vertical">
+              <div class="salName sal-time"></div>
+              <div class="flex-wrap salMiddle">
+                <img src="../../image/sale/img_card.png" alt="">
+                <div class="flex-con flex-wrap flex-vertical">
+                  <div class="time flex-1 sal_flex2 sal-time1"></div>
+                  <div class="flex-1 sal_flex2 ">
+                    <span class="finish-text">实际完成:</span>
+                    <span class="finish-text1 text-spe actually-complete"></span>
+                    <span class="finish-text2">万</span>
+                  </div>
+                  <div class="flex-1 sal_flex2">
+                    <span class="finish-text3">去年同期:</span>
+                    <span class="finish-text4 text-spe actually-complete1"></span>
+                    <span class="finish-text5 aui-margin-r-5">万</span>
+                    <span class="finish-text4 text-spe persent-num"></span>
+                    <span class="red persent text-spe persent-num1"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-con aui-padded-l-10 flex-wrap flex-vertical">
+                <div class="flex-1 flex-wrap">
+                  <div class="flex-1"></div>
+                  <div class="flex-1 finish-text6 sal_flex1">基准指标</div>
+                  <div class="flex-1 finish-text6 sal_flex1">中级指标</div>
+                  <div class="flex-1 finish-text6 sal_flex1">高级指标</div>
+                </div>
+                <div class="flex-1 flex-wrap">
+                  <div class="flex-1 finish-text6 sal_flex1">指标</div>
+                  <div class="flex-1 sal_flex1">
+                    <span class="finish-text7 basic-index"></span>
+                    <span class="finish-text8">万</span>
+                  </div>
+                  <div class="flex-1 sal_flex1">
+                    <span class="finish-text7 middle-index"></span>
+                    <span class="finish-text8">万</span>
+                  </div>
+                  <div class="flex-1 sal_flex1">
+                    <span class="finish-text7 advance-index"></span>
+                    <span class="finish-text8">万</span>
+                  </div>
+                </div>
+                <div class="flex-1 flex-wrap">
+                  <div class="finish-text6 sal_flex1 flex-1">完成率</div>
+                  <div class="flex-1 sal_flex1">
+                    <span class="finish-text9 basic-index1"></span>
+                    <span class="finish-text10">%</span>
+                  </div>
+                  <div class="flex-1 sal_flex1">
+                    <span class="finish-text9 middle-index1"></span>
+                    <span class="finish-text10">%</span>
+                  </div>
+                  <div class="flex-1 sal_flex1">
+                    <span class="finish-text9 advance-index1"></span>
+                    <span class="finish-text10">%</span>
+                  </div>
+                </div>
+                </div>
+              </div>
+          </div>
+
+        </div>
+        <div class="salListWrap flex-con flex-wrap flex-vertical aui-hide">
+            <div class="salList flex-con flex-wrap flex-vertical">
+                <div class="listHeader sal_flex aui-hide">
+                    <span class="shop" tapmode onclick="clickbtn()">本店</span>
+                    <span class="shop2" tapmode onclick="clickbtn1()">导购A</span>
+                    <span class="shop3" tapmode onclick="clickbtn2()">导购B</span>
+                </div>
+                <div class="sub-header flex-wrap listTittle">
+                    <div class="box-wrap box-horizontal-center box-vertical-center">
+                        总/周/日
+                    </div>
+                    <div class="sort-btn box-wrap box-horizontal-center box-vertical-center active" data-orderBy="totalMoney" tapmode onclick="sort(this)">
+                        指标<span>▲</span>
+                    </div>
+                    <div class="sort-btn box-wrap box-horizontal-center box-vertical-center" data-orderBy="completeMoney" tapmode onclick="sort(this)">
+                        已完成<span>▼</span>
+                    </div>
+                    <div class="sort-btn box-wrap box-horizontal-center box-vertical-center" data-orderBy="completePercent" tapmode onclick="sort(this)">
+                        完成度<span>▲</span>
+                    </div>
+                </div>
+                <div class="huizong-tittle">
+                    <!-- <div class="thisShop">
+                    <div class='listTittle sal_flex'>
+                      <div class='sal_flex1'>汇总</div>
+                      <div class='sal_flex1'>
+                        <span class='textStyle'>1170</span>
+                        <span>万</span>
+                      </div>
+                      <div class='sal_flex1'>
+                        <span class='textStyle'>5937</span>
+                        <span>万</span>
+                      </div>
+                      <div class='sal_flex1'>
+                        <span class='textStyle1'>507.44</span>
+                        <span class='textStyle1'>%</span>
+                      </div>
+                    </div> -->
+                </div>
+                <div class="huizong flex-con">
+
+                    <!-- <section class='aui-content-padded'>
+                          <ul class='aui-list aui-collapse'>
+                            <div class='aui-collapse-item'>
+                              <li class='aui-list-item aui-collapse-header speList'tapmode>
+                                 <div class='aui-list-item-inner'>
+                                   <div class='sal_flex1'>
+                                      <div class='aui-list-item-title item_Spe1'>第1周</div>
+                                      <div class='aui-list-item-right'>
+                                         <i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>
+                                       </div>
+                                     </div>
+                                     <div class='sal_flex1'>
+                                       <span class='textStyle'>190</span>
+                                       <span class='item_Spe'>万</span>
+                                     </div>
+                                     <div class='sal_flex1'>
+                                       <span class='textStyle'>5937</span>
+                                       <span class='item_Spe'>万</span>
+                                     </div>
+                                     <div class='sal_flex1'>
+                                       <span class='textStyle1'>3125.00</span>
+                                       <span class='textStyle1'>%</span>
+                                     </div>
+                                   </div>
+                                 </li>
+                                 <div class='aui-collapse-content'>
+                                    <li class='aui-list-item' tapmode >
+                                      <ul class='weekList'>
+                                        <li class="sal_flex">
+                                               <div class="weeSpe">1.7</div>
+                                               <div class="sal_flex1 weeMove">
+                                                   <span class="weeSpe1">0.5</span>
+                                                   <span class="weeSpe2">万</span>
+                                               </div>
+                                               <div class="sal_flex1 weeMove1">
+                                                   <span class="weeSpe1">0.3</span>
+                                                   <span class="weeSpe2">万</span>
+                                               </div>
+                                               <div class="sal_flex1 weeMove2">
+                                                   <span class="weeSpe1">60</span>
+                                                   <span class="weeSpe2">%</span>
+                                               </div>
+                                           </li>
+                                           <li class="sal_flex">
+                                                  <div class="weeSpe">1.7</div>
+                                                  <div class="sal_flex1 weeMove">
+                                                      <span class="weeSpe1">0.5</span>
+                                                      <span class="weeSpe2">万</span>
+                                                  </div>
+                                                  <div class="sal_flex1 weeMove1">
+                                                      <span class="weeSpe1">0.3</span>
+                                                      <span class="weeSpe2">万</span>
+                                                  </div>
+                                                  <div class="sal_flex1 weeMove2">
+                                                      <span class="weeSpe1">60</span>
+                                                      <span class="weeSpe2">%</span>
+                                                  </div>
+                                              </li>
+                                      </ul>
+                                    </li>
+                                  </div>
+                                </div>
+                              </ul>
+                            </section> -->
+                    <!-- <section class='aui-content-padded'>
+            <ul class='aui-list aui-collapse'>
+              <div class='aui-collapse-item'>
+                <li class='aui-list-item aui-collapse-header speList' tapmode>
+                   <div class='aui-list-item-inner'><div class='sal_flex1'>
+                      <div class='aui-list-item-title item_Spe1'>第1周</div>
+                      <div class='aui-list-item-right'> <i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>
+                      </div>
+                    </div>
+                    <div class='sal_flex1'>
+                      <span class='textStyle'>190</span>
+                       <span class='item_Spe'>万</span>
+                     </div>
+                     <div class='sal_flex1'>
+                       <span class='textStyle'>5937</span>
+                       <span class='item_Spe'>万</span></div>
+                       <div class='sal_flex1'><span class='textStyle1'>3125.00</span>
+                         <span class='textStyle1'>%</span></div></div></li>
+                         <div class='aui-collapse-content'>
+                            <li class='aui-list-item' tapmode ><ul class='weekList'>
+                              <li class='sal_flex'>
+                                <div class='weeSpe'>2.2</div>
+                                <div class='sal_flex1 weeMove'>
+                                  <span class='weeSpe1'>90</span>
+                                  <span class='weeSpe2'>万</span>
+                                </div>
+                                <div class='sal_flex1 weeMove1'>
+                                  <span class='weeSpe1'>0</span>
+                                  <span class='weeSpe2'>万</span>
+                                </div>
+                                <div class='sal_flex1 weeMove1'>
+                                  <span class='weeSpe1'>0</span>
+                                  <span class='weeSpe2'>%</span>
+                                </div>
+                              </li>
+                               <li class='sal_flex'>
+                                  <div class='weeSpe'>2.3</div>
+                                  <div class='sal_flex1 weeMove'>
+                                    <span class='weeSpe1'>100</span>
+                                    <span class='weeSpe2'>万</span>
+                                  </div><div class='sal_flex1 weeMove1'>
+                                    <span class='weeSpe1'>0</span>
+                                     <span class='weeSpe2'>万</span>
+                                   </div><div class='sal_flex1 weeMove1'>
+                                     <span class='weeSpe1'>0</span><span class='weeSpe2'>%</span>
+                                   </div>
+                                 </li></ul> </li></div></div></ul>
+                               </section> -->
+
+                </div>
+                <div class="footerWrap">
+                    <div class="listFooter">截止至2019.01.05</div>
+                </div>
+            </div>
+            <div class="thisShop1 aui-hide">
+                <div class="huizong">
+                    <div class="listTittle sal_flex">
+                        <div class="sal_flex1">汇总</div>
+                        <div class="sal_flex1">
+                            <span class="textStyle">252</span>
+                            <span>万</span>
+                        </div>
+                        <div class="sal_flex1">
+                            <span class="textStyle">12.5</span>
+                            <span>万</span>
+                        </div>
+                        <div class="sal_flex1">
+                            <span class="textStyle1">50</span>
+                            <span class="textStyle1">%</span>
+                        </div>
+                    </div>
+                    <section class="aui-content-padded">
+                        <ul class="aui-list aui-collapse">
+                            <div class="aui-collapse-item">
+                                <li class="aui-list-item aui-collapse-header speList" tapmode>
+                                    <div class="aui-list-item-inner">
+                                        <div class="sal_flex1">
+                                            <div class="aui-list-item-title item_Spe1">第一周</div>
+                                            <div class="aui-list-item-right">
+                                                <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                                            </div>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle">25</span>
+                                            <span class="item_Spe">万</span>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle">12.5</span>
+                                            <span class="item_Spe">万</span>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle1">50</span>
+                                            <span class="textStyle1">%</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <div class="aui-collapse-content">
+                                    <li class="aui-list-item">
+                                        <ul class="weekList">
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.7</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.8</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.9</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.10</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.11</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.12</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.13</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </div>
+                            </div>
+                            <div class="aui-collapse-item">
+                                <li class="aui-list-item aui-collapse-header speList" tapmode>
+                                    <div class="aui-list-item-inner">
+                                        <div class="sal_flex1">
+                                            <div class="aui-list-item-title item_Spe1">第二周</div>
+                                            <div class="aui-list-item-right">
+                                                <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                                            </div>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle">25</span>
+                                            <span class="item_Spe">万</span>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle">12.5</span>
+                                            <span class="item_Spe">万</span>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle1">50</span>
+                                            <span class="textStyle1">%</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <div class="aui-collapse-content">
+                                    <li class="aui-list-item">
+                                        <ul class="weekList">
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.7</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.8</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.9</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.10</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.11</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.12</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.13</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </div>
+                            </div>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+            <div class="thisShop2 aui-hide">
+                <div class="huizong">
+                    <div class="listTittle sal_flex">
+                        <div class="sal_flex1">汇总</div>
+                        <div class="sal_flex1">
+                            <span class="textStyle">259</span>
+                            <span>万</span>
+                        </div>
+                        <div class="sal_flex1">
+                            <span class="textStyle">12.5</span>
+                            <span>万</span>
+                        </div>
+                        <div class="sal_flex1">
+                            <span class="textStyle1">50</span>
+                            <span class="textStyle1">%</span>
+                        </div>
+                    </div>
+                    <section class="aui-content-padded">
+                        <ul class="aui-list aui-collapse">
+                            <div class="aui-collapse-item">
+                                <li class="aui-list-item aui-collapse-header speList">
+                                    <div class="aui-list-item-inner">
+                                        <div class="sal_flex1">
+                                            <div class="aui-list-item-title item_Spe1">第一周</div>
+                                            <div class="aui-list-item-right">
+                                                <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                                            </div>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle">25</span>
+                                            <span class="item_Spe">万</span>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle">12.5</span>
+                                            <span class="item_Spe">万</span>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle1">50</span>
+                                            <span class="textStyle1">%</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <div class="aui-collapse-content">
+                                    <li class="aui-list-item">
+                                        <ul class="weekList">
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.7</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.8</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.9</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.10</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.11</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.12</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">1.13</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                </div>
+                            </div>
+                            <div class="aui-collapse-item">
+                                <li class="aui-list-item aui-collapse-header speList" tapmode>
+                                    <div class="aui-list-item-inner">
+                                        <div class="sal_flex1">
+                                            <div class="aui-list-item-title item_Spe1">第二周</div>
+                                            <div class="aui-list-item-right">
+                                                <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                                            </div>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle">25</span>
+                                            <span class="item_Spe">万</span>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle">12.5</span>
+                                            <span class="item_Spe">万</span>
+                                        </div>
+                                        <div class="sal_flex1">
+                                            <span class="textStyle1">50</span>
+                                            <span class="textStyle1">%</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <div class="aui-collapse-content">
+                                    <li class="aui-list-item">
+                                        <ul class="weekList">
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.7</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.8</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.9</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.10</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.11</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.12</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                            <li class="sal_flex">
+                                                <div class="weeSpe">2.13</div>
+                                                <div class="sal_flex1 weeMove">
+                                                    <span class="weeSpe1">0.5</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove1">
+                                                    <span class="weeSpe1">0.3</span>
+                                                    <span class="weeSpe2">万</span>
+                                                </div>
+                                                <div class="sal_flex1 weeMove2">
+                                                    <span class="weeSpe1">60</span>
+                                                    <span class="weeSpe2">%</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                </div>
+                            </div>
+                        </ul>
+                    </section>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/echarts_min.js"></script>
+<script type="text/javascript" src="../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_toast.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_slide.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript" src="../../script/common/echarts_min.js"></script>
+<script type="text/javascript" src="../../script/common/linq.js"></script>
+<script type="text/javascript">
+function animationTab(_obj) {
+  if ( _obj<=3) {
+      // $("#tab").animate({left:-(_obj*3.6-7.2)+"rem" }, "slow");
+      $(".tabWrap").scrollLeft(0);
+  }
+    if (_obj > 3 ) {
+        // $("#tab").animate({left:-(_obj*3.6-7.2)+"rem" }, "slow");
+        $(".tabWrap").scrollLeft((_obj * 3.6 - 3 * 3.6) * 20);
+    }
+}
+function renderMonth() {
+   userInfo=$api.getStorage("userInfoKey");
+    var monthList = "";
+    for (var i = 0; i < 13; i++) {
+        if (i == 0) {
+            monthList += "<div class='aui-tab-item' month='0'> 全年</div>"
+        } else {
+            monthList += "<div class='aui-tab-item' month='" + i + "'>" + i + "月</div>"
+        }
+    }
+    $api.append($api.dom('#tab'), monthList);
+    console.log(monthList);
+    var listWidth = "width:" + (i * 3.6) + "rem";
+    $api.css($api.dom('#tab'), listWidth);
+      tab = new auiTab({
+          element: document.getElementById("tab"),
+      }, function(obj) {
+          //console.log(obj.dom)
+          //  console.log($api.attr(obj.dom,'all-data','0'));
+          var value = $api.attr(obj.dom, 'month');
+          api.pageParam.month = value
+          getDatas();
+      });
+      tab.setActive(api.pageParam.month+1);
+      animationTab(api.pageParam.month+1)
+}
+
+    // function judgeUser(){
+    //   	userInfo = $api.getStorage("userInfoKey");
+    //     console.log($api.jsonToStr(userInfo));
+    //     if(userInfo.factoryUserFlag){
+    //       //公司账号
+    //       if (api.pageParam.month == 0) {
+    //           $api.text($api.dom('.aui-title span'), api.pageParam.shopName + "全年");
+    //       } else {
+    //           $api.text($api.dom('.aui-title span'), api.pageParam.shopName + api.pageParam.month + "月");
+    //       }
+    //       $api.text($api.dom('.salName'), api.pageParam.shopName);
+    //       $api.text($api.dom('.NspeColor1'), api.pageParam.totalMoney);
+    //       $api.text($api.dom('.NspeColor2'), api.pageParam.completeMoney.toFixed(2));
+    //       option.series[0].data[1] = api.pageParam.completeMoney;
+    //       option.series[0].data[0] = (api.pageParam.totalMoney - api.pageParam.completeMoney) < 0 ? 0 : api.pageParam.totalMoney - api.pageParam.completeMoney;
+    //       myChart.setOption(option);
+    //       tab = new auiTab({
+    //             element: document.getElementById("tab"),
+    //         }, function(obj) {
+    //           // console.log(obj.dom)
+    //           var value = $api.attr(obj.dom, 'month');
+    //
+    //           getDatas(value);
+    //         });
+    //        tab.setActive(api.pageParam.month+1)
+    //     }else {
+    //
+    //     }
+    // }
+    function sort(_obj) {
+        // pageParam.orderBy = $api.attr(_obj, "data-orderBy");
+        var dataOrderBy = $api.attr(_obj, "data-orderBy");
+        if ($api.hasCls(_obj, "active")) {
+            if ($api.hasCls(_obj, "active-sort")) {
+                $api.text($api.dom(_obj, "span"), '▲');
+                $api.removeCls(_obj, "active-sort");
+                // pageParam.orderDir = 1;
+                shopList = Enumerable.From(shopList).OrderBy("$." + dataOrderBy).ToArray();
+                collapse = new auiCollapse({
+                    autoHide: false, //是否自动隐藏已经展开的容器
+                });
+            } else {
+                $api.addCls(_obj, "active-sort");
+                $api.text($api.dom(_obj, "span"), '▼');
+                // pageParam.orderDir = 0;
+                shopList = Enumerable.From(shopList).OrderByDescending("$." + dataOrderBy).ToArray();
+                collapse = new auiCollapse({
+                    autoHide: false, //是否自动隐藏已经展开的容器
+                });
+            }
+        } else {
+            $api.removeCls($api.dom(".sort-btn.active"), "active-sort");
+            $api.text($api.dom($api.dom(".sort-btn.active"), "span"), "▼");
+            $api.text($api.dom(_obj, "span"), '▼');
+            $api.addCls(_obj, "active-sort");
+            // pageParam.orderDir = 0;
+            shopList = Enumerable.From(shopList).OrderByDescending("$." + dataOrderBy).ToArray();
+            collapse = new auiCollapse({
+                autoHide: false, //是否自动隐藏已经展开的容器
+            });
+            $api.removeCls($api.dom(".sort-btn.active"), "active");
+            $api.addCls(_obj, "active");
+        }
+        //广播
+        // _sendEvent("query_filter_changed_event", pageParam);
+        initUI();
+    }
+
+    function initUI() {
+      if (api.pageParam.month == 0) {
+          $api.text($api.dom(".sal-time"),api.pageParam.shopName+"全年汇总");
+          $api.text($api.dom('.sal-time1'),new Date().getFullYear()+"年全年");
+      } else {
+          $api.text($api.dom(".sal-time"), api.pageParam.shopName+api.pageParam.month+ "月汇总");
+          $api.text($api.dom('.sal-time1'),new Date().getFullYear()+"年"+api.pageParam.month+ "月");
+      }
+      if(shopData.StandardTargetSaleEntity.totalMoney==undefined){
+        $api.text($api.dom('.basic-index'),'0');
+      }else {
+        $api.text($api.dom('.basic-index'), shopData.StandardTargetSaleEntity.totalMoney);
+      }
+      if(_isStringNull(shopData.compareShopLastYear)){
+         $api.text($api.dom('.persent-num'), '');
+         $api.text($api.dom('.persent-num1'), '');
+
+      }else {
+         if(shopData.compareShopLastYear>0){
+           $api.text($api.dom('.persent-num'),(shopData.compareShopLastYear*100).toFixed(0)+"%");
+           if($api.hasCls($api.dom('.persent-num1'),'green')){
+             $api.removeCls($api.dom('.persent-num1'),'green');
+           }
+           $api.text($api.dom('.persent-num1'), '↑');
+         }else {
+           $api.text($api.dom('.persent-num'),(Math.abs(shopData.compareShopLastYear)*100).toFixed(0)+"%");
+           if(!$api.hasCls($api.dom('.persent-num1'),'green')){
+             $api.addCls($api.dom('.persent-num1'),'green');
+           }
+           $api.text($api.dom('.persent-num1'), '↓');
+         }
+      }
+      if(shopData.StandardTargetSaleEntity.completePercent==undefined){
+        $api.text($api.dom('.basic-index1'), '0.00');
+      }else {
+        if (shopData.StandardTargetSaleEntity.completePercent > 1) {
+            $api.text($api.dom('.basic-index1'), '100');
+        } else {
+            $api.text($api.dom('.basic-index1'), (shopData.StandardTargetSaleEntity.completePercent * 100).toFixed(2));
+        }
+      }
+      if(shopData.MiddleTargetSaleEntity.totalMoney==undefined){
+        $api.text($api.dom('.middle-index'), '0');
+      }else {
+        $api.text($api.dom('.middle-index'), shopData.MiddleTargetSaleEntity.totalMoney);
+      }
+      if(shopData.MiddleTargetSaleEntity.completePercent==undefined){
+        $api.text($api.dom('.middle-index1'), '0.00');
+      }else {
+        if(shopData.MiddleTargetSaleEntity.completePercent > 1){
+            $api.text($api.dom('.middle-index1'), '100');
+        }else {
+            $api.text($api.dom('.middle-index1'),(shopData.MiddleTargetSaleEntity.completePercent*100).toFixed(2));
+        }
+      }
+      if(shopData.AdvanceTargetSaleEntity.totalMoney==undefined){
+        $api.text($api.dom('.advance-index'), '0');
+      }else {
+        $api.text($api.dom('.advance-index'), shopData.AdvanceTargetSaleEntity.totalMoney);
+      }
+      if(shopData.AdvanceTargetSaleEntity.completePercent==undefined){
+        $api.text($api.dom('.advance-index1'), '0.00');
+      }else {
+        if(shopData.AdvanceTargetSaleEntity.completePercent>1){
+            $api.text($api.dom('.advance-index1'), '100');
+        }else {
+            $api.text($api.dom('.advance-index1'),(shopData.AdvanceTargetSaleEntity.completePercent*100).toFixed(2));
+        }
+      }
+      if(_isStringNull(shopData.completeMoney)){
+        $api.text($api.dom('.actually-complete'), "0");
+      }else {
+
+
+            $api.text($api.dom('.actually-complete'), shopData.completeMoney.toFixed(2));
+
+      }
+      if(_isStringNull(shopData.salesCount)){
+        $api.text($api.dom('.actually-complete1'),"0" );
+      }else {
+        $api.text($api.dom('.actually-complete1'),shopData.salesCount.toFixed(2));
+      }
+
+      // var shoptotalMoney = shopData.totalMoney;
+      // var shopcompleteMoney = shopData.completeMoney;
+      // var completePercent = shopData.completePercent;
+      // $api.text($api.dom('.salName'), api.pageParam.shopName);
+      // if(shopData.completeMoney==undefined){
+      //      shopcompleteMoney=0;
+      //     $api.text($api.dom('.NspeColor2'), '0');
+      // }else {
+      //   $api.text($api.dom('.NspeColor2'), shopData.completeMoney.toFixed(2));
+      // }
+      // if(shopData.totalMoney==undefined){
+      //   shoptotalMoney=0;
+      //     $api.text($api.dom('.NspeColor1'), '0');
+      // }else {
+      // $api.text($api.dom('.NspeColor1'),shopData.totalMoney);
+      // }
+      // if (shopData.completePercent == undefined) {
+      //     if(shopData.totalMoney == undefined&&shopData.completeMoney!=undefined){
+      //       completePercent = 1;
+      //     }else {
+      //       completePercent = 0;
+      //     }
+      // } else {
+      //     completePercent = shopData.completePercent
+      //     if ((completePercent * 100) > 100) {
+      //         completePercent = 1;
+      //     }
+      // }
+      // $api.addCls($api.attr($api.dom('.aui-tab-item'),'month',api.pageParam.month), 'aui-active');
+      // option.series[0].data[0].value = shopcompleteMoney;
+      // option.series[0].data[1].value = (shoptotalMoney - shopcompleteMoney) < 0 ? 0 : shoptotalMoney - shopcompleteMoney;
+      //   option.series[0].data[0].name = '完成率\n' + (completePercent * 100).toFixed(0) + "%"
+      // myChart.setOption(option);
+      shopList = shopData.shopWeekCompleteList;
+      if (shopList) {
+          var weekDatas = "";
+          if (shopList[0].totalMoney == undefined) {
+              shopList[0].totalMoney = 0
+          }
+          if (shopList[0].completeMoney == undefined) {
+              shopList[0].completeMoney = 0
+          }
+          if (shopList[0].completePercent == undefined) {
+              shopList[0].completePercent = 0
+          }
+          weekDatas += "<div class='listTittle sal_flex'>";
+          weekDatas += "<div class='sal_flex1'>汇总</div>";
+          weekDatas += "<div class='sal_flex1'>";
+          weekDatas += "<span class='textStyle'>" + shopList[0].totalMoney + "</span>";
+          weekDatas += "<span>万</span>";
+          weekDatas += "</div>";
+          weekDatas += "<div class='sal_flex1'>";
+          weekDatas += "<span class='textStyle'>" + shopList[0].completeMoney + "</span>";
+          weekDatas += "<span>万</span>";
+          weekDatas += "</div>";
+          weekDatas += "<div class='sal_flex1'>";
+          weekDatas += "<span class='textStyle1'>" + (shopList[0].completePercent * 100).toFixed(2) + "</span>";
+          weekDatas += "<span class='textStyle1'>%</span>";
+          weekDatas += "</div>";
+          weekDatas += "</div>";
+          $api.html($api.dom('.huizong-tittle'), weekDatas);
+          shopList.splice(0, 1);
+          console.log($api.jsonToStr(shopList));
+          // return;
+          for (var i in shopList) {
+              //  console.log(i);
+              if (shopList[i].totalMoney == undefined) {
+                  shopList[i].totalMoney = 0
+              }
+              if (shopList[i].completeMoney == undefined) {
+                  shopList[i].completeMoney = 0
+              }
+              if (shopList[i].completePercent == undefined) {
+                  shopList[i].completePercent = 0
+              }
+          }
+
+        var htmlStr = "";
+
+        for (var _index in shopList) {
+            htmlStr += "  <section class='aui-content-padded'>";
+            htmlStr += "  <ul class='aui-list aui-collapse'>";
+            htmlStr += "<div class='aui-collapse-item'>";
+            htmlStr += "<li class='aui-list-item aui-collapse-header speList' tapmode>";
+            htmlStr += " <div class='aui-list-item-inner'>";
+            htmlStr += "<div class='sal_flex1'>";
+            htmlStr += " <div class='aui-list-item-title item_Spe1'>第" + shopList[_index].targetWeek + "周</div>";
+            htmlStr += " <div class='aui-list-item-right'>";
+            htmlStr += " <i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>";
+            htmlStr += "</div>";
+            htmlStr += "</div>";
+            htmlStr += "<div class='sal_flex1'>";
+            htmlStr += "<span class='textStyle'>" + shopList[_index].totalMoney + "</span>";
+            htmlStr += " <span class='item_Spe'>万</span>";
+            htmlStr += "</div>";
+            htmlStr += "<div class='sal_flex1'>";
+            htmlStr += "<span class='textStyle'>" + shopList[_index].completeMoney + "</span>";
+            htmlStr += " <span class='item_Spe'>万</span>";
+            htmlStr += "</div>";
+            htmlStr += "<div class='sal_flex1'>";
+            htmlStr += "<span class='textStyle1'>" + (shopList[_index].completePercent * 100).toFixed(2) + "</span>";
+            htmlStr += "<span class='textStyle1'>%</span>";
+            htmlStr += "</div>";
+            htmlStr += "</div>";
+            htmlStr += "</li>";
+            htmlStr += "\n";
+            htmlStr += "<div class='aui-collapse-content'>";
+            htmlStr += " <li class='aui-list-item' tapmode >";
+            htmlStr += "<ul class='weekList'>"
+            if (shopList[_index].shopDayCompleteList) {
+                var weeksData = shopList[_index].shopDayCompleteList
+                    //console.log(shopList[i].shopDayCompleteList);
+                for (var j in weeksData) {
+                    console.log(j);
+                    if (weeksData[j].totalMoney == undefined) {
+                        weeksData[j].totalMoney = 0
+                    }
+                    if (weeksData[j].completeMoney == undefined) {
+                        weeksData[j].completeMoney = 0
+                    }
+                    if (weeksData[j].completePercent == undefined) {
+                        weeksData[j].completePercent = 0
+                    }
+                    htmlStr += " <li class='sal_flex'>";
+                    htmlStr += " <div class='weeSpe'>" + api.pageParam.month + "." + weeksData[j].targetDay + "</div>";
+                    htmlStr += "<div class='sal_flex1 weeMove'>";
+                    htmlStr += "<span class='weeSpe1'>" + weeksData[j].totalMoney + "</span>";
+                    htmlStr += " <span class='weeSpe2'>万</span>";
+                    htmlStr += "</div>";
+                    htmlStr += "<div class='sal_flex1 weeMove1'>";
+                    htmlStr += "<span class='weeSpe1'>" + weeksData[j].completeMoney + "</span>";
+                    htmlStr += " <span class='weeSpe2'>万</span>";
+                    htmlStr += "</div>";
+                    htmlStr += "<div class='sal_flex1 weeMove1'>";
+                    htmlStr += "<span class='weeSpe1'>" + (weeksData[j].completePercent * 100) + "</span>";
+                    htmlStr += "<span class='weeSpe2'>%</span>";
+                    htmlStr += "</div>";
+                    htmlStr += "</li>";
+
+                }
+            }
+
+            htmlStr += "</ul>"
+            htmlStr += " </li>";
+            htmlStr += "</div>";
+            htmlStr += "</div>";
+            htmlStr += "</ul>";
+            htmlStr += "</section>";
+
+
+            // console.log(htmlStr);
+
+        }
+        $api.html($api.dom('.huizong'), htmlStr);
+        collapse = new auiCollapse({
+            autoHide: false, //是否自动隐藏已经展开的容器
+        });
+        }
+    }
+
+    function getDatas() {
+        var url = window.myServerUrl + "/order/app/targetShop/selectSalesTargetAnalyze";
+        url += "?targetYear=" + new Date().getFullYear();
+          url += "&shopSeq=" + api.pageParam.shopSeq;
+          if (api.pageParam.month!= 0) {
+              url += "&targetMonth="+api.pageParam.month;
+          }
+        console.log("获取门店指标分析接口数据-->url:" + url);
+        _showProgress('加载中...');
+        _ajax(url, "sale_indicator_win", function(ret, err) {
+          api.hideProgress();
+            if (ret) {
+                console.log("获取门店指标分析接口数据-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                  shopData = ret.result;
+
+                  console.log($api.jsonToStr(shopData));
+                  initUI();
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("获取门店指标分析接口数据-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            //callback();
+        });
+    }
+    // function clickbtn() {
+    //     $api.css($api.dom('.thisShop1'), 'display:none');
+    //     $api.css($api.dom('.thisShop2'), 'display:none');
+    //     $api.css($api.dom('.thisShop'), 'display:block');
+    //     $api.removeCls($api.dom('.shop'), 'listhot');
+    //     $api.removeCls($api.dom('.shop3'), 'listhot');
+    //     $api.removeCls($api.dom('.shop2'), 'listhot');
+    //     $api.addCls($api.dom('.shop'), 'listhot');
+    // }
+
+    // function clickbtn1() {
+    //     $api.css($api.dom('.thisShop'), 'display:none');
+    //     $api.css($api.dom('.thisShop2'), 'display:none');
+    //     $api.css($api.dom('.thisShop1'), 'display:block');
+    //     $api.removeCls($api.dom('.shop2'), 'listhot');
+    //     $api.removeCls($api.dom('.shop3'), 'listhot');
+    //     $api.removeCls($api.dom('.shop'), 'listhot');
+    //     $api.addCls($api.dom('.shop2'), 'listhot');
+    // }
+
+    // function clickbtn2() {
+    //     $api.css($api.dom('.thisShop1'), 'display:none');
+    //     $api.css($api.dom('.thisShop'), 'display:none');
+    //     $api.css($api.dom('.thisShop2'), 'display:block');
+    //     $api.removeCls($api.dom('.shop2'), 'listhot');
+    //     $api.removeCls($api.dom('.shop3'), 'listhot');
+    //     $api.removeCls($api.dom('.shop'), 'listhot');
+    //     $api.addCls($api.dom('.shop3'), 'listhot');
+    //
+    // }
+    // function initChart() {
+    //     myChart = echarts.init(document.getElementById('mychart'));
+    //
+    //     // 指定图表的配置项和数据
+    //     option = {
+    //         color: ['#288CFF','#F5A623'],
+    //         series: [{
+    //             name: '访问来源',
+    //             type: 'pie',
+    //             radius: ['70%', '100%'],
+    //             avoidLabelOverlap: false,
+    //             hoverOffset: 1,
+    //             startAngle: 180,
+    //             label: {
+    //                 normal: {
+    //                     show: true,
+    //                     position: 'center',
+    //                     textStyle: {
+    //                         fontSize: '12',
+    //                         fontWeight: 'bold'
+    //                     }
+    //                 },
+    //                 emphasis: {
+    //                     show: true,
+    //                     textStyle: {
+    //                         fontSize: '30',
+    //                         fontWeight: 'bold'
+    //                     }
+    //                 }
+    //             },
+    //             labelLine: {
+    //                 normal: {
+    //                     show: false
+    //                 }
+    //             },
+    //             data: [{
+    //                     value: 20,
+    //                     name:'',
+    //                     emphasis: {
+    //                         label: {
+    //                             // formatter: '完成率\n{d}%',
+    //                             color: '#288CFF',
+    //                             fontWeight: 900,
+    //                             fontSize: 8,
+    //                             fontFamily: 'Arial-Black',
+    //                         }
+    //                     },
+    //                 }, {
+    //                     value: 30,
+    //                     emphasis: {
+    //                         label: {
+    //                             // formatter: '未完成率\n{d}%',
+    //                             color: '#288CFF',
+    //                             fontWeight: 900,
+    //                             fontSize: 8,
+    //                             fontFamily: 'Arial-Black',
+    //                         }
+    //                     },
+    //                 },
+    //
+    //             ]
+    //         }]
+    //     };
+    //
+    //     // 使用刚指定的配置项和数据显示图表。
+    //     myChart.setOption(option);
+    // }
+    var shopList = [];
+    var collapse;
+    var myChart;
+    var option;
+    var tab;
+    var shopData = [];
+    var userInfo;
+    var monthValue;
+    apiready = function() {
+        // clickbtn()
+        renderMonth()
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        // initChart();
+        getDatas();
+        // $api.css($api.dom('.thisShop'), 'display:block');
+        console.log($api.jsonToStr(api.pageParam));
+    }
+</script>
+
+</html>

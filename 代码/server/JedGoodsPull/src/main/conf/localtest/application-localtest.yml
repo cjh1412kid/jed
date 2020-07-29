@@ -1,0 +1,92 @@
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        druid:
+            quartz: #数据源
+                url: jdbc:sqlserver://192.168.2.146:1433;DatabaseName=JedOther
+                username: sa
+                password: 123456
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /druid/*
+                #login-username: admin
+                #login-password: admin
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: false
+                wall:
+                    config:
+                        multi-statement-allow: true
+
+base-app:
+    #图片访问项目路径
+    picture_base_url: http://192.168.2.146:8181/jed-picture
+    #图片上传项目名称
+    picture_base_upload_project: /jed-picture
+    #基础信息表目录
+    base_dir: sr_base
+    #Base_Brand表文件夹名称
+    base_brand: Base_Brand
+    #Base_User表文件夹名称
+    base_user: Base_User
+    #Goods_Shoes表文件夹名称
+    goods_shoes: Goods_Shoes
+    #轮播图文件夹
+    sowing_map: sowing
+    #门店图文件夹
+    shop_image: shopImage
+    #websocket连接IP地址
+    websocket_host: 0.0.0.0
+    #websocket连接端口号
+    websocket_port: 9093
+    #依婷公主公司序号
+    ytgz_companyseq: 3
+    order_platform_app:
+        #订货平台表目录
+        order_platform_dir: order_platform_app
+        #PublicityPic表文件夹名称
+        publicity_pic: PublicityPic
+        #CommunityCONTENT表文件夹名称
+        community_content: CommunityCONTENT
+        #OnlineMessage表文件夹名称
+        online_message: OnlineMessage
+        #Order表文件夹名称
+        order: Order
+        #OrderExpress表文件夹名称
+        orderExpress: OrderExpress
+        #融云对接参数
+        rongCloud_appKey: bmdehs6pbrams
+        rongCloud_appSecret: 9pv8WLA45NBkIn
+        #极光对接参数
+        jPush_appKey: c96719825056a1c5b644612a
+        jPush_masterSecret: b16f0975a7915d5c1ed8527e
+        #iOS平台推送环境
+        jPush_apns_production: false
+        #亲加对接参数
+        gotye_username: xyd1041903129@163.com
+        gotye_password: xuyindeng111
+        gotye_api_url: https://demoapi.livevip.com.cn/liveApi
+
+esmart:
+    url: http://localhost:8181/eSmart/
+
+jrd:
+  companySeq: 1
+  brandSeq: 1
+  areaSeq: 2
+  userSeq: 2

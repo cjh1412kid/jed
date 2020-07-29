@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.MeetingPlanDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+  <resultMap type="io.nuite.modules.order_platform_app.entity.MeetingPlanEntity" id="meetingPlanMap">
+    <result property="seq" column="Seq"/>
+    <result property="companySeq" column="Company_Seq"/>
+    <result property="userSeq" column="User_Seq"/>
+    <result property="categorySeq" column="Category_Seq"/>
+    <result property="planNum" column="PlanNum"/>
+    <result property="planGoodsIDs" column="PlanGoodsIDs"/>
+    <result property="inputTime" column="InputTime"/>
+    <result property="del" column="Del"/>
+    <result property="shopSeq" column="Shop_Seq"/>
+    <result property="year" column="Year"/>
+    <result property="seasonSeq" column="Season_Seq"/>
+    <result property="zhLeiSeq" column="ZhLeiSeq"/>
+    <result property="daLeiSeq" column="DaLeiSeq"/>
+  </resultMap>
+
+
+  <select id="getShopPlanList" resultType="java.util.Map">
+    SELECT
+    A.[Seq] as shopSeq
+    ,A.[Id] as shopID
+    ,A.[Name] as shopName
+    ,B.Name as areaName
+    ,C.Name as companyName
+    ,case when D.Shop_Seq is null then 0 else 1 end as isUpload
+    FROM (select * from [JedSmartRetail].[dbo].[YHSR_Base_Shop]
+    where Del=0 and Company_Seq = ${companySeq}) A
+    LEFT JOIN (SELECT DISTINCT Shop_Seq
+    FROM [JedOrderPlatform].[dbo].[YHSR_OP_MeetingPlan]
+    WHERE Del = 0
+    <if test="year != null">
+      and Year=${year}
+    </if>
+    <if test="seasonSeq != null">
+      AND Season_Seq = ${seasonSeq}
+    </if>
+    ) D ON A.Seq = D.Shop_Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Area] B on A.Area_seq=B.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Company] C on A.Company_Seq=C.Seq
+    <trim prefix="where">
+      <if test="uploadState==1">
+        D.Shop_Seq IS NOT NULL
+      </if>
+      <if test="uploadState==2">
+        D.Shop_Seq IS NULL
+      </if>
+    </trim>
+  </select>
+
+  <select id="selectByPageAndCondition"
+          resultMap="meetingPlanMap">
+  SELECT A.*
+      ,B.[SeasonName] as seasonName
+      ,C.Name as categoryName
+      ,D.Name as daLeiName
+      ,E.Name as zhLeiName
+  FROM  (
+   SELECT *
+  FROM [JedOrderPlatform].[dbo].[YHSR_OP_MeetingPlan]
+  where Del=0 and Shop_Seq=#{shopSeq} and Year= #{year} and Season_Seq=#{seasonSeq}
+  ) A
+  left join [JedSmartRetail].[dbo].[YHSR_Goods_Season] B on A.Season_Seq=B.Seq
+  left join [JedSmartRetail].[dbo].[YHSR_Goods_Category] C on A.Category_Seq=C.Seq
+  left join [JedSmartRetail].[dbo].[YHSR_Goods_Category] D on A.DaLeiSeq=D.Seq
+  left join [JedSmartRetail].[dbo].[YHSR_Goods_Category] E on A.ZhLeiSeq=E.Seq
+
+
+</select>
+
+</mapper>

@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/filter_win.css" />
+	<style>
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+	<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick="api.closeDrawerPane();"> <span class="aui-iconfont aui-icon-close aui-text-default"></span> </a>
+		<div class="aui-title text-header-title aui-text-default aui-font-size-16">筛选</div>
+	</header>
+	<div class="flex-con content">
+		<section class="aui-content">
+			<div class="aui-card-list time-range">
+				<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+					<div class="aui-font-size-14">时间范围</div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-show">
+					<div class="aui-row aui-row-padded">
+						<div class="time-range-item time-range-item-1 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="1" tapmode onclick="singleSelectAction(this)">
+							最近一日
+						</div>
+						<div class="time-range-item time-range-item-7 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="7" tapmode onclick="singleSelectAction(this)">
+							近七天
+						</div>
+						<div class="time-range-item time-range-item-15 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="15" tapmode onclick="singleSelectAction(this)">
+							近15天
+						</div>
+						<div class="time-range-item time-range-item-30 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="30" tapmode onclick="singleSelectAction(this)">
+							近30天
+						</div>
+						<div class="time-range-item time-range-item-999 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="999" tapmode onclick="singleSelectAction(this)">
+							累计
+						</div>
+						<div class="time-range-item time-range-item-0 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="0" tapmode onclick="singleSelectAction(this)">
+							自定义
+						</div>
+						<div class="time-range-custom aui-col-xs-12 box-wrap box-vertical-end box-horizontal-center aui-font-size-12 aui-hide" tapmode onclick="openDateRangePick(this)">
+							<div class="aui-margin-l-5 aui-margin-r-5">
+								<span class="start start-time" data-value="2018/12/10">2018年12月10日</span>
+							</div>
+							至
+							<div class="aui-margin-l-5 aui-margin-r-5">
+								<span class="start end-time" data-value="2019/03/10">2019年3月10日</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="aui-card-list shop-range aui-hide">
+				<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+					<div class="aui-font-size-14">门店范围<span class="tips aui-font-size-12 aui-margin-l-5">(仅对销售曲线图有效)</span></div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-show shopSeqs">
+					<div class="aui-row aui-row-padded">
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<footer class="box-wrap box-horizontal-center box-vertical-end">
+		<div class="btns aui-margin-r-10 flex-wrap">
+			<div class="btn reset flex-con box-wrap box-vertical-center box-horizontal-center" tapmode onclick="reset()">重置</div>
+			<div class="btn sure flex-con box-wrap box-vertical-center box-horizontal-center" tapmode onclick="sure()">确定</div>
+		</div>
+	</footer>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+function openDateRangePick(_obj) {
+	var rect = {
+		x: 0, //左上角x坐标
+		y: 0, //左上角y坐标
+		w: "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+		h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+		marginLeft: 0, //相对父 window 左外边距的距离
+		marginTop: 0, //相对父 window 上外边距的距离
+		marginBottom: 0, //相对父 window 下外边距的距离
+		marginRight: 0 //相对父 window 右外边距的距离
+	};
+	var pageParam = {
+		pageName: api.frameName
+	};
+	var bounces = false;
+	var reload = true;
+	var allowEdit = false;
+	var animation = {
+		type: "fade", //动画类型（详见动画类型常量）
+		subType: "from_right", //动画子类型（详见动画子类型常量）
+		duration: 300 //动画过渡时间，默认300毫秒
+	}
+	_openFrame("date_range_picker", "../../date_range_picker.html", rect, pageParam, bounces, reload, allowEdit, animation);
+}
+
+function setDateRange(_startDate, _endDate) {
+	pageParam.startDate = _startDate;
+	pageParam.endDate = _endDate;
+	var startTime = _startDate.split('/');
+	var endTime = _endDate.split('/')
+	$api.text($api.dom('.start-time'), startTime[0]+"年"+startTime[1]+"月"+startTime[2]+"日");
+		$api.attr($api.dom('.start-time'), 'data-value', _startDate);
+	$api.text($api.dom('.end-time'), endTime[0]+"年"+endTime[1]+"月"+endTime[2]+"日");
+		$api.attr($api.dom('.end-time'), 'data-value', _endDate);
+	// console.log("开始时间：" + _startDate + " 结束时间：" + _endDate);
+	//添加渲染时间逻辑
+}
+	function reset() {
+		pageParam = $api.strToJson($api.jsonToStr(tempPageParam));
+		initTimeRangeUI();
+		initShopUI();
+	}
+
+	function sure() {
+		_sendEvent("filter_sale_graph_changed_event", pageParam);
+		api.closeDrawerPane();
+	}
+
+	function singleSelectAction(_obj) {
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+		if (!$api.hasCls(_obj, "selected")) {
+			//取消已经选中的
+			if ($api.dom("." + dataType + "-item.selected")) {
+				$api.removeCls($api.dom("." + dataType + "-item.selected"), 'selected');
+			}
+			//重新选中所点击的
+			$api.addCls(_obj, 'selected');
+			switch (dataType) {
+				case "time-range":
+					console.log("pageParam.timeRange:" + pageParam.timeRange);
+					pageParam.timeRange = dataValue;
+					// pageParam.saleTimeStart = _getStartDateByNum(dataValue);
+					console.log("pageParam.timeRange:" + pageParam.timeRange);
+					break;
+				default:
+			}
+			if (dataType == "time-range") {
+				//如果点击的是时间范围
+				if (dataValue == "0") {
+					//如果点击的是自定义
+					if ($api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+						$api.removeCls($api.dom(".time-range-custom"), "aui-hide");
+						pageParam.startDate = $api.attr($api.dom(".start-time"), "data-value");
+						pageParam.endDate = $api.attr($api.dom(".end-time"), "data-value");
+					}
+				} else {
+					if (!$api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+						$api.addCls($api.dom(".time-range-custom"), "aui-hide");
+						// pageParam.startDate = "";
+						// pageParam.endDate = "";
+					}
+				}
+			}
+		} else {
+			if (dataType == "time-range") {
+				//如果点击的事尺码
+				$api.removeCls(_obj, 'selected');
+				pageParam.timeRange = "";
+				if (dataValue == "0") {
+					//如果点击的是自定义
+					if (!$api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+						$api.addCls($api.dom(".time-range-custom"), "aui-hide");
+						// pageParam.startDate = "";
+						// pageParam.endDate = "";
+					}
+				}
+			}
+		}
+	}
+
+	function selectAction(_obj) {
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+		if ($api.hasCls(_obj, "selected")) {
+			$api.removeCls(_obj, 'selected');
+			switch (dataType) {
+				case "shopSeqs":
+					var shopSeqs = pageParam.shopSeqs;
+					var index = -1;
+					for (var i = 0; i < shopSeqs.length; i++) {
+						if (dataValue == shopSeqs[i]) {
+							index = i;
+							break;
+						}
+					}
+					console.log("pageParam.shopSeqs:" + $api.jsonToStr(pageParam.shopSeqs));
+					if (index != -1) {
+						pageParam.shopSeqs.splice(index, 1);
+						console.log("pageParam.shopSeqs:" + $api.jsonToStr(pageParam.shopSeqs));
+					}
+					break;
+				default:
+			}
+		} else {
+			$api.addCls(_obj, 'selected');
+			switch (dataType) {
+				case "shopSeqs":
+					var shopSeqs = pageParam.shopSeqs;
+					var index = -1;
+					for (var i = 0; i < shopSeqs.length; i++) {
+						if (dataValue == shopSeqs[i]) {
+							index = i;
+							break;
+						}
+					}
+					console.log("pageParam.shopSeqs:" + $api.jsonToStr(pageParam.shopSeqs));
+					if (index == -1) {
+						pageParam.shopSeqs.push(dataValue);
+						console.log("pageParam.shopSeqs:" + $api.jsonToStr(pageParam.shopSeqs));
+					}
+					break;
+				default:
+			}
+		}
+	}
+
+	function initTimeRangeUI() {
+		//先清除被选中的
+		if ($api.dom(".time-range-item.selected")) {
+			$api.removeCls($api.dom(".time-range-item.selected"), 'selected');
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		if (!_isStringNull(pageParam.timeRange)) {
+			$api.addCls($api.dom(".time-range-item-" + pageParam.timeRange), 'selected');
+			if (pageParam.timeRange == 0) {
+				if ($api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+					$api.removeCls($api.dom(".time-range-custom"), "aui-hide");
+				}
+			} else {
+				if (!$api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+					$api.addCls($api.dom(".time-range-custom"), "aui-hide");
+				}
+			}
+		}
+	}
+
+	function initShopUI() {
+		var allShops = $api.getStorage("allShopsKey");
+		var htmlStr = '';
+		for (var i = 0; i < allShops.length; i++) {
+			var flg = false;
+			for (var j = 0; j < pageParam.shopSeqs.length; j++) {
+				if (pageParam.shopSeqs[j] == allShops[i].seq) {
+					flg = true;
+				}
+			}
+			if (flg) {
+				htmlStr += '<div class="shop-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="shopSeqs" data-value="' + allShops[i].seq + '" tapmode onclick="selectAction(this)">';
+			} else {
+				htmlStr += '<div class="shop-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="shopSeqs" data-value="' + allShops[i].seq + '" tapmode onclick="selectAction(this)">';
+			}
+			htmlStr += allShops[i].name;
+			htmlStr += '</div>';
+		}
+		$api.html($api.dom(".shopSeqs .aui-row"), htmlStr);
+
+	}
+	var collapse = new auiCollapse({
+		autoHide: false //是否自动隐藏已经展开的容器
+	});
+	var pageParam;
+	var tempPageParam;
+	apiready = function() {
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		$api.fixTabBar($api.dom("body"));
+		$api.attr($api.dom('.btns'), 'style', 'margin-top:' + (api.safeArea.bottom / 2) + "px");
+		// initTimeRangeUI();
+		// initShopUI();
+		_addEventListener("open_filter_sale_graph_event", function(ret) {
+			console.log("open_filter_sale_graph_event.ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+			tempPageParam = $api.strToJson($api.jsonToStr(pageParam));
+			if (pageParam.type == "sale") {
+				if (!$api.hasCls($api.dom(".shop-range"), "aui-hide")) {
+					$api.addCls($api.dom(".shop-range"), "aui-hide");
+				}
+			} else {
+				if ($api.hasCls($api.dom(".shop-range"), "aui-hide")) {
+					$api.removeCls($api.dom(".shop-range"), "aui-hide");
+				}
+			}
+			initTimeRangeUI();
+			initShopUI();
+		});
+	};
+</script>
+
+</html>

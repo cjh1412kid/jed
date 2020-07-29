@@ -1,0 +1,68 @@
+
+body {
+	background-color: rgba(0,0,0,0.3);
+}
+/* 窗口部分 */
+.content {
+	height: 74%;
+	background-color: #FFFFFF;
+}
+/* header头部 */
+.header {
+	height: 2.0rem;
+}
+.sub-content{
+	overflow-x: scroll;
+	overflow-y: scroll;
+}
+.sub-content::-webkit-scrollbar {
+	width: 0px;
+	height: 0px;
+	visibility: hidden;
+}
+.row{
+	height: 2.0rem;
+	font-size: 0.7rem;
+}
+.row.table-title{
+	font-weight: bold;
+	background:rgba(255,251,243,1);
+}
+.row.table-title .col{
+	font-weight: bold;
+	background:rgba(255,251,243,1);
+	border-bottom: 0px solid #ccc;
+}
+.col{
+	/*width: 100%;*/
+	height: 2.0rem;
+	border-bottom: 1px solid #ccc;
+}
+.tel{
+	width: 3.0rem;
+}
+.name{
+	width: 5.0rem;
+}
+/*.scroll-x{
+	overflow-x: scroll;
+}
+.scroll-x::-webkit-scrollbar {
+	width: 0px;
+	height: 0px;
+	visibility: hidden;
+}*/
+.size{
+	width: 2.0rem;
+}
+/* 确认/下单按钮 */
+.aui-bar-tab {
+	position: static !important;
+}
+.btn-sure{
+	background:rgba(249,108,37,1);
+	color: #FFFFFF;
+}
+.btn-sure:active{
+	opacity: 0.9;
+}

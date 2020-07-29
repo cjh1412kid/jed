@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.ShoesValuateDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.ShoesValuateEntity" id="shoesValuateMap">
+        <result property="seq" column="Seq"/>
+        <result property="userSeq" column="User_Seq"/>
+        <result property="shoesSeq" column="Shoes_Seq"/>
+        <result property="score" column="Score"/>
+        <result property="isCollected" column="IsCollected"/>
+        <result property="collectedTime" column="CollectedTime"/>
+        <result property="suggest" column="Suggest"/>
+        <result property="suggestTime" column="SuggestTime"/>
+        <result property="isBrowse" column="IsBrowse"/>
+        <result property="browseTime" column="BrowseTime"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+
+	<!-- 定义收藏鞋子列表的resultMap，type为HashMap -->
+	<resultMap id="collectedShoesMap" type="java.util.HashMap">
+	    <id column="Seq" property="shoesSeq" jdbcType="INTEGER" />
+	    <result column="Img1" property="img" jdbcType="VARCHAR" />
+	    <result column="Category_Seq" property="categorySeq" jdbcType="VARCHAR" />
+	    <result column="GoodName" property="goodName" jdbcType="VARCHAR" />
+	    <result column="GoodID" property="goodId" jdbcType="VARCHAR" />
+	    <result column="Introduce" property="introduce" jdbcType="VARCHAR" />
+	    <result column="InputTime" property="inputTime" jdbcType="TIMESTAMP" />
+	    <result column="OemPrice" property="oemPrice" jdbcType="DECIMAL" />
+	    <result column="WholesalerPrice" property="wholesalerPrice" jdbcType="DECIMAL" />
+	    <result column="StorePrice" property="storePrice" jdbcType="DECIMAL" />
+	    <result column="SalePrice" property="salePrice" jdbcType="DECIMAL" />
+	    <result column="OnSale" property="onSale" jdbcType="INTEGER" />
+	    <result column="OffSaleTime" property="offSaleTime" jdbcType="TIMESTAMP" />
+	    <result column="Score" property="score" jdbcType="FLOAT" />
+	    <result column="BuyCount" property="buyCount" jdbcType="INTEGER" />
+	    <result column="stock" property="stock" jdbcType="INTEGER"/>
+	    <result column="SalesNum" property="salesNum" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<!-- 定义全部鞋款列表的resultMap，type为HashMap -->
+	<resultMap id="shoesSeqListMap" type="java.util.HashMap">
+		<id column="Seq" property="seq" jdbcType="INTEGER"/>
+	    <result column="Img1" property="img" jdbcType="VARCHAR"/>
+	    <result column="GoodName" property="goodName" jdbcType="VARCHAR"/>
+	    <result column="GoodID" property="goodId" jdbcType="VARCHAR"/>
+	    <result column="Introduce" property="introduce" jdbcType="VARCHAR"/>
+	    <result column="InputTime" property="inputTime" jdbcType="TIMESTAMP"/>
+	    
+	   	<result column="TagPrice1" property="tagPrice1" jdbcType="DECIMAL" />
+	   	<result column="TagPrice2" property="tagPrice2" jdbcType="DECIMAL" />
+	   	<result column="TagPrice3" property="tagPrice3" jdbcType="DECIMAL" />
+	    <result column="DealPrice1" property="dealPrice1" jdbcType="DECIMAL" />
+	    <result column="DealPrice2" property="dealPrice2" jdbcType="DECIMAL" />
+	    <result column="DealPrice3" property="dealPrice3" jdbcType="DECIMAL" />
+	    <result column="WholesalePrice1" property="wholesalePrice1" jdbcType="DECIMAL" />
+	    <result column="WholesalePrice2" property="wholesalePrice2" jdbcType="DECIMAL" />
+	    <result column="WholesalePrice3" property="wholesalePrice3" jdbcType="DECIMAL" />
+
+	    <result column="Num" property="num" jdbcType="INTEGER"/>
+	    <result column="Stock" property="stock" jdbcType="INTEGER"/>
+	    <result column="SalesNum" property="salesNum" jdbcType="INTEGER"/>
+	    <result column="SelloutRate" property="selloutRate" jdbcType="INTEGER"/>
+	    <result column="Score" property="score" jdbcType="FLOAT"/>
+	</resultMap>
+
+
+	<!-- 根据shoesSeqs获取鞋子列表 -->
+	<select id="getShoesBySeqs" resultMap="collectedShoesMap">
+		SELECT
+			A.Seq, A.Img1, A.Category_Seq, A.GoodName, A.GoodID, A.Introduce, A.InputTime,
+			B.OemPrice, B.WholesalerPrice, B.StorePrice, B.SalePrice, B.OnSale, B.OffSaleTime,
+			E.Score, D.BuyCount, C.stock, (C.num - C.stock) AS SalesNum
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B
+		 	LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes A ON B.Shoes_Seq = A.Seq
+		 	LEFT JOIN (SELECT Shoes_Seq, SUM (Num) AS num, SUM (Stock) AS stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 GROUP BY Shoes_Seq ) C ON A.Seq = C.Shoes_Seq
+			LEFT JOIN (SELECT B.Shoes_Seq, SUM (A.BuyCount) AS BuyCount FROM JedOrderPlatform.dbo.YHSR_OP_ShoppingCart A LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesData B ON A.ShoesData_Seq = B.Seq WHERE A.Del = 0 GROUP BY B.Shoes_Seq) D ON A.Seq = D.Shoes_Seq
+		 	LEFT JOIN (SELECT Shoes_Seq, CONVERT(DECIMAL(5,1), AVG(Score)) AS Score FROM JedOrderPlatform.dbo.YHSR_OP_ShoesValuate WHERE Del = 0 AND Score != 0 GROUP BY Shoes_Seq) E ON A.Seq = E.Shoes_Seq
+		
+		WHERE
+			A.Del = 0 AND B.Del = 0 AND
+			A.Seq IN (${shoesSeqs})
+ 		ORDER BY
+			CHARINDEX(',' + Rtrim(CAST(A.Seq as varchar(10))) + ',' , ',${shoesSeqs},')
+	</select>
+	
+	<!-- 获取浏览记录 -->
+	<select id="getBrowseList" resultMap="shoesSeqListMap">
+		SELECT
+		sv.Seq, s.Img1, s.GoodName, s.GoodID, s.Introduce, s.InputTime,
+		si.TagPrice1, si.TagPrice2,si.TagPrice3, si.DealPrice1, si.DealPrice2, si.DealPrice3, si.WholesalePrice1, si.WholesalePrice2, si.WholesalePrice3,
+		C.num AS Num, C.stock AS Stock, H.SaleCount AS SalesNum, ROUND(CAST((C.num - C.stock) AS Float)/NULLIF(C.num, 0), 2) * 100 AS SelloutRate,
+		E.Score,s.Seq AS shoesSeq
+		FROM
+		JedSmartRetail.dbo.YHSR_Goods_Shoes s
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_OP_ShoesValuate sv
+		ON sv.Shoes_Seq = s.Seq
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_OP_ShoesInfo si
+		ON s.Seq = si.Shoes_Seq
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Num) AS num, SUM (Stock) AS stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 GROUP BY Shoes_Seq ) AS C ON s.Seq = C.Shoes_Seq
+		LEFT JOIN (SELECT Shoes_Seq, CONVERT(DECIMAL(5,1), AVG(Score)) AS Score FROM JedOrderPlatform.dbo.YHSR_OP_ShoesValuate WHERE Del = 0 AND Score != 0 GROUP BY Shoes_Seq) AS E ON s.Seq = E.Shoes_Seq
+		LEFT JOIN (SELECT ShoeSeq,SUM(SaleCount) AS SaleCount,ROUND((SUM(CAST(isnull(SaleCount,0) AS FLOAT))/DATEDIFF(DAY,'2017/1/2',GETDATE())),2) AS salesDayAvg FROM JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail WHERE Del = 0 GROUP BY ShoeSeq) AS H ON H.ShoeSeq = s.Seq
+		WHERE
+		s.Del = 0 AND si.Del = 0 AND
+		si.OnSale = 1 AND (si.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), si.OffSaleTime) &gt;= 0)
+		AND sv.IsBrowse = 0 AND sv.User_Seq = #{userSeq} AND sv.Del = 0
+		ORDER BY
+		sv.BrowseTime DESC
+	</select>
+
+	<!-- 获取收藏 -->
+	<select id="getCollectedList" resultMap="shoesSeqListMap">
+		SELECT
+		sv.Seq, s.Img1, s.GoodName, s.GoodID, s.Introduce, s.InputTime,
+		si.TagPrice1, si.TagPrice2,si.TagPrice3, si.DealPrice1, si.DealPrice2, si.DealPrice3, si.WholesalePrice1, si.WholesalePrice2, si.WholesalePrice3,
+		C.num AS Num, C.stock AS Stock, H.SaleCount AS SalesNum, ROUND(CAST((C.num - C.stock) AS Float)/NULLIF(C.num, 0), 2) * 100 AS SelloutRate,
+		E.Score,s.Seq AS shoesSeq
+		FROM
+		JedSmartRetail.dbo.YHSR_Goods_Shoes s
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_OP_ShoesValuate sv
+		ON sv.Shoes_Seq = s.Seq
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_OP_ShoesInfo si
+		ON s.Seq = si.Shoes_Seq
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Num) AS num, SUM (Stock) AS stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 GROUP BY Shoes_Seq ) AS C ON s.Seq = C.Shoes_Seq
+		LEFT JOIN (SELECT Shoes_Seq, CONVERT(DECIMAL(5,1), AVG(Score)) AS Score FROM JedOrderPlatform.dbo.YHSR_OP_ShoesValuate WHERE Del = 0 AND Score != 0 GROUP BY Shoes_Seq) AS E ON s.Seq = E.Shoes_Seq
+		LEFT JOIN (SELECT ShoeSeq,SUM(SaleCount) AS SaleCount,ROUND((SUM(CAST(isnull(SaleCount,0) AS FLOAT))/DATEDIFF(DAY,'2017/1/2',GETDATE())),2) AS salesDayAvg FROM JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail WHERE Del = 0 GROUP BY ShoeSeq) AS H ON H.ShoeSeq = s.Seq
+		WHERE
+		s.Del = 0 AND si.Del = 0 AND
+		si.OnSale = 1 AND (si.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), si.OffSaleTime) &gt;= 0)
+		AND sv.IsCollected = 1 AND sv.User_Seq = #{userSeq} AND sv.Del = 0
+		ORDER BY
+		sv.CollectedTime DESC
+	</select>
+
+</mapper>

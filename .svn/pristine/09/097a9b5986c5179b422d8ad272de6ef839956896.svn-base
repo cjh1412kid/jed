@@ -1,0 +1,119 @@
+._flex {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+._flex1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+._flex2 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.listContent {
+    position: relative;
+    background: #fff;
+    border-radius: .5rem;
+}
+
+.name {
+
+font-size:1rem;
+font-family:PingFangSC-Semibold;
+font-weight:600;
+color:rgba(80,80,80,1);
+
+
+}
+.listspe{
+   height: 4rem!important;
+}
+.list{
+  position: relative;
+  width: 100%;
+  height: 2.6rem;
+  font-size: 0.7rem;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  color: rgba(74, 74, 74, 1);
+}
+.flex-spe{
+  width: 30%;
+}
+.phone{
+  position: relative;
+}
+.phone-icon{
+  position: absolute;
+  top: 0;
+  right: 40%;
+  width: 2rem;
+  height: 100%;
+}
+.icon{
+width: 1.75rem;
+height: 1.87rem;
+}
+.ages{
+  width: .8rem;
+  height: .8rem;
+}
+.pic{
+  width: .5rem;
+  height: .7rem;
+}
+.native{
+  width: .85rem;
+  height: 1.17rem;
+}
+.idcard{
+  width: .92rem;
+  height: .72rem;
+}
+.dutys{
+  width: .95rem;
+  height: .82rem;
+}
+.time{
+  width: .95rem;
+  height: .82rem;
+}
+.phones{
+  width: .93rem;
+  height: .97rem;
+}
+.position{
+  position: absolute;
+  left: 1rem;
+  top: .8rem;
+}
+.line{
+  padding-left: 1rem;
+}
+.sex{
+  transform: translateY(.1rem);
+}
+.age{
+  transform: translateY(.1rem);
+}
+.btns{
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  bottom: 1rem;
+  width:7.05rem;
+  height:1.58rem;
+  background:rgba(255,126,66,1);
+  border-radius:0.94rem;
+font-size:0.8rem;
+font-family:PingFangSC-Medium;
+font-weight:500;
+color: #fff;
+}

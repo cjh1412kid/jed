@@ -1,0 +1,60 @@
+对于调用rest  query 动作时，很多客户不能理解对于用于查询条件 Expression。
+这个Expression 是可以嵌套的 二叉树结构；支持任意个条件，支持 IN  、 IS NOT...等表达式。
+以下示例。请供参考
+
+VIP查询：
+
+{
+	table:"C_VIP",
+	columns:["VIPNAME","CARDNO","MOBIL","IDNO"],
+	params:{
+	 combine:"and",
+	 expr1:{
+					combine:"and",
+					expr1:{
+									column:"C_STORE_ID;C_CUSTOMER_ID;NAME",
+	         				condition:" IN ('BURGEON','四级经销仓')" //注意：这里 IN 的前后要有 空格
+	        },
+					expr2:{
+									column:"VIPNAME",
+									condition:"is not null"
+					} 
+	 },
+	 expr2:{
+	        combine:"and",
+					expr1:{
+					        column:"MOBIL",
+					        condition:" IS  NOT NULL"
+					},
+					expr2:{
+					        column:"IDNO",
+					        condition:" is not null"
+					}
+	 }
+	}
+}
+
+
+库存查询：
+{
+	table:"V_FA_V_STORAGE1",
+	columns:["M_PRODUCT_ID;NAME","M_PRODUCTALIAS_ID;NO","QTY","PRICELIST"],
+	params:{
+	 combine:"and",
+	 expr1:{
+					combine:"and",
+					expr1:{
+									column:"C_STORE_ID;C_CUSTOMER_ID;NAME",
+	         				condition:" IN ('BURGEON','四级经销仓')"
+	        },
+					expr2:{
+									column:"QTY",
+									condition:" > 0"
+					} 
+	 },
+	 expr2:{
+        column:"QTYCAN",
+        condition:" > 10"
+	  }
+	}
+}

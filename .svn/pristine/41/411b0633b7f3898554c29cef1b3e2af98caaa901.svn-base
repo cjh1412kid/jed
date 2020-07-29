@@ -1,0 +1,1138 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/goods/goods_inventory_structure_frm.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="box-content flex-con">
+            <div class="title year">年份库存占比</div>
+            <div class="flex-con">
+                <div class="charts" id="myChart1">
+
+                </div>
+                <div class="flex-con btns year">
+                    <!-- <div class="btn" tapmode onclick="chose1(this)">
+                        <input class='aui-radio' type='checkbox' name='radio' onclick='return false;' data-year="2016">
+                        <span class="type-name">2016</span>
+                    </div>
+                    <div class="btn" tapmode onclick="chose1(this)">
+                        <input class='aui-radio' type='checkbox' name='radio' onclick='return false;' data-year="2017">
+                        <span class="type-name">2017</span>
+                    </div>
+                    <div class="btn" tapmode onclick="chose1(this)">
+                        <input class='aui-radio' type='checkbox' name='radio' onclick='return false;' data-year="2018">
+                        <span class="type-name">2018</span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <div class="aui-margin-r-20">SKU量：<span class="skuNum year"></span></div>
+            <div class="aui-margin-l-20">库存：<span class="inventory year"></span></div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-content flex-con">
+            <div class="title season">季节库存占比</div>
+            <div class="flex-con">
+                <div class="charts" id="myChart2">
+
+                </div>
+                <div class="flex-con btns season">
+
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <div class="aui-margin-r-20">SKU量：<span class="skuNum season"></span></div>
+            <div class="aui-margin-l-20">库存：<span class="inventory season"></span></div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-content flex-con">
+            <div class="title cate-one">大类库存占比</div>
+            <div class="flex-con">
+                <div class="charts" id="myChart3">
+
+                </div>
+                <div class="flex-con btns cate-one">
+
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <div class="aui-margin-r-20">SKU量：<span class="skuNum cate-one"></span></div>
+            <div class="aui-margin-l-20">库存：<span class="inventory cate-one"></span></div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-content flex-con">
+            <div class="title cate-two">小类库存占比</div>
+            <div class="flex-con">
+                <div class="charts" id="myChart4">
+
+                </div>
+                <div class="flex-con btns cate-two">
+                    <!-- <div class="btn" tapmode onclick="chose1(this)">
+                        <input class='aui-radio' type='checkbox' name='radio' onclick='return false;' data-year="2016">
+                        <span class="type-name">2016</span>
+                    </div>
+                    <div class="btn" tapmode onclick="chose1(this)">
+                        <input class='aui-radio' type='checkbox' name='radio' onclick='return false;' data-year="2017">
+                        <span class="type-name">2017</span>
+                    </div>
+                    <div class="btn" tapmode onclick="chose1(this)">
+                        <input class='aui-radio' type='checkbox' name='radio' onclick='return false;' data-year="2018">
+                        <span class="type-name">2018</span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <div class="aui-margin-r-20">SKU量：<span class="skuNum cate-two"></span></div>
+            <div class="aui-margin-l-20">库存：<span class="inventory cate-two"></span></div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../script/common/echarts_min.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript">
+    function chose1(obj) {
+        var checkbox = $api.dom(obj, ".aui-radio");
+        var typeDom = $api.dom(obj, ".type-name");
+        if ((checkbox.checked)) {
+            checkbox.checked = false;
+            $(typeDom).removeClass('hot');
+        } else {
+            checkbox.checked = true;
+            $(typeDom).addClass('hot');
+        }
+        var inputList = $('.aui-radio.year')
+        var realList = option1.series[0].data
+        var list = []
+        for (var i = 0; i < inputList.length; i++) {
+            var dom = inputList[i]
+            if (dom.checked == true) {
+                list.push($(dom).attr('data-year'))
+            }
+        }
+        console.log(list);
+        yearList = list;
+        for (var i = 0; i < realList.length; i++) {
+            realList[i].selected = false
+        }
+        for (var i = 0; i < list.length; i++) {
+            for (var j = 0; j < realList.length; j++) {
+                if (list[i] == realList[j].name.split('\n')[0]) {
+                    realList[j].selected = true
+                }
+            }
+        }
+        console.log($api.jsonToStr(realList));
+        myChart1.setOption(option1);
+        var title = ''
+        for (var i = 0; i < yearList.length; i++) {
+            if (i == yearList.length - 1) {
+                title += yearList[i]
+            } else {
+                title += yearList[i] + ','
+            }
+
+        }
+        if (_isArrayNull(yearList)) {
+            $('.title.season').text(title + '季节库存占比')
+            $('.title.cate-one').text(title + '大类库存占比')
+            $('.title.cate-two').text(title + '小类库存占比')
+        } else {
+            $('.title.season').text(title + '年季节库存占比')
+            $('.title.cate-one').text(title + '年大类库存占比')
+            $('.title.cate-two').text(title + '年小类库存占比')
+        }
+        var url = window.myServerUrl;
+        url += 'order/app/shoesInfo/selectYearStockStructure?shopSeq=' + pageParam.shopSeqList;
+        url +='&yearList='+yearList
+        console.log("获取年份特殊值-->url:" + url);
+        isAjaxing = true;
+        _ajax(url, "selectYearStockStructure", function(ret, err) {
+            var tempGoodsList = [];
+            if (ret) {
+                console.log("获取年份特殊值-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                  $('.skuNum.year').text(ret.result[0].skuNum);
+                  $('.inventory.year').text(ret.result[0].stock)
+                  getDatas2(function(ret2) {
+                      initChart2(ret2);
+                      getDatas3(function(ret3) {
+                          initChart3(ret3);
+                          getDatas4(function(ret4) {
+                              initChart4(ret4);
+                          })
+                      })
+                  })
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("获取年份特殊值-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+        });
+
+
+    }
+
+    function chose2(obj) {
+        seasonList = [];
+        var checkbox = $api.dom(obj, ".aui-radio");
+        var typeDom = $api.dom(obj, ".type-name");
+        if ((checkbox.checked)) {
+            checkbox.checked = false;
+            $(typeDom).removeClass('hot');
+        } else {
+            checkbox.checked = true;
+            $(typeDom).addClass('hot');
+        }
+        var inputList = $('.aui-radio.season')
+        var realList = option2.series[0].data
+        var list = []
+        for (var i = 0; i < inputList.length; i++) {
+            var dom = inputList[i]
+            if (dom.checked == true) {
+                list.push($(dom).attr('data-season'));
+                seasonList.push($(dom).attr('data-seq'))
+            }
+        }
+        console.log(list);
+        console.log(seasonList);
+        for (var i = 0; i < realList.length; i++) {
+            realList[i].selected = false
+        }
+        for (var i = 0; i < list.length; i++) {
+            for (var j = 0; j < realList.length; j++) {
+                if (list[i] == realList[j].name.split('\n')[0]) {
+                    realList[j].selected = true
+                }
+            }
+        }
+        console.log($api.jsonToStr(realList));
+        myChart2.setOption(option2);
+        var title = ''
+        for (var i = 0; i < list.length; i++) {
+
+            if (i == list.length - 1) {
+                title += list[i]
+            } else {
+                title += list[i] + ','
+            }
+        }
+        var lastTitle = $('.title.season').text()
+        $('.title.cate-one').text(lastTitle.split('季节')[0] + title + '大类库存占比')
+        $('.title.cate-two').text(lastTitle.split('季节')[0] + title + '小类库存占比')
+        var url = window.myServerUrl;
+        url += 'order/app/shoesInfo/selectSeasonStockStructure?shopSeq=' + pageParam.shopSeqList;
+        url += '&yearList=' + yearList;
+        url +='&seasonSeqList='+seasonList;
+        console.log("获取季节特殊值-->url:" + url);
+        isAjaxing = true;
+        _ajax(url, "selectYearStockStructure", function(ret, err) {
+            var tempGoodsList = [];
+            if (ret) {
+                console.log("获取季节特殊值-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                  $('.skuNum.season').text(ret.result[0].skuNum);
+                  $('.inventory.season').text(ret.result[0].stock)
+                  getDatas3(function(ret3) {
+                      initChart3(ret3);
+                      getDatas4(function(ret4) {
+                          initChart4(ret4);
+                      })
+                  })
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("获取季节特殊值-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+        });
+
+    }
+
+    function chose3(obj) {
+        cateList = [];
+        var checkbox = $api.dom(obj, ".aui-radio");
+        var typeDom = $api.dom(obj, ".type-name");
+        if ((checkbox.checked)) {
+            checkbox.checked = false;
+            $(typeDom).removeClass('hot');
+        } else {
+            checkbox.checked = true;
+            $(typeDom).addClass('hot');
+        }
+        var inputList = $('.aui-radio.cate-one')
+        var realList = option3.series[0].data
+        var list = []
+        for (var i = 0; i < inputList.length; i++) {
+            var dom = inputList[i]
+            if (dom.checked == true) {
+                list.push($(dom).attr('data-cate-one'));
+                cateList.push($(dom).attr('data-seq'))
+            }
+        }
+        console.log(list);
+        console.log(cateList);
+        for (var i = 0; i < realList.length; i++) {
+            realList[i].selected = false
+        }
+        for (var i = 0; i < list.length; i++) {
+            for (var j = 0; j < realList.length; j++) {
+                if (list[i] == realList[j].name.split('\n')[0]) {
+                    realList[j].selected = true
+                }
+            }
+        }
+        console.log($api.jsonToStr(realList));
+        myChart3.setOption(option3);
+        var title = ''
+        for (var i = 0; i < list.length; i++) {
+
+            if (i == list.length - 1) {
+                title += list[i]
+            } else {
+                title += list[i] + ','
+            }
+        }
+        var lastTitle = $('.title.cate-one').text()
+        $('.title.cate-two').text(lastTitle.split('大类')[0] + title + '小类库存占比')
+        var url = window.myServerUrl;
+        url += 'order/app/shoesInfo/selectCategoryStockStructure?shopSeq=' + pageParam.shopSeqList;
+        url += '&yearList=' + yearList;
+        url += '&seasonSeqList=' + seasonList;
+        url +='&categorySeqList='+cateList
+        url += '&type=0'
+        console.log("获取类别特殊值-->url:" + url);
+        isAjaxing = true;
+        _ajax(url, "selectCategoryStockStructure", function(ret, err) {
+            var tempGoodsList = [];
+            if (ret) {
+                console.log("获取类别特殊值-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                  $('.skuNum.cate-one').text(ret.result[0].skuNum);
+                  $('.inventory.cate-one').text(ret.result[0].stock)
+                  getDatas4(function(ret4) {
+                      initChart4(ret4);
+                  })
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("获取类别特殊值-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+
+        });
+
+    }
+
+    function chose4(obj) {
+        var checkbox = $api.dom(obj, ".aui-radio");
+        var typeDom = $api.dom(obj, ".type-name");
+        if ((checkbox.checked)) {
+            checkbox.checked = false;
+            $(typeDom).removeClass('hot');
+        } else {
+            checkbox.checked = true;
+            $(typeDom).addClass('hot');
+        }
+        var inputList = $('.aui-radio.cate-two')
+        var realList = option4.series[0].data
+        var list = []
+        for (var i = 0; i < inputList.length; i++) {
+            var dom = inputList[i]
+            if (dom.checked == true) {
+                list.push($(dom).attr('data-cate-two'));
+            }
+        }
+        console.log(list);
+        console.log(cateList);
+        for (var i = 0; i < realList.length; i++) {
+            realList[i].selected = false
+        }
+        for (var i = 0; i < list.length; i++) {
+            for (var j = 0; j < realList.length; j++) {
+                if (list[i] == realList[j].name.split('\n')[0]) {
+                    realList[j].selected = true
+                }
+            }
+        }
+        console.log($api.jsonToStr(realList));
+        myChart4.setOption(option4);
+    }
+
+    function initChart1(_list) {
+        $('.skuNum.year').text(_list.skuNum);
+        $('.inventory.year').text(_list.stock);
+        var str = '';
+        var list = [];
+        for (var i = 0; i < _list.stockStructure.length; i++) {
+            if (_list.stockStructure[i].stock <= 0) {
+                continue;
+            }
+            str += ' <div class="btn" tapmode onclick="chose1(this)">'
+            str += '<input class="aui-radio year" type="checkbox" name="radio" onclick="return false;" data-year="' + _list.stockStructure[i].year + '">'
+            str += '<span class="type-name">' + _list.stockStructure[i].year + '</span>'
+            str += '</div>'
+            var obj = {};
+            obj.value = _list.stockStructure[i].stock;
+            obj.name = _list.stockStructure[i].year + '\n' + _list.stockStructure[i].stock + '\n' + _list.stockStructure[i].percent;
+            list.push(obj)
+        }
+        $('.btns.year').html(str);
+        myChart1 = echarts.init(document.getElementById('myChart1'));
+        option1 = {
+                color: ['#FFC353', '#36E2DF', '#7990FF', '#FF8844', '#FFAC53', '#FF6914', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+                // dataset: {
+                // 	source: [
+                //     ["2016",0.6,1],
+                //     ["2017",0.34,10],
+                //     ["2018",0.7,20],
+                // 	]
+                // },
+                series: [{
+                    hoverAnimation: false,
+                    selectedMode: 'multiple',
+                    hoverOffset: 10,
+                    labelLine: {
+                        show: true,
+                        length: 10,
+                        length2: 10,
+                    },
+                    label: {
+                        // normal: {
+                        //     position: 'inner'
+                        // }
+                    },
+                    type: 'pie',
+                    radius: 80,
+                    center: ["50%", "50%"],
+                    data: list
+                        // data:[
+                        //         // {value:335, name:'2016', selected:true},
+                        //         {value:335, name:'2016', selected:true},
+                        //         {value:679, name:'2017', selected:true},
+                        //         {value:1548, name:'2018'}
+                        //     ]
+                }]
+            },
+            myChart1.on('click', function(params) {
+                // 控制台打印数据的名称
+                var pageParams = params.data.name.split('\n')[0]
+                var pageParam = {
+                    flag: "goodsList",
+                    rangeType: "0",
+                    dataType: "0",
+                    name: '全部货品',
+                    seasonSeqList: [],
+                    supplement: '',
+                    categorySeqList: [],
+                    colorSeqList: [],
+                    cateSeqList: [],
+                    sXMap: "",
+                    fuzzySearchParam: "",
+                    sizeType: "",
+                    sizeSeqStart: "",
+                    sizeSeqEnd: "",
+                    orderBy: 1,
+                    orderDir: 0,
+                    saleTimeStart: "2017/01/02",
+                    saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+                    stockMinNum: "",
+                    stockMaxNum: "",
+                    yearList: [pageParams],
+                    timeRange: "30",
+                    shopSeqList: []
+                };
+                api.openDrawerLayout({
+                    name: "list_win",
+                    url: "goods_list_win.html",
+                    pageParam: pageParam,
+                    animation: {
+                        type: 'push'
+                    },
+                    softInputMode: "resize",
+                    softInputBarEnabled: false,
+                    overScrollMode: "always",
+                    slidToOpenPane: false,
+                    slidToClosePane: false,
+                    rightPane: {
+                        edge: 60,
+                        pageParam: pageParam,
+                        softInputMode: "resize",
+                        softInputBarEnabled: false,
+                        name: 'filter_win',
+                        url: '../filter_win.html'
+                    }
+                });
+                console.log($api.jsonToStr(yearList));
+                console.log(params.seriesIndex + ',' + params.seriesName + ',' + params.name + ',' + params.dataIndex + ',' + params.data + ',');
+            });
+        myChart1.setOption(option1);
+
+    }
+
+    function initChart2(_list) {
+        seasonList1 = []
+            // alert($api.jsonToStr(_list))
+        $('.skuNum.season').text(_list.skuNum);
+        $('.inventory.season').text(_list.stock);
+        var str = '';
+        var list = [];
+        for (var i = 0; i < _list.stockStructure.length; i++) {
+            if (_list.stockStructure[i].stock <= 0) {
+                continue;
+            }
+            str += ' <div class="btn" tapmode onclick="chose2(this)">'
+            str += '<input class="aui-radio season" type="checkbox" name="radio" onclick="return false;" data-season="' + _list.stockStructure[i].season + '" data-seq="' + _list.stockStructure[i].seq + '">'
+            str += '<span class="type-name">' + _list.stockStructure[i].season + '</span>'
+            str += '</div>'
+            var obj1 = {};
+            obj1.name = _list.stockStructure[i].season;
+            obj1.seq = _list.stockStructure[i].seq
+            seasonList1.push(obj1)
+            var obj = {};
+            obj.value = _list.stockStructure[i].stock;
+            obj.name = _list.stockStructure[i].season + '\n' + _list.stockStructure[i].stock + '\n' + _list.stockStructure[i].percent;
+            list.push(obj)
+        }
+        $('.btns.season').html(str);
+        myChart2 = echarts.init(document.getElementById('myChart2'));
+        option2 = {
+                color: ['#FFC353', '#36E2DF', '#7990FF', '#FF8844', '#FFAC53', '#FF6914', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+                // dataset: {
+                // 	source: [
+                //     ["2016",0.6,1],
+                //     ["2017",0.34,10],
+                //     ["2018",0.7,20],
+                // 	]
+                // },
+                series: [{
+                    hoverAnimation: false,
+                    selectedMode: 'multiple',
+                    hoverOffset: 10,
+                    labelLine: {
+                        show: true,
+                        length: 10,
+                        length2: 10,
+                    },
+                    label: {
+                        // normal: {
+                        //     position: 'inner'
+                        // }
+                    },
+                    type: 'pie',
+                    radius: 80,
+                    center: ["50%", "50%"],
+                    data: list
+                        // data:[
+                        //         // {value:335, name:'2016', selected:true},
+                        //         {value:335, name:'2016', selected:true},
+                        //         {value:679, name:'2017', selected:true},
+                        //         {value:1548, name:'2018'}
+                        //     ]
+                }]
+            },
+            myChart2.on('click', function(params) {
+                // 控制台打印数据的名称
+                allYearList = [];
+                var domList = $('.aui-radio.year')
+                for (var i = 0; i < domList.length; i++) {
+                    allYearList.push($(domList[i]).attr('data-year'))
+                }
+
+                // return
+                var pageParams = params.data.name.split('\n')[0]
+                var season;
+                for (var i = 0; i < seasonList1.length; i++) {
+                    if (seasonList1[i].name == pageParams) {
+                        season = seasonList1[i].seq
+                    }
+                }
+
+                var pageParam = {
+                    flag: "goodsList",
+                    rangeType: "0",
+                    dataType: "0",
+                    name: '全部货品',
+                    seasonSeqList: [season],
+                    supplement: '',
+                    categorySeqList: [],
+                    colorSeqList: [],
+                    cateSeqList: [],
+                    sXMap: "",
+                    fuzzySearchParam: "",
+                    sizeType: "",
+                    sizeSeqStart: "",
+                    sizeSeqEnd: "",
+                    orderBy: 1,
+                    orderDir: 0,
+                    saleTimeStart: "2017/01/02",
+                    saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+                    stockMinNum: "",
+                    stockMaxNum: "",
+                    yearList: _isArrayNull(yearList) ? allYearList : yearList,
+                    timeRange: "30",
+                    shopSeqList: []
+                };
+                api.openDrawerLayout({
+                    name: "list_win",
+                    url: "goods_list_win.html",
+                    pageParam: pageParam,
+                    animation: {
+                        type: 'push'
+                    },
+                    softInputMode: "resize",
+                    softInputBarEnabled: false,
+                    overScrollMode: "always",
+                    slidToOpenPane: false,
+                    slidToClosePane: false,
+                    rightPane: {
+                        edge: 60,
+                        pageParam: pageParam,
+                        softInputMode: "resize",
+                        softInputBarEnabled: false,
+                        name: 'filter_win',
+                        url: '../filter_win.html'
+                    }
+                });
+                console.log($api.jsonToStr(seasonList));
+                console.log(params.seriesIndex + ',' + params.seriesName + ',' + params.name + ',' + params.dataIndex + ',' + params.data + ',');
+            });
+        myChart2.setOption(option2);
+
+    }
+
+    function initChart3(_list) {
+        // alert($api.jsonToStr(_list))
+        cate1List = [];
+        $('.skuNum.cate-one').text(_list.skuNum);
+        $('.inventory.cate-one').text(_list.stock);
+        var str = '';
+        var list = [];
+        for (var i = 0; i < _list.stockStructure.length; i++) {
+            if (_list.stockStructure[i].stock <= 0) {
+                continue;
+            }
+            str += ' <div class="btn" tapmode onclick="chose3(this)">'
+            str += '<input class="aui-radio cate-one" type="checkbox" name="radio" onclick="return false;" data-cate-one="' + _list.stockStructure[i].categoryName + '" data-seq="' + _list.stockStructure[i].categorySeq + '">'
+            str += '<span class="type-name">' + _list.stockStructure[i].categoryName + '</span>'
+            str += '</div>'
+            var obj1 = {};
+            obj1.name = _list.stockStructure[i].categoryName;
+            obj1.seq = _list.stockStructure[i].categorySeq;
+            cate1List.push(obj1)
+            var obj = {};
+
+            obj.value = _list.stockStructure[i].stock;
+            obj.name = _list.stockStructure[i].categoryName + '\n' + _list.stockStructure[i].stock + '\n' + _list.stockStructure[i].percent;
+            list.push(obj)
+        }
+        $('.btns.cate-one').html(str);
+        myChart3 = echarts.init(document.getElementById('myChart3'));
+        option3 = {
+                color: ['#FFC353', '#36E2DF', '#7990FF', '#FF8844', '#FFAC53', '#FF6914', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+                // dataset: {
+                // 	source: [
+                //     ["2016",0.6,1],
+                //     ["2017",0.34,10],
+                //     ["2018",0.7,20],
+                // 	]
+                // },
+                series: [{
+                    hoverAnimation: false,
+                    selectedMode: 'multiple',
+                    hoverOffset: 10,
+                    labelLine: {
+                        show: true,
+                        length: 10,
+                        length2: 10,
+                    },
+                    label: {
+                        // normal: {
+                        //     position: 'inner'
+                        // }
+                    },
+                    type: 'pie',
+                    radius: 80,
+                    center: ["50%", "50%"],
+                    data: list
+                        // data:[
+                        //         // {value:335, name:'2016', selected:true},
+                        //         {value:335, name:'2016', selected:true},
+                        //         {value:679, name:'2017', selected:true},
+                        //         {value:1548, name:'2018'}
+                        //     ]
+                }]
+            },
+            myChart3.on('click', function(params) {
+                allYearList = [];
+                allSeasonList = [];
+                var domList = $('.aui-radio.year')
+                for (var i = 0; i < domList.length; i++) {
+                    allYearList.push($(domList[i]).attr('data-year'))
+                }
+                var domList1 = $('.aui-radio.season')
+                for (var i = 0; i < domList1.length; i++) {
+                    allSeasonList.push($(domList1[i]).attr('data-seq'))
+                }
+                // return
+                var pageParams = params.data.name.split('\n')[0]
+                var cate;
+                for (var i = 0; i < cate1List.length; i++) {
+                    if (cate1List[i].name == pageParams) {
+                        cate = cate1List[i].seq
+                    }
+                }
+
+                var pageParam = {
+                    flag: "goodsList",
+                    rangeType: "0",
+                    dataType: "0",
+                    name: '全部货品',
+                    seasonSeqList: _isArrayNull(seasonList) ? allSeasonList : seasonList,
+                    supplement: '',
+                    categorySeqList: [],
+                    colorSeqList: [],
+                    cateSeqList: [cate],
+                    sXMap: "",
+                    fuzzySearchParam: "",
+                    sizeType: "",
+                    sizeSeqStart: "",
+                    sizeSeqEnd: "",
+                    orderBy: 1,
+                    orderDir: 0,
+                    saleTimeStart: "2017/01/02",
+                    saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+                    stockMinNum: "",
+                    stockMaxNum: "",
+                    yearList: _isArrayNull(yearList) ? allYearList : yearList,
+                    timeRange: "30",
+                    shopSeqList: []
+                };
+                api.openDrawerLayout({
+                    name: "list_win",
+                    url: "goods_list_win.html",
+                    pageParam: pageParam,
+                    animation: {
+                        type: 'push'
+                    },
+                    softInputMode: "resize",
+                    softInputBarEnabled: false,
+                    overScrollMode: "always",
+                    slidToOpenPane: false,
+                    slidToClosePane: false,
+                    rightPane: {
+                        edge: 60,
+                        pageParam: pageParam,
+                        softInputMode: "resize",
+                        softInputBarEnabled: false,
+                        name: 'filter_win',
+                        url: '../filter_win.html'
+                    }
+                });
+                console.log($api.jsonToStr(cateList));
+                console.log(params.seriesIndex + ',' + params.seriesName + ',' + params.name + ',' + params.dataIndex + ',' + params.data + ',');
+            });
+        myChart3.setOption(option3);
+
+    }
+
+    function initChart4(_list) {
+        // alert($api.jsonToStr(_list))
+        cate2List = [];
+        $('.skuNum.cate-two').text(_list.skuNum);
+        $('.inventory.cate-two').text(_list.stock);
+        var str = '';
+        var list = [];
+        for (var i = 0; i < _list.stockStructure.length; i++) {
+            if (_list.stockStructure[i].stock <= 0) {
+                continue;
+            }
+
+            // str += ' <div class="btn" tapmode onclick="chose4(this)">'
+            // str += '<input class="aui-radio cate-two" type="checkbox" name="radio" onclick="return false;" data-cate-two="' + _list.stockStructure[i].categoryName + '">'
+            // str += '<span class="type-name">' + _list.stockStructure[i].categoryName + '</span>'
+            // str += '</div>'
+            var obj1 = {};
+            obj1.seq = _list.stockStructure[i].categorySeq;
+            obj1.name = _list.stockStructure[i].categoryName
+            cate2List.push(obj1)
+            var obj = {};
+            obj.value = _list.stockStructure[i].stock;
+            obj.name = _list.stockStructure[i].categoryName + '\n' + _list.stockStructure[i].stock + '\n' + _list.stockStructure[i].percent;
+            list.push(obj)
+        }
+        // $('.btns.cate-two').html(str);
+        myChart4 = echarts.init(document.getElementById('myChart4'));
+        option4 = {
+                color: ['#FFC353', '#36E2DF', '#7990FF', '#FF8844', '#FFAC53', '#FF6914', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+                // dataset: {
+                // 	source: [
+                //     ["2016",0.6,1],
+                //     ["2017",0.34,10],
+                //     ["2018",0.7,20],
+                // 	]
+                // },
+                series: [{
+                    hoverAnimation: false,
+                    selectedMode: 'multiple',
+                    hoverOffset: 10,
+                    labelLine: {
+                        show: true,
+                        length: 10,
+                        length2: 10,
+                    },
+                    label: {
+                        // normal: {
+                        //     position: 'inner'
+                        // }
+                    },
+                    type: 'pie',
+                    radius: 80,
+                    center: ["50%", "50%"],
+                    data: list
+                        // data:[
+                        //         // {value:335, name:'2016', selected:true},
+                        //         {value:335, name:'2016', selected:true},
+                        //         {value:679, name:'2017', selected:true},
+                        //         {value:1548, name:'2018'}
+                        //     ]
+                }]
+            },
+            myChart4.on('click', function(params) {
+                // 控制台打印数据的名称
+                allYearList = [];
+                allSeasonList = [];
+
+                var domList = $('.aui-radio.year')
+                for (var i = 0; i < domList.length; i++) {
+                    allYearList.push($(domList[i]).attr('data-year'))
+                }
+                var domList1 = $('.aui-radio.season')
+                for (var i = 0; i < domList1.length; i++) {
+                    allSeasonList.push($(domList1[i]).attr('data-seq'))
+                }
+                var domList2 = $('.aui-radio.cate-one')
+                var pageParams = params.data.name.split('\n')[0]
+                var cate1;
+                for (var i = 0; i < cate2List.length; i++) {
+                  if (cate2List[i].name == pageParams) {
+                      cate1 = cate2List[i].seq
+                  }
+                }
+                var pageParam = {
+                    flag: "goodsList",
+                    rangeType: "0",
+                    dataType: "0",
+                    name: '全部货品',
+                    seasonSeqList: _isArrayNull(seasonList) ? allSeasonList : seasonList,
+                    supplement: '',
+                    categorySeqList: [],
+                    colorSeqList: [],
+                    cateSeqList: [cate1],
+                    sXMap: "",
+                    fuzzySearchParam: "",
+                    sizeType: "",
+                    sizeSeqStart: "",
+                    sizeSeqEnd: "",
+                    orderBy: 1,
+                    orderDir: 0,
+                    saleTimeStart: "2017/01/02",
+                    saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+                    stockMinNum: "",
+                    stockMaxNum: "",
+                    yearList: _isArrayNull(yearList) ? allYearList : yearList,
+                    timeRange: "30",
+                    shopSeqList: []
+                };
+                api.openDrawerLayout({
+                    name: "list_win",
+                    url: "goods_list_win.html",
+                    pageParam: pageParam,
+                    animation: {
+                        type: 'push'
+                    },
+                    softInputMode: "resize",
+                    softInputBarEnabled: false,
+                    overScrollMode: "always",
+                    slidToOpenPane: false,
+                    slidToClosePane: false,
+                    rightPane: {
+                        edge: 60,
+                        pageParam: pageParam,
+                        softInputMode: "resize",
+                        softInputBarEnabled: false,
+                        name: 'filter_win',
+                        url: '../filter_win.html'
+                    }
+                });
+
+
+
+            });
+        myChart4.setOption(option4);
+          api.parseTapmode();
+        api.refreshHeaderLoadDone();
+    }
+    /*
+     *获取鞋子列表数据
+     */
+    function getDatas1(call) {
+        var url = window.myServerUrl;
+        url += 'order/app/shoesInfo/selectYearStockStructure?shopSeq=' + pageParam.shopSeqList;
+        console.log("库存结构按年份-->url:" + url);
+        isAjaxing = true;
+        _ajax(url, "selectYearStockStructure", function(ret, err) {
+            var tempGoodsList = [];
+            if (ret) {
+                console.log("库存结构按年份-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    tempGoodsList = ret.result[0];
+                    //list数组
+                    yearList = [];
+                    for (var i = 0; i < tempGoodsList.stockStructure.length; i++) {
+                        yearList.push(tempGoodsList.stockStructure[i].year)
+                    }
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("库存结构按年份-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            call(tempGoodsList);
+        });
+    }
+
+    function closeUILoading() {
+        UILoading.closeKeyFrame();
+    }
+
+    function openUILoading() {
+        UILoading.keyFrame({
+            rect: {
+                w: 102,
+                h: 102
+            },
+            styles: {
+                bg: 'rgba(0,0,0,0)',
+                corner: 5,
+                interval: 50,
+                frame: {
+                    w: 102,
+                    h: 102
+                }
+            },
+            //				content : [{
+            //					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+            //				}, {
+            //					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+            //				}],
+            mask: "rgba(255,0,0,0)"
+        }, function(ret) {
+            //								alert(JSON.stringify(ret));
+            console.log(12345);
+        });
+    }
+
+    function initData() {
+        start = 1;
+        num = 10;
+        UILoading = api.require('UILoading');
+        pageParam = api.pageParam;
+        goodsList = [];
+    }
+
+    function getDatas2(call) {
+        var url = window.myServerUrl;
+        url += 'order/app/shoesInfo/selectSeasonStockStructure?shopSeq=' + pageParam.shopSeqList;
+        url += '&yearList=' + yearList;
+        console.log("库存结构按季节-->url:" + url);
+        isAjaxing = true;
+        _ajax(url, "selectYearStockStructure", function(ret, err) {
+            var tempGoodsList = [];
+            if (ret) {
+                console.log("库存结构按季节-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    tempGoodsList = ret.result[0];
+                    //list数组
+                    seasonList = [];
+                    for (var i = 0; i < tempGoodsList.stockStructure.length; i++) {
+                        seasonList.push(tempGoodsList.stockStructure[i].seq)
+                    }
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("库存结构按季节-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            call(tempGoodsList);
+        });
+    }
+
+    function getDatas3(call) {
+        var url = window.myServerUrl;
+        url += 'order/app/shoesInfo/selectCategoryStockStructure?shopSeq=' + pageParam.shopSeqList;
+        url += '&yearList=' + yearList;
+        url += '&seasonSeqList=' + seasonList;
+        url += '&type=0'
+        console.log("库存结构按类别-->url:" + url);
+        isAjaxing = true;
+        _ajax(url, "selectCategoryStockStructure", function(ret, err) {
+            var tempGoodsList = [];
+            if (ret) {
+                console.log("库存结构按类别-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    tempGoodsList = ret.result[0];
+                    //list数组
+                    cateList = [];
+                    for (var i = 0; i < tempGoodsList.stockStructure.length; i++) {
+                        cateList.push(tempGoodsList.stockStructure[i].categorySeq)
+                    }
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("库存结构按类别-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            call(tempGoodsList);
+        });
+    }
+
+    function getDatas4(call) {
+        var url = window.myServerUrl;
+        url += 'order/app/shoesInfo/selectCategoryStockStructure?shopSeq=' + pageParam.shopSeqList;
+        url += '&yearList=' + yearList;
+        url += '&seasonSeqList=' + seasonList;
+        url += '&categorySeqList=' + cateList;
+        url += '&type=1'
+        console.log("库存结构按类别2-->url:" + url);
+        isAjaxing = true;
+        _ajax(url, "selectCategoryStockStructure", function(ret, err) {
+            var tempGoodsList = [];
+            if (ret) {
+                console.log("库存结构按类别2-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    tempGoodsList = ret.result[0];
+                    //list数组
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("库存结构按类别2-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            call(tempGoodsList);
+        });
+    }
+    var goodsList;
+    var UILoading;
+    var pageParam;
+    var userInfo = $api.getStorage('userInfoKey');
+    var option1;
+    var option2;
+    var option3;
+    var option4;
+    var myChart1;
+    var myChart2;
+    var myChart3;
+    var myChart4;
+    var yearList = [];
+    var allYearList = [];
+    var allSeasonList = [];
+    var seasonList = [];
+    var seasonList1 = [];
+    var cateList = [];
+    var cate2List = [];
+    var cate1List = [];
+
+    var apiready = function() {
+        initData();
+        //下拉刷新
+        api.setRefreshHeaderInfo({
+            loadingImg: 'widget://image/loading_more.gif',
+            bgColor: 'rgba(255,255,255,0)',
+            textColor: '#212121',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...'
+        }, function(ret, err) {
+            //在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+            getDatas1(function(ret) {
+                initChart1(ret);
+                getDatas2(function(ret2) {
+                    initChart2(ret2);
+                    getDatas3(function(ret3) {
+                        initChart3(ret3);
+                        getDatas4(function(ret4) {
+                            initChart4(ret4);
+                        })
+                    })
+                })
+            })
+            $('.title.season').text('季节库存占比')
+            $('.title.cate-one').text('大类库存占比')
+            $('.title.cate-two').text('小类库存占比')
+        });
+        //设置下拉刷新延迟时间
+        setTimeout(function() {
+            getDatas1(function(ret) {
+                initChart1(ret);
+                getDatas2(function(ret2) {
+                    initChart2(ret2);
+                    getDatas3(function(ret3) {
+                        initChart3(ret3);
+                        getDatas4(function(ret4) {
+                            initChart4(ret4);
+                        })
+                    })
+                })
+            });
+            $('.title.season').text('季节库存占比')
+            $('.title.cate-one').text('大类库存占比')
+            $('.title.cate-two').text('小类库存占比')
+        }, 150);
+
+        _addEventListener("query_filter_changed_event", function(ret) {
+            console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+            pageParam = ret.value;
+            api.refreshHeaderLoading();
+            $('.title.season').text('季节库存占比')
+            $('.title.cate-one').text('大类库存占比')
+            $('.title.cate-two').text('小类库存占比')
+        });
+
+
+
+    }
+</script>
+
+</html>

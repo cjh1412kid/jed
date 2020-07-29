@@ -1,0 +1,321 @@
+
+/************* 快递鸟 **************/ 
+.kdnlogin-box {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 900px;
+    height: 600px;
+    border: 1px solid #ccc;
+    margin-left: -350px;
+    margin-top: -300px;
+    background-color: #fff;
+}
+
+.kdnlogin-title {
+    height: 40px;
+    line-height: 40px;
+    background-color: #e5e5e5;
+    padding-left: 15px;
+}
+
+.kdnlogin-close {
+    color: #333;
+    float: right;
+    vertical-align: middle;
+    margin-top: -1px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.kdnlogin-close:hover {
+    color: #555;
+}
+   
+/*********************************/         
+.aui-list .aui-list-item {
+	padding-left: 0.5rem !important;
+}
+.aui-list .aui-list-item:active {
+    background-color: #FFFFFF !important;
+}
+.aui-list-item-media{
+	padding: 0.8rem!important;
+	width: 6.1rem!important;
+}
+.aui-list .aui-list-item-inner {
+    position: relative;
+    min-height: 0.6rem;
+	margin-top:0.25rem;
+	padding-right: 0.5rem;
+}
+.aui-list-item-title {
+	color: #444444;
+	font-size: 0.75rem;
+	max-height: 3.0rem;
+	margin-bottom: 0.1rem;
+	display: -webkit-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+/* 1.红色(待确认) */
+.aui-text-red{
+	color: #ff877e !important;
+}
+/* 2.橙色 (待审核/支付)*/
+.aui-text-orange{	
+	color: #FFA500 !important;
+}
+/* 3.黑色(待入库) */
+.aui-text-black{	
+	color: #565656 !important;	
+}
+/* 4.蓝色(未/待发货)*/
+.aui-text-blue{
+	color: #66A8CC !important;
+}
+/* 5.紫色(部分发货) */
+.aui-text-purple{
+	color: #9370DB !important;
+}
+/* 6.棕色(已发货) */
+.aui-text-brown{
+	color: #cfa972 !important;
+}
+/* 7.绿色(已到/收货) */
+.aui-text-green{
+	color: #1dc075 !important;
+}
+/* 8.灰色 (已取消)*/
+.aui-text-gray{	
+	color: #abb0a1 !important;
+}
+/* 扫描二维码 */
+#scanner:active{
+	background-color: #eeeeee !important;
+}
+/* 物流详情  */
+#wlxq{
+	height: 2.2rem;
+	background-color: #ffffff;
+}
+/*商品图片*/
+//.img-container{
+//	width: 100%;
+//}
+//.img-container img{
+//	width: 100%;
+//	border-top-left-radius:0.3rem;
+//	border-top-right-radius:0.3rem;
+//}
+//img{
+//	display: inline-block;
+//}
+
+/* 商品信息列表 */
+#goodsInfo .aui-collapse-item:not(:first-of-type){
+	border-top: 1px solid rgba(221,221,221,0.5);
+}
+.goods-info-list .aui-list-item-inner{
+	margin-bottom:0.25rem;
+}
+.goods-info-list img{
+	width: 3.0rem;
+	height: 3.0rem;
+}
+.goods-info-list span:not(:first-of-type){
+	color:#999; 
+	font-size: 0.7rem !important;
+	padding-right:0.5rem;
+}
+
+/*商品图片容器 */
+.contain {
+    width:  -webkit-calc(50vw -0.3rem);/*屏幕宽度的一半*/
+    height: -webkit-calc(50vw -0.3rem);/*屏幕宽度的一半*/
+}
+.item {
+    /*float: left;*/
+    position: relative;
+    /*这里显示的就是1:1,以后div就会保持这个比例*/
+    width: 100%;
+    padding-bottom: 100%;  
+}
+.item .box{
+	width: 100%;
+	height: 100%;
+    display: flex;
+    justify-content:center;
+    text-align: center;
+	position: absolute;	
+			
+}
+.item .box img{
+	border-top-left-radius: 0.3rem;
+	border-top-right-radius: 0.3rem;
+}
+
+/* 商品介绍 */
+.goods-title {
+	height:2.0rem;
+	max-height: 2.0rem;
+	margin-bottom: 0.1rem;
+	font-size:0.7rem !important;
+	display: -webkit-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+/* 货号 */
+.goods-name{
+	font-size: 0.6rem !important;
+	color: #999999 !important;
+}
+
+/* 商品属性(价格, 货号, 订货量, 评分) */
+.attr-name{
+	font-size: 0.6rem;
+	color: #999999;
+}
+.attr-value{
+	font-size: 0.7rem;
+	color: #999999;
+}
+/* 上传物流信息(运单号, 物流公司, 物流图片) */
+#WL.aui-list {
+	border-top: 1px solid #dddddd !important;
+}	
+/* 商品图片 */
+.aui-list .aui-list-item-media {
+	padding: 0 !important; 
+	padding-right: 0.75rem !important; 
+}	
+/* 金额样式 */
+.money-style-1{
+	font-weight:450 !important;  
+	font-size: 0.95rem !important; 
+}
+.money-style-2{
+	font-weight:550 !important;  
+	font-size: 0.7rem !important; 
+}						
+/* 用户信息(用户名, 电话, 地址) */
+.name-phone{
+	font-weight:400  !important; 
+}
+.aui-card-list-content-padded {
+	position: relative;
+	padding: 0.5rem !important;
+}
+/* 要求到货日期, 留言 */
+.require-date-name{
+	width: 5.0rem !important;
+}
+.require-date-value{
+	color: #999999 !important;
+}
+.require-date-value.active{
+	min-width: 4.0rem;
+	color: #999999 !important;
+}
+#suggestion,#requireTime[type="text"] {
+	display: inline !important;
+//	width: -webkit-calc(100% - 5.0rem)!important;
+	width: 60% !important;
+	height: auto;
+	line-height: normal;
+	font-size: 0.7rem !important;
+	color: #212121 !important;;
+}	
+/* 订单时间 */
+.order-time .aui-list-item {
+	min-height: 1.5rem !important;
+}
+/* 去除aui-list的边框(商品列表) */
+@media screen and (-webkit-min-device-pixel-ratio:1.5) {
+	.aui-list {
+		border: none;
+        background-size: 100% 0px;
+		background-repeat: no-repeat;
+		background-position: top;
+        background-image: linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);
+	}
+	.aui-list .aui-list-item {
+		border: none;
+        background-size: 100% 0px;
+		background-repeat: no-repeat;
+		background-position: bottom;
+        background-image: linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);
+        background-image: -webkit-linear-gradient(90deg,#dddddd,#dddddd 50%,transparent 50%);
+	}
+	.aui-list.aui-list-in .aui-list-item {
+		border: none;
+        background-size: 100% 0px;
+		background-repeat: no-repeat;
+		background-position: 0.75rem bottom;
+        background-image: linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);
+        background-image: -webkit-linear-gradient(90deg,#dddddd,#dddddd 50%,transparent 50%);
+	}
+	.aui-list.aui-list-in .aui-list-item:last-child {
+		background-position: bottom;
+	}
+	.aui-list.aui-list-noborder,
+	.aui-list.aui-list-noborder .aui-list-item:last-child {
+		border: none;
+        background-size: 100% 0;
+        background-image: none;
+	}
+}
+/* 猜你喜欢 */
+/*宫格布局*/
+.aui-grid {
+	width: 100%;
+	background-color: rgba(0,0,0,0);
+	display: table;
+	table-layout: fixed;
+}
+.aui-grid [class*=aui-col-xs-]:active {
+	opacity: 0.8;
+}
+.aui-col-xs-6{
+	width: -webkit-calc(50% - 0.3rem);
+	padding: 0.0rem !important;
+	border-radius: 0.3rem;
+}
+/*底部提示信息*/
+.aui-card-list-footer{
+	min-height: 1.6rem;
+	color: #bc9761;
+ 	padding: 0!important;
+}
+.aui-card-list-footer i{
+	font-weight: bold;
+	color: #bc9761;
+}
+.aui-margin-t-1{
+	margin-top: 0.05rem !important;
+}
+.aui-margin-l-2{
+	margin-left: 0.1rem !important;
+}
+.aui-margin-r-2{
+	margin-right: 0.1rem !important;
+}
+.aui-margin-b-4{
+	margin-bottom: 0.2rem !important;
+}
+.aui-margin-l-4{
+	margin-left: 0.2rem !important;
+}
+.aui-margin-r-4{
+	margin-right: 0.2rem !important;
+}
+.aui-margin-l-25{
+	margin-left: 1.25rem !important;
+}
+.aui-list .aui-list-header {
+	display: -webkit-box !important;
+}		

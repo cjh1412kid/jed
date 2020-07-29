@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.SaleShoesAnalysisDao">
+	
+
+	<!-- 货品销量的resultMap，type为HashMap -->
+	<resultMap id="shoesSeqListMap" type="java.util.HashMap">
+		<id column="Seq" property="seq" jdbcType="INTEGER"/>
+	    <result column="Img1" property="img" jdbcType="VARCHAR"/>
+	    <result column="GoodName" property="goodName" jdbcType="VARCHAR"/>
+	    <result column="GoodID" property="goodId" jdbcType="VARCHAR"/>
+	    <result column="Stock" property="stock" jdbcType="INTEGER"/>
+	    <result column="SaleCount" property="saleCount" jdbcType="INTEGER"/>
+	    <result column="AvgSalePrice" property="avgSalePrice" jdbcType="DECIMAL"/>
+	    <result column="InNum" property="inNum" jdbcType="INTEGER"/>
+	    <result column="SelloutRate" property="selloutRate" jdbcType="DECIMAL"/>
+	</resultMap>
+
+
+
+	<!-- 总部各个货品销量排行 -->
+	<select id="getHqShoesRankList" resultMap="shoesSeqListMap">
+		SELECT
+			A.Seq, A.Img1, A.GoodName, A.GoodID,
+			B.Stock, 
+			C.SaleCount, ROUND(C.AvgSalePrice, 0) AS AvgSalePrice,
+			D.InNum,
+			ROUND(CAST((C.SaleCount) AS Float)/NULLIF((D.InNum - isnull(E.OutNum,0)), 0) * 100, 2) AS SelloutRate
+		FROM
+			JedSmartRetail.dbo.YHSR_Goods_Shoes A
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Stock) AS Stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 GROUP BY Shoes_Seq) AS B ON A.Seq = B.Shoes_Seq
+		
+		
+	  	LEFT JOIN (
+		  	SELECT 
+		  		ShoeSeq, SUM(SaleCount) AS SaleCount, SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE
+			 SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+	  		GROUP BY ShoeSeq 
+	  	) AS C ON A.Seq = C.ShoeSeq
+	  	
+	  	LEFT JOIN (
+			SELECT 
+				Shoes_Seq, SUM (Count) AS InNum
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE 
+				 (Type = 0)
+			GROUP BY 
+				Shoes_Seq
+	  	) AS D ON A.Seq = D.Shoes_Seq
+
+		LEFT JOIN (
+		SELECT
+		Shoes_Seq, SUM (Count) AS OutNum
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+		WHERE
+		 (Type = 4)
+		GROUP BY
+		Shoes_Seq
+		) AS E ON A.Seq = E.Shoes_Seq
+		WHERE 
+			A.Del = 0
+			    AND A.Seq IN (${shoesSeqs})
+		ORDER BY 
+            <if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:平均售价 -->
+			    C.SaleCount
+			</if>
+			<if test="orderBy==2">
+			    B.Stock
+			</if>
+			<if test="orderBy==3">
+				CAST((C.SaleCount) AS Float)/NULLIF(D.InNum, 0)
+			</if>
+			<if test="orderBy==4">
+			    C.AvgSalePrice
+			</if>
+			<if test="orderDir==0">
+			    DESC
+			</if>
+			<if test="orderDir==1">
+			    ASC
+			</if>
+            , A.Seq DESC
+	</select>
+
+
+
+
+	<!-- 门店各个货品销量排行 -->
+	<select id="getShopShoesRankList" resultMap="shoesSeqListMap">
+		SELECT
+			A.Seq, A.Img1, A.GoodName, A.GoodID,
+			B.Stock, 
+			C.SaleCount, ROUND(C.AvgSalePrice, 0) AS AvgSalePrice,
+			D.InNum,
+			ROUND(CAST((C.SaleCount) AS Float)/NULLIF((D.InNum - isnull(E.OutNum,0)), 0) * 100, 2) AS SelloutRate
+		FROM
+			JedSmartRetail.dbo.YHSR_Goods_Shoes A
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Stock) AS Stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 AND Shop_Seq = #{shopSeq} GROUP BY Shoes_Seq) AS B ON A.Seq = B.Shoes_Seq
+		
+	  	LEFT JOIN (
+		  	SELECT 
+		  		ShoeSeq, SUM(SaleCount) AS SaleCount, SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE
+				ShopSeq = #{shopSeq} AND ShoeSeq IN (${shoesSeqs})AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+	  		GROUP BY ShoeSeq 
+	  	) AS C ON A.Seq = C.ShoeSeq
+	  	
+	  	LEFT JOIN (
+			SELECT 
+				Shoes_Seq, SUM (Count) AS InNum
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE 
+				Shop_Seq = #{shopSeq} AND Shoes_Seq IN (${shoesSeqs})
+			AND Type = 1
+			GROUP BY 
+				Shoes_Seq
+	  	) AS D ON A.Seq = D.Shoes_Seq
+
+		LEFT JOIN (
+		SELECT
+		Shoes_Seq, SUM (Count) AS OutNum
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+		WHERE
+		Shop_Seq = #{shopSeq} AND Shoes_Seq IN (${shoesSeqs})
+		AND Type = 2
+		GROUP BY
+		Shoes_Seq
+		) AS E ON A.Seq = E.Shoes_Seq
+
+		WHERE 
+			A.Del = 0
+			    AND A.Seq IN (${shoesSeqs})
+		ORDER BY 
+            <if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:平均售价 -->
+			    C.SaleCount
+			</if>
+			<if test="orderBy==2">
+			    B.Stock
+			</if>
+			<if test="orderBy==3">
+				CAST((C.SaleCount) AS Float)/NULLIF(D.InNum, 0)
+			</if>
+			<if test="orderBy==4">
+			    C.AvgSalePrice
+			</if>
+			<if test="orderDir==0">
+			    DESC
+			</if>
+			<if test="orderDir==1">
+			    ASC
+			</if>
+            , A.Seq DESC
+	</select>
+	
+	
+	
+	
+	
+	<!-- 门店销量排行的resultMap，type为HashMap -->
+	<resultMap id="shopListMap" type="java.util.HashMap">
+		<id column="Seq" property="shopSeq" jdbcType="INTEGER"/>
+	    <result column="Name" property="shopName" jdbcType="VARCHAR"/>
+	    <result column="ShopImage" property="shopImage" jdbcType="VARCHAR"/>
+	    <result column="Stock" property="stock" jdbcType="INTEGER"/>
+	    <result column="SaleCount" property="saleCount" jdbcType="INTEGER"/>
+	    <result column="AvgSalePrice" property="avgSalePrice" jdbcType="DECIMAL"/>
+	    <result column="InNum" property="inNum" jdbcType="INTEGER"/>
+	    <result column="SelloutRate" property="selloutRate" jdbcType="DECIMAL"/>
+	</resultMap>
+	
+	<!-- 门店销量排行 -->
+	<select id="getShopRankList" resultMap="shopListMap">
+		SELECT
+			A.Seq, A.Name, A.ShopImage,
+			B.Stock, 
+			C.SaleCount, ROUND(C.AvgSalePrice, 0) AS AvgSalePrice,
+			D.InNum,
+			CONVERT(DECIMAL(18,2),(CAST((C.SaleCount) AS Float)/NULLIF((D.InNum - NULLIF(E.OutNum,0)), 0) * 100)) AS SelloutRate
+		FROM
+			JedSmartRetail.dbo.YHSR_Base_Shop A
+		LEFT JOIN (
+			SELECT 
+				Shop_Seq, SUM (Stock) AS Stock 
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData 
+			WHERE 
+				Del = 0 
+			GROUP BY 
+				Shop_Seq
+		) AS B ON A.Seq = B.Shop_Seq
+		
+	  	LEFT JOIN (
+		  	SELECT 
+		  		ShopSeq, SUM(SaleCount) AS SaleCount, SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+	  		GROUP BY ShopSeq 
+	  	) AS C ON A.Seq = C.ShopSeq
+	  	
+	  	LEFT JOIN (
+			SELECT 
+				Shop_Seq, SUM (Count) AS InNum
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE 
+				Type = 1
+			GROUP BY 
+				Shop_Seq
+	  	) AS D ON A.Seq = D.Shop_Seq
+
+		LEFT JOIN (
+		SELECT
+		Shop_Seq, SUM (Count) AS OutNum
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+		WHERE
+		Type = 2
+		GROUP BY
+		Shop_Seq
+		) AS E ON A.Seq = E.Shop_Seq
+
+		WHERE 
+			A.Del = 0 AND A.Company_Seq = #{companySeq}
+		ORDER BY 
+            <if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:平均售价 -->
+			    C.SaleCount
+			</if>
+			<if test="orderBy==2">
+			    B.Stock
+			</if>
+			<if test="orderBy==3">
+				CAST((C.SaleCount) AS Float)/NULLIF(D.InNum, 0)
+			</if>
+			<if test="orderBy==4">
+			    C.AvgSalePrice
+			</if>
+			<if test="orderDir==0">
+			    DESC
+			</if>
+			<if test="orderDir==1">
+			    ASC
+			</if>
+	</select>
+	
+	
+	<!-- 销售品类分析 (销量)-->
+		<select id="getHqShoesAnalysisList" resultMap="shoesSeqListMap">
+		SELECT
+			A.Seq, A.Img1, A.GoodName, A.GoodID,
+			B.Stock, 
+			C.SaleCount, ROUND(C.AvgSalePrice, 0) AS AvgSalePrice,
+			D.InNum,
+			CONVERT(DECIMAL(18,2),(CAST((C.SaleCount) AS Float)/NULLIF((D.InNum - isnull(E.OutNum,0)), 0) * 100)) AS SelloutRate
+		FROM
+			JedSmartRetail.dbo.YHSR_Goods_Shoes A
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Stock) AS Stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 
+		<if test="shopSeqs!=null and shopSeqs!=''">
+		AND Shop_Seq IN (${shopSeqs})  
+		</if>
+		GROUP BY Shoes_Seq) AS B ON A.Seq = B.Shoes_Seq
+		
+		
+	  	LEFT JOIN (
+		  	SELECT 
+		  		ShoeSeq, SUM(SaleCount) AS SaleCount, SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE
+				ShoeSeq IN (${shoesSeqs}) 
+				<if test="shopSeqs!=null and shopSeqs!=''">
+				AND ShopSeq IN (${shopSeqs})  
+				</if>
+			AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+				 <if test="startPrice!=null and startPrice!='' and startPrice!=0">
+				AND RealPrice >= #{startPrice} 
+				</if>
+				 <if test="endPrice!=null and endPrice!='' and endPrice!=0">
+				AND RealPrice &lt; #{endPrice}
+				</if>
+	  		GROUP BY ShoeSeq 
+	  	) AS C ON A.Seq = C.ShoeSeq
+	  	
+	  	LEFT JOIN (
+			SELECT 
+				Shoes_Seq, SUM (Count) AS InNum
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE 
+				Shoes_Seq IN (${shoesSeqs})
+				<if test="shopSeqs!=null and shopSeqs!=''">
+		        AND Shop_Seq IN (${shopSeqs})  
+		       </if>
+			<if test="shopSeq == null">
+				AND (Type = 0)
+			</if>
+			<if test="shopSeq != null">
+				AND (Type = 1) AND Shop_Seq = #{shopSeq}
+			</if>
+			GROUP BY 
+				Shoes_Seq
+	  	) AS D ON A.Seq = D.Shoes_Seq
+
+			LEFT JOIN (
+			SELECT
+			Shoes_Seq, SUM (Count) AS OutNum
+			FROM
+			JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE
+			Shoes_Seq IN (${shoesSeqs})
+			<if test="shopSeqs!=null and shopSeqs!=''">
+				AND Shop_Seq IN (${shopSeqs})
+			</if>
+			<if test="shopSeq == null">
+				AND (Type = 4)
+			</if>
+			<if test="shopSeq != null">
+				AND (Type = 2) AND Shop_Seq = #{shopSeq}
+			</if>
+			GROUP BY
+			Shoes_Seq
+			) AS E ON A.Seq = E.Shoes_Seq
+
+		WHERE 
+			A.Del = 0 AND C.SaleCount > 0 
+			    AND A.Seq IN (${shoesSeqs})
+		ORDER BY 
+            <if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:平均售价 -->
+			    C.SaleCount
+			</if>
+			<if test="orderBy==2">
+			    B.Stock
+			</if>
+			<if test="orderBy==3">
+				CAST((C.SaleCount) AS Float)/NULLIF((D.InNum - isnull(E.OutNum,0)), 0)
+			</if>
+			<if test="orderBy==4">
+			    C.AvgSalePrice
+			</if>
+			<if test="orderDir==0">
+			    DESC
+			</if>
+			<if test="orderDir==1">
+			    ASC
+			</if>
+            , A.Seq DESC
+	</select>
+	
+	<resultMap id="shoesSeqListByMoneyMap" type="java.util.HashMap">
+		<id column="Seq" property="seq" jdbcType="INTEGER"/>
+	    <result column="Img1" property="img" jdbcType="VARCHAR"/>
+	    <result column="GoodName" property="goodName" jdbcType="VARCHAR"/>
+	    <result column="GoodID" property="goodId" jdbcType="VARCHAR"/>
+	    <result column="Stock" property="stock" jdbcType="INTEGER"/>
+	    <result column="SaleCount" property="saleCount" jdbcType="INTEGER"/>
+	    <result column="TotalPrice" property="totalPrice" jdbcType="DECIMAL"/>
+	    <result column="InNum" property="inNum" jdbcType="INTEGER"/>
+	    <result column="AvgSalePrice" property="avgSalePrice" jdbcType="DECIMAL"/>
+	</resultMap>
+	
+		<!-- 销售品类分析(销售金额) -->
+		<select id="getHqShoesAnalysisListByMoney" resultMap="shoesSeqListByMoneyMap">
+		SELECT
+			A.Seq, A.Img1, A.GoodName, A.GoodID,
+			B.Stock, 
+			C.SaleCount,  ROUND(C.TotalPrice, 0) AS TotalPrice,
+			D.InNum,
+			ROUND(C.AvgSalePrice, 0) AS AvgSalePrice
+		FROM
+			JedSmartRetail.dbo.YHSR_Goods_Shoes A
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Stock) AS Stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0
+				<if test="shopSeqs!=null and shopSeqs!=''">
+		        AND Shop_Seq IN (${shopSeqs})  
+		       </if> GROUP BY Shoes_Seq) AS B ON A.Seq = B.Shoes_Seq
+		
+		
+	  	LEFT JOIN (
+		  	SELECT 
+		  		ShoeSeq, SUM(SaleCount) AS SaleCount, SUM (RealPrice) AS TotalPrice,SUM (SaleCount * RealPrice) / NULLIF(SUM (SaleCount),0) AS AvgSalePrice
+		  	FROM 
+		  		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail
+			WHERE
+				ShoeSeq IN (${shoesSeqs}) 
+				<if test="shopSeqs!=null and shopSeqs!=''">
+		        AND ShopSeq IN (${shopSeqs})  
+		       </if>
+			AND SaleDate >= #{saleTimeStart} AND SaleDate &lt;= #{saleTimeEnd}
+				 <if test="startPrice!=null and startPrice!='' and startPrice!=0">
+				AND RealPrice >= #{startPrice} 
+				</if>
+				 <if test="endPrice!=null and endPrice!='' and endPrice!=0">
+				AND RealPrice &lt; #{endPrice}
+				</if>
+	  		GROUP BY ShoeSeq 
+	  	) AS C ON A.Seq = C.ShoeSeq
+	  	
+	  	LEFT JOIN (
+			SELECT 
+				Shoes_Seq, SUM (Count) AS InNum
+			FROM 
+				JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+			WHERE 
+				Shoes_Seq IN (${shoesSeqs}) 
+				<if test="shopSeqs!=null and shopSeqs!=''">
+		        AND Shop_Seq IN (${shopSeqs})  
+		       </if>
+			<if test="shopSeq == null">
+				AND (Type = 0)
+			</if>
+			<if test="shopSeq != null">
+				AND (Type = 1) AND Shop_Seq = #{shopSeq}
+			</if>
+			AND UpdateTime >= #{saleTimeStart} AND UpdateTime &lt;= #{saleTimeEnd}
+			GROUP BY 
+				Shoes_Seq
+	  	) AS D ON A.Seq = D.Shoes_Seq
+
+		WHERE 
+			A.Del = 0 AND C.SaleCount > 0 
+			    AND A.Seq IN (${shoesSeqs})
+		ORDER BY 
+            <if test="orderBy==1"> <!-- 1:销量 2:库存 3:售罄率 4:平均售价 -->
+			    C.SaleCount
+			</if>
+			<if test="orderBy==2">
+			    B.Stock
+			</if>
+			<if test="orderBy==3">
+				C.TotalPrice
+			</if>
+			<if test="orderBy==4">
+			   C.AvgSalePrice
+			</if>
+			<if test="orderDir==0">
+			    DESC
+			</if>
+			<if test="orderDir==1">
+			    ASC
+			</if>
+            , A.Seq DESC
+	</select>
+</mapper>

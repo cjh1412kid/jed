@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.MessageDao">
+    <!-- 获取消息 -->
+    <select id="selectMessage" parameterType="java.util.Map" resultType="io.nuite.modules.order_platform_app.entity.MessageEntity">
+        SELECT s.* FROM (SELECT
+        m.Seq AS seq,
+        m.Title AS title,
+        m.Content AS content,
+        '' AS name,
+        '' AS imageName,
+        m.Input_Time AS inputTime,
+        '' AS detailedPage,
+        m.Is_Read AS isRead
+        FROM
+        JedOrderPlatform.dbo.YHSR_OP_Message m
+        WHERE m.Del = 0
+        <if test="userSeq != null">
+            AND m.User_Seq = #{userSeq}
+        </if>
+        AND m.Type = #{type}
+        <if test="type == 3">
+            UNION ALL
+            SELECT
+            n.Seq AS seq,
+            '' AS title,
+            '' AS content,
+            n.Name AS name,
+            n.ImageName AS imageName,
+            n.InputTime AS inputTime,
+            n.DetailedPage AS detailedPage,
+            1 AS isRead
+            FROM
+            JedOrderPlatform.dbo.YHSR_OP_Notice n
+            WHERE n.Del = 0 AND n.CompanySeq = #{companySeq}
+        </if>
+        ) s
+        ORDER BY s.InputTime DESC,s.isRead ASC
+    </select>
+
+    <!-- 获取消息 -->
+    <select id="selectMessageBySeq" parameterType="java.util.Map" resultType="io.nuite.modules.order_platform_app.entity.MessageEntity">
+        SELECT
+        m.Seq AS seq,
+        m.Title AS title,
+        m.Content AS content,
+        m.Input_Time AS inputTime
+        FROM
+        JedOrderPlatform.dbo.YHSR_OP_Message m
+        WHERE m.Seq = #{seq}
+    </select>
+
+    <insert id="insertMessage" parameterType="io.nuite.modules.order_platform_app.entity.MessageEntity">
+        INSERT INTO
+        JedOrderPlatform.dbo.YHSR_OP_Message(Title,Content,User_Seq,Input_Time,Del,Type,Creator,Is_Read,Flag)
+        VALUES
+        <foreach collection="list" index="index" item="item" open="" close="" separator=",">
+            (#{item.title},#{item.content},#{item.userSeq},#{item.inputTime},#{item.del},#{item.type},#{item.creator},#{item.isRead},#{item.flag})
+        </foreach>
+    </insert>
+</mapper>

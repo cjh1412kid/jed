@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.system.dao.OrderPlanManageDao">
+
+  <select id="queryPage" resultType="io.nuite.modules.system.entity.OrderManageEntity">
+    SELECT
+    A.Seq as seq
+    ,A.Company_Seq as companySeq
+    ,A.GoodID as goodID
+    ,A.Year as year
+    ,A.Season_Seq as seasonSeq
+    ,A.InputTime as inputTime
+    ,A.Color_Seq as colorSeq
+    ,A.Category_Seq as categorySeq
+    ,B.Name as categoryName
+    ,C.SeasonName as seasonName
+    ,D.Name as colorName
+    ,E.Seq as daLeiSeq
+    ,E.Name as daLeiName
+    ,F.Seq as zhLeiSeq
+    ,F.Name as zhLeiName
+    FROM (
+    SELECT * from [JedSmartRetail].[dbo].[YHSR_Order_Manage]
+    where Del=0 and Company_Seq=${companySeq}
+    <if test="params.categorySeqs!=null and params.categorySeqs!=''">
+      AND Category_Seq IN (${params.categorySeqs})
+    </if>
+    <if test="params.year !=null and params.year !=-1">
+      AND Year = ${params.year}
+    </if>
+    <if test="params.seasonSeq !=null and params.seasonSeq !=-1">
+      AND Season_Seq = ${params.seasonSeq}
+    </if>
+    <if test="params.goodNameId!=null and params.goodNameId!=''">
+      AND GoodID LIKE '%${params.goodNameId}%'
+    </if>
+    )A
+    left join [JedSmartRetail].[dbo].[YHSR_Goods_Category] B on A.Category_Seq=B.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Goods_Season] C on A.Season_Seq=C.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Goods_Color] D on A.Color_Seq=D.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Goods_Category] E on A.DaLei_Seq=E.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Goods_Category] F on A.ZhongLei_Seq=F.Seq
+
+    order by A.InputTime desc
+  </select>
+
+  <select id="selectAllExistSeasons" resultType="java.util.Map">
+  SELECT [Seq] as seq
+      ,[SeasonName] as seasonName
+  FROM [JedSmartRetail].[dbo].[YHSR_Goods_Season]
+  where Seq in (
+  SELECT distinct
+      [Season_Seq]
+  FROM [JedSmartRetail].[dbo].[YHSR_Order_Manage]
+  where Company_Seq=#{companySeq} and Del=0
+  )
+  </select>
+
+  <select id="selectAllExistYears" resultType="integer">
+     SELECT distinct
+      [Year]
+    FROM [JedSmartRetail].[dbo].[YHSR_Order_Manage]
+    where Company_Seq=#{companySeq} and Del=0
+  </select>
+</mapper>

@@ -1,0 +1,142 @@
+body,html{
+  width: 100%;
+  height: 100%;
+}
+._flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+._flex1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.aui-btn img {
+    width: 1.05rem;
+    height: 1.05rem;
+}
+
+.tittle {
+    width: 100%;
+    height: 2.07rem;
+}
+
+.tittle span {
+    width: 33.33%;
+    height: 100%;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+}
+
+.content {
+  overflow-y: scroll;
+    padding: 0 .5rem;
+}
+.shopContent{
+  width: 100%;
+  height: auto;
+  border-radius: .5rem;
+  background: rgba(255,255,255,1);
+
+  margin-bottom: .5rem;
+}
+/*.aui-content-padded{
+  margin: 0!important;
+}
+.aui-collapse-header.aui-active{
+  background: #fff;
+}*/
+/*.list {
+    width: 100%;
+    height: auto;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 0.5rem;
+    margin-bottom: .5rem;
+}*/
+
+.shopname {
+    height: 1.5rem;
+    font-size: 0.7rem!important;
+    font-family: Arial-Black;
+    font-weight: 900;
+    color: rgba(255, 81, 0, 1)!important;
+}
+/*.hidden{
+  width: 5%;
+}*/
+.list{
+  width: 100%;
+  height: 2.23rem;
+  display: flex;
+}
+.spe {
+    height: 1.7rem;
+    width: 100%;
+    padding: 0 1rem !important;
+    display: flex;
+}
+
+.left {
+    width:33%;
+    height: 100%;
+
+}
+
+.left img {
+    width: 0.88rem;
+    height: 0.88rem;
+    border-radius: 50%;
+    background: red;
+    margin-right: .3rem;
+}
+
+.name {
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+    margin-right: .1rem;
+}
+
+.mark {
+    width: 1.6rem;
+    height: 0.7rem;
+    background: rgba(249, 108, 37, 1);
+    border-radius: 0.17rem;
+    font-size: 0.5rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+}
+
+.mid {
+    width: 33%;
+    height: 100%;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+}
+
+.right {
+    width: 33%;
+    height: 100%;
+
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+}
+.text-spe{
+  width: 100%;
+  height: 5rem;
+}
+.text-spe img{
+  width: 6.83rem;
+  height: 3.6rem;
+}

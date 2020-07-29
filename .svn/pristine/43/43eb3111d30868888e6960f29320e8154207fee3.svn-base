@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title></title>
+		<!--AUI样式框架-->
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<!--<link rel="stylesheet" type="text/css" href="../../css/my/setPassword_frm.css"/>-->
+		<style type="text/css">
+			@media screen and (-webkit-min-device-pixel-ratio: 1.5) {
+				.aui-list {
+					border: none;
+					background-size: 100% 0;
+					background-image: none;
+				}
+				.aui-list .aui-list-item {
+					border: none;
+					background-size: 100% 0;
+					background-image: none;
+				}
+				.aui-list.aui-list-noborder, .aui-list.aui-list-noborder .aui-list-item:last-child {
+					border: none;
+					background-size: 100% 0;
+					background-image: none;
+				}
+			}
+			.aui-list, .aui-list-item {
+				background-color: rgba(0,0,0,0) !important;
+				border-bottom: 1px solid #999999 !important;
+			}
+			.aui-list, .aui-list-item:last-of-type {
+				background-color: rgba(0,0,0,0) !important;
+				border-bottom: none !important;
+			}
+			.tips {
+				/*border-top: 1px solid #999999;*/
+				color: #999999;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="_closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+			<a id="btn" class="aui-pull-right aui-btn" tapmode > <span class="aui-font-size-14" style="color: #212121">保存</span> </a>
+			<div class="aui-title aui-text-default">
+				修改密码
+			</div>
+			<!--<a class="aui-pull-right" onclick="submit()"> 提交 </a>-->
+		</header>
+		<ul id="frm" class="aui-list aui-form-list aui-list-noborder aui-margin-15">
+			<li class="aui-list-item aui-padded-0">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label-icon">
+						<i class="aui-iconfont aui-icon-lock"></i>
+					</div>
+					<div class="aui-list-item-input">
+						<input id="oldPassword" type="password" placeholder="请输入旧密码" name="oldPassword" data-rule="*" data-nullmsg="请输入旧密码" data-errmsg="密码格式不正确" />
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item aui-padded-0">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label-icon">
+						<i class="aui-iconfont aui-icon-lock"></i>
+					</div>
+					<div class="aui-list-item-input">
+						<input id="newPassword" type="password" placeholder="请输入新密码" name="newPassword" data-rule="*" data-nullmsg="请输入新密码" data-errmsg="密码格式不正确"/>
+					</div>
+					<div class="aui-list-item-label-icon aui-hide">
+						<i class="aui-iconfont aui-icon-display"></i>
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item aui-padded-0">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label-icon">
+						<i class="aui-iconfont aui-icon-lock"></i>
+					</div>
+					<div class="aui-list-item-input">
+						<input id="surePassword" type="password" placeholder="请再次输入新密码" name="surePassword" data-rule="*" data-nullmsg="请再次输入新密码" data-errmsg="密码格式不正确"/>
+					</div>
+					<div class="aui-list-item-label-icon aui-hide">
+						<i class="aui-iconfont aui-icon-display"></i>
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item aui-padded-0">
+				<div  class="aui-list-item-inner aui-font-size-12 tips">
+					可由字母、数字、“_”组成
+				</div>
+			</li>
+		</ul>
+	</body>
+	<!--APICloud自带前端脚本-->
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<!--通用脚本库-->
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_toast.js"></script>
+	<!--表单验证-->
+	<script type="text/javascript" src="../../script/common/availdate_v1x0x2.js"></script>
+	<script type="text/javascript">
+		function _closeWin() {
+			api.closeWin();
+		}
+
+		function showPassword(idName, btnId) {
+			$api.attr($api.byId(idName), 'type', 'text');
+			$api.removeCls($api.byId(btnId), 'aui-icon-attention');
+			$api.addCls($api.byId(btnId), 'aui-icon-attentionfill');
+			$api.attr($api.byId(btnId), "onclick", "hidePassword('" + idName + "','" + btnId + "');");
+			api.parseTapmode();
+		}
+
+		function hidePassword(idName, btnId) {
+			$api.attr($api.byId(idName), 'type', 'password');
+			$api.removeCls($api.byId(btnId), 'aui-icon-attentionfill');
+			$api.addCls($api.byId(btnId), 'aui-icon-attention');
+			$api.attr($api.byId(btnId), 'onclick', "showPassword('" + idName + "','" + btnId + "');");
+			api.parseTapmode();
+		}
+
+		function changePasswordAction(bodyParam, newPassword) {
+			var url = window.myServerUrl + "order/app/baseUser/updateUserPassword";
+			var currentAjaxTag = "updateUserPassword";
+			var method = 'post';
+			console.log("ajax.url:" + url);
+			console.log("ajax._data:" + $api.jsonToStr(bodyParam));
+			console.log("ajax.tag:" + currentAjaxTag);
+			_showProgress("密码修改中", "", true);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				api.hideProgress();
+				//					api.refreshHeaderLoadDone();
+				if (ret) {
+					console.log("ajax." + currentAjaxTag + ".ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						new auiToast().custom({
+							title : ret.msg,
+							maxnum : 5,
+							html : '<i class="aui-iconfont aui-icon-info"></i>',
+							duration : 1000
+						});
+						setTimeout(function() {
+							$api.setStorage("passwordKey", newPassword);
+							api.closeWin({
+							});
+						}, 1050);
+					} else {
+						new auiToast().custom({
+							title : ret.msg,
+							maxnum : 5,
+							html : '<i class="aui-iconfont aui-icon-info"></i>',
+							duration : 3000
+						});
+					}
+				} else {
+					new auiToast().custom({
+						title : window.ajaxErrorMessage,
+						maxnum : 5,
+						html : '<i class="aui-iconfont aui-icon-info"></i>',
+						duration : 3000
+					});
+					console.log("ajax." + currentAjaxTag + ".err:" + $api.jsonToStr(err));
+				}
+			}, method, bodyParam);
+		}
+
+		var headerPos;
+		apiready = function() {
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			ac.form({
+				area : "#frm",
+				btn : "#btn",
+				startCheck : function() {
+				},
+				singleError : function(e, msg) {
+					_toast(msg);
+				},
+				endSuccess : function(data) {
+					var oldPassword = $api.getStorage("passwordKey");
+					if (data.oldPassword == oldPassword) {
+						if (data.oldPassword != data.newPassword) {
+							if (data.newPassword == data.surePassword) {
+								var bodyParam = {
+									values : {
+										token : $api.getStorage("tokenKey"),
+										oldPassword : oldPassword,
+										newPassword : data.newPassword,
+									},  //以表单方式提交参数（JSON对象）, 如 {"field1": "value1", "field1": "value2"} (直接传JSON对像.)
+								}
+								changePasswordAction(bodyParam, data.newPassword);
+							} else {
+								//								_toast("两次输入密码不一致！", 3000, "bottom");
+								new auiToast().custom({
+									title : "两次输入密码不一致！",
+									maxnum : 5,
+									html : '<i class="aui-iconfont aui-icon-info"></i>',
+									duration : 3000
+								});
+								return;
+							}
+						} else {
+							//							_toast("新旧密码不能相同！", 3000, "bottom");
+							new auiToast().custom({
+								title : "新旧密码不能相同！",
+								maxnum : 5,
+								html : '<i class="aui-iconfont aui-icon-info"></i>',
+								duration : 3000
+							});
+							return;
+						}
+					} else {
+						//						_toast("旧密码不正确！", 3000, "bottom");
+						new auiToast().custom({
+							title : "旧密码不正确！",
+							maxnum : 5,
+							html : '<i class="aui-iconfont aui-icon-info"></i>',
+							duration : 3000
+						});
+						return;
+					}
+				}
+			});
+		};
+	</script>
+</html>

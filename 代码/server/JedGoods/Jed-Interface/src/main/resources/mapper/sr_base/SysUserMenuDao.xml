@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.SysUserMenuDao">
+  <insert id="insertList">
+    insert into [JedSmartRetail].[dbo].YHSR_System_User_Menu (User_Seq,Menu_Seq) values
+    <foreach collection="menuIdList" item="menu" separator=",">
+      (#{userSeq},#{menu})
+    </foreach>
+  </insert>
+</mapper>

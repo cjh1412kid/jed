@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.system.dao.ShoesReplenishDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap
+		type="io.nuite.modules.system.entity.ShoesReplenishEntity"
+		id="shoesReplenishMap">
+		<result property="seq" column="Seq" />
+		<result property="shoesSeq" column="Shoes_Seq" />
+		<result property="replenishNum" column="ReplenishNum" />
+		<result property="replenishTime" column="ReplenishTime" />
+		<result property="remark" column="Remark" />
+		<result property="inputTime" column="InputTime" />
+		<result property="del" column="Del" />
+
+	</resultMap>
+
+
+
+	<!-- 获取补单到货时间 -->
+	<select id="getReplenishList"
+		resultType="io.nuite.modules.system.entity.ShoesReplenishEntity">
+		SELECT
+		B.GoodID,
+		A.ReplenishNum,
+		A.ReplenishTime
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_ShoesReplenish A
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Goods_Shoes B ON A.Shoes_Seq = B.Seq
+		WHERE
+		1 = 1
+		AND A.Del = 0
+		AND B.Del = 0
+		AND
+		A.Shoes_Seq = #{shoesSeq}
+		ORDER BY
+		A.ReplenishTime DESC
+	</select>
+
+	<select id="getReplenishListByTime" resultType="java.util.Map">
+			SELECT  B.Seq goodSeq,B.Img1 img,
+		B.GoodID goodID,A.Seq seq,
+		A.ReplenishNum replenishNum,A.ReplenishTime replenishTime,A.InputTime inputTime,C.StockS,D.ShopStock,E.arrivedNum,E.arrivedTime
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_ShoesReplenish A LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Goods_Shoes B ON A.Shoes_Seq = B.Seq
+		LEFT JOIN(SELECT Shoes_Seq,SUM(Stock) StockS FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData  WHERE Shop_Seq=0 GROUP BY Shoes_Seq) C
+		ON A.Shoes_Seq=C.Shoes_Seq
+		LEFT JOIN(SELECT Shoes_Seq,SUM(Stock) ShopStock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Shop_Seq!=0 GROUP BY Shoes_Seq ) D
+		ON A.Shoes_Seq=D.Shoes_Seq
+		LEFT JOIN(SELECT Replenish_Seq,SUM(ArrivedNum) arrivedNum,MAX(ArrivedTime) arrivedTime FROM JedOrderPlatform.dbo.YHSR_OP_ShoesArrived GROUP BY Replenish_Seq)	E
+		ON A.Seq=E.Replenish_Seq
+		WHERE A.Del=0 AND A.Company_Seq=#{companySeq} AND
+		datediff(dd, A.InputTime, #{inputTime} ) = 0 ORDER  BY A.ReplenishTime DESC
+	</select>
+
+	<!-- 获取总部未补单列表 -->
+	<select id="getSupplementList"
+		resultType="io.nuite.modules.system.entity.ShoesReplenishEntity">
+		SELECT
+		B.Seq,
+		A.Shoes_Seq
+		FROM
+		JedSmartRetail.dbo.YHSR_Goods_Shoes B
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_OP_ShoesReplenish A ON B.Seq = A.Shoes_Seq 
+		WHERE B.Company_Seq=#{companySeq}
+		GROUP BY B.Seq,A.Shoes_Seq
+	</select>
+
+	<!-- 获取总部已经补单数据 -->
+	<select id="getHaveSupplementList"
+		resultType="io.nuite.modules.system.entity.ShoesReplenishEntity">
+		SELECT
+		A.Shoes_Seq
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_ShoesReplenish A
+		WHERE A.Company_Seq=#{companySeq}
+		GROUP BY A.Shoes_Seq
+	</select>
+
+	<!-- 获取门店未补单数据 -->
+	<select id="getStoresSupplementList"
+		resultType="io.nuite.modules.system.entity.ShoesReplenishEntity">
+		SELECT DISTINCT
+		B.seq,
+		A.Shoes_Seq
+		FROM
+		JedSmartRetail.dbo.YHSR_Goods_Shoes B
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_OP_ShoesReplenish A ON B.Seq = A.Shoes_Seq
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesData C ON C.Shoes_Seq =
+		B.Seq
+		WHERE
+		C.Shop_Seq = #{shopSeq}
+	</select>
+
+	<!-- 获取门店已经补单数据 -->
+	<select id="getStoresHaveSupplementList"
+		resultType="io.nuite.modules.system.entity.ShoesReplenishEntity">
+		SELECT DISTINCT
+		A.Shoes_Seq
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_ShoesReplenish A
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Goods_Shoes B ON B.Seq = A.Shoes_Seq
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_OP_ShoesData C ON C.Shoes_Seq = A.Shoes_Seq
+		WHERE
+		C.Shop_Seq = #{shopSeq}
+	</select>
+
+	<select id="getDaysList" resultType="java.lang.String">
+		SELECT DISTINCT
+		CONVERT(varchar(12) , InputTime, 111 ) FROM
+		JedOrderPlatform.dbo.YHSR_OP_ShoesReplenish WHERE Del=0 AND Company_Seq=#{companySeq} ORDER BY CONVERT(varchar(12) , InputTime, 111 )  DESC
+	</select>
+	
+	<select id="getAllReplenishList" resultType="java.util.Map">
+		SELECT B.Seq goodSeq,B.Img1 img,
+		B.GoodID goodID,A.Seq seq,
+		A.ReplenishNum replenishNum,A.ReplenishTime replenishTime,A.InputTime inputTime,C.StockS,D.ShopStock,E.arrivedNum,E.arrivedTime
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_ShoesReplenish A LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Goods_Shoes B ON A.Shoes_Seq = B.Seq
+		LEFT JOIN(SELECT Shoes_Seq,SUM(Stock) StockS FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData  WHERE Shop_Seq=0 GROUP BY Shoes_Seq) C
+		ON A.Shoes_Seq=C.Shoes_Seq
+		LEFT JOIN(SELECT Shoes_Seq,SUM(Stock) ShopStock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Shop_Seq!=0 GROUP BY Shoes_Seq ) D
+		ON A.Shoes_Seq=D.Shoes_Seq
+		LEFT JOIN(SELECT Replenish_Seq,SUM(ArrivedNum) arrivedNum,MAX(ArrivedTime) arrivedTime FROM JedOrderPlatform.dbo.YHSR_OP_ShoesArrived GROUP BY Replenish_Seq)	E
+		ON A.Seq=E.Replenish_Seq WHERE A.Del=0 AND A.Company_Seq=#{companySeq} order by A.InputTime desc
+	</select>
+
+	<select id="getReplenishSeqList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		sr.Shoes_Seq AS seq
+		FROM
+		[JedOrderPlatform].[dbo].[YHSR_OP_ShoesReplenish] sr
+		WHERE Del = 0 AND EXISTS
+		(
+			SELECT Seq FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] WHERE Del = 0 AND sr.Shoes_Seq = Seq
+			AND Company_Seq = #{companySeq}
+		)
+		GROUP BY Shoes_Seq
+	</select>
+	<!-- 获取满足条件的补货货品序号和最后一次补货时间 -->
+	<select id="getGoodsSeqs" resultType="java.util.Map">
+		 SELECT
+   		DISTINCT  A.Seq AS shoesSeq,B.inputTime AS inputTime
+    	FROM
+    	[JedSmartRetail].[dbo].[YHSR_Goods_Shoes] A
+    	RIGHT JOIN (SELECT Shoes_Seq AS Shoes_Seq,MAX(InputTime) AS inputTime from [JedOrderPlatform].[dbo].[YHSR_OP_ShoesReplenish] WHERE Del=0 GROUP BY Shoes_Seq) B ON A.Seq=B.Shoes_Seq
+    	WHERE A.Company_Seq = #{companySeq} AND A.Del = 0 
+    	 <if test="years!=null and years!=''">
+     	 AND A.Year IN (${years})
+   		 </if>
+   		  <if test="seasonSeqs!=null and seasonSeqs!=''">
+      		AND A.Season_Seq IN (${seasonSeqs})
+   		 </if>
+    		<if test="categorySeqs!=null and categorySeqs!=''">
+     		 AND A.Category_Seq IN (${categorySeqs})
+    		</if>
+    		order by inputTime desc
+	</select>
+	<!--根据鞋子序号查询 补货总量和到货总量 -->
+	<select id="getTotalNum" resultType="java.util.Map">
+		SELECT SUM(A.ReplenishNum) AS replenishNum,SUM(B.ArrivedNum) AS arrivedNum FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesReplenish] A
+		LEFT JOIN [JedOrderPlatform].[dbo].[YHSR_OP_ShoesArrived] B
+		ON A.Seq=B.Replenish_Seq
+		WHERE A.Shoes_Seq=#{shoesSeq} AND A.Del=0 AND B.Del=0
+	</select>
+</mapper>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<title>title</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common_win.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/my/target/sale_win.css" />
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode='' onclick="_closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+		<a class="aui-pull-right aui-btn aui-hide" tapmode='' onclick="_openWin('history_win', 'history_win.html')"> <span class="aui-iconfont aui-icon-date aui-text-default"></span> </a>
+		<a class="aui-pull-right aui-btn edit-btn  aui-hide" tapmode='' onclick="editAction(this)"><span class="aui-iconfont aui-icon-edit aui-text-default"></span> </a>
+		<div class="aui-title aui-text-default">
+			指标分配
+		</div>
+	</header>
+	<div class="tab-wrap">
+		<div class="aui-tab" id="tab" style="background-color: rgba(61,52,90,0);">
+			<div data-value="1" class="aui-tab-item">
+				1月
+			</div>
+			<div data-value="2" class="aui-tab-item">
+				2月
+			</div>
+			<div data-value="3" class="aui-tab-item">
+				3月
+			</div>
+			<div data-value="4" class="aui-tab-item">
+				4月
+			</div>
+			<div data-value="5" class="aui-tab-item">
+				5月
+			</div>
+			<div data-value="6" class="aui-tab-item">
+				6月
+			</div>
+			<div data-value="7" class="aui-tab-item">
+				7月
+			</div>
+			<div data-value="8" class="aui-tab-item">
+				8月
+			</div>
+			<div data-value="9" class="aui-tab-item">
+				9月
+			</div>
+			<div data-value="10" class="aui-tab-item">
+				10月
+			</div>
+			<div data-value="11" class="aui-tab-item">
+				11月
+			</div>
+			<div data-value="12" class="aui-tab-item">
+				12月
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery_min.js"></script>
+<script type="text/javascript">
+	function changeEditBtnStatus() {
+		if (subHeaderDatas[currentIndex].editable) {
+			$api.removeCls($api.dom(".edit-btn .aui-iconfont"), "aui-icon-edit");
+			$api.addCls($api.dom(".edit-btn .aui-iconfont"), "aui-icon-correct");
+		} else {
+			$api.removeCls($api.dom(".edit-btn .aui-iconfont"), "aui-icon-correct");
+			$api.addCls($api.dom(".edit-btn .aui-iconfont"), "aui-icon-edit");
+		}
+	}
+
+	var editable = false;
+
+	function editAction(obj) {
+		if (subHeaderDatas[currentIndex].editable) {
+			_confirm("提示", "确定要提交指标数据吗？", ["确定", "取消"], function(ret, err) {
+				if (ret.buttonIndex == 1) {
+					subHeaderDatas[currentIndex].editable = !subHeaderDatas[currentIndex].editable;
+					changeEditBtnStatus();
+					_execScript("", currentFrm, "changePageStatus(" + subHeaderDatas[currentIndex].editable + ")");
+				} else {
+					_toast("已取消", 3000, "bottom");
+				}
+			});
+		} else {
+			subHeaderDatas[currentIndex].editable = !subHeaderDatas[currentIndex].editable;
+			changeEditBtnStatus();
+			_execScript("", currentFrm, "changePageStatus(" + subHeaderDatas[currentIndex].editable + ")");
+		}
+	}
+
+	function _closeWin() {
+		api.closeWin({});
+	}
+
+	function initFrmGroup() {
+		var tabPos = $api.offset($api.byId("tab"));
+		var _rect = {
+			x: 0,
+			y: 0,
+			w: 'auto',
+			h: 'auto',
+			marginLeft: 0, //相对父window左外边距的距离
+			marginTop: headerPos.h + tabPos.h, //相对父window上外边距的距离
+			marginBottom: api.safeArea.bottom, //相对父window下外边距的距离
+			marginRight: 0 //相对父window右外边距的距离
+		};
+		var _frames = [];
+		for (var i = 0; i < tabDoms.length; i++) {
+			var frame = {
+				name: 'sale_frm' + i, //frame名字，字符串类型，不能为空字符串
+				url: 'sale_frm.html', //页面地址，可以为本地文件路径，支持相对路径和绝对路径，以及 widget://、fs://等协议路径，也可以为远程地址。 当data参数不为空时，url将做为baseUrl，data中的html引用的资源文件根路径以该url为基础。字符串类型
+				//					data : '', //（可选项）页面加载的数据内容，可以为html片段或者整张html文件的数据
+				//					headers : {}, //（可选项）请求头
+				useWKWebView: false, //（可选项）是否使用WKWebView来加载页面，只支持iOS8.0及以上系统。WKWebView是iOS8新出的WebKit库中的控件，相比于以前的UIWebView，在性能和功能等方面都有所提升。注意使用WKWebView的页面不支持同步方法。
+				historyGestureEnabled: false, //（可选项）是否可以通过手势来进行历史记录前进后退，只在useWKWebView参数为true时有效。
+				pageParam: subHeaderDatas[i], //（可选项）页面参数，页面中可以通过api.pageParam获取，JSON对象
+				bounces: false, //（可选项）是否弹动，布尔型，默认值：若在 config.xml 里面配置了pageBounce，则默认值为配置的值，否则为true
+				bgColor: 'rgba(0,0,0,0)', //（可选项）背景色，支持图片和颜色，格式为#fff、#ffffff、rgba(r,g,b,a)等，图片路径支持fs://、widget://等APICloud自定义文件路径协议，同时支持相对路径
+				scrollToTop: true, //（可选项）当点击状态栏，页面是否滚动到顶部。若当前屏幕上不止一个页面的scrollToTop属性为true，则所有的都不会起作用。默认值：true。只iOS有效
+				scrollEnabled: true, //（可选项）页面内容超出后是否可以滚动，默认为true，只支持iOS
+				vScrollBarEnabled: true, //（可选项）是否显示垂直滚动条，布尔型，默认值：true
+				hScrollBarEnabled: false, //（可选项）是否显示水平滚动条，布尔型，默认值：false
+				scaleEnabled: false, //（可选项）页面是否可以缩放，布尔型，默认值：false
+				allowEdit: false, //（可选项）是否允许长按页面时弹出选择菜单
+				softInputMode: 'auto', //（可选项）当键盘弹出时，输入框被盖住时，当前页面的调整方式，只iOS有效。
+				//取值范围：
+				//resize            //若键盘盖住输入框，页面会自动上移
+				//pan                //若键盘盖住输入框，页面不会自动上移
+				//auto                //默认值，由系统决定如何处理，iOS平台该字段等同于resize
+				softInputBarEnabled: false, //（可选项）是否显示键盘上方的工具条，布尔型，默认值：true，只iOS有效
+				//					customRefreshHeader : '' //（可选项）设置使用自定义下拉刷新模块的名称，设置后可以使用api.setCustomRefreshHeaderInfo方法来使用自定义下拉刷新组件
+			};
+			_frames.push(frame);
+		}
+		var _scrollEnabled = true;
+		var _background = "rgba(0,0,0,0)";
+		var _preload = 0;
+		_openFrameGroup('hyd_group', _frames, function(ret, err) {
+			//				console.log("_openFrameGroup.ret:" + $api.jsonToStr(ret));
+			currentFrm = ret.name;
+			var _index = ret.index;
+			currentIndex = _index;
+			changeEditBtnStatus();
+			 tab.setActive(_index + 1);
+			 if (_index <= 2) {
+					 $(".tab-wrap").scrollLeft(0);
+			 }
+			 if (_index > 2) {
+					 $(".tab-wrap").scrollLeft((_index* 3.6 - 2 * 3.6) * 20);
+			 }
+			//				$api.text($api.byId("type"), $api.text(tabDoms[_index]));
+			api.parseTapmode();
+			setTimeout(function() {
+				_execScript("", "hyd_frm_" + _index, "getData();");
+			}, 300);
+		}, _background, _scrollEnabled, _rect, currentIndex, _preload);
+	}
+
+	function initUI() {
+		// for (var i = 0; i < tabDoms.length; i++) {
+		// 	$api.text(tabDoms[i], subHeaderDatas[i].month + "月");
+		// }
+
+		//now.setHours(now.getUTCHours() + 8);
+		for (var i = 0; i < tabDoms.length; i++) {
+			var now = new Date();
+			var currentMonth = now.getMonth();
+			var month = $api.attr(tabDoms[i], "data-value");
+			console.log("month:" + month);
+			console.log("currentMonth:" + currentMonth);
+			if (currentMonth == month) {
+				// $api.addCls(tabDoms[i], 'aui-active');
+				currentIndex=i+1;
+				tab.setActive(currentIndex + 1);
+			}
+			var subHeaderData = {};
+			subHeaderData.year = now.getFullYear();
+			subHeaderData.month = i + 1;
+			subHeaderData.editable = false;
+			subHeaderDatas.push(subHeaderData);
+			now.setMonth(now.getMonth() + 1);
+			// alert(now.getMonth()+"---"+now.getFullYear());
+
+		}
+					// console.log("subHeaderDatas:" + $api.jsonToStr(subHeaderDatas));
+		api.parseTapmode();
+	}
+
+	function initData() {
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		tabDoms = $api.domAll(".aui-tab-item");
+		headerPos = $api.offset(header);
+		tab = new auiTab({
+			element: document.getElementById("tab"),
+		}, function(ret) {
+			console.log("tab.ret:" + $api.jsonToStr(ret));
+			//				$api.text($api.byId("type"), $api.text(ret.dom));
+			api.setFrameGroupIndex({
+				name: 'hyd_group',
+				index: ret.index - 1
+			});
+		});
+	}
+
+	var headerPos;
+	var tab;
+	var tabDoms;
+	var currentIndex = 0;
+	var currentFrm = "";
+	var subHeaderDatas = [];
+	apiready = function() {
+		api.parseTapmode();
+		// initTheme();
+		initData();
+		initUI();
+		initFrmGroup();
+		_addEventListener("keyback", function(ret) {
+			api.closeWin({});
+		});
+		_addEventListener("pause", function(ret) {
+			console.log("pause");
+		});
+		_addEventListener("viewdisappear", function(ret) {
+		});
+	};
+</script>
+
+</html>

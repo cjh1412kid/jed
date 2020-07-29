@@ -1,0 +1,68 @@
+.aui-card-list-header,
+.aui-card-list-footer {
+	position: relative;
+	min-height: 2.2rem;
+    padding: 0.5rem 0.75rem;
+    -webkit-box-sizing: border-box;
+    		box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    		justify-content:space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    		align-items: center;
+}
+.aui-card-list-header {
+	font-size: 0.8rem;
+	color: #212121;
+}
+.aui-card-list-header.aui-card-list-user {
+	display: block;
+}
+/*折叠菜单*/
+.aui-collapse-header.aui-active {
+    background: #ececec;
+}
+@media screen and (-webkit-min-device-pixel-ratio:1.5) {
+    .aui-collapse-content .aui-list-item:last-child {
+        background-position: bottom;
+    }
+    .aui-list.aui-collapse.aui-list-noborder,
+    .aui-list.aui-collapse.aui-list-noborder .aui-collapse-content:last-child .aui-list-item:last-child {
+        border: none;
+        background-size: 100% 1px;
+        background-repeat: no-repeat;
+        background-position: 0 bottom;
+        background-image: linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);
+        background-image: -webkit-linear-gradient(90deg,#dddddd,#dddddd 50%,transparent 50%);
+    }
+    .aui-list.aui-collapse.aui-list-noborder,
+    .aui-list.aui-collapse.aui-list-noborder .aui-collapse-item:last-child .aui-list-item:last-child {
+        border: none;
+        background-size: 100% 0;
+        background-image: none;
+    }
+    .aui-list.aui-collapse.aui-list-noborder .aui-collapse-item:last-child .aui-list-item.aui-collapse-header,
+    .aui-list.aui-collapse.aui-list-noborder .aui-collapse-content .aui-list-item:last-child  {
+        border: none;
+        background-size: 100% 0;
+        background-image: none;
+    }
+}
+.aui-collapse-header.aui-active .aui-collapse-arrow {
+    display: block;
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+.order-time{
+	font-size:0.5rem;
+	font-family:PingFangSC-Regular;
+	font-weight:400;
+	color:rgba(151,151,151,1);
+	}
+.title{
+	background:rgba(255,248,245,1);
+}

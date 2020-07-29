@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>拆单模板管理</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+      name="viewport">
+  <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+  <link rel="stylesheet"
+        href="../../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet"
+        href="../../../plugins/ztree/css/metroStyle/metroStyle.css">
+  <link rel="stylesheet" href="../../../plugins/select2/select2.min.css">
+  <link rel="stylesheet" href="../../../css/main.css">
+  <script src="../../../libs/jquery.min.js"></script>
+  <script src="../../../plugins/layer/layer.js"></script>
+  <script src="../../../libs/bootstrap.min.js"></script>
+  <script src="../../../libs/vue.min.js"></script>
+  <script src="../../../plugins/select2/select2.full.min.js"></script>
+  <script src="../../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../../js/common.js"></script>
+  <style>
+    .select2-dropdown .select2-search__field:focus, .select2-search--inline .select2-search__field:focus {
+      border: none;
+    }
+
+    .select2-container.select2-container--open {
+      z-index: 20000000;
+    }
+  </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+
+  <div v-show="showList">
+    <div class="grid-btn">
+      <a class="btn btn-primary" style="margin-left: 10px;" @click="add">
+        <i class="fa fa-plus"></i>&nbsp;新增
+      </a>
+    </div>
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+  </div>
+
+  <div v-show="!showList && !showStepPage" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-2 control-label">模板名称</div>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" v-model="splitOrderModel.modelName"
+                 placeholder="模板名称"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">是否默认</div>
+        <div class="col-sm-10">
+          <input type="radio" v-model="splitOrderModel.isDefault" value="1"/>是&nbsp;&nbsp;
+          <input type="radio" v-model="splitOrderModel.isDefault" value="0"/>否
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-1 control-label"></div>
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+        </div>
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div v-show="!showList && showStepPage" class="panel panel-default">
+    <div class="panel-heading">步骤编辑</div>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+        </div>
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-primary" @click="addSplitStep" value="增加步骤"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">步骤</div>
+        <div class="col-sm-10">
+          <div v-for="(stepItem,index) in steps">
+            <div>
+              <div>步骤{{index+1}}：
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"
+                      @click="editSplitStep(index)"></span>
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"
+                      @click="removeSplitStep(stepItem.modelSeq,stepItem.seq)"></span>
+              </div>
+              <div>
+                <div v-for="item in stepItem.sxList">
+                  <span>{{item.name}}:{{item.value}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div id="sxSelectDialog" style="display: none">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-xs-2 control-label">波次</div>
+        <div class="col-xs-4">
+          <select class="form-control options-select select2" multiple="multiple" id="Period_Seq"
+                  data-placeholder="选择属性">
+            <option v-for="iitem in periods" :value="iitem.seq">{{iitem.name}}</option>
+          </select>
+        </div>
+
+        <div class="col-xs-2 control-label">品牌</div>
+        <div class="col-xs-4">
+          <select class="form-control options-select select2" multiple="multiple" id="ShoesBrand"
+                  data-placeholder="选择属性">
+            <option v-for="iitem in shoesBrands" :value="iitem.brandCode">{{iitem.brandName}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-xs-2 control-label">大类</div>
+        <div class="col-xs-4">
+          <select class="form-control options-select select2" multiple="multiple" id="Category_Seq"
+                  data-placeholder="选择属性">
+            <option v-for="iitem in categoryArray" :value="iitem.seq">{{iitem.name}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" v-for="(item,index) in sxArray">
+        <slot v-if="index%2==0">
+          <div class="col-xs-2 control-label">{{item.sxname}}</div>
+          <div class="col-xs-4">
+            <select class="form-control options-select sx_select select2" :id="item.sxid" multiple="multiple"
+                    data-placeholder="选择属性">
+              <option v-for="iitem in item.optionsList" :value="iitem.code">{{iitem.value}}</option>
+            </select>
+          </div>
+
+          <slot v-if="index+1<sxArray.length">
+            <div class="col-xs-2 control-label">{{sxArray[index+1].sxname}}</div>
+            <div class="col-xs-4">
+              <select class="form-control options-select sx_select select2" :id="sxArray[index+1].sxid"
+                      multiple="multiple"
+                      data-placeholder="选择属性">
+                <option v-for="iitem in sxArray[index+1].optionsList" :value="iitem.code">{{iitem.value}}</option>
+              </select>
+            </div>
+          </slot>
+        </slot>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="../../../js/modules/system/order_platform/split_model.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.GoodsPeriodDao">
+
+  <select id="selectSeqByName" resultType="java.lang.Integer">
+    select top 1 ygp.Seq from JedSmartRetail.dbo.YHSR_Goods_Period ygp
+    left join JedSmartRetail.dbo.YHSR_Base_Brand ybb on ygp.Brand_Seq=ybb.Seq
+    where ybb.Company_Seq=#{companySeq} and ygp.Year=#{year} and ygp.Name like #{name}
+  </select>
+</mapper>

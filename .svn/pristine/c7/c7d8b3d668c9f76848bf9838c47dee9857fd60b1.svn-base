@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>货品波次管理</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<link rel="stylesheet"
+	href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet"
+	href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet"
+	href="../../plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet" href="../../plugins/datepicker/datepicker3.css">
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../plugins/daterangepicker/moment.min.js"></script>
+<script src="../../plugins/daterangepicker/daterangepicker.js"></script>
+<script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
+<script
+	src="../../plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="../../js/common.js"></script>
+</head>
+<body>
+	<div id="rrapp" v-cloak>
+
+		<div v-show="showList">
+			<div class="grid-btn">
+				<a class="btn btn-primary" style="margin-left: 10px;" @click="add">
+					<i class="fa fa-plus"></i>&nbsp;新增
+				</a>
+			</div>
+			<table id="jqGrid"></table>
+			<div id="jqGridPager"></div>
+		</div>
+
+		<div v-show="!showList" class="panel panel-default">
+			<div class="panel-heading">{{title}}</div>
+			<form class="form-horizontal">
+				<div class="form-group">
+					<div class="col-sm-2 control-label">年份</div>
+					<div class="col-sm-10">
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right"
+								id="periodYearPicker" readonly="readonly"
+								v-model="goodsPeriod.year">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">销售时间</div>
+					<div class="col-sm-10">
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right"
+								id="saleDatePicker" readonly="readonly"
+								v-model="goodsPeriod.saleDate">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">波次名称</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="goodsPeriod.name"
+							placeholder="批次名称" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">订货会开始时间</div>
+					<div class="col-sm-10">
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right"
+								id="meetingStartTimePicker" readonly="readonly"
+								v-model="goodsPeriod.meetingStartTime">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">订货会结束时间</div>
+					<div class="col-sm-10">
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right"
+								id="meetingEndTimePicker" readonly="readonly"
+								v-model="goodsPeriod.meetingEndTime">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-1 control-label"></div>
+					<div class="col-sm-2 control-label">
+						<input type="button" class="btn btn-primary" @click="saveOrUpdate"
+							value="确定" />
+					</div>
+					<div class="col-sm-2 control-label">
+						<input type="button" class="btn btn-warning" @click="reload"
+							value="返回" />
+					</div>
+				</div>
+			</form>
+		</div>
+
+	</div>
+	<script src="../../js/modules/system/period.js"></script>
+</body>
+</html>

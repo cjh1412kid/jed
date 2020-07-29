@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.BaseShopDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.sr_base.entity.BaseShopEntity" id="baseShopMap">
+        <result property="seq" column="Seq"/>
+        <result property="areaSeq" column="Area_seq"/>
+        <result property="id" column="Id"/>
+        <result property="name" column="Name"/>
+        <result property="address" column="Address"/>
+        <result property="lat" column="Lat"/>
+        <result property="lng" column="Lng"/>
+        <result property="installDate" column="InstallDate"/>
+        <result property="remark" column="Remark"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="shopTypeFlag" column="ShopTypeFlag"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+    <!-- 定义返回的resultMap，type为HashMap -->
+    <resultMap id="areaMap" type="java.util.HashMap">
+        <id column="Seq" property="seq" jdbcType="INTEGER"/>
+        <result column="Name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <!-- 根据品牌编号查询区域列表 -->
+    <select id="getAreaListByBrandSeq" resultMap="areaMap">
+        SELECT
+        Seq, Name
+        FROM
+        JedSmartRetail.dbo.YHSR_Base_Area
+        WHERE
+        Del = 0 AND Brand_Seq = #{0} AND ParentSeq = 0
+    </select>
+
+
+    <!-- 根据区域编号查询办事处列表 -->
+    <select id="getOfficeListByAreaSeq" resultMap="areaMap">
+        SELECT
+        Seq, Name
+        FROM
+        JedSmartRetail.dbo.YHSR_Base_Area
+        WHERE
+        Del = 0 AND ParentSeq = #{0}
+    </select>
+
+
+    <!-- 根据办事处编号查询门店列表 -->
+    <select id="getShopListByOfficeSeq" resultMap="areaMap">
+        SELECT
+        Seq, Name
+        FROM
+        JedSmartRetail.dbo.YHSR_Base_Shop
+        WHERE
+        Del = 0 AND Area_seq = #{0}
+    </select>
+
+
+    <select id="getShopListByAreaSeq" resultType="io.nuite.modules.sr_base.entity.BaseShopEntity">
+        SELECT top ${num}
+        bs.*,
+        ba.Name as areaName,br.Name as regionName
+        from
+        [JedSmartRetail].[dbo].YHSR_Base_Shop bs
+        LEFT JOIN
+        [JedSmartRetail].[dbo].YHSR_Base_Area ba on bs.Area_seq = ba.Seq
+          LEFT JOIN
+        [JedSmartRetail].[dbo].YHSR_Base_Region br on bs.Region_seq = br.Seq
+        where
+        bs.Seq NOT IN (
+        SELECT top ${start}
+        bs.Seq
+        from
+        [JedSmartRetail].[dbo].YHSR_Base_Shop bs
+        LEFT JOIN
+        [JedSmartRetail].[dbo].YHSR_Base_Area ba on bs.Area_seq = ba.Seq
+         LEFT JOIN
+        [JedSmartRetail].[dbo].YHSR_Base_Region br on bs.Region_seq = br.Seq
+        where
+        bs.Del = 0 and bs.Area_seq in
+        <foreach collection="areaSeqList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        )
+        and
+        bs.Del = 0 and bs.Area_seq in
+        <foreach collection="areaSeqList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getTotalCount" resultType="integer">
+        SELECT
+        count(bs.Seq )
+        from
+        [JedSmartRetail].[dbo].YHSR_Base_Shop bs
+        LEFT JOIN
+        [JedSmartRetail].[dbo].YHSR_Base_Area ba on bs.Area_seq = ba.Seq
+        where
+        bs.Del = 0 and bs.Area_seq in
+        <foreach collection="areaSeqList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="getShopBySeq" resultType="io.nuite.modules.sr_base.entity.BaseShopEntity">
+        SELECT
+        bs.*,
+        ba.Name as areaName,br.Name as regionName
+        from
+        [JedSmartRetail].[dbo].YHSR_Base_Shop bs
+        LEFT JOIN
+        [JedSmartRetail].[dbo].YHSR_Base_Area ba on bs.Area_seq = ba.Seq
+        LEFT JOIN
+        [JedSmartRetail].[dbo].YHSR_Base_Region br on bs.Region_seq = br.Seq
+        where  bs.Del = 0 and bs.seq = #{seq}
+    </select>
+
+    <select id="selectAllList" resultType="io.nuite.modules.sr_base.entity.BaseShopEntity">
+        select bs.* from
+        [JedSmartRetail].[dbo].YHSR_Base_Shop bs
+        LEFT JOIN
+        [JedSmartRetail].[dbo].YHSR_Base_Area ba on bs.Area_seq = ba.Seq
+          LEFT JOIN
+        [JedSmartRetail].[dbo].YHSR_Base_Region br on bs.Region_seq = br.Seq
+        
+        where  bs.Del = 0 and ba.Brand_Seq = #{brandSeq} AND Is_Active=1
+    </select>
+<select id="selectShopSeqs" resultType="java.lang.Integer">
+    select bs.Seq from
+    [JedSmartRetail].[dbo].YHSR_Base_Shop bs
+        LEFT JOIN
+    [JedSmartRetail].[dbo].YHSR_Base_Area ba on bs.Area_seq = ba.Seq
+        where  bs.Del = 0 and ba.Brand_Seq = #{brandSeq}
+  </select>
+    <select id="listPageByCompanySeq" resultMap="baseShopMap">
+        SELECT A.*
+        ,B.Name as areaName,C.Name as regionName
+        FROM (
+        SELECT *
+        FROM [JedSmartRetail].[dbo].[YHSR_Base_Shop] where Company_Seq=#{companySeq} and Del=0
+        ) A
+        left join [JedSmartRetail].[dbo].[YHSR_Base_Area] B on B.Seq = A.Area_seq
+        
+         left join [JedSmartRetail].[dbo].[YHSR_Base_Region] C on C.Seq = A.Region_seq
+    </select>
+
+    <insert id="insertShop" parameterType="java.util.List">
+        INSERT INTO
+        [JedSmartRetail].[dbo].[YHSR_Base_Shop](Area_seq,Id,Name,Address,Lat,Lng,InstallDate,Remark,InputTime,ShopTypeFlag,Del,Company_Seq,ShopImage,Is_Active)
+        VALUES
+        <foreach collection="list" index="index" item="item" open="" close="" separator=",">
+            (#{item.areaSeq},#{item.id},#{item.name},#{item.address},#{item.lat},#{item.lng},#{item.installDate},#{item.remark},#{item.inputTime},#{item.shopTypeFlag},#{item.del},#{item.companySeq},#{item.shopImage},#{item.isActive})
+        </foreach>
+    </insert>
+
+    <update id="updateShop" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" open="" close="" separator=";">
+            UPDATE
+            [JedSmartRetail].[dbo].[YHSR_Base_Shop]
+            SET
+            Id = #{item.id},
+            Name = #{item.name},
+            Address = #{item.address},
+            Remark = #{item.remark},
+            ShopTypeFlag = #{item.shopTypeFlag},
+            ShopImage = #{item.shopImage},
+            Is_Active = #{item.isActive}
+            WHERE Seq = #{item.seq}
+        </foreach>
+    </update>
+
+    <select id="selectShop" parameterType="java.util.Map" resultType="io.nuite.modules.sr_base.entity.BaseShopEntity">
+        SELECT
+        *
+        FROM
+        [JedSmartRetail].[dbo].[YHSR_Base_Shop]
+        WHERE Company_Seq = #{companySeq}
+    </select>
+</mapper>

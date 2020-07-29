@@ -1,0 +1,542 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>聊天列表</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/chat/chat_frm.css"/>
+	</head>
+	<body>
+		<section class="aui-chat" id="message-content">
+			<div class="aui-chat-header history-date"></div>
+			
+			<!--<div class='aui-chat-item'>
+			<ul class='aui-list aui-media-list aui-list-noborder aui-margin-t-15'>
+			<li class='aui-list-item aui-list-item-middle aui-padded-0' tapmode onclick='toDetailWin()'>
+			<div class='aui-media-list-item-inner'>
+			<div class='aui-list-item-media wechat-avatar aui-padded-0'>
+			<img src='http://192.168.2.186:8080/picture/sr_base/Goods_Shoes/YCB8001182/2.jpg'/>
+			</div>
+			<div class='aui-list-item-inner aui-padded-l-5 aui-padded-r-5'>
+			<div class='aui-list-item-text '>
+			<div class='aui-list-item-title goods-title aui-font-size-12'>
+			依婷公主女鞋2018新款时尚春款品牌内增高平底透气百搭休闲小白鞋,皮质真皮
+			</div>
+			</div>
+			<div class='aui-info aui-font-size-12 aui-padded-0'>
+			<div class='goods-attr flex-con'>
+			<span class='attr-name aui-font-size-12'>货号：</span><span class='sale-value aui-font-size-12'>013AEB</span>
+			</div>
+			<div class='goods-attr flex-con aui-padded-r-5 aui-text-danger'>
+			<div><span class='attr-name aui-font-size-12'>价格：</span></div>
+			<div><span>￥</span><span class='aui-font-size-18'>223</span><span>.00</span></div>
+			</div>
+			</div>
+			</div>
+			</div>
+			</li>
+			<li class='aui-list-item aui-list-item-middle aui-padded-0 aui-border-t aui-hide' tapmode onclick='toDetailWin()' >
+			<div class='aui-list-item-inner aui-text-center aui-font-size-12'>
+			发送链接>
+			</div>
+			</li>
+			</ul>
+			</div>
+			
+			<div class='aui-chat-item aui-chat-left'>
+			<div class='aui-chat-media'>
+			<img src='../../image/load_img_middle.png' />
+			</div>
+			<div class='aui-chat-inner'>
+			<div class="aui-chat-name aui-invisible">流浪男</div>
+			<div class='aui-chat-content'>
+			<div class='aui-chat-arrow'></div>
+			Hello AUI 2.0!
+			</div>
+			<div class='aui-chat-status'>
+			<i class='aui-iconfont aui-icon-refresh aui-text-success'></i>
+			</div>
+			</div>
+			</div>
+			
+			<div class="aui-chat-item aui-chat-right">
+	        <div class="aui-chat-media">
+	        <img src="../image/liulangnan.png" />
+	        </div>
+	        <div class="aui-chat-inner">
+	        <div class="aui-chat-name aui-invisible">流浪男</div>
+	        <div class="aui-chat-content">
+	        <div class="aui-chat-arrow"></div>
+	       	 你好！
+	        </div>
+	        <div class="aui-chat-status">
+	        <i class="aui-iconfont aui-icon-info aui-text-danger"></i>
+	        </div>
+	        </div>
+	        </div>
+	        
+	        <div class='aui-chat-item aui-chat-left'>
+			<div class='aui-chat-media'>
+			<img src='../../image/load_img_middle.png' />
+			</div>
+			<div class='aui-chat-inner'>
+			<div class="aui-chat-name aui-invisible">流浪男</div>
+			<div class='aui-chat-content'>
+			<div class='aui-chat-arrow'></div>
+			<label class='winu-display-block yuyin' tapmode onclick='playVoice(this)'><img class='voice-icon-left' src='../../image/chatBox/voice_init_left.png'/>15s</label>
+			</div>
+			<div class='aui-chat-status aui-hide'>
+			<i class='aui-iconfont aui-icon-refresh aui-text-success'></i>
+			</div>
+			</div>
+			</div>
+	        
+			<div class="aui-chat-item aui-chat-right">
+	        <div class="aui-chat-media">
+	        <img src="../image/liulangnan.png" />
+	        </div>
+	        <div class="aui-chat-inner">
+	        <div class="aui-chat-name aui-invisible">流浪男</div>
+	        <div class="aui-chat-content">
+	        <div class="aui-chat-arrow"></div>
+	       	<label class='winu-display-block yuyin' tapmode onclick='playVoice(this)'>15s<img class='voice-icon-right' src='../../image/chatBox/voice_init_left.png'/></label>
+	        </div>
+	        <div class="aui-chat-status aui-hide">
+	        <i class="aui-iconfont aui-icon-info aui-text-danger"></i>
+	        </div>
+	        </div>
+	        </div>-->
+			
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/api.js" ></script>
+	<script type="text/javascript" src="../../script/common/common.js" ></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js" ></script>
+	<script type="text/javascript" src="../../script/chat/emo.js" ></script>
+	<script type="text/javascript">
+		// 设置语音空格长度
+		function setVoiceLength(duration) {
+			var beisu = Math.ceil(parseInt(duration) / 4.0);
+			var html = "";
+			for (var i = 0; i < beisu; i++) {
+				html += "&nbsp;&nbsp;&nbsp;";
+			}
+			return html;
+		}
+
+		function toGoodsDetailWin(_seq) {
+			var pageParam = {
+				seq : _seq,
+				isSearch:0
+			};
+			_openWin("goods_detail_win", "../goods/detail/goods_detail_win.html", pageParam);
+		}
+
+		function initUi(msgObj, type, isGoods) {
+//			console.log("消息方:-------->"+type+" , 是否是商品链接:"+isGoods+" , 内容:"+$api.jsonToStr(msgObj));
+            //根据当前时间与最后条信息的时间差(大于半小时),则显示消息时间
+			var htmlStr = "";
+			if (isGoods) {
+				var extraJson = msgObj.content.extra;
+				console.log("extraJson:" + $api.jsonToStr(extraJson));
+				var goodsShortData = extraJson.goodsShortData;
+				if (_isObjectNull(goodsShortData)) {
+					return;
+				}
+				console.log("goodsShortData:" + $api.jsonToStr(goodsShortData));
+				
+				htmlStr += "<div class='aui-chat-item'>";
+				htmlStr += "<ul class='aui-list aui-media-list aui-list-noborder aui-margin-t-15'>";
+				htmlStr += "<li class='aui-list-item aui-list-item-middle aui-padded-0' tapmode onclick='toGoodsDetailWin(" + goodsShortData.seq + ")'>";
+				htmlStr += "<div class='aui-media-list-item-inner'>";
+				htmlStr += "<div class='aui-list-item-media wechat-avatar aui-padded-0'>";
+				htmlStr += "<img data-src='" + goodsShortData.image + "' src='../../image/load_small_img.png' />";
+				htmlStr += "</div>";
+				htmlStr += "<div class='aui-list-item-inner aui-padded-l-5 aui-padded-r-5'>";
+				htmlStr += "<div class='aui-list-item-text '>";
+				htmlStr += "<div class='aui-list-item-title goods-title aui-font-size-12'>";
+				htmlStr += goodsShortData.introduce;
+				htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "<div class='aui-info aui-font-size-12 aui-padded-0'>";
+				htmlStr += "<div class='goods-attr flex-con'>";
+				htmlStr += "<span class='attr-name aui-font-size-12'>货号：</span><span class='sale-value aui-font-size-12'>" + goodsShortData.goodId + "</span>";
+				htmlStr += "</div>";
+				htmlStr += "<div class='goods-attr flex-con aui-padded-r-5 aui-text-danger'>";
+				var partPrice = goodsShortData.price.toFixed(2).split(".");
+				htmlStr += "<div><span>￥</span><span class='aui-font-size-18'>"+partPrice[0]+"</span><span>."+partPrice[1]+"</span></div>";
+				htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "</li>";
+				htmlStr += "<li class='aui-list-item aui-list-item-middle aui-padded-0 aui-border-t aui-hide' tapmode onclick='toDetailWin()' >";
+				htmlStr += "<div class='aui-list-item-inner aui-text-center aui-font-size-12'>";
+				htmlStr += "发送链接>";
+				htmlStr += "</div>";
+				htmlStr += "</li>";
+				htmlStr += "</ul>";
+				htmlStr += "</div>";
+			} else {
+				switch(type) {
+					case 'sender':
+						htmlStr += "<div class='aui-chat-item aui-chat-right'>";
+						htmlStr += "<div class='aui-chat-media'>";						
+						htmlStr += "<img src='" + msgObj.content.extra.headImg + "' onerror='imgerror(this)' />";
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-chat-inner'>";
+						htmlStr += "<div class='aui-chat-name aui-invisible'>" + msgObj.content.extra.userName + "</div>";
+						htmlStr += "<div class='aui-chat-content'>";
+						htmlStr += "<div class='aui-chat-arrow'></div>";
+						htmlStr += msgObj.content.text;
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-chat-status aui-hide'>";
+						htmlStr += "<i class='aui-iconfont aui-icon-refresh aui-text-default aui-chat-progress'></i>";
+						htmlStr += "</div>";
+						htmlStr += "</div>";
+						htmlStr += "</div>";
+						break;
+					case 'receiver':
+						htmlStr += "<div class='aui-chat-item aui-chat-left'>";
+						htmlStr += "<div class='aui-chat-media'>";
+						htmlStr += "<img src='" + msgObj.content.extra.headImg + "' onerror='imgerror(this)' />";
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-chat-inner' data-msgid='" + msgObj.messageId + "'>";
+						htmlStr += "<div class='aui-chat-name aui-invisible'>" + msgObj.content.extra.userName + "</div>";
+						htmlStr += "<div class='aui-chat-content'>";
+						htmlStr += "<div class='aui-chat-arrow'></div>";
+						htmlStr += msgObj.content.text;
+						htmlStr += "</div>";
+						//					htmlStr += "<div class='aui-chat-status'>";
+						//					htmlStr += "<i class='aui-iconfont aui-icon-info aui-text-success'></i>";
+						//					htmlStr += "</div>";
+						htmlStr += "</div>";
+						htmlStr += "</div>";
+						break;
+				}
+			}
+			//				console.log("htmlStr:" + htmlStr);
+			$api.append($api.byId("message-content"), htmlStr);
+			new auiLazyload({
+				errorImage : "../../image/error_small_img.png"
+			});
+		}
+		
+		function imgerror(img){
+			img.src="../../image/noavatar.gif";
+			img.onerror = null; //控制不要一直跳动
+		}
+
+
+		// 生成发送消息样式
+		function writeSendMsg(msgObj) {
+//			console.log("writeSendMsg.msgObj:" + $api.jsonToStr(msgObj));
+			var isGoods = false;
+			// 获取消息类型
+			switch(msgObj.objectName) {
+				// 文本类型
+				case "RC:TxtMsg":
+					msgObj.content.text = _transEmo(msgObj.content.text);
+					break;
+				// 语音类型
+				case "RC:VcMsg":
+					msgObj.content.text = "<label class='winu-display-block yuyin' data-voicepath='" + msgObj.content.voicePath + "' data-side='right' tapmode onclick='playVoice(this)'>" + msgObj.content.extra.duration + "s" + setVoiceLength(msgObj.content.extra.duration) + "<img class='voice-icon-right' src='../../image/chatBox/voice_init_right.png'/>" + "</label>";
+					break;
+				// 图片消息
+				case "RC:ImgMsg":
+					msgObj.content.text = "<img data-src='" + msgObj.content.imageUrl + "' src='../../image/load_img_middle.png' style='width:100%;' class='imagemsg' tapmode onclick='showImage(this)'/>";
+					break;
+				// 图文消息
+				case "RC:ImgTextMsg":
+					console.log("图文___________________>"+$api.jsonToStr(msgObj));
+					isGoods = true;
+					break;
+			}
+			initUi(msgObj, "sender", isGoods);
+			//滚动到底部
+			_scrollToEnd();
+		}
+
+		// 生成接受信息样式
+		function receiverSendMsg(msgObj) {
+//			console.log("receiverSendMsg.msgObj:" + $api.jsonToStr(msgObj));
+			var isGoods = false;
+			// 获取接收类型
+			switch(msgObj.objectName) {
+				// 文本类型
+				case "RC:TxtMsg":
+				    try{
+                        var kefuInfo = $api.strToJson(msgObj.content.text); //客服人员信息
+                        msgObj.content.text = "<a data-conversationType='"+msgObj.conversationType+"' data-targetId='"+kefuInfo.id+"' data-targetName='"+kefuInfo.name+"'  onclick='openChatWin(this)'>[转接客服]："+ kefuInfo.name+"</a>";
+                    }catch(err){
+    					msgObj.content.text = _transEmo(msgObj.content.text);
+                    }
+					msgObj.sentTime = msgObj.receivedTime;
+					break;
+				// 语音类型
+				case "RC:VcMsg":
+					//<i class='iconfont icon-yuyin'></i>
+					msgObj.content.text = "<label class='winu-display-block yuyin' data-voicepath='" + msgObj.content.voicePath + "' data-side='left' tapmode onclick='playVoice(this)'>" + "<img class='voice-icon-left' src='../../image/chatBox/voice_init_left.png'/>" + setVoiceLength(msgObj.content.extra.duration) + msgObj.content.extra.duration + "s"; +"</label>";
+					msgObj.sentTime = msgObj.receivedTime;
+					break;
+				// 图片消息
+				case "RC:ImgMsg":
+					msgObj.content.text = "<img data-src='" + msgObj.content.imageUrl + "' src='../../image/load_img_middle.png' style='width:100%;' class='imagemsg' tapmode onclick='showImage(this)'/>";
+					msgObj.sentTime = msgObj.receivedTime;
+					break;
+				// 图文消息
+				case "RC:ImgTextMsg":
+					console.log("图文___________________>"+$api.jsonToStr(msgObj));
+					isGoods = true;
+					break;
+			}
+			// 开始渲染
+			initUi(msgObj, "receiver", isGoods);
+			//滚动到底部
+			_scrollToEnd();
+		}
+
+		/**
+		 * 点击显示图片预览
+		 */
+		function showImage(obj) {
+			var showImgsArr = [];
+			var imagemsgEls = $api.domAll($api.byId("message-content"), ".imagemsg");
+			for (var i = 0; i < imagemsgEls.length; i++) {
+				var srcPath = $api.attr(imagemsgEls[i], "src");
+				showImgsArr.push(srcPath);
+			}
+			var index = showImgsArr.indexOf($api.attr(obj, "src"));
+			openImageBrowser(showImgsArr, index);
+		}
+
+		// 打开图片浏览
+		// imgs：需要预览的图片集合
+		function openImageBrowser(imgs, index) {
+			imageBrowser.openImages({
+				imageUrls : imgs,
+				showList : false,
+				activeIndex : index
+			});
+		}
+
+		// 点击语音播放
+		function playVoice(obj) {
+			var side = $api.attr(obj, "data-side");
+//			console.log(side);
+			if(side == "left"){
+				$api.attr($api.first(obj, "img"), "src", "../../image/chatBox/voice_play_left.gif");
+			}else{
+				$api.attr($api.first(obj, "img"), "src", "../../image/chatBox/voice_play_right.gif");
+			}
+			// 先停止所有播放
+			api.stopPlay();
+//			var yuyinEls = $api.domAll($api.byId("message-content"), "yuyin");
+//			for (var i = 0; i < yuyinEls.length; i++) {
+//				var iconYuyinEl = $api.dom(yuyinEls[i], ".icon-yuyin");
+//				if ($api.hasCls(iconYuyinEl, "red")) {
+//					$api.removeCls(iconYuyinEl, "red");
+//				}
+//			}
+//			var iconYuyinEl = $api.dom(obj, ".icon-yuyin");
+//			if (!$api.hasCls(iconYuyinEl, "red")) {
+//				$api.addCls(iconYuyinEl, "red");
+//			}
+			var voicepath = $api.attr(obj, "data-voicepath");
+			// 开始播放
+			api.startPlay({
+				path : voicepath
+			}, function(ret, err) {
+//				if ($api.hasCls(iconYuyinEl, "red")) {
+//					$api.removeCls(iconYuyinEl, "red");
+//				}
+				if (ret) {
+//			        console.log('播放完成');
+					if(side == "left"){
+						$api.attr($api.first(obj, "img"), "src", "../../image/chatBox/voice_init_left.png");
+					}else{
+						$api.attr($api.first(obj, "img"), "src", "../../image/chatBox/voice_init_right.png");
+					}
+			    } else {
+			        console.log(JSON.stringify(err));
+			    }
+			});
+		}
+		
+		function openChatWin(obj){
+		    // 获取会话类型
+            var conversationType = $api.attr(obj, "data-conversationType");
+            // 获取目标ID
+            var targetId = $api.attr(obj, "data-targetId");
+            // 获取目标名称
+            var targetName = $api.attr(obj, "data-targetName");
+            // 打开会话页面
+            var pageParam = {
+                conversationType : conversationType,
+                targetId : targetId,
+                targetName : targetName,
+                framePage : "chat_frm"
+            };
+            console.log("打开客服聊天界面:"+$api.jsonToStr(pageParam));
+            _execScript("chat_win", "", "openKFFrame('"+$api.jsonToStr(pageParam)+"')")
+		}
+
+		// 图片预览模块
+		var imageBrowser = null;
+		apiready = function() {
+			console.log("api.pageParam:" + $api.jsonToStr(api.pageParam));
+			// 引入图片浏览模块
+			imageBrowser = api.require('imageBrowser');
+			// 监听是否需要滚动到底部
+			_addEventListener("scrollBottom", function() {
+				setTimeout(function() {
+					_scrollToEnd();
+				}, 30);
+			});
+			// 0.0  请求获取历史消息
+			_sendEvent("getNewMsgStart", {
+				conversationType : api.pageParam.conversationType,
+				targetId : api.pageParam.targetId,
+				oldestMessageId : -1
+			});
+			// 广播事件，通知成功获取到历史数据
+			_addEventListener("getNewMsgEnd", function(ret) {
+				if (ret && ret.value) {
+					console.log("getNewMsgEnd.ret:" + $api.jsonToStr(ret));
+					var result = ret.value;
+					var msglist = typeof result == "object" ? result : $api.strToJson(result);
+					console.log("msglist:" + $api.jsonToStr(msglist));
+					// 渲染消息
+					if (msglist && msglist.length > 0) {
+						for (var i = msglist.length - 1; i >= 0; i--) {
+							if (i == (msglist.length - 1)) {
+								$api.text($api.dom(".history-date"), _getFormatedDate(msglist[i].sentTime, "yyyy年MM月dd日  HH:mm:ss"));
+							}
+							var msgObj = msglist[i];
+//							console.log(msgObj.content.extra);
+							if(!_isStringNull(msgObj.content.extra)){
+								msgObj.content.extra = $api.strToJson(msgObj.content.extra);
+							}else{
+								msgObj.content.extra = {};
+							}
+							// 发送方
+							if (msgObj.messageDirection == "SEND") {
+								writeSendMsg(msgObj);
+							}
+							// 接收方
+							else {
+								receiverSendMsg(msgObj);
+							}
+						}
+						setTimeout(function() {
+							_scrollToEnd();
+						}, 600);
+					}
+				}
+			});
+			// 1.0 监听发送准备事件
+			_addEventListener("sendMsgPrepare", function(ret) {
+				if (ret && ret.value) {
+					var msg = ret.value;
+					//					api.toast({
+					//	                    msg:$api.jsonToStr(msg)
+					//                  });
+					//                  api.alert({
+					//                  msg:$api.jsonToStr(msg)
+					//                  },function(ret,err){
+					//                  	//coding...
+					//                  });
+					msg.content.extra = $api.strToJson(msg.content.extra);
+					// 渲染模板引擎
+					writeSendMsg(msg);
+					//					$(".aui-chat-sender[data-msgid='" + msg.messageId + "']").find(".aui-chat-status").removeClass("aui-hide");
+					var chatSenderEls = $api.domAll($api.byId("message-content"), ".aui-chat-sender[data-msgid='" + msg.messageId + "']");
+					console.log("chatSenderEls.length:" + chatSenderEls.length);
+					if (chatSenderEls.length > 0) {
+						for (var i = 0; i < chatSenderEls.length; i++) {
+							if ($api.hasCls($api.dom(chatSenderEls[i], ".aui-chat-status"), "aui-hide")) {
+								$api.removeCls(chatSenderEls[i], "aui-hide");
+							}
+						}
+					}
+				}
+			});
+			// 2.0 监听是否发送成功
+			_addEventListener("sendMsgSuccess", function(ret) {
+				if (ret && ret.value) {
+					var msg = ret.value;
+					//隐藏加载图标
+					//					$(".aui-chat-sender[data-msgid='" + msg.messageId + "']").find(".aui-chat-status").addClass("aui-hide");
+					var chatSenderEls = $api.domAll($api.byId("message-content"), ".aui-chat-sender[data-msgid='" + msg.messageId + "']");
+					console.log("chatSenderEls.length:" + chatSenderEls.length);
+					if (chatSenderEls.length > 0) {
+						for (var i = 0; i < chatSenderEls.length; i++) {
+							if (!$api.hasCls($api.dom(chatSenderEls[i], ".aui-chat-status"), "aui-hide")) {
+								$api.addCls(chatSenderEls[i], "aui-hide");
+							}
+						}
+					}
+				}
+			});
+			// 3.0 监听是否发送失败
+			_addEventListener("sendMsgError", function(ret) {
+				if (ret && ret.value) {
+					var msg = ret.value;
+					//隐藏加载图标
+					//					$(".aui-chat-sender[data-msgid='" + msg.messageId + "']").find(".aui-chat-status i").attr("class", "aui-iconfont  iconfont icon-jinggao").css("color", "#f00");
+					var chatSenderEls = $api.domAll($api.byId("message-content"), ".aui-chat-sender[data-msgid='" + msg.messageId + "']");
+					console.log("chatSenderEls.length:" + chatSenderEls.length);
+					if (chatSenderEls.length > 0) {
+						for (var i = 0; i < chatSenderEls.length; i++) {
+							$api.attr($api.dom(chatSenderEls[i], ".aui-chat-status i"), "class", "aui-iconfont  iconfont icon-jinggao");
+							$api.css($api.dom(chatSenderEls[i], ".aui-chat-status i"), "color:#f00");
+						}
+					}
+				}
+			});
+			// 4.0 监听是否有消息进来
+			_addEventListener("receivedMsg", function(ret) {
+				console.log("receivedMsg.ret:" + $api.jsonToStr(ret));
+				if (ret && ret.value) {
+					// 清除会话
+					_sendEvent("clearMessages", {
+						conversationType : api.pageParam.conversationType,
+						targetId : api.pageParam.targetId
+					});
+					// 判断是否是自己
+					var msg = ret.value;
+					console.log("api.pageParam.targetId:" + api.pageParam.targetId);
+					if (msg.targetId == api.pageParam.targetId) {
+						msg.content.extra = $api.strToJson(msg.content.extra);
+						msg.sentTime = msg.receivedTime;
+						// 渲染模板引擎
+						receiverSendMsg(msg);
+					}
+				}
+			});
+			// 清除会话
+			_sendEvent("clearMessages", {
+				conversationType : api.pageParam.conversationType,
+				targetId : api.pageParam.targetId
+			});
+			api.parseTapmode();
+			//下拉刷新
+			api.setRefreshHeaderInfo({
+				loadingImg : 'widget://image/loading_more.gif',
+				bgColor : 'rgba(255,255,255,0)',
+				textColor : '#212121',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...'
+			}, function(ret, err) {
+				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+				//				getDatas();
+				setTimeout(function() {
+					api.refreshHeaderLoadDone();
+				}, 800);
+			});
+		}
+	</script>
+</html>

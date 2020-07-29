@@ -1,0 +1,284 @@
+
+
+
+/* 更新图片列表 */
+function refreshMultipleImgsUi(imgUrl) {
+//	var multipleImgs = $api.domAll(".express-img");
+//	console.log("已选择图片个数:" + multipleImgs.length);
+	var htmlStr = "";
+	htmlStr += "<div class='aui-padded-t-10 aui-padded-l-10 aui-padded-r-10'>";
+	htmlStr += "<img class='express-img' data-url='" + imgUrl + "' src='" + imgUrl + "'/>";
+	htmlStr += "</div>";
+	$api.html($api.dom(".multiple-imgs"), htmlStr);
+}
+
+// 图片压缩
+// imageFilter:压缩对象
+// imgsrc：源图片的路径
+// quality：图片压缩质量，一般建议0.5
+// scale：图片压缩比例，也是建议0.5
+// ext：源图片拓展名
+// callback：转换成功之后回调函数
+function _imgCompress(imageFilter, imgsrc, quality, scale, ext, callback) {
+	// 压缩文件的保存目录
+	var savePath = api.cacheDir + "/" + _getNowFormatDate() + "/";
+	// 压缩文件生成的随机文件名称
+	var savename = _newGuid() + "." + ext;
+	imageFilter.compress({
+		img : imgsrc,
+		quality : quality,
+		scale : quality,
+		save : {
+			album : false,
+			imgPath : savePath,
+			imgName : savename
+		}
+	}, function(ret, err) {
+		if (ret) {
+			callback(savePath + savename);
+		} else {
+			alert(JSON.stringify(err));
+		}
+	});
+}
+
+/**
+ *打开底部弹出框
+ */
+function openActionShit(_obj, type) {
+	switch(type) {
+		case 1:
+			api.actionSheet({
+				title : "请选择",
+				cancelTitle : '取消',
+				buttons : ['预览', '删除']
+			}, function(ret, err) {
+				if (ret.buttonIndex == 1) {
+					//预览
+				} else if (ret.buttonIndex == 2) {
+					//删除
+				} else {
+					//取消
+				}
+			});
+			break;
+		case 2:
+			api.actionSheet({
+				title : "请选择图片来源",
+				cancelTitle : '取消',
+				buttons : ['拍照', '相册']
+			}, function(ret, err) {
+				if (ret.buttonIndex == 1) {
+					//拍照
+					getPictureBySourceType("camera");
+				} else if (ret.buttonIndex == 2) {		
+					//相册
+					uiMediaScanner.open({
+						type : 'picture',
+						column : 4,
+						classify : true,
+						max : 1,
+						sort : {
+							key : 'time',
+							order : 'desc'
+						},
+						texts : {
+							stateText : '已选*项',
+							cancelText : '取消',
+							finishText : '完成',
+							selectedMaxText : "最多支持*张图片"
+						},
+						styles : {
+							bg : '#fff',
+							mark : {
+								icon : '',
+								position : 'top_right',
+								size : 20
+							},
+							nav : {
+								bg : '#FFFFFF',
+								stateColor : '#212121',
+								stateSize : 18,
+								cancelBg : 'rgba(0,0,0,0)',
+								cancelColor : '#666666',
+								cancelSize : 16,
+								finishBg : 'rgba(0,0,0,0)',
+								finishColor : '#666666',
+								finishSize : 16
+							}
+						},
+						scrollToBottom : {
+							intervalTime : 1, //（可选项）数字类型；打开媒体资源界面后间隔的时间开始自动滚动到底部，单位秒（s），小于零的数表示不滚动到底部；默认：-1
+							anim : true //（可选项）布尔类型；滚动时是否添加动画，android 平台不支持动画效果；默认true
+						},
+						showPreview : true,
+						showBrowser : true
+					}, function(ret) {
+						if (ret) {
+							if (ret.list && typeof ret.list != "undefined" && ret.list.length > 0) {
+								for (var i = 0; i < ret.list.length; i++) {
+									var selectImg = ret.list[i];
+									// 获取图片的路径
+									var selectimgPath = selectImg.path; //字符串类型，返回资源在本地的绝对路径，注意：iOS 平台上需要用 transPath 接口转换之后才可读取原图
+									var selectimgThumbPath = selectImg.thumbPath; //字符串类型径，返回资源缩略图在本地的绝对路径
+									// IOS需要将虚拟路径转换为本地路径才可以压缩
+									if (_isIOS()) {
+										// 转换为真实路径
+										uiMediaScanner.transPath({
+											path : selectimgPath
+										}, function(transObj) {
+											// 图片压缩
+											_imgCompress(imageFilter, transObj.path, 0.5, 0.5, selectImg.suffix, function(compressImg) {
+												console.log("compressImg:" + compressImg);//图片全路径
+												$api.val($api.byId("expressImg"), compressImg);
+												refreshMultipleImgsUi(compressImg);
+												// 发送图片消息
+											});
+										});
+									} else {
+										// 图片压缩
+										_imgCompress(imageFilter, selectimgPath, 0.5, 0.5, selectImg.suffix, function(compressImg) {
+											console.log("compressImg:" + compressImg);
+											$api.val($api.byId("expressImg"), compressImg);
+											refreshMultipleImgsUi(compressImg);
+											// 发送图片消息
+										});
+									}
+								}
+							} else {
+								api.toast({
+									msg : '未选取任何图片！'
+								});
+							}
+						}
+					});
+				} else {
+					//取消
+				}
+			});
+			break;
+	}
+}
+
+/**
+ *根据sourceType获取本地图片
+ */
+function getPictureBySourceType(sourceType) {
+	api.getPicture({
+		sourceType : sourceType,
+		encodingType : 'jpg',
+		mediaValue : 'pic',
+		destinationType : 'url',
+		allowEdit : false,
+		quality : 100,
+		//			targetWidth : 200,
+		//			targetHeight : 200,
+		saveToPhotoAlbum : false
+	}, function(ret1, err) {
+		if (ret1) {
+			if (ret1.data) {
+				var msg = "路径" + ret1.data;
+				console.log("msg:" + msg);
+				FNImageClip.open({
+					rect : {
+						x : 0,
+						y : 0,
+						w : api.frameWidth,
+						h : api.frameHeight,
+					},
+					srcPath : ret1.data,
+					highDefinition : false,
+					style : {
+						mask : 'rgba(80,80,80,0.5)',
+						clip : {
+							w : api.frameWidth,
+							h : api.frameWidth,
+							x : 0,
+							y : (api.frameHeight - api.frameWidth - 44) / 2,
+							borderColor : '#0f0',
+							borderWidth : 1,
+							appearance : 'rectangle'//支持 circular | rectangle；默认：rectangle
+						}
+					},
+					mode : "image",
+					fixedOn : api.frameName
+				}, function(ret2, err) {
+					if (ret2) {
+						console.log(ret2.status);
+						var rect = {
+							x : 0,
+							y : api.winHeight - footerHeight,
+							w : api.frameWidth,
+							h : footerHeight
+						};
+						var pageParam = {
+							frameName : api.frameName,
+							footerHeight : footerHeight //win中footer高度
+						};
+						var bounces = false;
+						var reload = true;
+						var allowEdit = false;
+						var animation = {
+							type : "fade", //动画类型（详见动画类型常量）
+							subType : "", //动画子类型（详见动画子类型常量）
+							duration : 0
+						};
+						_openFrame("img_clip_frm", "../../common/img_clip_frm.html", rect, pageParam, bounces, reload, allowEdit, animation);
+//						_openFrame("img_clip_frm", "../../html/common/img_clip_frm.html", rect, pageParam, bounces, reload, allowEdit, animation);
+					} else {
+						alert(JSON.stringify(ret2));
+					}
+				});
+			} else {
+				currentPage = null;
+				api.toast({
+					msg : "已取消"
+				});
+			}
+		} else {
+			currentPage = null;
+			api.toast({
+				msg : err.msg
+			});
+		}
+	});
+}
+
+function clipSave() {
+	var savePath = "fs://imageClip/" + _getFormatedDate(new Date(), "yyyyMMddHHmmss") + ".png"; //图片保存地址
+	console.log("正在保存图片, 地址:" + savePath);
+	FNImageClip.save({
+		destPath : savePath,
+		copyToAlbum : false,
+		quality : 1
+	}, function(ret, err) {
+		if (ret) {
+			console.log("save.ret:" + JSON.stringify(ret));
+			clipClose();
+			getImgMD5(ret.destPath);
+		} else {
+			alert(JSON.stringify(err));
+		}
+	});
+}
+
+function clipClose() {
+	api.closeFrame({
+		name : "img_clip_frm"
+	});
+	FNImageClip.close();
+}
+
+var fs;
+function getImgMD5(url) {
+	fs = api.require('fs');
+	fs.getMD5({
+		path : url
+	}, function(ret) {
+		if (ret.status) {
+			$api.val($api.byId("expressImg"), url);
+			refreshMultipleImgsUi(url);
+		}
+	});
+}
+

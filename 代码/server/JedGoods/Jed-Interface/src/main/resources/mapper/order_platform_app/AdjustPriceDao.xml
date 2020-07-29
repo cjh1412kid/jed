@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.AdjustPriceDao">
+
+  <resultMap id="messageMap" type="io.nuite.modules.order_platform_app.entity.MessageEntity">
+    <id property="seq" column="Seq"/>
+    <result property="flag" column="Flag"/>
+
+    <collection property="details" column="Seq"
+                ofType="io.nuite.modules.order_platform_app.entity.AdjustPriceEntity"
+                select="selectAdjustPriceEntity"></collection>
+  </resultMap>
+
+  <select id="selectAdjustPriceEntity" parameterType="int"
+          resultType="io.nuite.modules.order_platform_app.entity.AdjustPriceEntity">
+    SELECT
+    A.*
+    ,B.GoodID as goodID
+      from (
+      select
+      [Seq] as seq
+      ,[Shoes_Seq]  as shoesSeq
+      ,[Message_Seq] as messageSeq
+      ,[Current_Price] as currentPrice
+      ,[Previous_Price] as previousPrice
+  FROM [JedOrderPlatform].[dbo].[YHSR_OP_AdjustPrice]
+  where  Message_Seq=#{Seq}
+     ) A
+  left join [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] B on A.shoesSeq=B.Seq
+  </select>
+
+
+  <!-- 获取调价信息下调价列表 -->
+  <select id="selectAdjustPriceByMessageSeq" parameterType="java.util.Map"
+          resultType="io.nuite.modules.order_platform_app.entity.AdjustPriceEntity">
+        SELECT
+        gs.Seq AS shoesSeq,
+        gs.GoodId AS shoesId,
+        gs.Img1 AS image,
+        m.Input_Time AS adjustTime,
+        ap.Current_Price AS currentPrice,
+        ap.Previous_Price AS previousPrice
+        FROM
+        JedOrderPlatform.dbo.YHSR_OP_AdjustPrice ap
+        LEFT JOIN
+        JedSmartRetail.dbo.YHSR_Goods_Shoes gs
+        ON gs.Seq = ap.Shoes_Seq
+        LEFT JOIN
+        JedOrderPlatform.dbo.YHSR_OP_Message m
+        ON m.Seq = ap.Message_Seq
+        WHERE ap.Message_Seq = #{messageSeq}
+        GROUP BY gs.Seq,gs.GoodId,gs.Img1,m.Input_Time,ap.Current_Price,ap.Previous_Price
+    </select>
+
+  <!--查询公司下的所有调价列表-->
+  <select id="selectAdjustPriceTree" resultType="java.util.Map">
+
+    SELECT
+
+     AA.Seq as seq,
+     AA.Flag as flag
+
+     FROM (
+    SELECT A.Seq,A.Flag, A.Input_Time
+    ,ROW_NUMBER() over(partition by  A.Flag order by A.Input_Time desc ) as NEWINDEX
+    FROM (
+    SELECT
+    msg.*
+    ,bu.Shop_Seq as shopSeq
+      FROM [JedOrderPlatform].[dbo].[YHSR_OP_Message] msg
+    join  [JedSmartRetail].[dbo].[YHSR_Base_User] bu on msg.Del=0 and bu.Seq=msg.User_Seq and  bu.Company_Seq=#{companySeq} and bu.Shop_Seq is not null
+    ) A
+    ) AA
+    where AA.NEWINDEX = 1
+
+     order by AA.Input_Time desc
+  </select>
+
+
+  <select id="selectAdjustPriceDataByFlag" resultMap="messageMap">
+
+select
+ B.*
+ ,u.Shop_Seq shopSeq
+ ,s.Name as shopName
+  from (
+
+    SELECT
+     AA.Seq as seq,
+     AA.Flag as flag,
+     AA.User_Seq as userSeq
+     FROM (
+
+    SELECT msg.Seq,msg.Flag,msg.User_Seq
+    ,ROW_NUMBER() over(partition by bu.Shop_Seq order by msg.Input_Time DESC) as NEWINDEX
+     FROM
+	 (select Seq,Flag,User_Seq,Input_Time  from
+	  [JedOrderPlatform].[dbo].[YHSR_OP_Message]
+	  where Flag=#{flag} and Del=0
+	 ) msg
+	 join  [JedSmartRetail].[dbo].[YHSR_Base_User] bu on bu.Seq=msg.User_Seq  and bu.Shop_Seq is not null
+    ) AA
+
+    where AA.NEWINDEX = 1
+	)  B
+	left join [JedSmartRetail].[dbo].[YHSR_Base_User] u on u.Seq=B.userSeq
+	left join  [JedSmartRetail].[dbo].[YHSR_Base_Shop] s on s.Seq=u.Shop_Seq
+
+  </select>
+
+</mapper>

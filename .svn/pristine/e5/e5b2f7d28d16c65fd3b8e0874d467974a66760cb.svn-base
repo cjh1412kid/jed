@@ -1,0 +1,304 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>底部导航</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/my/frm_personalInfo.css"/>
+		<style>
+		</style>
+	</head>
+	<body>
+		<div class="container aui-margin-t-10">
+			<div class="item user-header flex-wrap aui-border-b" tapmode onclick="openActionShit()">
+				<div class="item-name box-wrap box-horizontal-center">
+					头像
+				</div>
+				<div class="flex-con box-wrap box-vertical-end box-horizontal-center">
+					<img class="header-img aui-margin-r-10" src="../../image/noavatar.gif" data-src=""/>
+				</div>
+			</div>
+			<div class="item flex-wrap aui-border-b" tapmode onclick="_openWin('changeNickName_win', 'changeNickName_win.html');">
+				<div class="item-name box-wrap box-horizontal-center">
+					昵称
+				</div>
+				<div class="flex-con box-wrap box-vertical-end box-horizontal-center">
+					<div class="item-value user-name">
+						XXX
+					</div>
+				</div>
+			</div>
+			<div class="item flex-wrap aui-border-b" tapmode onclick="_openWin('changeAddress_win', 'changeAddress_win.html');">
+				<div class="item-name box-wrap box-horizontal-center">
+					地址
+				</div>
+				<div class="flex-con box-wrap box-vertical-end box-horizontal-center">
+					<div class="item-value address aui-ellipsis">
+						江苏省盐城市xx县
+					</div>
+				</div>
+			</div>
+			<div class="item flex-wrap aui-border-b" tapmode onclick="_openWin('changePhone_win', 'changePhone_win.html');">
+				<div class="item-name box-wrap box-horizontal-center">
+					手机号
+				</div>
+				<div class="flex-con box-wrap box-vertical-end box-horizontal-center">
+					<div class="item-value telephone">
+						18014081652
+					</div>
+				</div>
+			</div>
+			<div class="item flex-wrap" tapmode onclick="_openWin('changePassword_win', 'changePassword_win.html');">
+				<div class="item-name box-wrap box-horizontal-center">
+					密码
+				</div>
+				<div class="flex-con box-wrap box-vertical-end box-horizontal-center">
+					<div class="item-value">
+						******
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js" ></script>
+<script type="text/javascript">
+	function loginOutAction() {
+		_confirm("提示", "确定要退出登录吗？", ["确定", "取消"], function(ret, err) {
+			if (ret.buttonIndex == 1) {
+				$api.rmStorage("userInfoKey");
+				$api.rmStorage("passwordKey");
+				$api.rmStorage("itemsKey");
+				$api.rmStorage("collectionShoesListKey");
+				$api.rmStorage("collectionAreaListKey");
+				_execScript("root", "", "openLoginFrmAgain();")
+				api.closeToWin({
+					name : 'root'
+				});
+			} else {
+				_toast("已取消", 3000, "bottom");
+			}
+		});
+	}
+
+	/**
+	 *打开底部弹出框
+	 */
+	function openActionShit() {
+		api.actionSheet({
+			title : "请选择图片来源",
+			cancelTitle : '取消',
+			buttons : ['拍照', '相册']
+		}, function(ret, err) {
+			if (ret.buttonIndex == 1) {
+				//拍照
+				getPictureBySourceType("camera");
+			} else if (ret.buttonIndex == 2) {
+				//相册
+				getPictureBySourceType("album")
+			} else {
+				//取消
+			}
+		});
+	}
+
+	/**
+	 *根据sourceType获取本地图片
+	 */
+	function getPictureBySourceType(sourceType) {
+		api.getPicture({
+			sourceType : sourceType,
+			encodingType : 'jpg',
+			mediaValue : 'pic',
+			destinationType : 'url',
+			allowEdit : false,
+			quality : 100,
+			//			targetWidth : 200,
+			//			targetHeight : 200,
+			saveToPhotoAlbum : false
+		}, function(ret1, err) {
+			if (ret1) {
+				if (ret1.data) {
+					var msg = "路径" + ret1.data;
+					console.log("msg:" + msg);
+					FNImageClip.open({
+						rect : {
+							x : 0,
+							y : 0,
+							w : api.frameWidth,
+							h : api.frameHeight,
+						},
+						srcPath : ret1.data,
+						highDefinition : false,
+						style : {
+							mask : 'rgba(80,80,80,0.5)',
+							clip : {
+								w : api.frameWidth / 4,
+								h : api.frameWidth / 4,
+								x : api.frameWidth / 4,
+								y : api.frameHeight / 4,
+								borderColor : '#0f0',
+								borderWidth : 1,
+								appearance : 'circular'
+							}
+						},
+						mode : "image",
+						fixedOn : api.frameName
+					}, function(ret2, err) {
+						if (ret2) {
+							console.log(ret2.status);
+							var rect = {
+								x : 0,
+								y : api.winHeight - 44,
+								w : api.frameWidth,
+								h : 44
+							};
+							var pageParam = {
+								frameName : api.frameName
+							};
+							var bounces = false;
+							var reload = true;
+							var allowEdit = false;
+							var animation = {
+								type : "fade", //动画类型（详见动画类型常量）
+								subType : "", //动画子类型（详见动画子类型常量）
+								duration : 0
+							};
+							_openFrame("img_clip_frm", "../common/img_clip_frm.html", rect, pageParam, bounces, reload, allowEdit, animation);
+						} else {
+							alert(JSON.stringify(ret2));
+						}
+					});
+				} else {
+					currentPage = null;
+					api.toast({
+						msg : "已取消"
+					});
+				}
+			} else {
+				currentPage = null;
+				api.toast({
+					msg : err.msg
+				});
+			}
+		});
+	}
+
+	function clipSave() {
+		console.log("api.frameWidth:" + api.frameWidth);
+		FNImageClip.save({
+			destPath : "fs://imageClip/" + _getFormatedDate(new Date(), "yyyyMMddHHmmss") + ".png",
+			copyToAlbum : false,
+			quality : 1
+		}, function(ret, err) {
+			if (ret) {
+				console.log("save.ret:" + JSON.stringify(ret));
+				clipClose();
+				getImgMD5(ret.destPath);
+			} else {
+				alert(JSON.stringify(err));
+			}
+		});
+	}
+
+	function clipClose() {
+		api.closeFrame({
+			name : "img_clip_frm"
+		});
+		FNImageClip.close();
+	}
+
+	var fs;
+	function getImgMD5(url) {
+		fs = api.require('fs');
+		fs.getMD5({
+			path : url
+		}, function(ret) {
+			if (ret.status) {
+				uploadPhoto(url, ret.md5Str)
+			}
+		});
+	}
+
+	/**
+	 *请求服务器：更换用户头像
+	 */
+	function uploadPhoto(filepath, md5Str) {
+		var url = window.myServerUrl + "order/app/baseUser/changeHeadImg";
+		var method = 'post';
+		var timeout = 15;
+		var data = {
+			values : {
+				//				parameters : "username=" + userInfo.username + "@" + "md5code=" + md5Str
+				token : $api.getStorage("tokenKey")
+			}, //以表单方式提交参数（JSON对象）, 如 {"field1": "value1", "field1": "value2"} (直接传JSON对像.)
+			files : {
+				"headImg" : filepath
+			}
+		};
+		var currentAjaxTag = "changeHeadImg";
+		console.log("ajax.url:" + url);
+		console.log("ajax._data:" + $api.jsonToStr(data));
+		_showProgress("请稍后...", "", true);
+		_ajax(url, "changeHeadImg", function(ret, err) {
+			isRequesting = false;
+			api.hideProgress();
+			//					api.refreshHeaderLoadDone();
+			if (ret) {
+				console.log("ajax." + currentAjaxTag + ".ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					var res = ret.result;
+					if (!_isArrayNull(res)) {
+						userInfo.headImg = res[0].headImg;
+						$api.setStorage("userInfoKey", userInfo);
+						_sendEvent("userInfoUpdateKey");
+						_toast(ret.msg, 3000, "bottom");
+					} else {
+						_toast(ret.msg, 3000, "bottom");
+					}
+				} else {
+					_toast(ret.msg, 3000, "bottom", function() {
+						//							$api.rmStorage("userInfoKey");
+						//							$api.rmStorage("passwordKey");
+					});
+				}
+			} else {
+				_toast(window.ajaxErrorMessage, 3000, "bottom", function() {
+					//						$api.rmStorage("userInfoKey");
+					//						$api.rmStorage("passwordKey");
+				});
+				console.log("ajax." + currentAjaxTag + ".err:" + $api.jsonToStr(err));
+			}
+		}, method, data, timeout, "json");
+	}
+
+	function initUI() {
+		$api.text($api.dom(".user-name"), userInfo.userName);
+		$api.text($api.dom(".address"), userInfo.address);
+		$api.text($api.dom(".telephone"), _hideCellphone(userInfo.telephone));
+		$api.attr($api.dom(".header-img"), "data-src", userInfo.headImg);
+		new auiLazyload({
+			errorImage : "../../image/noavatar.gif"
+		});
+	}
+
+	function initData() {
+		FNImageClip = api.require('FNImageClip');
+		userInfo = $api.getStorage("userInfoKey");
+	}
+
+	var userInfo;
+	var FNImageClip;
+	apiready = function() {
+		initData();
+		initUI();
+		_addEventListener("userInfoUpdateKey", function(ret) {
+			initData();
+			initUI();
+		}, {});
+	}
+</script>

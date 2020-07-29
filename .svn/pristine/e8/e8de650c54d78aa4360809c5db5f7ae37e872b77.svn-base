@@ -1,0 +1,206 @@
+body {
+	background-color: rgba(0,0,0,0.3);
+}
+.halfAph {
+	height: 50%;
+}
+.halfAph div {
+	height: 85%;
+	/*background-color: #0062CC;*/
+}
+.content {
+	height: 70%;
+	background-color: #FFFFFF;
+}
+
+.popTitle {
+	height: 2.0rem;
+	text-align: center !important;
+}
+.aui-content{
+	overflow-y: auto;
+//	height: -webkit-calc(100% - 4.75rem);
+	-webkit-overflow-scrolling: touch;
+}
+.titleBtn {
+	font-size: 12px;
+	color: #999999;
+}
+img {
+	width: 24px;
+	height: 24px;
+}
+.goodsNumber {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+.category-pop-body{
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+}
+.aui-collapse-header.aui-active {
+    background: #FFFFFF!important;
+}
+.aui-list .aui-list-item {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 0.75rem;
+    color: #212121;
+    border-bottom: 0px solid #dddddd;
+    position: relative;
+    min-height: 1.0rem;
+    -webkit-box-sizing: border-box;
+    		box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    		justify-content: space-between;
+}
+.aui-list .aui-list-item-inner {
+    position: relative;
+    min-height: 1.0rem;
+	padding-right: 0.75rem;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    		box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-flex: 1;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+			justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+			align-items: center;
+}
+.aui-list-item-title{
+	font-size: 0.7rem!important;
+	color: #212121!important;
+}
+
+.aui-collapse-content .aui-col-xs-3{
+	height:1.2rem;
+	margin-bottom:0.25rem;
+	text-align: center;
+	font-size: 0.6rem;
+}
+.aui-collapse-content .aui-col-xs-3 div{
+	height:100%;
+	width:70%;
+	margin:0 auto;
+	display: flex;
+	justify-content: center;
+	align-items:center;
+	background-color: #ECECEC;
+	border-radius: 0.3rem;	
+}
+.aui-collapse-content .aui-col-xs-3 div.active{
+	color: red;
+	background: rgba(248,171,166, 0.2);
+	border: 1px solid red;
+	border-radius: 0.3rem;
+}
+
+.bottom-btns{
+	position: fixed;
+	bottom: 0;
+	height: 2.5rem;
+	background-color: #f08a58;
+	width: 100%;
+	color: #FFFFFF;
+	line-height:2.5rem;
+	text-align: center;
+}
+.total-price{
+	color: #212121;
+	width: 8.98rem;
+	font-size: 1.0rem;
+	background-color: #FFFFFF;
+}
+/* 金额样式 */
+.money-style-1{
+	font-weight:450 !important;  
+	font-size: 0.95rem !important; 
+}
+.money-style-2{
+	font-weight:550 !important;  
+	font-size: 0.7rem !important; 
+}
+
+.btn-sure{
+	background-color: #f08a58;
+	color: #FFFFFF;
+}
+.btn-sure:active{
+	opacity: 0.9;
+}
+.aui-bar-btn {
+	width: 6.0rem !important;
+}
+.aui-bar-btn .aui-bar-btn-item {
+	font-size: 1.0rem !important;
+}
+.aui-bar-btn .aui-bar-btn-item.aui-active {
+	background-color: #FFFFFF;
+}
+.aui-bar-btn .aui-input, .aui-bar-btn input, .aui-bar-btn select {
+	padding-left: 0.25rem;
+	padding-right: 0.25rem;
+	height: 1.5rem;
+	line-height: 1.45rem;
+}
+.aui-bg-gray {
+	background-color: #ECECEC !important;
+}
+
+.selected-list .aui-list-item {
+	padding-left:0rem;
+}
+.selected-list li:active {
+	background-color: #FFFFFF !important;
+}
+.selected-list .aui-list-item .aui-list-item-inner{
+	padding-right:0rem;
+}
+.buy-name{
+	font-size: 0.7rem;
+	color: #999999;
+}
+
+/* aui1.0版本  列表左滑显示按钮,如:删除  start*/
+.aui-list-view {
+	list-style: none;
+	background-color: #fff;
+}
+.aui-list-view:after {
+	content: '';
+	-webkit-transform-origin: 0 0;
+	-webkit-transform: scale(1);
+	pointer-events: none;
+}
+
+.aui-list-view-cell {
+	position: relative;
+	padding: 12px 15px;
+	overflow: hidden;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	-webkit-touch-callout: none;
+}
+.aui-list-view.aui-in .aui-list-view-cell:last-child:after {
+	left: 0;
+}
+
+.aui-list-view-cell:after {
+	content: '';
+	-webkit-transform-origin: 0 0;
+	-webkit-transform: scale(1);
+	pointer-events: none;
+}
+/* aui1.0版本  列表左滑显示按钮,如:删除  end */
+
+

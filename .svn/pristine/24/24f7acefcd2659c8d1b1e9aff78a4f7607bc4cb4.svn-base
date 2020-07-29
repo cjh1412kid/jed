@@ -1,0 +1,65 @@
+<widget id="A6006117652577" version="0.0.1">
+    <name>货品管理</name>
+    <description>
+        Example For APICloud.
+    </description>
+    <author email="developer@apicloud.com" href="http://www.apicloud.com">
+        Developer
+    </author>
+    <content src="index.html"/>
+    <access origin="*"/>
+    <preference name="pageBounce" value="false"/>
+    <preference name="appBackground" value="rgba(0,0,0,0.0)"/>
+    <preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
+    <preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
+    <preference name="hScrollBarEnabled" value="false"/>
+    <preference name="vScrollBarEnabled" value="false"/>
+    <preference name="autoLaunch" value="true"/>
+    <preference name="fullScreen" value="false"/>
+    <preference name="autoUpdate" value="true"/>
+    <preference name="smartUpdate" value="true"/>
+    <preference name="debug" value="false"/>
+    <preference name="statusBarAppearance" value="true"/>
+    <preference name="softInputMode" value="resize"/>
+    <permission name="readPhoneState"/>
+    <permission name="camera"/>
+    <permission name="fileSystem"/>
+    <permission name="internet"/>
+    <permission name="bootCompleted"/>
+    <permission name="hardware"/>
+    <feature name="imageBrowser"/>
+    <feature name="mam"/>
+    <feature name="ajpush">
+        <param name="app_key" value="c96719825056a1c5b644612a"/>
+        <param name="channel" value="goodsmanage"/>
+    </feature>
+    <feature name="rongCloud2">
+        <param name="appKey" value="kj7swf8ok3xs2"/>
+    </feature>
+    <feature name="UIChatBox"/>
+    <feature name="UIMediaScanner"/>
+    <feature name="imageFilter"/>
+    <feature name="FNImageClip"/>
+    <feature name="fs"/>
+    <feature name="UIListView"/>
+    <feature name="UILoading"/>
+    <feature name="UICustomPicker"/>
+    <feature name="NVNavigationBar"/>
+    <feature name="UIScrollPromptView"/>
+    <feature name="MNPopups"/>
+    <feature name="FNScanner"/>
+    <feature name="UIInput"/>
+    <feature name="dialogBox"/>
+    <feature name="inputField"/>
+    <feature name="audioStreamer"/>
+    <feature name="addressView"/>
+    <feature name="wx">
+        <param name="urlScheme" value="wx4bfb5c0e7afea5cd"/>
+        <param name="apiKey" value="wx4bfb5c0e7afea5cd"/>
+        <param name="apiSecret" value="e548992fba663b60a040b8f3bac0e6c2"/>
+    </feature>
+    <feature name="QQPlus">
+        <param name="urlScheme" value="tencent1106728916"/>
+        <param name="apiKey" value="1106728916"/>
+    </feature>
+</widget>

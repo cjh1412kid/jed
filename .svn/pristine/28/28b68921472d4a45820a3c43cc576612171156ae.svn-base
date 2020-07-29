@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>购物车</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/cart/cart_win.css" />
+		<style>
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="_closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+			<a class="aui-pull-right aui-btn" tapmode onclick=""><span class="aui-hide aui-iconfont aui-icon-more aui-text-default"></span> </a>
+			<div class="aui-title text-header-title aui-text-default">
+				购物车
+			</div>
+		</header>
+		<div class="bottom-btns flex-wrap">
+			<div class="count-price flex-con aui-font-size-14 box-wrap ">
+				<!--<label class="aui-margin-l-10" tapmode onclick="selectAll(this)">
+					<input class="aui-radio aui-checked active" type="checkbox" name="radio">
+					全选</label>-->
+				<div class="flex-con box-wrap box-vertical-center box-horizontal-center">
+					<span class="money-style-2 aui-margin-l-5">¥</span>
+					<span class="cheked-total-price">
+						<span class='money-style-1'>0</span><span class='money-style-2'>.00</span>
+					</span>
+				</div>
+			</div>
+			<div class="bottom-btn bottom-btn-xn aui-hide" tapmode onclick="openFillOrderWin(2)">
+				虚拟订货
+			</div>
+			<div class="bottom-btn bottom-btn-fk" tapmode onclick="openFillOrderWin()">
+				去结算&nbsp;<span class="aui-font-size-12">(<span class="cheked-total-num aui-font-size-14"></span>双)</span>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../script/common/alert_tips.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_toast.js"></script>
+	<script type="text/javascript">
+
+		//购物车全选(isChecked==1)/全不选(isChecked==0)
+		function checkAllShoppingCart(call, isChecked) {
+			var url = window.myServerUrl + "order/app/shoppingCart/checkAllShoppingCart?token=" + token + "&isChecked=" + isChecked;
+			console.log("购物车全选/全不选:" + url);
+			isAjaxing = true;
+			_ajax(url, "checkAllShoppingCart", function(ret, err) {
+				if (ret) {
+					console.log("_ajax.checkAllShoppingCart.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						call();
+					} else {
+//						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			});
+		}
+		
+//		var isOpen = true;
+		function openFillOrderWin() {
+//			if(isOpen){			
+				if (!_isArrayNull(cartList)) {									
+//					console.log("跳转至下单页, _extraData为:" + $api.jsonToStr(cartList));
+					var _extraData = [];
+					var tempObj;
+					for (var i = 0; i < cartList.length; i++) {
+						for (var j = 0; j < cartList[i].cartArr.length; j++) {
+							for (var k = 0; k < cartList[i].cartArr[j].sizeAndStock.length; k++) {
+								if(!_isStringNull(cartList[i].cartArr[j].sizeAndStock[k].shoppingCartSeq)){
+									tempObj = {
+										seq : cartList[i].cartArr[j].sizeAndStock[k].shoppingCartSeq, //订单总价
+										shoesDataSeq : cartList[i].cartArr[j].sizeAndStock[k].shoesDataSeq, //鞋子数据序号(表ShoesData)
+										buyCount : cartList[i].cartArr[j].sizeAndStock[k].buyCount, //鞋子购买数量
+										purchasePrice : cartList[i].purchasePrice,
+										img : cartList[i].img //鞋子图片(不区分颜色, 尺码, 默认商品图片第一张)
+									};
+									_extraData.push(tempObj);
+								}
+							}
+						}
+					}	
+					console.log($api.jsonToStr(_extraData));
+					_openWin("fill_order_win", "../order/fill_order_win.html", {
+						type : "cart",
+						extraData : _extraData
+					});	
+				} else {
+					_toast("购物车未发现商品数据哟^o^");
+				}
+//			}
+		}
+
+		function _closeWin() {
+			api.closeWin();
+		}
+
+		function initUi() {
+			cartList = $api.getStorage("cartListKey");
+//			console.log("购物车列表(长度:"+cartList.length+"):" + $api.jsonToStr(cartList));
+			if (!_isArrayNull(cartList)) {
+				//选中的商品总数
+				var checkedTotalNum = 0;
+				//选中的商品总价格
+				var checkedToatlPrice = 0;
+				for (var i = 0; i < cartList.length; i++) {
+					checkedTotalNum += cartList[i].buyCountTotal;
+					//采购价, 包括:1.oemPrice(贴牌商价格), 2.wholesalerPrice(批发商价格), 3.storePrice(直营店价格)
+					checkedToatlPrice += cartList[i].purchasePrice * cartList[i].buyCountTotal;					
+				}
+				
+				var priceParts = checkedToatlPrice.toFixed(2).split(".");
+				$api.html($api.dom(".cheked-total-price"), "<span class='money-style-1'>" + priceParts[0] + "</span><span class='money-style-2'>." + priceParts[1] + "</span>");
+				$api.text($api.dom(".cheked-total-num"), checkedTotalNum);
+			}else{
+				$api.html($api.dom(".cheked-total-price"), "<span class='money-style-1'>0</span><span class='money-style-2'>.00</span>");
+				$api.text($api.dom(".cheked-total-num"), "0");
+			}
+		}
+
+		function initData() {
+			token = $api.getStorage("tokenKey");
+		}
+
+		var token;
+		var cartList = [];
+		apiready = function() {
+			//			$api.text($api.dom(".aui-title"), api.pageParam.name);
+			api.parseTapmode();
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			$api.fixTabBar($api.dom(".bottom-btns"));
+			initData();
+			initUi();
+			var headerPos = $api.offset(header);
+			var rect = {
+				x : 0,
+				y : 0,
+				w : 'auto',
+				h : 'auto',
+				marginLeft : 0, //相对父 window 左外边距的距离
+				marginTop : headerPos.h, //相对父 window 上外边距的距离
+				marginBottom : $api.offset($api.dom(".bottom-btns")).h, //相对父 window 下外边距的距离
+				marginRight : 0 //相对父 window 右外边距的距离
+			};
+			var bounces = false;
+			var reload = true;
+			var allowEdit = false;
+			var animation = {
+				type : "none", //动画类型（详见动画类型常量）
+				//			subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 0 //动画过渡时间，默认300毫秒
+			};
+//			_openFrame("cart_frm", "cart_frm.html", rect, api.pageParam, bounces, reload, allowEdit, animation);			
+			_openFrame("cart_frm", "cart_frm_2.html", rect, api.pageParam, bounces, reload, allowEdit, animation);			
+			//			_addEventListener("keyback", function(ret) {
+			//			});
+			_addEventListener("pause", function(ret) {
+				console.log("pause");
+				//				alert("pause");
+			});
+			_addEventListener("viewdisappear", function(ret) {
+			});
+			_addEventListener("cartListUpdateEndEvent", function(ret) {
+//				initData();
+				initUi();
+			});
+		};
+	</script>
+</html>

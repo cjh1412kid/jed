@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/my/target/history_frm.css"/>
+		<style>
+			.text-light {
+				color: #ffffff;
+			}
+			.aui-timeline-item-label {
+				background-color: rgba(230,53,125,1) !important;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="aui-content aui-padded-t-10">
+			<div class="aui-timeline">
+				<!--<div class='aui-timeline-item-header'>
+				2018年
+				</div>
+				<div class='aui-timeline-item'>
+				<div class='aui-timeline-item-label aui-bg-warning text-light'>
+				<span class='month'>10</span><span class='aui-font-size-12'>月</span>
+				</div>
+				<div class='aui-timeline-item-inner '>
+				<div class='aui-card-list'>
+				<div class='aui-card-list-content-padded'>
+				<div class='aui-row aui-row-padded'>
+				<div class='aui-col-xs-9 aui-text-white'>
+				全国
+				</div>
+				<div class='aui-col-xs-3 value'>
+				3000万
+				</div>
+				<div class='aui-col-xs-9 aui-text-white'>
+				全国
+				</div>
+				<div class='aui-col-xs-3 value'>
+				3000万
+				</div>
+				<div class='aui-col-xs-9 aui-text-white'>
+				全国
+				</div>
+				<div class='aui-col-xs-3 value'>
+				3000万
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				<div class='aui-timeline-item'>
+				<div class='aui-timeline-item-label aui-bg-warning text-light'>
+				<span class='month'>9</span><span class='aui-font-size-12'>月</span>
+				</div>
+				<div class='aui-timeline-item-inner '>
+				<div class='aui-card-list'>
+				<div class='aui-card-list-content-padded'>
+				<div class='aui-row aui-row-padded'>
+				<div class='aui-col-xs-9 aui-text-white'>
+				全国
+				</div>
+				<div class='aui-col-xs-3 value'>
+				3000万
+				</div>
+				<div class='aui-col-xs-9 aui-text-white'>
+				全国
+				</div>
+				<div class='aui-col-xs-3 value'>
+				3000万
+				</div>
+				<div class='aui-col-xs-9 aui-text-white'>
+				全国
+				</div>
+				<div class='aui-col-xs-3 value'>
+				3000万
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				<div class='aui-timeline-item-header'>
+				2017年
+				</div>
+				<div class='aui-timeline-item'>
+				<div class='aui-timeline-item-label aui-bg-warning text-light'>
+				<span class='month'>10</span><span class='aui-font-size-12'>月</span>
+				</div>
+				<div class='aui-timeline-item-inner'>
+				<div class='aui-card-list'>
+				<div class='aui-card-list'>
+				<div class='aui-card-list-content-padded'>
+				<div class='aui-row aui-row-padded'>
+				<div class='aui-col-xs-9 aui-text-white'>
+				全国
+				</div>
+				<div class='aui-col-xs-3 value'>
+				3000万
+				</div>
+				<div class='aui-col-xs-9 aui-text-white'>
+				全国
+				</div>
+				<div class='aui-col-xs-3 value'>
+				3000万
+				</div>
+				<div class='aui-col-xs-9 aui-text-white'>
+				全国
+				</div>
+				<div class='aui-col-xs-3 value'>
+				3000万
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>-->
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../script/common/common.js"></script>
+	<script type="text/javascript">
+		function initUi(result) {
+			var htmlStr = "";
+			if (!_isArrayNull(result)) {
+				var tempYear = "";
+				for (var i = 0; i < result.length; i++) {
+					//					if (_isStringNull(tempYear)) {
+					//						tempYear = result[i].year;
+					//					}
+					if (tempYear != result[i].year) {
+						htmlStr += "<div class='aui-timeline-item-header'>";
+						htmlStr += result[i].year + "年";
+						htmlStr += "</div>";
+						tempYear = result[i].year;
+					}
+					htmlStr += "<div class='aui-timeline-item'>";
+					htmlStr += "<div class='aui-timeline-item-label aui-bg-warning text-light'>";
+					htmlStr += "<span class='month'>" + result[i].month + "</span><span class='aui-font-size-12'>月</span>";
+					htmlStr += "</div>";
+					htmlStr += "<div class='aui-timeline-item-inner '>";
+					htmlStr += "<div class='aui-card-list'>";
+					htmlStr += "<div class='aui-card-list-content-padded'>";
+					htmlStr += "<div class='aui-row aui-row-padded'>";
+					var distributeSaleQuota = result[i].distributeSaleQuota;
+					if (!_isArrayNull(distributeSaleQuota)) {
+						for (var j = 0; j < distributeSaleQuota.length; j++) {
+							if (j == 0) {
+								htmlStr += "<div class='aui-col-xs-9 aui-text-white'>";
+								htmlStr += userInfo.userAreaName;
+								htmlStr += "</div>";
+								htmlStr += "<div class='aui-col-xs-3 value'>";
+								htmlStr += (result[i].mySaleQuota / 10000) + "万";
+								htmlStr += "</div>";
+							}
+							htmlStr += "<div class='aui-col-xs-9 aui-text-white'>";
+							htmlStr += distributeSaleQuota[j].areaName;
+							htmlStr += "</div>";
+							htmlStr += "<div class='aui-col-xs-3 value'>";
+							htmlStr += (distributeSaleQuota[j].quota / 10000) + "万";
+							htmlStr += "</div>";
+						}
+					} else {
+						htmlStr += "<div class='aui-col-xs-9 aui-text-white'>";
+						htmlStr += userInfo.userAreaName;
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-col-xs-3 value'>";
+						htmlStr += (result[i].mySaleQuota / 10000) + "万";
+						htmlStr += "</div>";
+					}
+					htmlStr += "</div>";
+					htmlStr += "</div>";
+					htmlStr += "</div>";
+					htmlStr += "</div>";
+					htmlStr += "</div>";
+				}
+			} else {
+			}
+			$api.html($api.dom(".aui-timeline"), htmlStr);
+		}
+
+		/**
+		 *查询上级给我分配的，以及我给下级分配的销售指标 历史记录
+		 */
+		function getSaleQuotaHistory() {
+			distributedQuotas = [];
+			var url = window.serverUrl + "saleQuotaDistribute/saleQuotaHistory";
+			console.log("历史指标-->url:" + url);
+			_ajax(url, "saleQuotaHistory", function(ret, err) {
+				api.refreshHeaderLoadDone();
+				var result = [];
+				if (ret) {
+					console.log("历史指标-->ret:" + $api.jsonToStr(ret));
+					if (ret.code == 1) {
+						result = ret.result;
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					console.log("历史指标-->err:" + $api.jsonToStr(err));
+					_toast(window.ajaxErrorMessage);
+				}
+				initUi(result);
+			}, "get");
+		}
+
+		var userInfo;
+		apiready = function() {
+			userInfo = $api.getStorage("userInfoKey");
+			setTimeout(function() {
+				getSaleQuotaHistory();
+			}, 300);
+			//下拉刷新
+			api.setRefreshHeaderInfo({
+				loadingImg : 'widget://image/loading_more.gif',
+				bgColor : 'rgba(255,255,255,0)',
+				textColor : '#fff',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...'
+			}, function(ret, err) {
+				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+				setTimeout(function() {
+					getSaleQuotaHistory();
+				}, 300);
+			});
+		};
+	</script>
+</html>

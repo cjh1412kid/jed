@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>积分商城</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/aui1x2x1/aui_iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/common.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/goods/detail/add_to_cart_pop_2.css" />
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+	<div class="dark-bg flex-con" tapmode onclick="api.closeFrame();"></div>
+	<!-- <div class="content flex-wrap flex-vertical aui-invisible"> -->
+	<div class="content flex-wrap flex-vertical">
+		<!--****** 颜色  ******-->
+		<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="api.closeFrame()"> <span class="aui-iconfont aui-icon-close aui-text-default aui-font-weight-bold"></span> </a>
+			<a class="aui-pull-right aui-btn aui-hide" tapmode onclick="shareTo()"> <span class="aui-iconfont aui-icon-share aui-text-default"></span> </a>
+			<div class="aui-title text-header-title aui-text-default">
+				推荐门店
+			</div>
+		</header>
+
+		<div class="sub-content flex-con">
+			<div class="row box-wrap table-title">
+				<div class="col tel box-wrap box-vertical-center box-horizontal-center">打电话</div>
+				<div class="col name box-wrap box-vertical-center box-horizontal-center">门店</div>
+				<div class="scroll-x box-wrap">
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">36码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">37码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">38码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">39码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">40码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">41码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">42码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">43码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">44码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">45码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">46码</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">47码</div>
+				</div>
+			</div>
+			<div class="row box-wrap">
+				<div class="col tel box-wrap box-vertical-center box-horizontal-center"><span class="aui-iconfont aui-icon-mobilefill aui-text-danger aui-font-weight-bold"></span></div>
+				<div class="col name box-wrap box-vertical-center box-horizontal-center">门店分手</div>
+				<div class="scroll-x box-wrap">
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">4</div>
+				</div>
+			</div>
+			<div class="row box-wrap">
+				<div class="col tel box-wrap box-vertical-center box-horizontal-center"><span class="aui-iconfont aui-icon-mobilefill aui-text-danger aui-font-weight-bold"></span></div>
+				<div class="col name box-wrap box-vertical-center box-horizontal-center">门店分手</div>
+				<div class="scroll-x box-wrap">
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">3</div>
+					<div class="col size box-wrap box-vertical-center box-horizontal-center">4</div>
+				</div>
+			</div>
+		</div>
+		<!-- 底部 -->
+		<footer class="aui-bar aui-bar-tab">
+			<!-- <div class="aui-bar-tab-item edit-preivew aui-font-size-14" style="width: auto;">
+					共<span class="money-style-2 aui-margin-l-5">¥</span>
+					<span id="amount"><span class='money-style-1'>0</span><span class='money-style-2'>.00</span></span>
+				</div> -->
+			<div class="aui-bar-tab-item aui-font-size-16 btn-sure" tapmode onclick="api.closeFrame();" style="width: auto;">
+				确定
+			</div>
+		</footer>
+	</div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+<!--<script type="text/javascript" src="../../../script/common/alert_tips.js"></script>-->
+<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+	function initUi() {}
+
+	function initData() {}
+
+	apiready = function() {
+		api.parseTapmode();
+		initData();
+		initUi();
+	}
+</script>
+
+</html>

@@ -1,0 +1,95 @@
+/* 置顶时,列表背景灰色 */
+.aui-list-item.wechat-top {
+//  background-color: #f3f3f7;
+}
+
+/*基本容器*/
+.aui-content {
+	margin-top: 0.15rem !important;
+}
+
+/* 用户头像 */
+.aui-list .wechat-avatar {
+    width:2.75rem;
+    height: 2.75rem;
+//  background-color: #FF2600;
+}
+.wechat-avatar .aui-row-padded {
+    background-color: #dddee0;
+    padding: 0.1rem;
+    border-radius: 0.2rem;
+    margin-left: -0.05rem;
+    margin-right: -0.05rem;
+    height: 2.1rem;
+}
+.wechat-avatar .aui-row-padded [class*=aui-col-xs-] {
+    padding: 0.05rem;
+}
+.wechat-avatar,
+.wechat-avatar > img {
+    border-radius:1.375rem;
+}
+
+/* 用户昵称 */
+.aui-list .aui-list-item-title {
+    font-family: PingFang-SC-Regular;
+	font-size: 0.7rem;
+	font-weight: normal;
+}
+/* 上次发送消息时间  */
+.aui-list .aui-list-item-right{
+    font-family: PingFang-SC-Regular;
+	font-size: 0.6rem;
+	font-weight: normal;
+	color: #999999;
+}
+/* 消息内容 */
+.aui-list .aui-list-item-text {
+	font-family: PingFang-SC-Regular;
+	font-size: 0.6rem;
+	font-weight: normal;
+	color: #999999;
+}
+
+/* 角标1(带数字红点, 提示有多少条消息未读) */
+.aui-badge {
+	display: inline-block;
+	width: auto;
+	text-align: center;
+	min-width: 0.8rem;
+	height: 0.8rem;
+    line-height: 0.8rem;
+    padding: 0 0.2rem;
+    font-size: 0.6rem;
+    color: #ffffff;
+    background-color: #ff2600;
+    border-radius: 0.4rem;
+    position: absolute;
+    top: 0.3rem;
+    left: 55%;
+    z-index: 99;
+}
+/* 角标1(不带数字小红点, 只起提示作用) */
+.aui-dot {
+	display: inline-block;
+    width: 0.4rem;
+    height: 0.4rem;
+    background: #ff2600;
+    border-radius: 0.5rem;
+    position: absolute;
+    top: 0.5rem;
+    right: 30%;
+    z-index: 99;
+}
+
+/* 底部提示 */
+.aui-card-list-footer{
+    min-height: 1.6rem;
+    color: #bc9761;
+    padding: 0!important;
+}
+.aui-card-list-footer i{
+    font-weight: bold;
+    color: #bc9761;
+}
+	

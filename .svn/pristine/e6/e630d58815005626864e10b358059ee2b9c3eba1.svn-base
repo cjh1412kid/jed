@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>购物车</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_list_swipe.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/cart/cart_frm_2.css" />
+		<style type="text/css">			
+		</style>
+	</head>
+	<body>
+		<div class="no-data box-wrap box-vertical box-vertical-center box-horizontal-center aui-hide">
+			<img src="../../image/img_no_cart.png"/>
+			<div class="no-data-btn box-wrap box-vertical-center box-horizontal-center" tapmode onclick="toGoodsListWin('全部鞋款', 0)">
+				去逛逛
+			</div>
+		</div>
+		<div class="aui-content aui-hide">
+	        <ul class="aui-list aui-collapse aui-border-b">
+			
+				 <!--<div class="aui-collapse-item" data-price="20" >
+					 <li class="goods-info-list aui-list-item aui-collapse-header" data-shoes-seq="0" tapmode >
+						 <div class="aui-list-item-inner flex-wrap aui-swipe-handle">
+							 <span class="flex-2">货号：YCA805860</span><span class="flex-1 num-li-0">数量：45</span>
+							 <div class="aui-list-item-right"><i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i></div>
+						 </div>
+						 <div class="aui-swipe-right-btn aui-bg-danger" tapmode onclick="deleteShoppingCart(this.parentNode.parentNode, 3, '[425,428,423,427,424,426]')">删除</div>
+					 </li>
+					<div class="aui-collapse-content aui-padded-0 aui-border-b content-0">
+						<table cellspacing="0" id="buyTable0" style="width:432px !important;">
+						<tr class="row-title">
+						<td width="200">款式/码</td>
+						<td width="170" class="size">35</td>
+						<td width="170" class="size">36</td>
+						<td width="170" class="size">37</td>
+						<td width="170" class="size">38</td>
+						<td width="200">合计/双</td>
+						</tr>
+						<tr>
+							<td><span class="color">红色</span><img src="../../image/common/no_img_small.png" /></td>
+							<td class="aui-padded-t-20 textfield-black"><input type="number" data-color-size="红色, 35码" data-seq="425" data-shoesdata-seq="3" tapmode oninput="count(this, 0)" onfocus="selectCell(this)" onblur="addOrChangeCart(this, 0)" value="5"></td>
+							<td class="aui-padded-t-20 textfield-blue"><input type="number" data-color-size="红色, 36码" data-seq="428" data-shoesdata-seq="4" tapmode oninput="count(this, 0)" onfocus="selectCell(this)" onblur="addOrChangeCart(this, 0)" value="10"></td>
+							<td class="aui-padded-t-20 textfield-black"><input type="number" data-color-size="红色, 37码" data-seq="423" data-shoesdata-seq="5" tapmode oninput="count(this, 0)" onfocus="selectCell(this)" onblur="addOrChangeCart(this, 0)" value="10"></td>
+							<td class="aui-padded-t-20 textfield-blue"><input type="number" data-color-size="红色, 38码" data-seq="427" data-shoesdata-seq="6" tapmode oninput="count(this, 0)" onfocus="selectCell(this)" onblur="addOrChangeCart(this, 0)" value="5"></td>
+							<td class="aui-padded-t-20"><input type="number" class="textfield-total" readonly="readonly" value="30"></td>
+						</tr>
+						<tr>
+							<td><span class="color">橙色</span><img src="../../image/common/no_img_small.png" /></td>
+							<td class="aui-padded-t-20"><input type="number" readonly="readonly" style="border: 0px solid #ddd !important;"></td>
+							<td class="aui-padded-t-20 textfield-blue"><input type="number" data-color-size="橙色, 36码" data-seq="424" data-shoesdata-seq="7" tapmode oninput="count(this, 0)" onfocus="selectCell(this)" onblur="addOrChangeCart(this, 0)" value="10"></td>
+							<td class="aui-padded-t-20 textfield-black"><input type="number" data-color-size="橙色, 37码" data-seq="426" data-shoesdata-seq="8" tapmode oninput="count(this, 0)" onfocus="selectCell(this)" onblur="addOrChangeCart(this, 0)" value="5"></td>
+							<td class="aui-padded-t-20"><input type="number" readonly="readonly" style="border: 0px solid #ddd !important;"></td>
+							<td class="aui-padded-t-20"><input type="number" class="textfield-total" readonly="readonly" value="15"></td></tr>
+						<tr class="row-total">
+							<td class="textfield-total" >合计：</td>
+							<td><input type="number" class="textfield-total" readonly="readonly" value="5"></td>
+							<td><input type="number" class="textfield-total" readonly="readonly" value="20"></td>
+							<td><input type="number" class="textfield-total" readonly="readonly" value="15"></td>
+							<td><input type="number" class="textfield-total" readonly="readonly" value="5"></td>
+							<td><input type="number" class="textfield-total totalCount-0" readonly="readonly" value="45"></td>
+						</tr>
+						</table>
+					</div>
+				</div>-->
+					
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/aui1x2x1/aui_list_swipe.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_collapse_2.js"></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../script/common/my_common.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js" ></script>
+	<script type="text/javascript">	
+		
+		//选中单元格(onfocus)
+		function selectCell(obj){
+			setTimeout(function(){
+				obj.scrollIntoView(false);
+			}, 100);
+		}
+		
+		//计算 (oninput)
+		function count(obj, index) {
+			var tempValue = "";
+			var value = $api.val(obj);
+//			console.log("手动输入的值为:" + value+" ,是否按下了删除键:"+isDelKeyCode);
+			if (!isValidInteger(value) && !isDelKeyCode) {//输入的值无效(按下软键盘中删除键导致值为""的情况除外!)
+	        	//非法字符(如:"+", "-"等), 会忽略小数点"."
+				_toast("数量无效！", 2000, "bottom", function() {
+				});
+				$api.val(obj, tempValue);						
+        	}else{
+		        tempValue = value;
+        	}
+	        //算"合计/双"(行)
+	        var trObj = $api.closest(obj, "tr"); //获取当前行tr元素
+	        var inputObjs = $api.domAll(trObj, "input");
+	        var sum = 0;
+	        for(var i = 0; i < inputObjs.length - 1; i++){ //循环input所在行的单元格（除去最后一个input）
+//		        console.log("i="+i+"-->"+$api.val(inputObjs[i]));
+	            sum += $api.val(inputObjs[i]) ? parseInt($api.val(inputObjs[i]), 10) : 0; //如果input值为空，则算作0
+	        }
+	        $api.val(inputObjs[inputObjs.length - 1], sum); //给最后一个input赋值
+	        //算"合计"(列)
+	        var table = document.getElementById("buyTable"+index);
+	        for(var i=1; i < table.rows[0].cells.length; i++){ //循环列（除去第一列)
+	            var total = 0;
+	            for (var j = 1; j < table.rows.length - 1; j++){ //循环行（除去第一行和最后一行）
+	                total += table.rows[j].cells[i].firstChild.value ? parseInt(table.rows[j].cells[i].firstChild.value,10) : 0; //如果input值为空，则算作0
+	            }
+	            table.rows[table.rows.length-1].cells[i].firstChild.value = total; //给每列最下面一行的input赋值   
+	        }
+//	        alert("总共订购:"+total+"双");
+        	$api.text($api.dom(".num-li-"+index), "数量："+ total);
+	    }
+	    
+	    /**
+		 *请求服务器：加入购物车
+		 */
+		function addToShoppingCart(call, shoesDataSeq, buyCount, totalPrice) {
+			var url = window.myServerUrl + "order/app/shoppingCart/addToShoppingCart?token=" + token + "&shoesDataSeq=" + shoesDataSeq + "&buyCount=" + buyCount + "&totalPrice=" + totalPrice;
+			console.log("新增-购物车商品:" + url);
+			isAjaxing = true;
+			_ajax(url, "addToShoppingCart", function(ret, err) {
+				if (ret) {
+					console.log("_ajax.addToShoppingCart.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						call();
+					} else {
+						_toast("加入购物车失败！");
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			});
+		}	
+		
+		/**
+		 *请求服务器：修改购物车 
+		 */
+		function changeShoppingCart(call, shoppingCartSeq, buyCount, totalPrice, isChecked) {
+			var url = window.myServerUrl + "order/app/shoppingCart/changeShoppingCart?token=" + token + "&shoppingCartSeq=" + shoppingCartSeq + "&buyCount=" + buyCount + "&totalPrice=" + totalPrice + "&isChecked=" + isChecked;
+			console.log("修改-购物车商品:" + url);
+			isAjaxing = true;
+			_ajax(url, "changeShoppingCart", function(ret, err) {
+				if (ret) {
+					console.log("_ajax.changeShoppingCart.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						call();
+					} else {
+						_toast("修改购物车失败！");
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			});
+		}	
+
+		//删除购物车, 购物车Seq数组(带[])
+		function deleteShoppingCart(obj, shoesSeq, shoppingCartSeqArr) {
+			var url = window.myServerUrl + "order/app/shoppingCart/deleteShoppingCart?token=" + token + "&shoppingCartSeqArr=" + shoppingCartSeqArr;
+			console.log("删除购物车:" + url);
+			isAjaxing = true;
+			_ajax(url, "deleteShoppingCart", function(ret, err) {
+				if (ret) {
+					console.log("_ajax.deleteShoppingCart.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						for (var i = 0; i < cartList.length; i++) {
+							if (shoesSeq == cartList[i].shoesSeq) {
+								cartList.splice(i, 1);
+								$api.setStorage("cartListKey", cartList);
+								setTimeout(function() {
+									$api.remove(obj);
+//									alert("还有"+$api.domAll(".aui-collapse-item").length+"款");
+									if($api.domAll(".aui-collapse-item").length == 0){
+										hideAndTip();
+									}									
+								}, 300);
+								_sendEvent("updateCartListEvent");
+								break;
+							}
+						}	
+					} else {
+						_toast("删除购物车失败！");
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			});
+		}
+		
+		//增加或修改购物车数量(onblur)
+		function addOrChangeCart(obj, index) {
+			var li = $api.closest(obj, ".aui-collapse-item");
+			var price = parseFloat($api.attr(li, "data-price"));
+			var buyCount = _isStringNull($api.val(obj))? 0 : parseInt($api.val(obj));	
+			var totalPrice = buyCount * price;
+			if(_isStringNull($api.attr(obj, "data-seq"))){
+				//增加购物车
+				var shoesDataSeq = parseInt($api.attr(obj, "data-shoesdata-seq"));
+//				console.log("参数:shoesDataSeq="+shoesDataSeq+",buyCount="+buyCount+",totalPrice="+totalPrice);
+				addToShoppingCart(function() {
+					_sendEvent("updateCartListEvent");
+				}, shoesDataSeq, buyCount, totalPrice);				
+			}else{
+				//修改购物车
+				var shoppingCartSeq = parseInt($api.attr(obj, "data-seq"));				
+				changeShoppingCart(function() {	
+					var cartArr = cartList[index].cartArr;								
+					for (var i = 0; i < cartArr.length; i++) {
+						for(var j = 0; j < cartArr[i].sizeAndStock.length; j++){
+							if (shoppingCartSeq == cartArr[i].sizeAndStock[j].shoppingCartSeq) {
+								//							console.log("修改前, cartArr:" + $api.jsonToStr(cartArr));
+								cartList[index].buyCountTotal = parseInt($api.val($api.dom(".totalCount-"+index)));
+								cartArr[i].sizeAndStock[j].buyCount = buyCount;
+								cartArr[i].sizeAndStock[j].isChecked = 1;
+								//							console.log("修改后, cartArr:" + $api.jsonToStr(cartArr));
+								$api.setStorage("cartListKey", cartList);
+								_sendEvent("cartListUpdateEndEvent");
+								break;
+							}
+						}
+					}
+				}, shoppingCartSeq, buyCount, totalPrice, 1);			
+			}
+		}
+		
+		//算"合计"(列)
+		function getTotalNum(_size, _cartArr){
+		    var totalNum = 0;
+			for(var i = 0; i < _cartArr.length; i++){
+				//遍历sizeAndStock
+				for(var j = 0; j < _cartArr[i].sizeAndStock.length; j++){
+					if(_cartArr[i].sizeAndStock[j].size == _size && !_isStringNull(_cartArr[i].sizeAndStock[j].buyCount)){
+//						console.log("size:"+_cartArr[i].sizeAndStock[j].buyCount)
+						 totalNum += parseInt(_cartArr[i].sizeAndStock[j].buyCount);
+					}
+				}
+			}
+			return totalNum;
+		}
+		
+		
+		function getShoesData(colorSeq, size, cartArr){
+//			console.log("colorSeq:"+colorSeq+"("+typeof(colorSeq)+"), size:"+size+"("+typeof(size)+")");
+//			console.log("cartArr:"+$api.jsonToStr(cartArr));
+			//遍历尺码,颜色数据
+			for(var i = 0; i < cartArr.length; i++){
+				if(cartArr[i].colorSeq == colorSeq){
+					//遍历sizeAndStock
+					for(var j = 0; j < cartArr[i].sizeAndStock.length; j++){
+						if(cartArr[i].sizeAndStock[j].size == size){
+//							console.log("seq:"+cartArr[i].sizeAndStock[j].shoppingCartSeq)
+							return {
+								"seq":cartArr[i].sizeAndStock[j].shoppingCartSeq,
+								"shoesDataSeq":cartArr[i].sizeAndStock[j].shoesDataSeq,
+							 	"value":cartArr[i].sizeAndStock[j].buyCount
+							  };
+						}
+					}
+				}
+			}
+		}
+		
+		//画表格
+		function drawTable(_cartArr, index){		
+//			console.log("颜色,尺码,库存:" + $api.jsonToStr(_cartArr));
+			var colorArr = [], sizeArr = []; //颜色集合,尺码集合(数组,元素不重复)
+			if(!_isArrayNull(_cartArr)){								
+				for(var i = 0; i < _cartArr.length; i++){									
+					colorArr.push({"colorSeq":_cartArr[i].colorSeq, "colorName":_cartArr[i].colorName, "img":"../../image/common/no_img_small.png"});
+					for(var j = 0; j < _cartArr[i].sizeAndStock.length; j++){	
+						sizeArr.push(_cartArr[i].sizeAndStock[j].size);
+					}
+				}
+				sizeArr = _unique(sizeArr).sort();
+			}
+			console.log("渲染表格：尺码集合--->"+$api.jsonToStr(sizeArr)+", 颜色集合--->"+$api.jsonToStr(colorArr));
+			var tableHtml = '';			
+			tableHtml += '<table cellspacing="0" id="buyTable'+index+'" style="width:'+ (sizeArr.length+2)*72 +'px !important;">';
+			tableHtml += 	'<tr class="row-title">';
+			tableHtml += 		'<td width="200">款式/码</td>';
+			//遍历尺码集合
+			var sizeHtml = '', totalHtml = '';
+			for(var i = 0; i < sizeArr.length; i++){
+			    sizeHtml += 	'<td width="170" class="size">'+sizeArr[i]+'</td>';
+			    totalHtml += 	'<td><input type="number" class="textfield-total" readonly="readonly" value="'+getTotalNum(sizeArr[i], _cartArr)+'"></td>';	
+			}
+			tableHtml += sizeHtml;
+			tableHtml += 		'<td width="200">合计/双</td>';
+			tableHtml += 	'</tr>';			  
+			var totalCount = 0;
+			//遍历颜色
+			for(var j = 0; j < colorArr.length; j++){
+			    tableHtml += '<tr>';
+			    tableHtml += 	'<td><span class="color">'+colorArr[j].colorName+'</span><img src="'+colorArr[j].img+'" /></td>';
+			    var rowNum = 0;
+			    for(var k = 0; k < sizeArr.length; k++){
+			    	var shoesData = getShoesData(colorArr[j].colorSeq, sizeArr[k], _cartArr);	
+//			    	console.log("shoesData--->"+$api.jsonToStr(shoesData));	
+		    		if(!_isObjectNull(shoesData)){
+				    	if((k+1)%2 == 0){//偶数列
+							tableHtml += '<td class="aui-padded-t-20 textfield-blue"><input type="number" data-color-size="'+colorArr[j].colorName+', '+sizeArr[k]+'码" data-seq="'+shoesData.seq+'" data-shoesdata-seq="'+shoesData.shoesDataSeq+'" tapmode oninput="count(this, '+index+')" onfocus="selectCell(this)" onblur="addOrChangeCart(this, '+index+')" value="'+shoesData.value+'"></td>';			    		
+				    	}else{//奇数列
+						    tableHtml += '<td class="aui-padded-t-20 textfield-black"><input type="number" data-color-size="'+colorArr[j].colorName+', '+sizeArr[k]+'码" data-seq="'+shoesData.seq+'" data-shoesdata-seq="'+shoesData.shoesDataSeq+'" tapmode oninput="count(this, '+index+')" onfocus="selectCell(this)" onblur="addOrChangeCart(this, '+index+')" value="'+shoesData.value+'"></td>';
+				    	}
+						if(!_isStringNull(shoesData.value)){
+							rowNum += parseInt(shoesData.value); 
+						}			    
+			    	}else{
+						    tableHtml += '<td class="aui-padded-t-20"><input type="number" readonly="readonly" style="border: 0px solid #ddd !important;"></td>';			    		
+			    	}
+				}
+				totalCount += rowNum;
+		    	tableHtml += 	'<td class="aui-padded-t-20"><input type="number" class="textfield-total" readonly="readonly" value="'+rowNum+'"></td>';
+		  		tableHtml += '</tr>';
+			}			
+			/* 合计 (行)*/		
+		  	tableHtml += 	 '<tr class="row-total">';
+		    tableHtml += 		'<td class="textfield-total" >合计：</td>';	
+			tableHtml += 		totalHtml;					    
+		    tableHtml += '<td><input type="number" class="textfield-total totalCount-'+index+'" readonly="readonly" value="'+totalCount+'"></td>';
+		  	tableHtml += '</tr>';
+			tableHtml += '</table>';			
+//			console.log(tableHtml);			
+			$api.html($api.dom(".content-"+index), tableHtml);
+		}
+
+		function initUi() {	
+			if (!_isArrayNull(cartList)) {				
+				var htmlStr = '';
+				for (var i = 0; i < cartList.length; i++) {					
+					htmlStr += '<div class="aui-collapse-item" data-price="'+cartList[i].purchasePrice+'" >';
+					htmlStr += 	'<li class="goods-info-list aui-list-item aui-collapse-header" data-shoes-seq="'+cartList[i].shoesSeq+'" tapmode >';
+					htmlStr += 		'<div class="aui-list-item-inner flex-wrap aui-swipe-handle">';
+					htmlStr += 			'<span class="flex-2">货号：'+cartList[i].goodId+'</span><span class="flex-1 num-li-'+i+'">数量：'+cartList[i].buyCountTotal+'</span>';
+					htmlStr += 			'<div class="aui-list-item-right"><i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i></div>';
+					htmlStr += 		'</div>';
+					htmlStr += 		'<div class="aui-swipe-right-btn aui-bg-danger" tapmode onclick="deleteShoppingCart(this.parentNode.parentNode, '+cartList[i].shoesSeq+', \''+$api.jsonToStr(cartList[i].shoppingCartSeqArr)+'\')">删除</div>';
+					htmlStr += 	'</li>';
+					htmlStr += 	'\n';
+					htmlStr += 	'<div class="aui-collapse-content aui-padded-0 aui-border-b content-'+i+'">';	
+					htmlStr += 	'</div>';
+					htmlStr += '</div>';											
+				}
+//				console.log("htmlStr:" + htmlStr);
+				$api.html($api.dom(".aui-list"), htmlStr);	
+				collapse = new auiCollapse({
+			        autoHide : true //是否自动隐藏已经展开的容器
+			    });	
+			    	
+				api.parseTapmode();
+				
+//				new auiLazyload({
+//					errorImage : "../../image/error_small_img.png"
+//				});				
+				setTimeout(function() {
+					api.refreshHeaderLoadDone();
+					if ($api.hasCls($api.dom(".aui-content"), "aui-hide")) {
+						$api.removeCls($api.dom(".aui-content"), "aui-hide");
+					}
+				}, window.refreshLoadDoneTimeOut);
+			} else {
+				hideAndTip();
+			}
+		}
+		
+		//隐藏内容, 并显示"购物车为空"的提示
+		function hideAndTip(){
+			if (!$api.hasCls($api.dom(".aui-content"), "aui-hide")) {
+				$api.addCls($api.dom(".aui-content"), "aui-hide");
+			}
+			if ($api.hasCls($api.dom(".no-data"), "aui-hide")) {
+				$api.removeCls($api.dom(".no-data"), "aui-hide");
+			}
+		}
+		
+		function initData() {
+			token = $api.getStorage("tokenKey");
+			cartList = $api.getStorage("cartListKey");
+			swipe = new ListSwipe();
+		}
+
+		var token;
+		var cartList;
+		var swipe;
+		var collapse;
+		var isDelKeyCode = false;
+		apiready = function() {
+			api.parseTapmode();
+			initData();
+			initUi();
+				
+			//监听键盘按下事件
+			document.onkeydown = function(){
+				var oEvent = window.event;
+				if (oEvent.keyCode == 8) { //你按下了删除键哦
+					isDelKeyCode = true;
+				}else{
+					isDelKeyCode = false;
+				}
+			}
+			
+			//"更新购物车数量"事件监听
+			_addEventListener("cartListUpdateEndEvent", function(ret) {
+				cartList = $api.getStorage("cartListKey");
+				console.log("cartListUpdateEndEvent.ret:"+$api.jsonToStr(cartList));
+//				for (var i = 0; i < cartList.length; i++) {
+//					$api.text($api.dom(".num-li-"+i), "数量："+ cartList[i].buyCountTotal);
+//				}
+			});
+		}
+		
+		//点击"去逛逛"
+		function toGoodsListWin(_name, _seq) {
+			var pageParam = {
+				name : _name,//"全部鞋款"
+				seq : _seq //0
+			}, bounces = false, reload = true;
+			//跳转"全部鞋款"页面
+			_openWin("all_goods_list_win", "../goods/list/all/all_goods_list_win.html", pageParam, bounces, reload);			 
+		}
+	</script>
+</html>

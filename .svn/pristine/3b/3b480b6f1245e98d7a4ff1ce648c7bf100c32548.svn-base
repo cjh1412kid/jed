@@ -1,0 +1,361 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>商品详情</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/sale/shop_frm.css" />
+	<style>
+
+	</style>
+</head>
+
+<body class=" aui-hide">
+	<div class="sub-header flex-wrap aui-padded-l-10 aui-padded-r-10">
+		<div class="sort-btns flex-con flex-wrap">
+			<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center active" data-orderBy="1" tapmode onclick="sort(this)">
+				销量<span>▲</span>
+			</div>
+			<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center" data-orderBy="2" tapmode onclick="sort(this)">
+				库存<span>▼</span>
+			</div>
+			<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center" data-orderBy="3" tapmode onclick="sort(this)">
+				售罄率<span>▲</span>
+			</div>
+			<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center" data-orderBy="4" tapmode onclick="sort(this)">
+				平均售价<span>▲</span>
+			</div>
+		</div>
+		<i class="aui-iconfont aui-icon-right aui-invisible"></i>
+	</div>
+	<!-- 列表数据 -->
+	<ul class='flex-con aui-list aui-media-list aui-list-noborder aui-padded-l-10'>
+		<!-- <li class='aui-list-item aui-list-item-middle aui-padded-0' tapmode onclick='toGoodsDetailWin(3)'>
+			<div class='aui-media-list-item-inner'>
+				<div class='aui-list-item-media'><img data-src='http://221.229.214.60:8181/jed-picture/sr_base/Goods_Shoes/YCA111111/YCA80587001.jpg' src='../../image/load_img_middle.png' /></div>
+				<div class='aui-list-item-inner aui-padded-r-10 aui-border-b'>
+					<div class='aui-list-item-text aui-padded-l-10 aui-padded-b-5'>
+						<div class='aui-list-item-title goods-title-1'>温州吉尔达A店</div>
+						<div class='score box-wrap box-vertical-center box-horizontal-center'>Top1</div>
+					</div>
+					<div class='aui-padded-l-10'>
+						<div class='goods-attr flex-wrap aui-margin-b-5'>
+							<div class='flex-6'><span>总销量：</span><span>29</span></div>
+							<div class='flex-6'><span>平均售价：</span><span>600</span></div>
+						</div>
+						<div class='goods-attr flex-wrap'>
+							<div class='flex-6'><span>库存：</span><span>2.5万</span></div>
+							<div class='flex-6'><span>售罄率：</span><span>54%</span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li class='aui-list-item aui-list-item-middle aui-padded-0' tapmode onclick='toGoodsDetailWin(3)'>
+			<div class='aui-media-list-item-inner'>
+				<div class='aui-list-item-media'><img data-src='http://221.229.214.60:8181/jed-picture/sr_base/Goods_Shoes/YCA111111/YCA80587001.jpg' src='../../image/load_img_middle.png' /></div>
+				<div class='aui-list-item-inner aui-padded-r-10 aui-border-b'>
+					<div class='aui-list-item-text aui-padded-l-10 aui-padded-b-5'>
+						<div class='aui-list-item-title goods-title-1'>温州吉尔达A店</div>
+						<div class='score box-wrap box-vertical-center box-horizontal-center'>Top1</div>
+					</div>
+					<div class='aui-padded-l-10'>
+						<div class='goods-attr flex-wrap aui-margin-b-5'>
+							<div class='flex-6'><span>总销量：</span><span>29</span></div>
+							<div class='flex-6'><span>平均售价：</span><span>600</span></div>
+						</div>
+						<div class='goods-attr flex-wrap'>
+							<div class='flex-6'><span>库存：</span><span>2.5万</span></div>
+							<div class='flex-6'><span>售罄率：</span><span>54%</span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</li> -->
+	</ul>
+	<div class='footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		到底了<i class='aui-iconfont aui-icon-activity aui-font-size-12'></i>
+	</div>
+	<div class='footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		暂无数据
+	</div>
+	<div class='footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		加载更多<i class='aui-iconfont aui-icon-more aui-font-size-12'></i>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript">
+	//商品排序
+	function sort(_obj) {
+		pageParam.orderBy = $api.attr(_obj, "data-orderBy");
+		if ($api.hasCls(_obj, "active")) {
+			if ($api.hasCls(_obj, "active-sort")) {
+				$api.text($api.dom(_obj, "span"), '▲');
+				$api.removeCls(_obj, "active-sort");
+				pageParam.orderDir = 1;
+			} else {
+				$api.addCls(_obj, "active-sort");
+				$api.text($api.dom(_obj, "span"), '▼');
+				pageParam.orderDir = 0;
+			}
+		} else {
+			$api.removeCls($api.dom(".sort-btn.active"), "active-sort");
+			$api.text($api.dom($api.dom(".sort-btn.active"), "span"), "▼");
+			$api.text($api.dom(_obj, "span"), '▼');
+			$api.addCls(_obj, "active-sort");
+			pageParam.orderDir = 0;
+			$api.removeCls($api.dom(".sort-btn.active"), "active");
+			$api.addCls(_obj, "active");
+		}
+		//下拉刷新重新获取数据
+		api.refreshHeaderLoading();
+	}
+
+	/*
+	 *获取所点击商品的详细信息, 参数isSearch:是否搜索(0:不是, 1:是)
+	 */
+	function toGoodsDetailWin(_obj,_seq) {
+		api.setFrameGroupIndex({
+			name: 'sale_analysis_group',
+			index: 0,
+			scroll: true
+		});
+		pageParam.shopSeqList=_seq;
+
+		pageParam.shopName=$api.text($api.dom(_obj,".aui-list-item-title"));
+		console.log("pageParam:"+$api.jsonToStr(pageParam));
+		_sendEvent("refresh_single_product_frm_event",pageParam);
+	}
+
+	function getHtmlStr(data) {
+		var htmlStr = "";
+		for (var i = 0; i < data.length; i++) {
+			htmlStr += "<li class='aui-list-item aui-list-item-middle aui-padded-0' tapmode onclick='toGoodsDetailWin(this," + data[i].shopSeq + ")'>";
+			htmlStr += "<div class='aui-media-list-item-inner'>";
+			htmlStr += "<div class='aui-list-item-media'><img data-src='" + data[i].img + "' src='../../image/load_img_middle.png' /></div>";
+			htmlStr += "<div class='aui-list-item-inner aui-padded-r-10 aui-border-b'>";
+			htmlStr += "<div class='aui-list-item-text aui-padded-l-10 aui-padded-b-5'>";
+			htmlStr += "<div class='aui-list-item-title goods-title-1'>" + data[i].shopName + "</div>";
+			if(start/10==0.1){
+				htmlStr += "<div class='score box-wrap box-vertical-center box-horizontal-center'>Top" + (i + 1) + "</div>";
+			}else {
+				htmlStr += "<div class='score box-wrap box-vertical-center box-horizontal-center'>Top" + (i + start) + "</div>";
+			}
+
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-padded-l-10'>";
+			htmlStr += "<div class='goods-attr flex-wrap aui-margin-b-5'>";
+			var saleCount = (_isStringNull(data[i].saleCount) ? "0" : data[i].saleCount);
+			htmlStr += "<div class='flex-6'><span>总销量：</span><span>" + saleCount + "</span></div>";
+			var avgSalePrice = (_isStringNull(data[i].avgSalePrice) ? "¥0" : "¥" + data[i].avgSalePrice);
+			htmlStr += "<div class='flex-6'><span>平均售价：</span><span>" + avgSalePrice + "</span></div>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='goods-attr flex-wrap'>";
+			var stock = (_isStringNull(data[i].stock) ? "0" : data[i].stock);
+			htmlStr += "<div class='flex-6'><span>库存：</span><span>" + stock + "</span></div>";
+			var selloutRate = (_isStringNull(data[i].selloutRate) ? "0" : data[i].selloutRate);
+			htmlStr += "<div class='flex-6'><span>售罄率：</span><span>" + selloutRate + "</span></div>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</li>";
+		}
+		console.log("htmlStr:" + htmlStr);
+		return htmlStr;
+	}
+
+	function initUI(data, type) {
+		switch (type) {
+			case "down":
+				if (_isArrayNull(data)) {
+					//第一页没数据，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+					isAjaxing = true;
+					$api.html($api.dom("ul.aui-list"), "");
+					showEmptyMsg(); //显示"暂无数据"
+				} else {
+					$api.html($api.dom("ul.aui-list"), getHtmlStr(data));
+					if (data.length < num) {
+						//第一页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						showOverMsg(); //显示"到底了"
+					} else {
+						//第一页数据等于每页总数，false，用户向上滑动就再次请求服务器获取后面页数的数据
+						isAjaxing = false;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+			case "up":
+				if (_isArrayNull(data)) {
+					//当前页没数据了，则将isAjaxing置为true，防止继续上滑频繁请求服务器
+					isAjaxing = true;
+					showOverMsg(); //显示"到底了"
+				} else {
+					$api.append($api.dom("ul.aui-list"), getHtmlStr(data));
+					if (data.length < num) {
+						//新获取页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						showOverMsg(); //显示"到底了"
+					} else {
+						isAjaxing = false;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+		}
+
+		new auiLazyload({
+			errorImage: "../../image/error_img_middle.png"
+		});
+		api.parseTapmode();
+		setTimeout(function() {
+			if ($api.hasCls($api.dom("body"), "aui-hide")) {
+				$api.removeCls($api.dom("body"), "aui-hide");
+			}
+			closeUILoading();
+			api.refreshHeaderLoadDone();
+		}, window.refreshLoadDoneTimeOut);
+	}
+
+	/*
+	 *获取销量门店排行
+	 */
+	function getDatas(call) {
+		var url = window.myServerUrl + "order/app/saleShoesAnalysis/shopRankList";
+		url += "?orderBy=" + pageParam.orderBy; //排序字段(1:销量 2:库存 3:售罄率 4:评分) 数据类型：integer
+		url += "&orderDir=" + pageParam.orderDir; //排序方式(0:降序 1:升序) 数据类型：integer
+		url += "&start=" + start; //起始条数 数据类型：integer
+		url += "&num=" + num; //总条数 数据类型：integer
+		url += "&saleTimeStart=" + (pageParam.timeRange == 0 ? pageParam.saleTimeStart : _getStartDateByNum(pageParam.timeRange)); //销售时间区间：起始时间 数据类型：date-time
+		url += "&saleTimeEnd=" + (pageParam.timeRange == 0 ? pageParam.saleTimeEnd : _getFormatedDate("", "yyyy/MM/dd")); //销售时间区间：结束时间 数据类型：date-time
+		console.log("获取销量门店排行-->url:" + url);
+		isAjaxing = true;
+		_ajax(url, "shopRankList", function(ret, err) {
+			var tempDataList = [];
+			if (ret) {
+				console.log("获取销量门店排行-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					tempDataList = ret.result;
+					//list数组
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("获取销量门店排行-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			call(tempDataList);
+		});
+	}
+
+	function closeUILoading() {
+		UILoading.closeKeyFrame();
+	}
+
+	function openUILoading() {
+		UILoading.keyFrame({
+			rect: {
+				w: 102,
+				h: 102
+			},
+			styles: {
+				bg: 'rgba(0,0,0,0)',
+				corner: 5,
+				interval: 50,
+				frame: {
+					w: 102,
+					h: 102
+				}
+			},
+			//				content : [{
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}, {
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}],
+			mask: "rgba(255,0,0,0)"
+		}, function(ret) {
+			//								alert(JSON.stringify(ret));
+			console.log(12345);
+		});
+	}
+
+	function initData() {
+		start = 1;
+		num = 10;
+		UILoading = api.require('UILoading');
+		pageParam = api.pageParam;
+		console.log("pageParam:" + $api.jsonToStr(pageParam));
+		dataList = [];
+	}
+
+	var categorySeq; //0:全部鞋款, 其它:鞋子分类序号
+	var start;
+	var num;
+	var dataList;
+	var isAjaxing = false;
+	var UILoading;
+	var pageParam;
+	var apiready = function() {
+		initData();
+		getDatas(function(ret) {
+			openUILoading();
+			dataList = ret;
+			initUI(ret, "down");
+		});
+		//下拉刷新
+		api.setRefreshHeaderInfo({
+			loadingImg: 'widget://image/loading_more.gif',
+			bgColor: 'rgba(255,255,255,0)',
+			textColor: '#212121',
+			textDown: '下拉刷新...',
+			textUp: '松开刷新...'
+		}, function(ret, err) {
+			//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+			start = 1;
+			dataList = [];
+			getDatas(function(ret) {
+				dataList = ret;
+				initUI(ret, "down");
+			});
+		});
+		//上拉加载
+		api.addEventListener({
+			name: 'scrolltobottom',
+			extra: {
+				threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+			}
+		}, function(ret, err) {
+			console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+			if (!isAjaxing) {
+				start += num;
+				getDatas(function(ret) {
+					dataList = dataList.concat(ret);
+					setTimeout(function() {
+						initUI(ret, "up");
+					}, 100);
+				});
+			}
+		});
+		_addEventListener("query_filter_changed_event", function(ret) {
+			console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+			start = 1;
+			dataList = [];
+			getDatas(function(ret) {
+				dataList = ret;
+				initUI(ret, "down");
+			});
+		});
+	}
+</script>
+
+</html>

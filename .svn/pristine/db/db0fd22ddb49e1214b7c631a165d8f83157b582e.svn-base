@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/goods/goods_detail_fold_win.css" />
+    <style>
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="_closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-pull-right aui-btn aui-hide" tapmode onclick="shareTo()"> <span class="aui-iconfont aui-icon-share aui-text-default"></span> </a>
+        <div class="aui-title text-header-title aui-text-default">
+            货品调入
+        </div>
+    </header>
+    <div class="content flex-con">
+        <!-- <div class="item" tapmode onclick="chose(this)">
+            <div class="button">
+                <input class="aui-radio" type="checkbox" name="" onclick="return false;">
+            </div>
+            <div class="flex-con size">
+                <div>
+                    <div class="shopName font">石浦店</div>
+                    <div class="calloutNum font">调出总数:9</div>
+                </div>
+                <div>
+                    <div class="font2">尺码/数量</div>
+                    <div class="font2 flex-con size-list">
+                        <div>39/1</div>
+
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+    <div class="sum-box">
+      <img src="../../../image/load_nine_five" alt="">
+      <div class="sum-content flex-con">
+        <div class="font3 sun-title">
+          <div class="goodid"></div>
+          <div>
+            <div>调入总数</div>
+            <div class="sun-allnum">0</div>
+          </div>
+        </div>
+        <div class="font4 flex-wrap">
+          <div>尺码</div>
+          <div class="sun-sizelist flex-con">
+
+          </div>
+        </div>
+        <div class="font4 flex-wrap">
+          <div>数量</div>
+          <div class="sun-numlist flex-con">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer tapmode onclick="sure()" class="flex-style">确定调入</footer>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript">
+    function _closeWin() {
+        api.closeWin();
+    }
+
+    function chose(obj) {
+        var checkbox = $api.dom(obj, ".aui-radio");
+        var itemAllnum = $api.dom(obj, ".item-allnum");
+        var sizeNumList = $(obj).find('.item-size');
+        var numList = $('.nums');
+        var allsizelist = $('.new-size');
+        if ((checkbox.checked)) {
+            checkbox.checked = false;
+            $('.sun-allnum').text(parseInt($('.sun-allnum').text())-parseInt($(itemAllnum).text()));
+            for (var i = 0; i < sizeNumList.length; i++) {
+              for (var j = 0; j < allsizelist.length; j++) {
+                if ($(sizeNumList[i]).attr('data-size')==$(allsizelist[j]).attr('data-size')) {
+                  $(numList[j]).text(parseInt($(numList[j]).text())-parseInt($(sizeNumList[i]).attr('data-num')));
+                }
+              }
+            }
+        } else {
+            checkbox.checked = true;
+            $('.sun-allnum').text(parseInt($('.sun-allnum').text())+parseInt($(itemAllnum).text()));
+            for (var i = 0; i < sizeNumList.length; i++) {
+              for (var j = 0; j < allsizelist.length; j++) {
+                if ($(sizeNumList[i]).attr('data-size')==$(allsizelist[j]).attr('data-size')) {
+                  $(numList[j]).text(parseInt($(numList[j]).text())+parseInt($(sizeNumList[i]).attr('data-num')));
+                }
+              }
+            }
+        }
+    }
+
+    function sure() {
+      var checkbox = $(".aui-radio");
+      var pushList = [];
+
+        for (var i = 0; i < checkbox.length; i++) {
+          if((checkbox[i].checked)){
+            var num = parseInt($(checkbox[i]).attr('data-index'))
+          var list= {
+              shopSeq:datas[num].shopSeq,
+              sizeAndNum:datas[num].sizeAndNum
+            }
+            pushList.push(list);
+          }
+        }
+        if (_isArrayNull(pushList)) {
+          _toast('请至少选择一个门店');
+          return;
+        }
+        var url = window.myServerUrl + "order/app/allocateTransfer/confirmTransferIn";
+        var _data = {
+            values: {
+                shoesSeq:shoesSeq,
+                sizesShopsTransferInNum:pushList
+            }
+        };
+
+        console.log("确认调入:" + url);
+        console.log("确认调入._data:" + $api.jsonToStr(_data));
+
+        _ajax(url, "confirmTransferIn", function(ret, err) {
+            if (ret.code == 0) {
+                console.log("确认调入.ret:" + $api.jsonToStr(ret));
+                _toast('调入成功');
+                // _execScript('goods_detail_win','goods_detail_callin_frm','closeFrm()');
+                _closeWin();
+            } else {
+                _toast(window.ajaxErrorMessage);
+            }
+        }, "post", _data);
+    }
+
+
+
+
+
+    function getDatas() {
+        shoesSeq = api.pageParam.shoesSeq
+        var url = window.myServerUrl + "order/app/allocateTransfer/getAllShopsStockAndTransferOutNum";
+        url += "?shoesSeq=" + shoesSeq;
+        console.log("查询货品多个尺码，所有门店的调出数量、当前库存-->url:" + url);
+        _ajax(url, "getAllShopsStockAndTransferOutNum", function(ret, err) {
+            datas = [];
+            if (ret) {
+                console.log("查询货品多个尺码，所有门店的调出数量、当前库存-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    datas = ret.result[0].shopSizeList;
+                    imgstr = ret.result[0].img;
+                    goodId = ret.result[0].goodId;
+                    shoesSeq = ret.result[0].shoesSeq;
+                    initUI();
+                } else {
+                    _toast("查询货品多个尺码，所有门店的调出数量、当前库存失败！", 3000, "bottom", function() {});
+                }
+            } else {
+                _toast(window.ajaxErrorMessage);
+                console.log("查询货品多个尺码，所有门店的调出数量、当前库存-->err:" + $api.jsonToStr(err));
+            }
+        });
+    }
+
+
+
+    function initUI() {
+      $('img').attr("data-src",imgstr);
+      new auiLazyload({
+          errorImage: "../../../image/error_nine_five.png"
+      });
+
+        $('.goodid').text(goodId);
+        if (!_isArrayNull(datas)) {
+            var str = '';
+            allsizeList=[];
+            for (var i = 0; i < datas.length; i++) {
+
+                str += '<div class="item"  tapmode onclick="chose(this)">';
+                str += '<div class="button">';
+                str += '<input class="aui-radio" data-index="'+i+'" type="checkbox" name="" onclick="return false;" >';
+                str += '</div>';
+                str += '<div class="flex-con size">';
+                str += '<div>';
+                str += '<div class="shopName font">' + datas[i].shopName + '</div>';
+                str += '<div class="calloutNum font">调出总数:<span class="item-allnum">' + datas[i].shopTotalNum + '</span></div>';
+                str += '</div>';
+                str += '<div>';
+                str += '<div class="font2">尺码/数量</div>';
+                str += '<div class="font2 flex-con size-list">';
+                var list = datas[i].sizeAndNum
+                for (var j = 0; j < list.length; j++) {
+                    allsizeList.push(list[j].size)
+                    str += '<div class="item-size" data-size="'+list[j].size+'" data-num="'+list[j].num+'">' + list[j].size + '/' + list[j].num + '</div>';
+                }
+                str += '</div>';
+                str += '</div>';
+                str += '</div>';
+                str += '</div>';
+            }
+
+            $('.content').html(str);
+            var set  = new Set(allsizeList);
+            var newsizeList = Array.from(set);
+            var sizeStr = '';
+            var numStr = '';
+            for (var i = 0; i < newsizeList.length; i++) {
+              sizeStr +='<div class="new-size" data-size="'+newsizeList[i]+'">'+newsizeList[i]+'</div>';
+              numStr +='<div class="nums">0</div>';
+            }
+            $('.sun-sizelist').html(sizeStr);
+            $('.sun-numlist').html(numStr);
+        }else {
+          var str = ''
+          str +='<div class="no-shop">暂无门店调出此货品</div>'
+          $('.content').html(str);
+        }
+    }
+    var pageParam;
+    var sizeList;
+    var sizeStr;
+    var datas;
+    var shopStockList = [];
+    var shoptransferOutNumList = [];
+    var shoptransferOutNum = 0;
+    var shopStock = 0;
+    var shoesSeq;
+    var allsizeList = [];
+    var goodId;
+    var imgstr;
+    var shoesSeq;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        getDatas();
+
+    };
+</script>
+
+</html>

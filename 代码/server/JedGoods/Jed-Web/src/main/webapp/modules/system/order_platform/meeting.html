@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>订货会计划</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../../plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="../../../plugins/datepicker/datepicker3.css">
+  <link rel="stylesheet" href="../../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet" href="../../../css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../../../css/all-skins.min.css">
+  <link rel="stylesheet" href="../../../css/main.css">
+  <script src="../../../libs/jquery.min.js"></script>
+  <script src="../../../libs/jquery.form.js"></script>
+  <script src="../../../plugins/layer/layer.js"></script>
+  <script src="../../../libs/bootstrap.min.js"></script>
+  <script src="../../../libs/vue.min.js"></script>
+  <script src="../../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../../js/common.js"></script>
+
+  <style>
+    .ui-jqgrid .ui-jqgrid-htable .ui-th-div {
+      height: 23px;
+      margin-top: 0;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+
+  <div class="form-group">
+    <div class="grid-btn">
+      <button class="btn" :style="uploadState==0?'background:#3c8dbc;color:white':''"
+              style="margin-left: 10px; margin-right: 0px;" @click="selectUploadState(0)">全部列表
+      </button>
+      <button class="btn" :style="uploadState==1?'background:#3c8dbc;color:white':''"
+              style="margin-left: -3px; margin-right: 0px;" @click="selectUploadState(1)">已上传列表
+      </button>
+      <button class="btn" :style="uploadState==2?'background:#3c8dbc;color:white':''"
+              style="margin-left: -3px; margin-right: 0px;" @click="selectUploadState(2)">未上传列表
+      </button>
+      <a href="../../../media/meetingPlan.xlsx" style="margin-left: 10px;" download="订货计划导入模板">
+        下载导入模板
+      </a>
+      <div style="float:right;">
+        <span style="font-size: 16px; color:#3c8dbc">年份选择:</span>&nbsp;&nbsp;
+        <select v-model="year" @change="selectByYear"
+                style="border:1px #eeeeee; background-color: #eeeeee; width:160px; height:30px; font-size:16px; margin-right: 20px;">
+          <option v-for="item in yearList" :value="item">{{item}}</option>
+        </select>
+        <span style="font-size: 16px; color:#3c8dbc">季节选择:</span>&nbsp;&nbsp;
+        <select v-model="seasonSeq" @change="selectByYear"
+                style="border:1px #eeeeee; background-color: #eeeeee; width:160px; height:30px; font-size:16px; margin-right: 20px;">
+          <option v-for="item in seasonList" :value="item.seq">{{item.seasonName}}</option>
+        </select>
+      </div>
+    </div>
+
+
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+
+  </div>
+
+</div>
+
+
+<!-- 订货计划详细列表 -->
+<div id="planDetailLayer" style="display: none;padding:10px;">
+  <table id="jqPlanDetailGrid"></table>
+  <div id="jqPlanDetailGridPager"></div>
+</div>
+<!-- 导入Excel的Form表单 -->
+<form method="POST" enctype="multipart/form-data" id="form1" style="display:none">
+  <input id="shopSeqArr" type="text" name="shopSeqArr">
+  <input id="excelFile" type="file" name="excelFile" onchange="uploadExcel()"
+         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+</form>
+
+<script src="../../../js/modules/system/order_platform/meeting.js"></script>
+</body>
+</html>

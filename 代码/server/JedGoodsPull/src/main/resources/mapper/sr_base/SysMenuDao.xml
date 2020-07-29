@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.SysMenuDao">
+  <select id="queryListParentId" resultType="io.nuite.modules.sr_base.entity.SysMenuEntity">
+		select * from [JedSmartRetail].[dbo].YHSR_System_Menu sm where sm.Parent_Seq = #{parentId} order by sm.Order_Num asc
+	</select>
+
+  <select id="queryNotButtonList" resultType="io.nuite.modules.sr_base.entity.SysMenuEntity">
+		select * from [JedSmartRetail].[dbo].YHSR_System_Menu sm where sm.Type != 2 order by sm.Order_Num asc
+	</select>
+</mapper>

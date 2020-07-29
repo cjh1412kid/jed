@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/goods/goods_detail_callout_frm.css" />
+    <style>
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <div class="hidden flex-con" tapmode onclick="closeFrm()"></div>
+    <div class="content flex-wrap flex-vertical">
+        <div class="inner flex-con">
+            <div class="inner-title flex-wrap">
+                <div class="aui-col-xs-4 flex-style">尺码</div>
+                <div class="aui-col-xs-4 flex-style">当前库存</div>
+                <div class="aui-col-xs-4 flex-style">调出数量</div>
+            </div>
+            <div class="size-content">
+              <!-- <div class="item">
+                  <div class="aui-col-xs-4 flex-style">35</div>
+                  <div class="aui-col-xs-4 flex-style">5</div>
+                  <div class="aui-col-xs-4 flex-style">
+                      <div class="flex-style btns" tapmode onclick="dell()">－</div>
+                      <input type="text" class="aui-margin-l-5 aui-margin-r-5">
+                      <div class="flex-style btns" tapmode onclick="add()">＋</div>
+                  </div>
+              </div> -->
+
+            </div>
+
+        </div>
+        <div class="inner-footer">
+            <div class="aui-col-xs-4 flex-style">汇总</div>
+            <div class="aui-col-xs-4 flex-style all-stock"></div>
+            <div class="aui-col-xs-4 flex-style all-out">0</div>
+        </div>
+        <div class="inner-footer">
+            <div class="aui-col-xs-4 flex-style"></div>
+            <div class="aui-col-xs-4 flex-style"></div>
+            <div class="aui-col-xs-4 flex-style" tapmode onclick="choseAll()">全部调出</div>
+        </div>
+        <div class="footer flex-style" tapmode onclick="sure()">确定调出</div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript">
+    function choseAll(){
+      var domList = $('input');
+      var allNum= 0;
+      for (var i = 0; i < domList.length; i++) {
+        $(domList[i]).val(datas[i].stock);
+        allNum +=parseInt(datas[i].stock);
+      }
+      $('.all-out').text(allNum);
+    }
+    function sure(){
+      var allInput=$('input');
+      var inputList = [];
+      for (var i = 0; i < allInput.length; i++) {
+        if (!_isStringNull($(allInput[i]).val())&&$(allInput[i]).val()!=0) {
+          var obj={};
+          obj.size = $(allInput[i]).attr('data-size');
+          obj.num = $(allInput[i]).val();
+          inputList.push(obj);
+        }
+      }
+    if (_isArrayNull(inputList)) {
+      _toast('请输入正确调出数量');
+      return;
+    }
+      var url = window.myServerUrl + "order/app/allocateTransfer/confirmTransferOut";
+      var _data = {
+        values: {
+          shoesSeq:goodSeq,
+          sizeTransferOutNum: inputList,
+        }
+      };
+      console.log("确认调出:" + url);
+      console.log("确认调出._data:" + $api.jsonToStr(_data));
+      _ajax(url, "confirmTransferOut", function(ret, err) {
+        if (ret.code==0) {
+          console.log("确认调出.ret:" + $api.jsonToStr(ret));
+          _toast('调出成功');
+          _execScript('','','refreshData();')
+          closeFrm();
+        } else {
+          _toast(window.ajaxErrorMessage);
+        }
+      }, "post", _data);
+    }
+    function changeNum(obj) {
+      var inputNum = parseInt($(obj).val())
+      var item = $(obj).closest(".item")
+      var stock = $(item).find('.stock');
+      var stockNum = parseInt($(stock).text());
+
+       if (inputNum>stockNum) {
+         console.log(2);
+         $(obj).val(stockNum);
+         var allInputList=$('input');
+         var allOutNum = 0
+         for (var i = 0; i < allInputList.length; i++) {
+           if (_isStringNull($(allInputList[i]).val())) {
+             allOutNum +=0;
+           }else {
+             allOutNum +=parseInt($(allInputList[i]).val());
+           }
+         }
+         $('.all-out').text(allOutNum)
+       }else {
+        //  $($(obj).siblings('input')).val(inputNum);
+         var allInputList=$('input');
+         var allOutNum = 0
+         for (var i = 0; i < allInputList.length; i++) {
+           if (_isStringNull($(allInputList[i]).val())) {
+             allOutNum +=0;
+           }else {
+             allOutNum +=parseInt($(allInputList[i]).val());
+           }
+         }
+         $('.all-out').text(allOutNum)
+       }
+    }
+    function dell(obj) {
+      var num=0;
+       if (_isStringNull($($(obj).siblings('input')).val())) {
+         num=0
+       }else {
+         num =parseInt($($(obj).siblings('input')).val())
+       }
+       num--;
+       if (num<0) {
+         return;
+       }else {
+         $($(obj).siblings('input')).val(num);
+         var allInputList = $('input');
+         var allOutNum = 0
+         for (var i = 0; i < allInputList.length; i++) {
+             if (_isStringNull($(allInputList[i]).val())) {
+                 allOutNum += 0;
+             } else {
+                 allOutNum += parseInt($(allInputList[i]).val());
+             }
+         }
+         $('.all-out').text(allOutNum)
+       }
+    }
+
+    function add(obj) {
+      var item = $(obj).closest(".item")
+      var stock = $(item).find('.stock');
+      var stockNum = parseInt($(stock).text());
+      var num=0;
+       if (_isStringNull($($(obj).siblings('input')).val())) {
+         num=0
+       }else {
+         num =parseInt($($(obj).siblings('input')).val())
+       }
+       num++;
+       if (num>stockNum) {
+         return;
+       }else {
+         $($(obj).siblings('input')).val(num);
+         var allInputList=$('input');
+         var allOutNum = 0
+         for (var i = 0; i < allInputList.length; i++) {
+           if (_isStringNull($(allInputList[i]).val())) {
+             allOutNum +=0;
+           }else {
+             allOutNum +=parseInt($(allInputList[i]).val());
+           }
+         }
+         $('.all-out').text(allOutNum)
+       }
+    }
+
+    function closeFrm() {
+        api.closeFrame({
+            name: 'goods_detail_callout_frm'
+        });
+
+    }
+    function getDatas() {
+      goodSeq = api.pageParam.goodSeq
+      // alert($api.jsonToStr(pageParam))
+      var url = window.myServerUrl + "order/app/allocateTransfer/getShoesStockAndTransferOutNum";
+      url += "?shoesSeq=" + goodSeq;
+      console.log("获取鞋子各个尺码的 当前库存 + 调出数量-->url:" + url);
+      _ajax(url, "getShoesStockAndTransferOutNum", function(ret, err) {
+       datas = [];
+        if (ret) {
+          console.log("获取鞋子各个尺码的 当前库存 + 调出数量-->ret:" + $api.jsonToStr(ret));
+          if (ret.code == 0) {
+            datas = ret.result;
+           initUI();
+          } else {
+            _toast("获取鞋子各个尺码的 当前库存 + 调出数量失败！", 3000, "bottom", function() {});
+          }
+        } else {
+          _toast(window.ajaxErrorMessage);
+          console.log("获取鞋子各个尺码的 当前库存 + 调出数量-->err:" + $api.jsonToStr(err));
+        }
+        // call(datas);
+      });
+    }
+    function initUI(){
+      var str = '';
+      var allStock = 0;
+      var allInputNum = 0;
+      for (var i = 0; i < datas.length; i++) {
+        str+='<div class="item">';
+        str+='<div class="aui-col-xs-4 flex-style size">'+datas[i].size+'</div>';
+        str+='<div class="aui-col-xs-4 flex-style stock">'+datas[i].stock+'</div>';
+        str+='<div class="aui-col-xs-4 flex-style">';
+        str+='<div class="flex-style btns" tapmode onclick="dell(this)">－</div>';
+        str+='<input type="number" class="aui-margin-l-5 aui-margin-r-5" oninput="changeNum(this)" value="'+datas[i].transferOutNum+'" data-size="'+datas[i].size+'">';
+        str+='<div class="flex-style btns" tapmode onclick="add(this)">＋</div>';
+        str+='</div>';
+        str+='</div>';
+        allStock+=parseInt(datas[i].stock);
+        if (!_isStringNull(datas[i].transferOutNum)) {
+          allInputNum+=parseInt(datas[i].transferOutNum);
+        }
+      }
+      $('.size-content').html(str);
+      $('.all-stock').text(allStock);
+      $('.all-out').text(allInputNum);
+    }
+    var goodSeq;
+    var datas=[];
+    apiready = function() {
+  	  getDatas();
+
+  	};
+</script>
+
+</html>

@@ -1,0 +1,974 @@
+﻿
+/*
+ * NuiteCompanyApp JavaScript Library
+ * Created by 许银灯 on 2015/12/17.
+ * Copyright (c) 2015 nuite.com.cn
+ */
+
+//是否为调试模式
+window.isDebugMode = false;
+/**
+ * 服务器地址
+ */
+if (window.isDebugMode) {
+    //开发
+    // window.myServerUrl = "http://192.168.2.146:8181/interface/"; //快易订的
+    window.myServerUrl = "http://119.3.150.141:8080/interface/"; //公司测试的云服务器
+} else {
+    //发布
+    window.myServerUrl = "http://117.48.157.6:8181/interface/";
+    //http://192.168.2.146:8181
+    //http://221.229.214.60:8181
+}
+// APP默认参数 BEGIN
+window.frameGroupRect = {
+    x: 0, //左上角x坐标
+    y: 0, //左上角y坐标
+    w: 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+    h: 'auto', //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+    marginLeft: 0, //相对父window左外边距的距离
+    marginTop: 0, //相对父window上外边距的距离
+    marginBottom: 0, //相对父window下外边距的距离
+    marginRight: 0 //相对父window右外边距的距离
+};
+window.openWinAnimation = {
+    type: "push", //动画类型（详见动画类型常量）
+    subType: "from_right", //动画子类型（详见动画子类型常量）
+    duration: 300 //动画过渡时间，默认300毫秒
+};
+window.openWinDelay = 0;
+window.openWinSoftInputMode = "resize";
+window.openFrmSoftInputMode = "resize";
+window.toastDuration = 3000;
+window.toastLocation = "bottom";
+window.showProgressAnimationType = "fade";
+window.showProgressTitle = "努力加载中...";
+window.showProgressText = "先喝杯茶...";
+window.ajaxErrorMessage = "亲，网络异常...";
+window.ajaxTimeout = 10;
+window.refreshLoadDoneTimeOut = 500;
+// APP默认参数 END
+
+/**
+ *打开新窗口win
+ * 更新时间：2017/01/16/14：08
+ * 版本号：v1.0
+ * @许银灯
+ */
+function _openWin(name, url, pageParam, bounces, reload, animation, delay, bgColor, scaleEnabled, allowEdit, customRefreshHeader, vScrollBarEnabled, hScrollBarEnabled, headers, progress, scrollToTop, slidBackEnabled, slidBackType, softInputMode, softInputBarEnabled, scrollEnabled, useWKWebView, historyGestureEnabled) {
+    var _pageParam = _isObjectNull(arguments[2]) ? {} : arguments[2];
+    var _bounces = _isObjectNull(arguments[3]) ? false : arguments[3];
+    var _reload = _isObjectNull(arguments[4]) ? true : arguments[4];
+    var _animation = _isObjectNull(arguments[5]) ? window.openWinAnimation : arguments[5];
+    var _delay = _isObjectNull(arguments[6]) ? window.openWinDelay : arguments[6];
+    var _bgColor = _isStringNull(arguments[7]) ? 'rgba(0,0,0,0)' : arguments[7];
+    var _scaleEnabled = _isObjectNull(arguments[8]) ? false : arguments[8];
+    var _allowEdit = _isObjectNull(arguments[9]) ? false : arguments[9];
+    var _customRefreshHeader = _isObjectNull(arguments[10]) ? '' : arguments[10];
+    var _vScrollBarEnabled = _isObjectNull(arguments[11]) ? false : arguments[11];
+    var _hScrollBarEnabled = _isObjectNull(arguments[12]) ? false : arguments[12];
+    var _headers = _isObjectNull(arguments[13]) ? {} : arguments[13];
+    var _progress = _isObjectNull(arguments[14]) ? {} : arguments[14];
+    var _scrollToTop = _isObjectNull(arguments[15]) ? false : arguments[15];
+    var _slidBackEnabled = _isObjectNull(arguments[16]) ? false : arguments[16];
+    var _slidBackType = _isObjectNull(arguments[17]) ? 'full' : arguments[17];
+    var _softInputMode = _isObjectNull(arguments[18]) ? window.openWinSoftInputMode : arguments[18];
+    var _softInputBarEnabled = _isObjectNull(arguments[19]) ? false : arguments[19];
+    var _scrollEnabled = _isObjectNull(arguments[20]) ? true : arguments[20];
+    var _useWKWebView = _isObjectNull(arguments[21]) ? false : arguments[21];
+    var _historyGestureEnabled = _isObjectNull(arguments[22]) ? false : arguments[22];
+    api.openWin({
+        name: name, //类型：字符串,默认值：无,描述：window名字，不能为空字符串。若为root，则会关闭首页上面所有存在的window，相当于调用closeToWin({name:'root'})方法
+        url: url, //类型：字符串,默认值：无,描述：页面地址，可以为本地文件路径，支持相对路径和绝对路径，以及widget://、fs://等协议路径，也可以为远程地址
+        pageParam: _pageParam, //类型：JSON对象,默认值：无,描述：（可选项）页面参数，新页面中可以通过api.pageParam获取
+        bounces: _bounces, //类型：布尔,默认值：若在config.xml里面配置了pageBounce，则默认值为配置的值，否则为false,描述：（可选项）页面是否弹动
+        reload: _reload, //类型：布尔,默认值：false,描述：（可选项）页面已经打开时，是否重新加载页面，重新加载页面后apiready方法将会被执行
+        animation: _animation, //类型：JSON对象,默认值：无,描述：（可选项）动画参数，不传时使用默认动画，type：动画类型，subType：动画子类型。
+        //		animation : {
+        //			type : "fade", //动画类型（详见动画类型常量）
+        //			//			subType : "from_right", //动画子类型（详见动画子类型常量）
+        //			duration : 300 //动画过渡时间，默认300毫秒
+        //		}, //类型：JSON对象,默认值：无,描述：（可选项）动画参数，不传时使用默认动画，type：动画类型，subType：动画子类型。
+        delay: _delay, //类型：数字,默认值：0,描述：（可选项）window显示延迟时间，适用于将被打开的window中可能需要打开有耗时操作的模块时，可延迟window展示到屏幕的时间，保持UI的整体性
+        scaleEnabled: _scaleEnabled, //类型：布尔,默认值：false,描述：（可选项）页面是否可以缩放，为true时softInputMode参数无效
+        allowEdit: _allowEdit, //类型：布尔,默认值：false,描述：（可选项）是否允许长按页面时弹出选择菜单
+        customRefreshHeader: _customRefreshHeader, //类型：字符串,默认值：无,描述：（可选项）设置使用自定义下拉刷新模块的名称，设置后可以使用 api.setCustomRefreshHeaderInfo 方法来使用自定义下拉刷新组件
+        vScrollBarEnabled: _vScrollBarEnabled, //类型：布尔,默认值：true,描述：（可选项）是否显示垂直滚动条
+        hScrollBarEnabled: _hScrollBarEnabled, //类型：布尔,默认值：true,描述：（可选项）是否显示水平滚动条
+        headers: _headers, //类型：JSON 对象,默认值：无,描述：（可选项）请求头
+        progress: _progress, //类型：JSON 对象,默认值：无,描述：（可选项）页面加载进度配置信息，若不传则无加载进度效果
+        //		{
+        //  type:"",                //加载进度效果类型，默认值为default，取值范围为default|page，default等同于showProgress参数效果；为page时，进度效果为仿浏览器类型，固定在页面的顶部
+        //  title:"",               //type为default时显示的加载框标题
+        //  text:"",                //type为default时显示的加载框内容
+        //  color:""                //type为page时进度条的颜色，默认值为#45C01A，支持#FFF，#FFFFFF，rgb(255,255,255)，rgba(255,255,255,1.0)等格式
+        //}
+        bgColor: _bgColor, //类型：字符串,默认值：若在config.xml里面配置了windowBackground，则默认值为配置的值，否则透明,描述：（可选项）背景色，支持图片和颜色，格式为#fff、#ffffff、rgba(r,g,b,a)等，图片路径支持fs://、widget://等APICloud自定义文件路径协议，同时支持相对路径
+        scrollToTop: _scrollToTop, //类型：布尔,默认值：false,描述：（可选项）当点击状态栏，页面是否滚动到顶部。若当前屏幕上不止一个页面的scrollToTop属性为true，则所有的都不会起作用。只iOS有效
+        slidBackEnabled: _slidBackEnabled, // 类型：布尔,默认值：true,描述：（可选项）是否支持滑动返回。iOS7.0及以上系统中，在新打开的页面中向右滑动，可以返回到上一个页面，该字段只iOS有效,
+        slidBackType: _slidBackType, //类型：字符串,默认值：full,（可选项）是否支持滑动返回。iOS7.0及以上系统中，在新打开的页面中向右滑动，可以返回到上一个页面，该字段只 iOS 有效
+        softInputMode: _softInputMode, //类型：字符串,默认值：auto,描述：（可选项）当键盘弹出时，输入框被盖住时，当前页面的调整方式，详见键盘弹出页面调整方式常量；只iOS有效，且当scaleEnabled参数为true时无效，Android请在config.xml里面配置并云编译使用
+        softInputBarEnabled: _softInputBarEnabled, //类型：布尔,默认值：true,描述：（可选项）是否显示键盘上方的工具条。只支持iOS
+        scrollEnabled: _scrollEnabled, //类型：布尔,默认值：true,描述：（可选项）页面内容超出后是否可以滚动，只支持iOS
+        useWKWebView: _useWKWebView, //类型：布尔,默认值：false描述：（可选项）是否使用WKWebView来加载页面，只支持iOS8.0及以上系统。WKWebView是iOS8新出的WebKit库中的控件，相比于以前的UIWebView，在性能和功能等方面都有所提升。注意使用WKWebView后，localStorage可能不能和其它未使用WKWebView加载的页面通用，同时也不支持方法结果同步返回。
+        historyGestureEnabled: _historyGestureEnabled, //类型：布尔,默认值：false,描述：（可选项）是否可以通过手势来进行历史记录前进后退，只在useWKWebView参数为true时有效。
+    });
+}
+
+/**
+ *打开 frame
+ * 更新时间：2017/01/13/16：29
+ * 版本号：v1.0
+ * @许银灯
+ */
+function _openFrame(name, url, rect, pageParam, bounces, reload, allowEdit, animation, customRefreshHeader, softInputMode, softInputBarEnabled, scaleEnabled, headers, showProgress, progress, bgColor, scrollToTop, scrollEnabled, vScrollBarEnabled, hScrollBarEnabled, useWKWebView, historyGestureEnabled) {
+    var _rect = _isObjectNull(arguments[2]) ? window.frameRect : arguments[2];
+    var _pageParam = _isObjectNull(arguments[3]) ? {} : arguments[3];
+    var _bounces = _isObjectNull(arguments[4]) ? true : arguments[4];
+    var _reload = _isObjectNull(arguments[5]) ? false : arguments[5];
+    var _allowEdit = _isObjectNull(arguments[6]) ? false : arguments[6];
+    var _animation = _isObjectNull(arguments[7]) ? {} : arguments[7];
+    var _customRefreshHeader = _isObjectNull(arguments[8]) ? '' : arguments[8];
+    var _softInputMode = _isObjectNull(arguments[9]) ? window.openFrmSoftInputMode : arguments[9];
+    var _softInputBarEnabled = _isObjectNull(arguments[10]) ? true : arguments[10];
+    var _scaleEnabled = _isObjectNull(arguments[11]) ? false : arguments[11];
+    var _headers = _isObjectNull(arguments[12]) ? {} : arguments[12];
+    var _showProgress = _isObjectNull(arguments[13]) ? false : arguments[13];
+    var _progress = _isObjectNull(arguments[14]) ? {} : arguments[14];
+    var _bgColor = _isObjectNull(arguments[15]) ? 'rgba(0,0,0,0)' : arguments[15];
+    var _scrollToTop = _isObjectNull(arguments[16]) ? true : arguments[16];
+    var _scrollEnabled = _isObjectNull(arguments[17]) ? true : arguments[17];
+    var _vScrollBarEnabled = _isObjectNull(arguments[18]) ? false : arguments[18];
+    var _hScrollBarEnabled = _isObjectNull(arguments[19]) ? false : arguments[19];
+    var _useWKWebView = _isObjectNull(arguments[20]) ? false : arguments[20];
+    var _historyGestureEnabled = _isObjectNull(arguments[21]) ? false : arguments[21];
+    api.openFrame({
+        name: name, //类型：字符串,默认值：无,描述：frame名字
+        url: url, //类型：字符串,默认值：无,描述：页面地址，可以为本地文件路径，支持相对路径和绝对路径，以及widget://、fs://等协议路径，也可以为远程地址
+        headers: _headers, //类型：JSON 对象,默认值：无,描述：（可选项）请求头
+        useWKWebView: _useWKWebView, //类型：布尔,默认值：false描述：（可选项）是否使用WKWebView来加载页面，只支持iOS8.0及以上系统。WKWebView是iOS8新出的WebKit库中的控件，相比于以前的UIWebView，在性能和功能等方面都有所提升。注意使用WKWebView后，localStorage可能不能和其它未使用WKWebView加载的页面通用，同时也不支持方法结果同步返回。
+        historyGestureEnabled: _historyGestureEnabled, //类型：布尔,默认值：false,描述：（可选项）是否可以通过手势来进行历史记录前进后退，只在useWKWebView参数为true时有效。
+        pageParam: _pageParam, //类型：JSON对象,默认值：无,描述：（可选项）页面参数，在新页面通过api.pageParam获取
+        bounces: _bounces, //类型：布尔,默认值：若在config.xml里面配置了pageBounce，则默认值为配置的值，否则为true,描述：（可选项）页面是否弹动
+        bgColor: _bgColor, //类型：字符串,默认值：若在config.xml里面配置了frameBackgroundColor，则默认值为配置的值，否则透明,描述：（可选项）背景色，支持图片和颜色，格式为#fff、#ffffff、rgba(r,g,b,a)等，图片路径支持fs://、widget://等APICloud自定义文件路径协议，同时支持相对路径
+        scrollToTop: _scrollToTop, //类型：布尔,默认值：true,描述：（可选项）当点击状态栏，页面是否滚动到顶部。若当前屏幕上不止一个页面的scrollToTop属性为true，则所有的都不会起作用。只iOS有效
+        scrollEnabled: _scrollEnabled, //类型：布尔,默认值：true,描述：（可选项）页面内容超出后是否可以滚动，只支持iOS
+        vScrollBarEnabled: _vScrollBarEnabled, //类型：布尔,默认值：true,描述：（可选项）是否显示垂直滚动条
+        hScrollBarEnabled: _hScrollBarEnabled, //类型：布尔,默认值：true,描述：（可选项）是否显示水平滚动条
+        scaleEnabled: _scaleEnabled, //类型：布尔,默认值：false,描述：（可选项）页面是否可以缩放，为true时softInputMode参数无效
+        rect: _rect, //类型：JSON对象,默认值：充满整个父页面,描述：（可选项）frame的位置和大小，设置margin后，在不同手机上面会保持与父页面的各方向边距一致，而中间区域会自动扩充。
+        //rect : {
+        //x : 0, //左上角x坐标
+        //y : headerPos.h, //左上角y坐标
+        //w : 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+        //h : api.winHeight - headerPos.h, //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+        // marginLeft:0,    //相对父 window 左外边距的距离
+        // marginTop:0,    //相对父 window 上外边距的距离
+        // marginBottom:0,    //相对父 window 下外边距的距离
+        // marginRight:0    //相对父 window 右外边距的距离
+        //		}, //类型：JSON对象,默认值：充满整个父页面,描述：（可选项）frame的位置和大小，设置margin后，在不同手机上面会保持与父页面的各方向边距一致，而中间区域会自动扩充。
+        showProgress: _showProgress, //类型：布尔,默认值：false,描述：（可选项）是否显示等待框，只在url为网址时有效
+        progress: _progress, //类型：JSON 对象,默认值：无,描述：（可选项）页面加载进度配置信息，若不传则无加载进度效果
+        //		{
+        //  type:"",                //加载进度效果类型，默认值为default，取值范围为default|page，default等同于showProgress参数效果；为page时，进度效果为仿浏览器类型，固定在页面的顶部
+        //  title:"",               //type为default时显示的加载框标题
+        //  text:"",                //type为default时显示的加载框内容
+        //  color:""                //type为page时进度条的颜色，默认值为#45C01A，支持#FFF，#FFFFFF，rgb(255,255,255)，rgba(255,255,255,1.0)等格式
+        //}
+        reload: _reload, //类型：布尔,默认值：false,描述：（可选项）页面已经打开时，是否重新加载页面
+        allowEdit: _allowEdit, //类型：布尔,默认值：false,描述：（可选项）是否允许长按页面时弹出选择菜单
+        softInputMode: _softInputMode, //类型：字符串,默认值：auto,描述：（可选项）当键盘弹出时，输入框被盖住时，当前页面的调整方式，详见键盘弹出页面调整方式常量；只iOS有效，且当scaleEnabled参数为true时无效，Android请在config.xml里面配置并云编译使用
+        softInputBarEnabled: _softInputBarEnabled, //类型：布尔,默认值：true,描述：（可选项）是否显示键盘上方的工具条。只支持iOS
+        animation: _animation, //类型：JSON 对象,默认值：无,描述：（可选项）动画参数，不传时无动画，type：动画类型，subType：动画子类型。
+        //		{
+        //  type:"none",                //动画类型（详见动画类型常量）
+        //  subType:"from_right",       //动画子类型（详见动画子类型常量）
+        //  duration:300                //动画过渡时间，默认300毫秒
+        //}
+        customRefreshHeader: _customRefreshHeader, //类型：字符串,默认值：无,描述：（可选项）设置使用自定义下拉刷新模块的名称，设置后可以使用 api.setCustomRefreshHeaderInfo 方法来使用自定义下拉刷新组件
+    });
+}
+
+/**
+ *打开 frame 组
+ * 更新时间：2017/01/13/15：53
+ * 版本号：v1.0
+ * @许银灯
+ */
+function _openFrameGroup(name, frames, callBack, background, scrollEnabled, rect, index, preload) {
+    var _background = _isObjectNull(arguments[3]) ? 'rgba(0,0,0,0)' : arguments[3];
+    var _scrollEnabled = _isObjectNull(arguments[4]) ? true : arguments[4];
+    var _rect = _isObjectNull(arguments[5]) ? window.frameGroupRect : arguments[5];
+    var _index = _isObjectNull(arguments[6]) ? 0 : arguments[6];
+    var _preload = _isObjectNull(arguments[7]) ? 1 : arguments[7];
+    api.openFrameGroup({
+        name: name, //类型：字符串,默认值：无,描述：frame组名字
+        background: _background, //类型：字符串,默认值：无,描述：（可选项）frame组背景，颜色（#fff,#ffffff,rgba(r,g,b,a)）或图片（支持文件路径协议和相对路径）
+        scrollEnabled: _scrollEnabled, //类型：布尔,默认值：true,描述：（可选项）frame组是否能够左右滚动
+        rect: _rect, //类型：JSON对象,默认值：充满整个父页面,描述：（可选项）frameGroup的位置和大小，设置margin后，在不同手机上面会保持与父页面的各方向边距一致，而中间区域会自动扩充。
+        //		rect : {
+        //			x : 0, //左上角x坐标
+        //			y : headerPos.h, //左上角y坐标
+        //			w : 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+        //			h : api.winHeight - headerPos.h - footerPos.h, //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+        //			marginLeft : 0, //相对父window左外边距的距离
+        //			marginTop : 0, //相对父window上外边距的距离
+        //			marginBottom : 0, //相对父window下外边距的距离
+        //			marginRight : 0 //相对父window右外边距的距离
+        //		}, //类型：JSON对象,默认值：充满整个父页面,描述：（可选项）frameGroup的位置和大小，设置margin后，在不同手机上面会保持与父页面的各方向边距一致，而中间区域会自动扩充。
+        index: _index, //类型：数字,默认值：0,描述：（可选项）默认显示的页面索引
+        preload: _preload, //类型：数字,默认值：1,描述：（可选项）预加载的frame个数，默认加载当前页后面一个
+        frames: frames, //类型：数组,默认值：无,描述：frame数组
+    }, function(ret, err) {
+        callBack(ret, err);
+    });
+}
+
+/**
+ *跨域异步请求，支持文件上传
+ * 更新时间：2017/01/16/16：16
+ * 版本号：v1.0
+ * @许银灯
+ */
+function _ajax(url, tag, _call, method, _data, timeout, dataType, charset, encode, cache, headers, report, returnAll, certificate) {
+    var _tag = _isObjectNull(arguments[1]) ? '' : arguments[1];
+    var _method = _isObjectNull(arguments[3]) ? 'get' : arguments[3];
+    var _data = _isObjectNull(arguments[4]) ? {} : arguments[4];
+    var _timeout = _isObjectNull(arguments[5]) ? window.ajaxTimeout : arguments[5];
+    var _dataType = _isObjectNull(arguments[6]) ? "json" : arguments[6];
+    var _charset = _isObjectNull(arguments[7]) ? 'utf-8' : arguments[7];
+    var _encode = _isObjectNull(arguments[8]) ? true : arguments[8];
+    var _cache = _isObjectNull(arguments[9]) ? false : arguments[9];
+    var token = $api.getStorage("tokenKey");
+    var _headers = _isObjectNull(arguments[10]) ? {
+        token: _isStringNull(token) ? "" : token
+    } : arguments[10];
+    var _report = _isObjectNull(arguments[11]) ? false : arguments[11];
+    var _returnAll = _isObjectNull(arguments[12]) ? false : arguments[12];
+    var _certificate = _isObjectNull(arguments[13]) ? {} : arguments[13];
+    api.ajax({
+        url: url, //请求地址
+        tag: _tag, //类型：字符串,默认值：无,请求标识，可以传递此字段给cancelAjax方法来取消请求
+        timeout: _timeout, //类型：数字,默认值：30,描述：（可选项）超时时间，单位秒
+        dataType: _dataType, //类型：字符串,默认值：json,描述：（可选项）返回数据类型（详见异步请求返回数据类型常量）
+        charset: _charset, //类型：字符串,默认值：utf-8,描述：（可选项）当响应头里面没有返回字符集编码时，使用此编码来解析数据
+        encode: _encode, //类型：布尔,默认值：true,描述：（可选项）是否对url进行编码。传false时底层将不会对url进行编码
+        cache: _cache, //类型：布尔,默认值：false,（可选项）是否缓存，若缓存，下次没网络时请求则会使用缓存
+        method: _method, //类型：字符串,默认值：get,异步请求方法类型（详见异步请求方法类型常量）
+        headers: _headers, //类型：JSON对象,默认值：无,描述：（可选项）请求头
+        data: _data, //类型：JSON对象,默认值：无,描述：（可选项）POST数据，method为get时不传。以下字段除了values和files可以同时使用，其它参数都不能同时使用。
+        //		data : {
+        //			values : {
+        //			},  //以表单方式提交参数（JSON对象）, 如 {"field1": "value1", "field1": "value2"} (直接传JSON对像.)
+        //		}, //类型：JSON对象,默认值：无,描述：（可选项）POST数据，method为get时不传。以下字段除了values和files可以同时使用，其它参数都不能同时使用。
+        report: _report, //类型：布尔,默认值：false,描述：（可选项）是否实时返回上传文件进度
+        returnAll: _returnAll, //类型：布尔,默认值：false,描述：（可选项）是否需要返回所有response信息，为true时，返回的头信息获取方法(ret.headers)，消息体信息获取方法(ret.body)，状态码获取方法(ret.statusCode)
+        certificate: _certificate, //类型：JSON对象,默认值：无,描述：（可选项）https安全证书设置。内部字段：{ path:'',//p12证书路径，支持fs://、widget://等文件路径协议，字符串类型,password:''//证书密码，字符串类型}
+    }, function(ret, err) {
+        _call(ret, err);
+    });
+}
+
+/**
+ * 判断String是否为空
+ * 更新时间：2017/01/19/9：16
+ * 版本号：v1.0
+ * @许银灯
+ */
+function _isStringNull(str) {
+    if (str == null)
+        return true;
+    str = str + "";
+    str = $api.trimAll(str);
+    if (typeof str != "undefined" && "" != str && "undefined" != str) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
+ * 判断String是否为空
+ * 更新时间：2017/01/19/9：16
+ * 版本号：v1.0
+ * @许银灯
+ */
+function _isObjectNull(obj) {
+    if (typeof obj != "undefined" && obj != null && JSON.stringify(obj) != '{}') {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
+ * 判断Array是否为空
+ * 更新时间：2017/01/19/9：16
+ * 版本号：v1.0
+ * @许银灯
+ */
+function _isArrayNull(arr) {
+    if (typeof arr != "undefined" && arr != null && arr.length > 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+// 双击退出应用
+function _twoClickCloseApp(_call) {
+    //定义个时间戳
+    var mkeyTime = new Date().getTime();
+
+    _addEventListener('keyback', function(ret) {
+        //如果当前时间减去标志时间大于2秒，说明是第一次点击返回键，反之为2秒内点了2次，则退出。
+        if ((new Date().getTime() - mkeyTime) > 2000) {
+            mkeyTime = new Date().getTime();
+            _toast('再按一次退出程序', 2000);
+        } else {
+            if (typeof _call == "function") {
+                _call();
+            }
+            // 静默关闭,不弹出关闭提示窗口
+            api.closeWidget({
+                silent: true
+            });
+        }
+    }, {});
+}
+
+// 下拉刷新
+function _setRefreshHeaderInfo(_call, bgColor, textColor) {
+    var _bgColor = (typeof arguments[1] == "undefined" || arguments[1] == null) ? '#f1f1f1' : arguments[1];
+    var _textColor = (typeof arguments[2] == "undefined" || arguments[2] == null) ? '#999' : arguments[2];
+    api.setRefreshHeaderInfo({
+        visible: true,
+        loadingImg: 'widget://image/refresh.png',
+        bgColor: _bgColor,
+        textColor: _textColor,
+        textDown: '下拉刷新...',
+        textUp: '松开刷新...',
+        showTime: true
+    }, function(ret, err) {
+        if (typeof _call == "function") {
+            _call();
+        }
+    });
+}
+
+// 上拉加载
+function _scrolltobottom(_call, threshold) {
+    var _threshold = (typeof arguments[1] == "undefined" || arguments[1] == null) ? 0 : arguments[1];
+    _addEventListener('scrolltobottom', _call, {
+        threshold: _threshold
+    });
+}
+
+// 滚动到底部
+function _scrollToEnd() {
+    document.getElementsByTagName('body')[0].scrollTop = document.getElementsByTagName('body')[0].scrollHeight;
+}
+
+// 加载框
+function _showProgress(title, text, modal, animationType) {
+    var _title = (typeof arguments[0] == "undefined" || arguments[0] == null) ? window.showProgressTitle : arguments[0];
+    var _text = (typeof arguments[1] == "undefined" || arguments[1] == null) ? window.showProgressText : arguments[1];
+    var _modal = (typeof arguments[2] == "undefined" || arguments[2] == null) ? true : arguments[2];
+    var _animationType = (typeof arguments[3] == "undefined" || arguments[3] == null) ? window.showProgressAnimationType : arguments[3];
+    api.showProgress({
+        style: 'default',
+        animationType: _animationType,
+        title: _title,
+        text: _text,
+        modal: _modal
+    });
+}
+
+// 小提示
+function _toast(msg, duration, location, _call) {
+    var _duration = (typeof arguments[1] == "undefined" || arguments[1] == null) ? window.toastDuration : arguments[1];
+    var _location = (typeof arguments[2] == "undefined" || arguments[2] == null) ? window.toastLocation : arguments[2];
+    api.toast({
+        msg: msg,
+        duration: _duration,
+        location: _location
+    });
+    if (typeof _call == "function") {
+        setTimeout(_call, duration);
+    }
+}
+
+/**
+ *	自定义Toast
+ * @param {Object} 标题
+ * @param {Object} 内容
+ * @param {Object} 按钮标题
+ */
+function _confirm(title, msg, buttons, callBack) {
+    api.confirm({
+        title: title, //类型：字符串,默认值：无,描述：（可选项）标题
+        msg: msg, //类型：字符串,默认值：无,描述：（可选项）内容
+        buttons: buttons, //类型：数组,默认值：["取消","确定"],描述：（可选项）按钮标题，若小于两个按钮，会补齐两个按钮；若大于三个按钮，则使用前三个按钮
+    }, function(ret, err) {
+        //		if (ret.buttonIndex == 1) {
+        //			initAttendanceType(signId);
+        //			api.execScript({
+        //				frameName : "frm_baiduMap_bottom_over",
+        //				script : "updateProgressBar('40%');"
+        //			});
+        //		} else {
+        //			api.execScript({
+        //				frameName : "frm_baiduMap_bottom_over",
+        //				script : "updateProgressBar('0%');"
+        //			});
+        //			_toast("签到取消!", 3000, "bottom");
+        //		}
+        callBack(ret, err);
+
+    });
+}
+
+// 弹窗
+function _alert(obj) {
+    if (typeof obj == "object") {
+        api.alert({
+            msg: JSON.stringify(obj)
+        }, function(ret, err) {
+
+        });
+    } else {
+        api.alert({
+            msg: obj
+        }, function(ret, err) {
+
+        });
+    }
+}
+
+// 指定window或者frame执行脚本
+function _execScript(winName, frmName, fnStr) {
+    var _winName = (typeof arguments[0] == "undefined" || arguments[0] == null) ? api.winName : arguments[0];
+    var _frmName = (typeof arguments[1] == "undefined" || arguments[1] == null) ? api.frameName : arguments[1];
+    var _fnStr = (typeof arguments[2] == "undefined" || arguments[2] == null) ? '' : arguments[2];
+    api.execScript({
+        name: _winName,
+        frameName: _frmName,
+        script: _fnStr
+    });
+}
+
+// 设置偏好设置
+function _setPrefs(key, value, _call) {
+    api.setPrefs({
+        key: key,
+        value: value
+    }, function(ret, err) {
+        var v = ret.value;
+        if (typeof _call == "function") {
+            _call();
+        }
+    });
+}
+
+// 设置存储
+function _setStorage(key, value) {
+    $api.setStorage(key, value);
+}
+
+// 获取存储
+function _getStorage(key) {
+    return $api.getStorage(key);
+}
+
+// 广播事件
+function _sendEvent(eventName, extra) {
+    var _extra = (typeof arguments[1] == "undefined" || arguments[1] == null) ? {} : arguments[1];
+    api.sendEvent({
+        name: eventName,
+        extra: _extra //extra: { key1: 'value1', key2: 'value2' }
+    });
+}
+
+// 监听事件
+function _addEventListener(eventName, _call, extra) {
+    var _extra = (typeof arguments[2] == "undefined" || arguments[2] == null) ? {} : arguments[2];
+    api.addEventListener({
+        name: eventName,
+        extra: _extra
+    }, function(ret, err) {
+        if (typeof _call == "function") {
+            _call(ret);
+        }
+    });
+}
+
+// 获取文件拓展名
+function _getExt(fileName) {
+    return fileName.substring(fileName.lastIndexOf('.') + 1);
+}
+
+// PHP时间戳转时间
+function _trans_php_time_to_str(timestamp, n) {
+    var update = new Date(timestamp * 1000);
+    //时间戳要乘1000
+    year = update.getFullYear();
+    month = (update.getMonth() + 1 < 10) ? ('0' + (update.getMonth() + 1)) : (update.getMonth() + 1);
+    day = (update.getDate() < 10) ? ('0' + update.getDate()) : (update.getDate());
+    hour = (update.getHours() < 10) ? ('0' + update.getHours()) : (update.getHours());
+    minute = (update.getMinutes() < 10) ? ('0' + update.getMinutes()) : (update.getMinutes());
+    second = (update.getSeconds() < 10) ? ('0' + update.getSeconds()) : (update.getSeconds());
+    if (n == 1) {
+        return (year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second);
+    } else if (n == 2) {
+        return (year + '-' + month + '-' + day);
+    } else {
+        return 0;
+    }
+}
+
+// 生成guid,主要用于生成随机文件名
+function _newGuid() {
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
+
+//数字小于10前面加0
+function _lessThanTenAdd0(value) {
+    if (parseInt(value) < 10) {
+        return "0" + value;
+    } else {
+        return value + "";
+    }
+}
+
+/**
+ *获取简短数字
+ * @param {Object}
+ */
+function _getShortNum(num) {
+    var shortNum = "0";
+    if (num <= 9999) { //三位数
+        shortNum = num + "";
+    } else if (num > 9999) { //四位以上
+        shortNum = (num / 1e4).toFixed(1) + "<span class='aui-font-size-12'>万</span>";
+    }
+    return shortNum;
+}
+
+/**
+ * 将日期格式化成工作日
+ */
+function getCNWeekByDay(day, template) {
+    var formatedWeek = "";
+    switch (day) {
+        case 0:
+            formatedWeek = template + "日";
+            break;
+        case 1:
+            formatedWeek = template + "一";
+            break;
+        case 2:
+            formatedWeek = template + "二";
+            break;
+        case 3:
+            formatedWeek = template + "三";
+            break;
+        case 4:
+            formatedWeek = template + "四";
+            break;
+        case 5:
+            formatedWeek = template + "五";
+            break;
+
+        case 6:
+            formatedWeek = template + "六";
+            break;
+
+    }
+    return formatedWeek;
+}
+
+/**
+ * 更具格式化时间字符串获取简短时间
+ * @param {Object} timeStr
+ */
+function _getShortTimeByTimeStr(timeStr) {
+    var result = "";
+    var time = new Date(timeStr);
+    var now = new Date();
+    now.setHours(now.getUTCHours() + 8);
+    //相差秒数
+    var disSecond = parseInt((now.getTime() - time.getTime()) / 1000);
+    if (disSecond < 60) {
+        //小于1分钟
+        disSecond = "刚刚";
+    } else if (disSecond >= 60 && disSecond < 60 * 60) {
+        //大于1分钟小于1小时
+        disSecond = parseInt(disSecond / 60);
+        disSecond += "分钟前";
+    } else if (disSecond >= 60 * 60 && disSecond < 60 * 60 * 24) {
+        //大于1小时小于24小时
+        disSecond = parseInt(disSecond / (60 * 60));
+        disSecond += "小时前";
+    } else if (disSecond >= 60 * 60 * 24 && disSecond < 60 * 60 * 24 * 30) {
+        //大于24小时小于30天
+        disSecond = parseInt(disSecond / (60 * 60 * 24));
+        disSecond += "天前";
+    } else if (disSecond >= 60 * 60 * 24 * 30 && disSecond < 60 * 60 * 24 * 30 * 12) {
+        //大于1个月
+        disSecond = parseInt(disSecond / (60 * 60 * 24 * 30));
+        disSecond += "个月前";
+    } else if (disSecond >= 60 * 60 * 24 * 30 * 12 && disSecond < 60 * 60 * 24 * 30 * 12 * 10) {
+        //大于1个月
+        disSecond = parseInt(disSecond / (60 * 60 * 24 * 30 * 12));
+        disSecond += "年前";
+    } else {
+        //大于10年
+        disSecond = "很久以前";
+    }
+    return disSecond;
+}
+// function getCurrentMonthLast(nextMonth){
+//           var date=new Date();
+//           var nextMonthFirstDay=new Date(date.getFullYear(),nextMonth-1,1);
+//           console.log(nextMonthFirstDay);
+//           var oneDay=1000*60*60*24;
+//           return new Date(nextMonthFirstDay.getTime()-oneDay);
+//       }
+// 获取当前的时间，拼接成2015-11-09这样的格式，主要用于对图片进行时间分类
+function _getFormatedDate(time, _pattern) {
+    var date = (typeof arguments[0] == "undefined" || arguments[0] == null || arguments[0] == "") ? new Date() : new Date(arguments[0]);
+    var pattern = (typeof arguments[1] == "undefined" || arguments[1] == null || arguments[1] == "") ? "yyyy-MM-dd HH:mm:ss" : arguments[1];
+    var seperator1 = "-";
+    var seperator2 = "/";
+    var year = date.getFullYear();
+    var month = date.getMonth()+ 1;
+    var strDate = date.getDate();
+     if(time==''){
+      date = new Date();
+      var oldDate = new Date();
+      date.setTime(date.getTime()-24*60*60*1000);
+      strDate = date.getDate();
+      if(oldDate.getDate()==1){
+        var data=1
+        month = oldDate.getMonth()
+        if(month==0){
+          month = oldDate.getMonth()+12;
+          year = oldDate.getFullYear()-1;
+        }
+      }
+    }
+    // var strDate = date.getDate()-1;
+    var strHours = date.getHours();
+    var strMinutes = date.getMinutes();
+    var strSeconds = date.getSeconds();
+    var currentdate = "";
+    switch (pattern) {
+        case "HH时":
+            currentdate = _lessThanTenAdd0(strHours) + "时";
+            break;
+        case "dd日":
+            currentdate = _lessThanTenAdd0(strDate) + "日";
+            break;
+        case "dd日HH时":
+            currentdate = _lessThanTenAdd0(strDate) + "日" + _lessThanTenAdd0(strHours) + "时";
+            break;
+        case "MM月":
+            currentdate = _lessThanTenAdd0(month) + "月";
+            break;
+        case "MM月dd日":
+            currentdate = _lessThanTenAdd0(month) + "月" + _lessThanTenAdd0(strDate) + "日 ";
+            break;
+        case "MM月dd日HH时":
+            currentdate = _lessThanTenAdd0(month) + "月" + _lessThanTenAdd0(strDate) + "日" + _lessThanTenAdd0(strHours) + "时";
+            break;
+        case "MM月dd日HH时mm分":
+            currentdate = _lessThanTenAdd0(month) + "月" + _lessThanTenAdd0(strDate) + "日" + _lessThanTenAdd0(strHours) + "时" + _lessThanTenAdd0(strMinutes) + "分";
+            break;
+        case "yyyy年":
+            currentdate = year + "年";
+            break;
+        case "yyyy年MM月":
+            currentdate = year + "年" + _lessThanTenAdd0(month) + "月";
+            break;
+        case "yyyy年MM月dd日":
+            currentdate = year + "年" + _lessThanTenAdd0(month) + "月" + _lessThanTenAdd0(strDate) + "日 ";
+            break;
+        case "yyyy年MM月dd日  HH时":
+            currentdate = year + "年" + _lessThanTenAdd0(month) + "月" + _lessThanTenAdd0(strDate) + "日 " + _lessThanTenAdd0(strHours) + "时";
+            break;
+        case "yyyy年MM月dd日  HH时mm分":
+            currentdate = year + "年" + _lessThanTenAdd0(month) + "月" + _lessThanTenAdd0(strDate) + "日 " + _lessThanTenAdd0(strHours) + "时" + _lessThanTenAdd0(strMinutes) + "分";
+            break;
+        case "yyyy年MM月dd日  HH时mm分ss秒":
+            currentdate = year + "年" + _lessThanTenAdd0(month) + "月" + _lessThanTenAdd0(strDate) + "日 " + _lessThanTenAdd0(strHours) + "时" + _lessThanTenAdd0(strMinutes) + "分" + _lessThanTenAdd0(strSeconds) + "秒";
+            break;
+        case "yyyy年MM月dd日  HH:mm:ss":
+            currentdate = year + "年" + _lessThanTenAdd0(month) + "月" + _lessThanTenAdd0(strDate) + "日 " + _lessThanTenAdd0(strHours) + ":" + _lessThanTenAdd0(strMinutes) + ":" + _lessThanTenAdd0(strSeconds);
+            break;
+        case "yyyy.MM.dd HH时":
+            currentdate = year + "." + _lessThanTenAdd0(month) + "." + _lessThanTenAdd0(strDate) + " " + _lessThanTenAdd0(strHours) + "时";
+            break;
+        case "yyyy-MM-dd HH:00:00":
+            currentdate = year + seperator1 + _lessThanTenAdd0(month) + seperator1 + _lessThanTenAdd0(strDate) + " " + _lessThanTenAdd0(strHours) + ":00:00";
+            break;
+        case "yyyy/MM/dd HH:00:00":
+            currentdate = year + seperator2 + _lessThanTenAdd0(month) + seperator2 + _lessThanTenAdd0(strDate) + " " + _lessThanTenAdd0(strHours) + ":00:00";
+            break;
+        case "HH:mm":
+            currentdate = _lessThanTenAdd0(strHours) + ":" + _lessThanTenAdd0(strMinutes);
+            break;
+        case "MM-dd":
+            currentdate = _lessThanTenAdd0(month) + seperator1 + _lessThanTenAdd0(strDate);
+            break;
+        case "MM/dd":
+            currentdate = _lessThanTenAdd0(month) + seperator2 + _lessThanTenAdd0(strDate);
+            break;
+        case "yyyy-MM":
+            currentdate = year + seperator1 + _lessThanTenAdd0(month);
+            break;
+        case "yyyy/MM":
+            currentdate = year + seperator2 + _lessThanTenAdd0(month);
+            break;
+        case "yyyy-MM-dd":
+            currentdate = year + seperator1 + _lessThanTenAdd0(month) + seperator1 + _lessThanTenAdd0(strDate);
+            break;
+        case "yyyy/MM/dd":
+            currentdate = year + seperator2 + _lessThanTenAdd0(month) + seperator2 + _lessThanTenAdd0(strDate);
+            break;
+        case "yyyy-MM-dd HH:mm:ss":
+            currentdate = year + seperator1 + _lessThanTenAdd0(month) + seperator1 + _lessThanTenAdd0(strDate) + " " + _lessThanTenAdd0(strHours) + ":" + _lessThanTenAdd0(strMinutes) + ":" + _lessThanTenAdd0(strSeconds);
+            break;
+        case "yyyy/MM/dd HH:mm:ss":
+            currentdate = year + seperator2 + _lessThanTenAdd0(month) + seperator2 + _lessThanTenAdd0(strDate) + " " + _lessThanTenAdd0(strHours) + ":" + _lessThanTenAdd0(strMinutes) + ":" + _lessThanTenAdd0(strSeconds);
+            break;
+        case "yyyyMMdd":
+            currentdate = year + "" + _lessThanTenAdd0(month) + "" + _lessThanTenAdd0(strDate);
+            break;
+        case "yyyyMMddHHmmss":
+            currentdate = year + "" + _lessThanTenAdd0(month) + "" + _lessThanTenAdd0(strDate) + "" + _lessThanTenAdd0(strHours) + "" + _lessThanTenAdd0(strMinutes) + "" + _lessThanTenAdd0(strSeconds);
+            break;
+        case "yyyyMMddHH0000":
+            currentdate = year + "" + _lessThanTenAdd0(month) + "" + _lessThanTenAdd0(strDate) + "" + _lessThanTenAdd0(strHours) + "0000";
+            break;
+        default:
+            currentdate = year + seperator1 + _lessThanTenAdd0(month) + seperator1 + _lessThanTenAdd0(strDate) + " " + _lessThanTenAdd0(strHours) + ":" + _lessThanTenAdd0(strMinutes) + ":" + _lessThanTenAdd0(strSeconds);
+            break;
+    }
+    return currentdate;
+}
+
+function getHalfDay() {
+    var halfDay = {};
+    if (new Date().getHours() >= 6 && new Date().getHours() <= 18) {
+        halfDay.cName = "白天";
+        halfDay.hour = new Date().getHours();
+        halfDay.eName = "day";
+    } else {
+        halfDay.cName = "夜晚";
+        halfDay.hour = new Date().getHours();
+        halfDay.eName = "night";
+    }
+    return halfDay;
+}
+
+// 获取当前的时间，拼接成2015-11-09这样的格式，主要用于对图片进行时间分类
+function _getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = year + seperator1 + month + seperator1 + strDate
+    return currentdate;
+}
+
+function _formatedDate(dateTime, _pattern) {
+    var _formatedDateStr = "";
+    switch (_pattern) {
+        case "yyyy/MM/dd HH:mm:ss":
+            _formatedDateStr = dateTime.substring(0, 4) + "/" + dateTime.substring(4, 6) + "/" + dateTime.substring(6, 8) + " " + dateTime.substring(8, 10) + ":" + dateTime.substring(10, 12) + ":" + dateTime.substring(12, 14);
+            break;
+        case "yyyy.MM.dd HH时":
+            _formatedDateStr = dateTime.substring(0, 4) + "." + dateTime.substring(4, 6) + "." + dateTime.substring(6, 8) + " " + dateTime.substring(8, 10) + "时";
+            break;
+        case "MM月dd日HH时":
+            _formatedDateStr = dateTime.substring(4, 6) + "月" + dateTime.substring(6, 8) + "日" + dateTime.substring(8, 10) + "时";
+            break;
+    }
+    //	console.log("_formatedDateStr:" + _formatedDateStr);
+    return _formatedDateStr;
+}
+
+// 倒计时(参数container: 展示倒计时的容器)
+function _countDown(timeStr, container) {
+    var leftTime = (new Date(timeStr)) - (new Date()); //计算剩余的毫秒数
+    if (leftTime <= 0) {
+        document.getElementById(container).innerHTML = "00天00小时00分";
+    } else {
+        var days = parseInt(leftTime / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+        var hours = parseInt(leftTime / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+        var minutes = parseInt(leftTime / 1000 / 60 % 60, 10); //计算剩余的分钟
+        //	  var seconds = parseInt(leftTime / 1000 % 60, 10);//计算剩余的秒数
+        days = _lessThanTenAdd0(days);
+        hours = _lessThanTenAdd0(hours);
+        minutes = _lessThanTenAdd0(minutes);
+        //	  seconds = _lessThanTenAdd0(seconds);
+        document.getElementById(container).innerHTML = days + "天" + hours + "小时" + minutes + "分"; //+seconds+"秒";
+        setInterval(function() {
+            _countDown(timeStr, container)
+        }, 60000); //周期1分钟
+    }
+}
+
+
+// 去除数组重复项
+function _unique(arr) {
+    var result = [],
+        hash = {};
+    for (var i = 0, elem;
+        (elem = arr[i]) != null; i++) {
+        if (!hash[elem]) {
+            result.push(elem);
+            hash[elem] = true;
+        }
+    }
+    return result;
+}
+
+/**
+ * 判断一个元素是否存在于一个数组中
+ * @param {Object} arr 数组
+ * @param {Object} value 元素值
+ */
+function _isInArray(arr, value) {
+    for (var i = 0; i < arr.length; i++) {
+        if (value === arr[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// 判断是否是IOS
+function _isIOS() {
+    return api.systemType == "ios" ? true : false;
+}
+
+//隐匿手机号(*代替中间四位)
+function _hideCellphone(cellphoneNo) {
+    if (!_isStringNull(cellphoneNo)) {
+        return cellphoneNo.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+    } else {
+        return cellphoneNo;
+    }
+}
+
+//JS判断变量是否以某个字符串结尾
+String.prototype.endWith = function(endStr) {
+        var d = this.length - endStr.length;
+        return (d >= 0 && this.lastIndexOf(endStr) == d)
+    }
+    //设置透明度
+function _setOpacity(ele, opacity) {
+    if (ele.style.opacity != undefined) {
+        ///兼容FF和GG和新版本IE
+        ele.style.opacity = opacity / 100;
+
+    } else {
+        ///兼容老版本ie
+        ele.style.filter = "alpha(opacity=" + opacity + ")";
+    }
+}
+//渐入动画
+function _fadein(ele, opacity, speed) {
+    if (ele) {
+        var v = ele.style.filter.replace("alpha(opacity=", "").replace(")", "") || ele.style.opacity;
+        v < 1 && (v = v * 100);
+        var count = speed / 1000;
+        var avg = count < 2 ? (opacity / count) : (opacity / count - 1);
+        var timer = null;
+        timer = setInterval(function() {
+            if (v < opacity) {
+                v += avg;
+                setOpacity(ele, v);
+            } else {
+                clearInterval(timer);
+            }
+        }, 500);
+    }
+}
+//渐出动画
+function _fadeout(ele, opacity, speed) {
+    if (ele) {
+        var v = ele.style.filter.replace("alpha(opacity=", "").replace(")", "") || ele.style.opacity || 100;
+        v < 1 && (v = v * 100);
+        var count = speed / 1000;
+        var avg = (100 - opacity) / count;
+        var timer = null;
+        timer = setInterval(function() {
+            if (v - avg > opacity) {
+                v -= avg;
+                setOpacity(ele, v);
+            } else {
+                clearInterval(timer);
+            }
+        }, 500);
+    }
+}
+/**
+ *获取简短数字
+ * @param {Object}
+ */
+function _getShortNum(num) {
+    var shortNum = "0";
+    if (num <= 9999) { //三位数
+        shortNum = num + "";
+    } else if (num > 9999) { //四位以上
+        shortNum = (num / 1e4).toFixed(1) + "万";
+    }
+    return shortNum;
+}
+
+function _getStartDateByNum(num) {
+    var startDate = "";
+    var now = new Date();
+    now.setHours(now.getUTCHours() + 8);
+    switch (num) {
+        case "1":
+            // now.setDate(now.getDate() - 2);
+            now.setDate(now.getDate()-1);
+            break;
+        case "7":
+            // now.setDate(now.getDate() - now.getDay() + 1);
+            now.setDate(now.getDate() - 7);
+            break;
+        case "15":
+            now.setDate(now.getDate() - 15);
+            break;
+        case "30":
+            // now.setDate(1);
+            // now.setDate(now.getDate() - 31);
+            now.setDate(now.getDate() - 30);
+            break;
+        case "365":
+            // now.setMonth(0);
+            // now.setDate(1);
+            now.setDate(now.getDate() - 366);
+            break;
+        case "999":
+            now.setFullYear(2017, 0, 2);
+            break;
+    }
+    startDate = _getFormatedDate(now, "yyyy/MM/dd");
+    return startDate;
+}

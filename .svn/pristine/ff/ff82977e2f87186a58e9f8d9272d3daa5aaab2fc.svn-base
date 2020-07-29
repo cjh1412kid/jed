@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>公司简介</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css"/>
+		<!--<link rel="stylesheet" type="text/css" href="../../css/common/style.css"/>-->
+		<style>
+			/* 公司简介图片 */
+			.brandImage{
+				width: -webkit-calc(100% - 1.0rem);
+				height: auto;
+			}			
+			/* 公司简介内容 */
+			.company-summary{
+				text-indent:2em; 
+				margin-bottom: 1.0rem !important;
+			}
+			
+			.aui-text-brown{
+				font-weight: bold;
+			}			
+		</style>
+	</head>
+	<body class="aui-hide">	
+		<div class="info-container">
+			<!--<div class="brandImage aui-margin-10"><img src="http://192.168.2.186:8080/picture/sr_base/Base_Brand/4/aaa.jpg" onerror="imgerror(this)"/></div>
+			<div class="aui-padded-10 aui-font-size-16 aui-text-center">
+				<div class="aui-text-brown">温州依婷公主女鞋</div>
+				<div class="aui-padded-t-5 aui-font-size-14">品牌：<span>依婷公主</span>(<span>女鞋生产商</span>)</div>
+			</div>
+			<div class="company-summary aui-font-size-16 aui-padded-10">依婷公主中国驰名商标。为依婷公主鞋业有限公司所属品牌。依婷公主鞋业有限公司始创于1999年，是一家集科研、开发、生产、销售及服务于一体的大型鞋类企业，也是“中国鞋都”（温州）女鞋行业的领军企业，主导产品为“依婷 公主”牌中高档休闲女鞋。</div>
+			<div class="address aui-font-size-12 aui-padded-b-10 aui-padded-l-10 aui-padded-r-10">地址：温州市双屿街道鞋都二期2号地块（温州市健克鞋材有限公司厂房第三层东西向）</div>-->
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<!--<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js" ></script>-->
+<script type="text/javascript">
+	
+	//获取"关于我们"（公司、品牌信息）
+	function getDatas(call) {
+		var url = window.myServerUrl + "order/app/baseUser/getCompanyBrandInfo?token="+token;		
+		console.log("获取'关于我们':" + url);
+		isAjaxing = true;
+		_ajax(url, "getCompanyBrandInfo", function(ret, err) {
+			if (ret) {
+				console.log("_ajax.getCompanyBrandInfo.ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					var res = ret.result[0];//公司简介
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				_toast(window.ajaxErrorMessage);
+			}
+			call(res);
+		});
+	}
+	
+	function closeUILoading() {
+		UILoading.closeKeyFrame();
+	}
+
+	function openUILoading() {
+		UILoading.keyFrame({
+			rect : {
+				w : 102,
+				h : 102
+			},
+			styles : {
+				bg : 'rgba(0,0,0,0)',
+				corner : 5,
+				interval : 50,
+				frame : {
+					w : 102,
+					h : 102
+				}
+			},
+			//				content : [{
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}, {
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}],
+			mask : "rgba(255,0,0,0)"
+		}, function(ret) {
+			//								alert(JSON.stringify(ret));
+			console.log(12345);
+		});
+	}	
+	
+	function initUI(res) {	
+//		console.log("渲染'关于我们':" + $api.jsonToStr(res));
+		var htmlStr = '';
+		if(res.brandImage.endWith("null")){
+			htmlStr += '<div class="brandImage aui-margin-10"><img src="../../image/common/no_img.png"/></div>';
+		}else{
+			htmlStr += '<div class="brandImage aui-margin-10"><img src="'+res.brandImage+'" onerror="imgerror(this)"/></div>';
+		}		
+		htmlStr += '<div class="aui-padded-10 aui-font-size-16 aui-text-center">';
+		htmlStr += 	'<div class="aui-text-brown">'+res.companyName+'</div>';
+		if(!_isStringNull(res.brandName) && !_isStringNull(res.brandRemark)){
+			htmlStr += 	'<div class="aui-padded-t-5 aui-font-size-14">品牌：<span>'+res.brandName+'</span>(<span>'+res.brandRemark+'</span>)</div>';
+		}else{
+			if(!_isStringNull(res.brandName) && _isStringNull(res.brandRemark)){
+				htmlStr += 	'<div class="aui-padded-t-5 aui-font-size-14">品牌：<span>'+res.brandName+'</span><span></span></div>';			
+			}			
+		}
+		htmlStr += '</div>';			
+		htmlStr += '<div class="company-summary aui-font-size-16 aui-padded-10">'+res.companyRemark+'</div>';
+		htmlStr += '<div class="address aui-font-size-12 aui-padded-b-10 aui-padded-l-10 aui-padded-r-10">地址：'+res.companyAddress+'</div>';
+//		console.log(htmlStr);
+		$api.html($api.dom(".info-container"), htmlStr);	
+//		new auiLazyload({
+//			errorImage : "../../image/error_img.png"
+//		});
+		
+		setTimeout(function() {
+			api.parseTapmode();
+			if ($api.hasCls($api.dom("body"), "aui-hide")) {
+				$api.removeCls($api.dom("body"), "aui-hide");
+			}
+			closeUILoading();
+		}, window.refreshLoadDoneTimeOut);
+	}
+	
+	function imgerror(img){
+		img.src="../../image/error_img.png";
+		img.onerror = null; //控制不要一直跳动
+	}
+
+	function initData() {
+		token = $api.getStorage("tokenKey");
+//		console.log("token：" + token);
+		UILoading = api.require('UILoading');
+	}
+	
+
+	var token;
+	var UILoading;
+	apiready = function() {
+		initData();
+		
+		//设置下拉刷新延迟
+		setTimeout(function() {
+			openUILoading();
+			getDatas(function(res) {
+				if (!_isObjectNull(res)) {
+					initUI(res);
+				} else {						
+					setTimeout(function() {
+						api.parseTapmode();
+						if ($api.hasCls($api.dom("body"), "aui-hide")) {
+							$api.removeCls($api.dom("body"), "aui-hide");
+						}
+						closeUILoading();
+					}, window.refreshLoadDoneTimeOut);
+				}
+			});
+		}, 150);
+		
+		api.parseTapmode();	
+	}
+</script>

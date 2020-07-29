@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="io.nuite.modules.order_platform_app.dao.TargetShopDao">
+	<!-- 新增门店指标 -->
+	<insert id="insertTargetShop"
+		parameterType="io.nuite.modules.order_platform_app.entity.TargetShopEntity">
+		INSERT INTO
+		JedOrderPlatform.dbo.YHSR_Target_Shop(Money,Del,Creator,Shop_Seq,Target_Year,Target_Month,InputTime,Tag)
+		VALUES
+		<foreach collection="list" index="index" item="item" open=""
+			close="" separator=",">
+			(#{item.money},0,#{item.creator},#{item.shopSeq},#{item.targetYear},#{item.targetMonth},#{item.inputTime},#{item.tag})
+		</foreach>
+	</insert>
+
+	<!-- 修改门店指标 -->
+	<update id="updateTargetShop"
+		parameterType="io.nuite.modules.order_platform_app.entity.TargetShopEntity">
+		<foreach collection="list" index="index" item="item" open=""
+			close="" separator=";">
+			UPDATE
+			JedOrderPlatform.dbo.YHSR_Target_Shop
+			SET
+			Money = #{item.money}
+			WHERE Seq = #{item.seq}
+		</foreach>
+	</update>
+
+	<!-- 获取总指标 -->
+	<select id="selectTotalTarget" parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetShopEntity">
+		SELECT
+		bb.Seq AS seq,
+		SUM(ts.Money) AS totalMoney,
+		ts.Target_Year AS targetYear
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Brand bb
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Area ba
+		ON bb.Seq = ba.Brand_Seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		ON bs.Area_seq = ba.Seq
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop ts
+		ON bs.Seq =
+		ts.Shop_Seq
+		WHERE bs.Del = 0 AND ts.Del = 0 AND ts.Target_Year =
+		#{targetYear} AND
+		bb.Seq = #{brandSeq} AND ts.Tag=#{tag}
+		GROUP BY
+		bb.Seq,ts.Target_Year
+	</select>
+
+	<!-- 获取总月指标 -->
+	<select id="selectTotalMonthTarget"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetShopEntity">
+		SELECT
+		bs.Seq AS seq,
+		ts.Target_Year AS targetYear,
+		ts.Target_Month AS targetMonth ,
+		tas.Money AS middleMoney,tas.Seq AS
+		middleSeq,
+		tbs.Money AS
+		advanceMoney ,tbs.Seq AS advanceSeq,
+		tcs.Money AS
+		standardMoney,tcs.Seq
+		AS standardSeq
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Brand bb
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Area ba
+		ON bb.Seq = ba.Brand_Seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		ON bs.Area_seq = ba.Seq
+		LEFT JOIN
+		(
+		SELECT Shop_Seq, Target_Year, Target_Month, Del FROM
+		JedOrderPlatform.dbo.YHSR_Target_Shop GROUP BY Shop_Seq, Target_Year,
+		Target_Month, Del ) ts
+		ON ts.Shop_Seq = bs.Seq
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop tas ON ts.Shop_Seq=
+		tas.Shop_Seq
+		AND ts.Target_Year= tas.Target_Year
+		AND ts.Target_Month=
+		tas.Target_Month
+		AND tas.tag= 2
+		AND tas.Del= 0
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop tbs
+		ON ts.Shop_Seq= tbs.Shop_Seq
+		AND ts.Target_Year= tbs.Target_Year
+		AND ts.Target_Month=
+		tbs.Target_Month
+		AND tbs.tag= 3
+		AND tbs.Del= 0
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop tcs
+		ON ts.Shop_Seq= tcs.Shop_Seq
+		AND ts.Target_Year= tcs.Target_Year
+		AND ts.Target_Month=
+		tcs.Target_Month
+		AND tcs.tag= 1
+		AND tcs.Del= 0
+		WHERE bs.Del = 0 AND
+		ts.Del = 0 AND bb.Seq = #{brandSeq}
+	</select>
+
+	<!-- 获取单个月指标 -->
+	<select id="selectMonthTarget" parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetShopEntity">
+		SELECT
+		bb.Seq AS seq,
+		ts.Target_Year AS targetYear,
+		ts.Target_Month AS targetMonth,
+		SUM(ts.money) AS monthMoney
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Brand bb
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Area ba
+		ON bb.Seq = ba.Brand_Seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		ON bs.Area_seq = ba.Seq
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop ts
+		ON bs.Seq = ts.Shop_Seq
+		WHERE
+		bs.Del = 0 AND ts.Del = 0 AND ts.Target_Year = #{targetYear} AND
+		ts.Target_Month = #{targetMonth} AND bb.Seq = #{brandSeq} AND
+		ts.Tag=#{tag}
+		GROUP BY bb.Seq,ts.Target_Year,ts.Target_Month
+	</select>
+
+	<!-- 获取单个月门店指标列表 -->
+	<select id="selectMonthShopTarget" parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetShopEntity">
+		SELECT
+		bs.Seq AS shopSeq,
+		ts.Target_Year AS targetYear,
+		ts.Target_Month AS
+		targetMonth,
+		bs.Name AS shopName,
+		tas.Money AS middleMoney,tas.Seq AS
+		middleSeq,
+		tbs.Money AS advanceMoney ,tbs.Seq AS advanceSeq,
+		tcs.Money AS standardMoney,tcs.Seq AS standardSeq
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		LEFT JOIN
+		( SELECT Shop_Seq,
+		Target_Year, Target_Month, Del FROM
+		JedOrderPlatform.dbo.YHSR_Target_Shop GROUP BY Shop_Seq, Target_Year,
+		Target_Month, Del ) ts
+		ON ts.Shop_Seq = bs.Seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Area ba
+		ON bs.Area_seq = ba.Seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Brand bb
+		ON bb.Seq = ba.Brand_Seq
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop tas ON ts.Shop_Seq= tas.Shop_Seq
+		AND ts.Target_Year= tas.Target_Year
+		AND ts.Target_Month= tas.Target_Month
+		AND tas.tag= 2
+		AND tas.Del= 0
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_Target_Shop tbs
+		ON ts.Shop_Seq= tbs.Shop_Seq
+		AND ts.Target_Year= tbs.Target_Year
+		AND ts.Target_Month= tbs.Target_Month
+		AND tbs.tag= 3
+		AND tbs.Del= 0
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_Target_Shop tcs
+		ON ts.Shop_Seq= tcs.Shop_Seq
+		AND ts.Target_Year= tcs.Target_Year
+		AND ts.Target_Month= tcs.Target_Month
+		AND tcs.tag= 1
+		AND tcs.Del= 0
+		WHERE bs.Del = 0 AND ts.Del = 0 AND bb.Seq = #{brandSeq}
+		AND ts.Target_Year
+		= #{targetYear} AND ts.Target_Month = #{targetMonth}
+	</select>
+
+	<!-- 获取总销售指标分析 -->
+	<select id="selectTotalTargetAnalyze"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetShopEntity">
+		SELECT
+		s.*,
+		CASE s.totalMoney WHEN 0 THEN 0 ELSE
+		(s.completeMoney/s.totalMoney)END AS
+		completePercent FROM (SELECT
+		SUM(ts.Money) AS totalMoney,
+		(SELECT
+		SUM(ssd.RealPrice*ssd.SaleCount/10000)
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail ssd
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		ON bs.Seq = ssd.ShopSeq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Area ba
+		ON ba.Seq = bs.Area_seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Brand bb
+		ON bb.Seq = ba.Brand_Seq
+		WHERE
+		DATENAME(YY, ssd.SaleDate) = #{targetYear}
+		<if test="targetMonth != null">
+			AND DATEPART(MM, ssd.SaleDate) = #{targetMonth}
+		</if>
+		AND bb.Seq = #{brandSeq}) AS completeMoney
+		FROM
+		JedOrderPlatform.dbo.YHSR_Target_Shop ts
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		ON bs.Seq = ts.Shop_Seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Area ba
+		ON ba.Seq = bs.Area_seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Brand bb
+		ON bb.Seq = ba.Brand_Seq
+		WHERE
+		ts.Del = 0 AND ts.Target_Year = #{targetYear}
+		<if test="tag != null">
+			AND ts.Tag=#{tag}
+		</if>
+		<if test="targetMonth != null">
+			AND ts.Target_Month = #{targetMonth}
+		</if>
+		AND bb.Seq = #{brandSeq})s
+	</select>
+
+	<!-- 获取门店总指标列表 -->
+	<select id="selectTotalShopTargetAnalyze"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetShopEntity">
+		SELECT
+		bs.Seq AS shopSeq,
+		bs.Name AS shopName,
+		SUM(ts.Money) AS
+		totalMoney
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop ts
+		ON bs.Seq = ts.Shop_Seq AND
+		ts.Target_Year = #{targetYear}
+		<if test="targetMonth != null">
+			AND ts.Target_Month = #{targetMonth}
+		</if>
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Area ba
+		ON ba.Seq = bs.Area_seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Brand bb
+		ON bb.Seq = ba.Brand_Seq
+		WHERE bs.Del = 0 AND ts.Del = 0 AND bb.Seq = #{brandSeq}
+		<if test="tag != null">
+			AND ts.Tag=#{tag}
+		</if>
+		GROUP BY bs.Seq,bs.Name
+	</select>
+	<select id="selectTotalShopTargetAnalyzeByYear"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetShopEntity">
+		SELECT
+		bs.Seq AS shopSeq,
+		bs.Name AS shopName,
+		ts.Target_Year AS
+		targetYear,
+		ts.Target_Month AS targetMonth,
+		tas.Money AS
+		middleMoney,tas.Seq AS middleSeq,
+		tbs.Money AS advanceMoney ,tbs.Seq AS
+		advanceSeq,
+		tcs.Money AS standardMoney,tcs.Seq AS standardSeq
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		LEFT JOIN (SELECT
+		Shop_Seq,Target_Year,Target_Month,Del FROM
+		JedOrderPlatform.dbo.YHSR_Target_Shop GROUP BY Shop_Seq
+		, Target_Year
+		,Target_Month,Del) ts ON bs.Seq = ts.Shop_Seq
+		AND ts.Target_Year =
+		#{targetYear}
+		<if test="targetMonth != null">
+			AND ts.Target_Month = #{targetMonth}
+		</if>
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Base_Area ba ON ba.Seq = bs.Area_seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Base_Brand bb ON bb.Seq =
+		ba.Brand_Seq
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_Target_Shop tas
+		ON
+		ts.Shop_Seq= tas.Shop_Seq
+		AND ts.Target_Year= tas.Target_Year
+		AND
+		ts.Target_Month= tas.Target_Month
+		AND tas.tag= 2
+		AND tas.Del= 0
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop tbs
+		ON ts.Shop_Seq= tbs.Shop_Seq
+		AND ts.Target_Year= tbs.Target_Year
+		AND ts.Target_Month=
+		tbs.Target_Month
+		AND tbs.tag= 3
+		AND tbs.Del= 0
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop tcs
+		ON ts.Shop_Seq= tcs.Shop_Seq
+		AND ts.Target_Year= tcs.Target_Year
+		AND ts.Target_Month=
+		tcs.Target_Month
+		AND tcs.tag= 1
+		AND tcs.Del= 0
+		WHERE
+		bs.Del = 0
+		AND ts.Del
+		= 0
+		AND bb.Seq = #{brandSeq}
+
+	</select>
+</mapper>

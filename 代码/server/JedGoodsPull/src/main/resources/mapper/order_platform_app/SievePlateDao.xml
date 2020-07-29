@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.SievePlateDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.SievePlateEntity" id="sievePlateMap">
+        <result property="seq" column="Seq"/>
+        <result property="companySeq" column="Company_Seq"/>
+        <result property="year" column="Year"/>
+        <result property="seasonSeq" column="Season_Seq"/>
+        <result property="orderShoesSeq" column="OrderShoes_Seq"/>
+        <result property="goodID" column="GoodID"/>
+        <result property="categorySeq" column="Category_Seq"/>
+        <result property="userSeq" column="User_Seq"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+</mapper>

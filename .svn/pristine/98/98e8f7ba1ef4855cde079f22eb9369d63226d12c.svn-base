@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>品类详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/ordermetting/category_detail_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical shop-user">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-pull-right aui-btn"></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16" tapmode onclick="openSearchWin();">品类详情</div>
+    </header>
+    <div class="wrapTittle check_flex">
+        <span class="shopNum check_flex1">货号</span>
+        <span class="tittle_hot des check_flex1" onclick="sortAction(this)" tapmode>筛选次数<span>▼</span></span>
+        <span class="check_flex1">是否分配</span>
+        <span class="check_flex1 checkOrder">订货分配</span>
+    </div>
+    <div class="flex-con aui-margin-l-10 aui-margin-r-10 aui-margin-b-10 content">
+        <ul class="checkContent">
+            <!-- <li class='flex-wrap aui-border-b check_flex'>
+                <div class='checkNum '> + order_list[i].goodId + </div>
+                <div class='checkTime '> + order_list[i].num + </div>
+
+                <div class='checkOrder ' onclick='openAllotPop(\"" + order_list[i].goodId + "\")'>分配</div>
+                <div class='isCheck' tapmode onclick='toggleCls(this)'><span class='aui-iconfont aui-icon-correct aui-text-default'></span></div>
+            </li> -->
+        </ul>
+    </div>
+    <div class="bottom box-wrap box-horizontal-center box-vertical-center ">
+        <div class="btn-check" tapmode onclick="check()">计划审查</div>
+
+    </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../script/common/linq.js"></script>
+<script type="text/javascript">
+    function openCheckPop(datas) {
+        var rect = {
+                x: 0, //左上角x坐标
+                y: 0, //左上角y坐标
+                w: 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+                h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+                marginLeft: 0, //相对父 window 左外边距的距离
+                marginTop: 0, //相对父 window 上外边距的距离
+                marginBottom: 0, //相对父 window 下外边距的距离
+                marginRight: 0 //相对父 window 右外边距的距离
+            }; //类型：JSON对象,默认值：充满整个父页面,描述：（可选项）frame的位置和大小，设置margin后，在不同手机上面会保持与父页面的各方向边距一致，而中间区域会自动扩充。
+            var animation = {
+               type:"fade",                //动画类型（详见动画类型常量）
+               subType:"from_right",       //动画子类型（详见动画子类型常量）
+               duration:300                //动画过渡时间，默认300毫秒
+            };
+        _openFrame("order_plan_check_pop", "order_plan_check_pop.html", rect, datas, false, true, false, animation);
+    }
+    /**
+     *订货会审核
+     */
+    function check() {
+        var url = window.myServerUrl + '/order/app/sievePlate/reviewSievePlateDistribution';
+        url += '?year=' + api.pageParam.year;
+        url += '&seasonSeq=' + api.pageParam.seasonSeq;
+        url += '&categorySeq=' + api.pageParam.categorySeq;
+        console.log("订货会审核-->url:" + url);
+        _ajax(url, "reviewSievePlateDistribution", function(ret, err) {
+            if (ret) {
+                console.log("订货会审核-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    var check_info = ret.result;
+                    if (!_isArrayNull(check_info)) {
+                        openCheckPop(check_info);
+                    } else {
+                        _toast("未获取到计划审查数据！");
+                    }
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("订货会审核-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+        })
+
+    }
+
+    function toggleCls(obj) {
+        return;
+        if ($api.dom(obj, "span")) {
+            $api.html(obj, "");
+        } else {
+            $api.html(obj, '<span class="aui-iconfont aui-icon-correct aui-text-default"></span>');
+
+        }
+    }
+
+    function sortAction(obj) {
+        if ($api.hasCls(obj, 'des')) {
+            $api.removeCls(obj, 'des');
+            $api.text($api.dom(obj, 'span'), '▲');
+            order_list = Enumerable.From(order_list).OrderBy("$.num").ToArray();
+        } else {
+            $api.addCls(obj, 'des');
+            $api.text($api.dom(obj, 'span'), '▼');
+            order_list = Enumerable.From(order_list).OrderByDescending("$.num").ToArray();
+        }
+        initUI();
+    }
+
+    function openAllotPop(_goodsId) {
+        if (userInfo.factoryUserFlag) {
+            //公司帐号
+            var pageParam = {
+                goodsId: _goodsId
+            };
+            _openWin('order_allot_win', 'order_allot_win.html', pageParam);
+        }
+
+    }
+
+    function initUI() {
+        var htmlContent = ""
+        for (var i in order_list) {
+            htmlContent += "<li class='flex-wrap aui-border-b check_flex'>";
+            //  flex-con box-wrap box-vertical-start box-horizontal-center
+            htmlContent += "<div class='checkNum '>" + order_list[i].goodId + "</div>";
+            htmlContent += "<div class='checkTime '>" + order_list[i].num + "</div>";
+            if (order_list[i].distributed == 1) {
+                htmlContent += "<div class='isCheck' tapmode onclick='toggleCls(this)'><span class='aui-iconfont aui-icon-correct aui-text-default'></span></div>"
+            } else if (order_list[i].distributed == 0) {
+                htmlContent += "<div class='isCheck' tapmode onclick='toggleCls(this)'></div>"
+            }
+            htmlContent += "<div class='checkOrder aui-font-size-12' tapmode onclick='openAllotPop(\"" + order_list[i].goodId + "\")'>分配</div>"
+            htmlContent += "</li>"
+            $api.html($api.dom('.checkContent'), htmlContent);
+            api.parseTapmode();
+        }
+    }
+
+    function getDatas() {
+        var url = window.myServerUrl + "/order/app/sievePlate/sievePlateDetail"
+        url += '?year=' + api.pageParam.year;
+        url += '&seasonSeq=' + api.pageParam.seasonSeq;
+        url += '&categorySeq=' + api.pageParam.categorySeq;
+        console.log("获取订货会品类详情列表数据-->url:" + url);
+        _ajax(url, "sievePlateList", function(ret, err) {
+            if (ret) {
+                console.log("获取订货会品类详情列表数据-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    order_list = ret.result;
+                    //  console.log($api.jsonToStr(order_list));
+                    order_list = Enumerable.From(order_list).OrderByDescending("$.num").ToArray();
+                    //  console.log($api.jsonToStr(order_list));
+                    //list数组
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("获取订货会品类详情列表数据-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            //callback();
+            initUI();
+        })
+    }
+
+    function initData() {
+        userInfo = $api.getStorage("userInfoKey");
+        if (userInfo.factoryUserFlag) {
+            //公司帐号
+            if ($api.hasCls($api.dom("body"), "shop-user")) {
+                $api.removeCls($api.dom("body"), "shop-user");
+            }
+        } else {
+            //门店账号
+            if (!$api.hasCls($api.dom("body"), "shop-user")) {
+                $api.addCls($api.dom("body"), "shop-user");
+            }
+        }
+    }
+
+    var order_list = [];
+    var userInfo;
+    var apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        initData();
+        getDatas();
+    }
+</script>
+
+</html>

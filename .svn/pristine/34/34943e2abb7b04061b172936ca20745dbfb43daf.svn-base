@@ -1,0 +1,36 @@
+html, body {
+    height: 100%;
+}
+
+.aui-iconfont {
+    font-weight: bold!important;
+    color: #505050!important;
+}
+
+.sub-header,.content-item {
+    height: 1.8rem;
+    line-height: 1.8rem;
+    text-align: center;
+    background: rgba(255, 248, 245, 1);
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+}
+
+.content {
+    overflow-y: scroll;
+}
+
+.content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+.content-item{
+  background:rgba(255,255,255,1);
+  color: rgba(147, 147, 147, 1);
+}
+.content-item:nth-of-type(2n){
+  background:rgba(248,252,255,1);
+}

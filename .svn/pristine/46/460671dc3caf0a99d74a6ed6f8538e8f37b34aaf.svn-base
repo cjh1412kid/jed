@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/goods/goods_list_win.css" />
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+		<a class="aui-pull-right aui-btn" tapmode onclick="openRightPane();"><img src="../../image/icon_filter.png" /></a>
+		<div class="aui-title text-header-title aui-text-default aui-font-size-16" tapmode onclick="openSearchWin();">全部<span class='aui-margin-l-5 aui-iconfont aui-icon-search aui-text-default aui-font-size-14'></span></div>
+	</header>
+	<div class="sub-header flex-wrap aui-border-b">
+		<div class="sort-btns flex-con flex-wrap">
+			<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center active active-sort" data-orderBy="1" tapmode onclick="sort(this)">
+				<div class="sort-name">
+					销售
+				</div>
+				<img data-orderDir="0" src="../../image/goods/icon_sort_21.png" />
+			</div>
+			<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center" data-orderBy="2" tapmode onclick="sort(this)">
+				<div class="sort-name">
+					库存
+				</div>
+				<img data-orderDir="0" src="../../image/goods/icon_sort_d.png" />
+			</div>
+			<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center finish-box" data-orderBy="3" tapmode onclick="sort(this)">
+				<div class="sort-name">
+					售罄率
+				</div>
+				<img data-orderDir="0" src="../../image/goods/icon_sort_d.png" />
+			</div>
+			<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center" data-orderBy="4" tapmode onclick="sort(this)">
+				<div class="sort-name">
+					日均销量
+				</div>
+				<img data-orderDir="0" src="../../image/goods/icon_sort_d.png" />
+			</div>
+		</div>
+		<div class="box-wrap box-horizontal-center box-vertical-center grid " tapmode onclick="changeViewMode(this)">
+			<div class="style-btn box-wrap box-horizontal-center box-vertical-center aui-border-l"><img src="../../image/goods/icon_grid.png" /></div>
+		</div>
+	</div>
+	<div class="order-metting-tips box-wrap box-horizontal-center box-vertical-center aui-hide">订货会</div>
+	<div class="content flex-wrap flex-vertical"></div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript">
+	function openRightPane() {
+		api.openDrawerPane({
+			type: 'right'
+		});
+	}
+
+	function openSearchWin() {
+		if (pageParam.name == '调配仓' || pageParam.name == '畅销款' || pageParam.name == '滞销款' || pageParam.name == '主推款' || pageParam.name == '老款' || pageParam.name == '断缺码'|| pageParam.name == '补货动态') {
+			return;
+		}
+		if (!_isStringNull(pageParam.searchType)) {
+			if (pageParam.searchType == 'tab_content_1') {
+				return;
+			}
+		}
+		var animation = {
+			type: "fade", //动画类型（详见动画类型常量）
+			subType: "from_right", //动画子类型（详见动画子类型常量）
+			duration: 300 //动画过渡时间，默认300毫秒
+		};
+		console.log($api.jsonToStr(pageParam));
+		pageParam.searchType = 'goods_list_win';
+		_openWin('search_win', '../search/search_win.html', pageParam, false, true, animation);
+	}
+	//商品排序
+	function sort(_obj) {
+		pageParam.orderBy = $api.attr(_obj, "data-orderBy");
+		if ($api.hasCls(_obj, "active")) {
+			if ($api.hasCls(_obj, "active-sort")) {
+				$api.attr($api.dom(_obj, "img"), "src", "../../image/goods/icon_sort_12.png");
+				$api.removeCls(_obj, "active-sort");
+				pageParam.orderDir = 1;
+			} else {
+				$api.addCls(_obj, "active-sort");
+				$api.attr($api.dom(_obj, "img"), "src", "../../image/goods/icon_sort_21.png");
+				pageParam.orderDir = 0;
+			}
+		} else {
+			$api.attr($api.dom($api.dom(".sort-btn.active"), "img"), "src", "../../image/goods/icon_sort_d.png");
+			$api.removeCls($api.dom(".sort-btn.active"), "active-sort");
+			$api.attr($api.dom(_obj, "img"), "src", "../../image/goods/icon_sort_21.png");
+			$api.addCls(_obj, "active-sort");
+			pageParam.orderDir = 0;
+			$api.removeCls($api.dom(".sort-btn.active"), "active");
+			$api.addCls(_obj, "active");
+		}
+		//广播
+		_sendEvent("query_filter_changed_event", pageParam);
+	}
+
+	/*
+	 *改变商品布局(1.列表list, 2.网格grid)
+	 */
+	function changeViewMode(_obj) {
+		var viewMode = "list"; //商品布局(默认:列表)
+		if ($api.hasCls(_obj, "grid")) {
+			$api.removeCls(_obj, "grid");
+			$api.attr($api.dom(_obj, "img"), "src", "../../image/goods/icon_list.png");
+			viewMode = "grid";
+		} else {
+			$api.addCls(_obj, "grid");
+			$api.attr($api.dom(_obj, "img"), "src", "../../image/goods/icon_grid.png");
+			viewMode = "list";
+		}
+		_sendEvent("changeViewModeEvent", {
+			viewMode: viewMode
+		});
+	}
+	var userInfo = $api.getStorage('userInfoKey');
+	var pageParam;
+	apiready = function() {
+		$api.html($api.dom(".aui-title"), api.pageParam.name + "<span class='aui-margin-l-5 aui-iconfont aui-icon-search aui-text-default aui-font-size-14'></span>"); //顶部标题
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		$api.fixTabBar($api.dom(".content"));
+		pageParam = api.pageParam;
+		if (pageParam.name=='畅销款'||pageParam.name=='滞销款') {
+			$('.aui-title span').addClass('aui-hide');
+			$('.sort-btns').html('');
+			var str = '';
+			if (pageParam.name=='畅销款') {
+				str +='<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center active active-sort" data-orderBy="1" tapmode onclick="sort(this)">'
+				str +='<div class="sort-name">销售</div>'
+				str +='<img data-orderDir="0" src="../../image/goods/icon_sort_21.png"/></div>'
+				str +='<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center" data-orderBy="2" tapmode onclick="sort(this)">'
+				str +='<div class="sort-name">库存</div>'
+				str +='<img data-orderDir="0" src="../../image/goods/icon_sort_d.png" /></div>'
+				str +='<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center " data-orderBy="3" tapmode onclick="sort(this)">'
+				str +='<div class="sort-name">在仓天数</div>'
+				str +='<img data-orderDir="0" src="../../image/goods/icon_sort_d.png" /></div>'
+			}else {
+				str +='<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center " data-orderBy="1" tapmode onclick="sort(this)">'
+				str +='<div class="sort-name">销售</div>'
+				str +='<img data-orderDir="0" src="../../image/goods/icon_sort_d.png"/></div>'
+				str +='<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center" data-orderBy="2" tapmode onclick="sort(this)">'
+				str +='<div class="sort-name">库存</div>'
+				str +='<img data-orderDir="0" src="../../image/goods/icon_sort_d.png" /></div>'
+				str +='<div class="sort-btn flex-con box-wrap box-horizontal-center box-vertical-center active active-sort" data-orderBy="3" tapmode onclick="sort(this)">'
+				str +='<div class="sort-name">在仓天数</div>'
+				str +='<img data-orderDir="0" src="../../image/goods/icon_sort_21.png" /></div>'
+			}
+
+			$('.sort-btns').html(str);
+		}else if (pageParam.name=='补货动态') {
+			$('.aui-title span').addClass('aui-hide');
+			$('.sub-header').addClass('aui-hide');
+		}
+		if (pageParam.name == '断缺码') {
+			$('.aui-title').html('');
+			var str = ''
+			str += '<div class="aui-tab" id="tab">';
+			str += '<div class="aui-tab-item aui-active">断码</div>';
+			str += '<div class="aui-tab-item">缺码</div>';
+			str += '</div>';
+			$('.aui-title').html(str);
+			var tab = new auiTab({
+				element: document.getElementById("tab"),
+			}, function(ret) {
+				api.setFrameGroupIndex({
+					name: 'list_frm',
+					index: ret.index - 1
+				});
+			});
+		}
+		if ( pageParam.name == '老款' || pageParam.name == '断缺码') {
+			$api.addCls($api.dom('.sub-header'), 'aui-hide');
+			$api.addCls($api.dom('.aui-title span'), 'aui-hide');
+		} else if (pageParam.name == '主推款' || pageParam.name == '调配仓') {
+			$api.addCls($api.dom('.finish-box'), 'aui-hide');
+			$api.addCls($api.dom('.aui-title span'), 'aui-hide');
+		}
+		// 总部账号点击门店主推
+		if (userInfo.factoryUserFlag) {
+			if (pageParam.rangeType == 1 && pageParam.dataType == 2) {
+				$api.addCls($api.dom('.grid'), 'aui-hide');
+			}
+		}
+		if (!_isStringNull(pageParam.searchType)) {
+			if (pageParam.searchType == 'tab_content_1') {
+				$api.addCls($api.dom('.aui-pull-right'), 'aui-hide');
+				$api.html($api.dom(".aui-title"), api.pageParam.name); //顶部标题
+			}
+		}
+		console.log("pageParam:" + $api.jsonToStr(pageParam));
+
+		if (pageParam.name == '断缺码') {
+			var headerPos = $api.offset(header);
+			var rect = {
+				x: 0,
+				y: 0,
+				w: 'auto',
+				h: 'auto',
+				marginLeft: 0, //相对父 window 左外边距的距离
+				marginTop: headerPos.h, //相对父 window 上外边距的距离
+				marginBottom: 0, //相对父 window 下外边距的距离
+				marginRight: 0 //相对父 window 右外边距的距离
+			};
+			var bounces = true;
+			var reload = true;
+			var allowEdit = false;
+			var animation = {
+				type: "none", //动画类型（详见动画类型常量）
+				//			subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration: 0 //动画过渡时间，默认300毫秒
+			};
+			var frames = [{
+				name: 'break_frm',
+				url: 'goods_list_frm.html',
+				bounces: true,
+				pageParam: pageParam
+			}, {
+				name: 'lost_frm',
+				url: 'goods_list_frm.html',
+				bounces: false,
+				pageParam: pageParam
+			}];
+			_openFrameGroup("list_frm", frames, function(ret, err) {
+				//				console.log("_openFrameGroup.ret:" + $api.jsonToStr(ret));
+
+				tab.setActive(ret.index + 1);
+			}, "", false, rect, 0, 1);
+		} else {
+			var headerPos = $api.offset(header);
+			var rect = {
+				x: 0,
+				y: 0,
+				w: 'auto',
+				h: 'auto',
+				marginLeft: 0, //相对父 window 左外边距的距离
+				marginTop: headerPos.h + $api.offset($api.dom(".sub-header")).h, //相对父 window 上外边距的距离
+				marginBottom: 0, //相对父 window 下外边距的距离
+				marginRight: 0 //相对父 window 右外边距的距离
+			};
+			var animation = {
+				type: "none",
+			};
+			console.log($api.jsonToStr(pageParam));
+			_openFrame("goods_list_frm", "goods_list_frm.html", rect, pageParam, false, true, false, animation);
+		}
+
+		_addEventListener("query_filter_changed_event", function(ret) {
+			console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+		});
+		_addEventListener("pause", function(ret) {
+			// console.log("pause");
+			// alert('pause')
+		});
+		_addEventListener("viewappear", function(ret) {
+			// console.log("pause");
+			// alert('viewappear')
+			// _execScript('','goods_list_frm','refreshData();')
+		});
+		_addEventListener("viewdisappear", function(ret) {
+			// console.log("pause");
+			// alert('viewdisappear')
+		});
+	};
+</script>
+
+</html>

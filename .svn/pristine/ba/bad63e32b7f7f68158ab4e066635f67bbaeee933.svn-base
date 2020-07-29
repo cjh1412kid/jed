@@ -1,0 +1,287 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/aui1x2x1/aui_iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../css/my/my_win.css" />
+</head>
+<style type="text/css">
+
+</style>
+
+<body>
+	<header class="flex-wrap" id="aui-header">
+		<div class="img-name flex-wrap flex-con aui-margin-l-10 aui-margin-t-10">
+			<img class="user-icon aui-img-round" src="../image/noavatar.gif" alt="">
+			<div id="accountName" class="user-name aui-font-size-14 aui-ellipsis aui-margin-l-10 aui-margin-t-10">门店a</div>
+		</div>
+		<div class="btn-edit aui-margin-r-10 aui-margin-t-10" tapmode onclick="openPersonalWin()">
+			<img src="../image/icon_edit.png" alt="">
+		</div>
+	</header>
+	<div class="aui-content aui-margin-10">
+		<ul class="aui-list aui-list-in aui-margin-b-5 aui-list-noborder">
+			<li class="aui-list-item address-manager aui-hide" tapmode="active" onclick="_openWin('address_win', 'my/address/address_win.html')">
+				<div class="aui-list-item-label-icon"><img src="../image/my/icon_address.png" alt=""></div>
+				<div class="aui-list-item-inner aui-list-item-arrow">
+					<div class="aui-list-item-title">
+						收货地址管理
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item home-set aui-hide" tapmode="active" onclick="_openWin('home_set_win','my/home_set_win.html')">
+				<div class="aui-list-item-label-icon"><img src="../image/my/icon_home_set.png" alt=""></div>
+				<div class="aui-list-item-inner aui-list-item-arrow">
+					<div class="aui-list-item-title">
+						首页展示设置
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item account-manager" tapmode="active" onclick="_openWin('authority_win', 'my/authority/authority_win.html')">
+				<div class="aui-list-item-label-icon"><img src="../image/my/icon_user_set.png" alt=""></div>
+				<div class="aui-list-item-inner aui-list-item-arrow">
+					<div class="aui-list-item-title">
+						用户管理
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item target-manage aui-hide" tapmode="active" onclick="_openWin('sale_win', 'my/target/sale_win.html')">
+				<div class="aui-list-item-label-icon"><img src="../image/my/icon_target_set.png" alt=""></div>
+				<div class="aui-list-item-inner aui-list-item-arrow">
+					<div class="aui-list-item-title">
+						指标管理
+					</div>
+				</div>
+			</li>
+			<!-- <li class="aui-list-item" tapmode="active" onclick="_openWin('about_win', 'about_win.html')">
+				<div class="aui-list-item-label-icon"><i class="aui-iconfont aui-icon-vipcard aui-text-info aui-font-size-20"></i></div>
+				<div class="aui-list-item-inner aui-list-item-arrow">
+					<div class="aui-list-item-title">
+						关于
+					</div>
+					<div class="version aui-list-item-right">
+					</div>
+				</div>
+			</li> -->
+		</ul>
+		<!-- 退出登录 -->
+
+	</div>
+	<div class="top-container">
+		<div class="focus-area aui-font-size-14" tapmode onclick="_openWin('collection','collection/collection_win.html');">
+			<div class="collection-num">1</div>
+			<div class="focus-name">
+				我的收藏
+			</div>
+		</div>
+		<div class="focus-goods aui-font-size-12" tapmode onclick="_openWin('history_win','history/history_win.html');">
+			<div class="history-num">2</div>
+			<div class="focus-name" onclick="">
+				浏览记录
+			</div>
+		</div>
+		<div class="divider-vertical"></div>
+	</div>
+	<ul class="aui-list aui-list-in aui-margin-t-15 aui-list-noborder quit" style="background-color:transparent;">
+		<li class="aui-list-item " tapmode="active" onclick="loginOut()">
+			<div class="aui-list-item-inner">
+				<div class="aui-list-item-title aui-list-item-login-out aui-text-danger">
+					退出登录
+				</div>
+			</div>
+		</li>
+	</ul>
+	<div class="version"></div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/common/my_common.js"></script>
+<script type="text/javascript" src="../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript">
+	/* 绑定用户别名和标签。服务端可以指定别名和标签进行消息推送
+	 */
+	function bindAliasAndTagsJPush(call) {
+		var param = {
+			alias: "logoutAlias",
+			//				tags : userInfo.accountName
+		};
+		console.log("param:" + $api.jsonToStr(param));
+		var jpush = api.require('ajpush');
+		jpush.bindAliasAndTags(param, function(_ret) {
+			console.log("jpush bindAliasAndTags ret:" + $api.jsonToStr(_ret));
+			var statusCode = _ret.statusCode;
+			if (statusCode == 0) {
+				console.log("推送绑定logoutAlias成功");
+				call();
+			} else {
+				api.hideProgress();
+				_toast("注销失败！", 3000, "bottom");
+			}
+		});
+	}
+
+	/**
+	 * 退出登录
+	 */
+	function loginOut() {
+		_myAlert("确定要退出登录吗？", "取消", "确定", function(ret, err) {
+			_showProgress("注销中...", "", true);
+			//用户能查看的所有鞋子的相关信息
+			if (userInfo.accountName == "visitor") {
+				bindAliasAndTagsJPush(function() {
+					setTimeout(function() {
+						api.hideProgress();
+						_openWin("login_win", "../login/login_win.html", {
+							type: "my_win"
+						});
+					}, 300);
+				});
+			} else {
+				// 2.0 引入融云模块
+				var rong = api.require('rongCloud2');
+				rong.logout(function(ret, err) {
+					if (ret.status == 'error') {
+						api.toast({
+							msg: "注销融云失败！"
+						});
+						setTimeout(function() {
+							api.hideProgress();
+						}, 300);
+					} else {
+						console.log("注销融云成功！");
+						// bindAliasAndTagsJPush(function() {
+						//用户信息
+						$api.rmStorage("userInfoKey");
+						//缓存的"热搜商品"数据
+						$api.rmStorage("hotSearchKey");
+						//缓存的"所有商品"货号
+						$api.rmStorage("allGoodIdKey");
+						//缓存的"当前波次"(订货计划)
+						$api.rmStorage("currentPeriodKey");
+						setTimeout(function() {
+							api.hideProgress();
+							$api.rmStorage('allModulesKey');
+							$api.rmStorage('myModulesKey');
+							_openWin("login_win", "login/login_win.html", {
+								type: "my_win"
+							});
+						}, 300);
+						// });
+					}
+				});
+			}
+		});
+	}
+
+	//点击"个人中心"(我的资料)
+	function openPersonalWin() {
+		if (userInfo.accountName == "visitor") {
+			visitorAlert("../");
+		} else {
+			_openWin('personalCenter_win', 'my/personalCenter_win.html');
+		}
+	}
+
+	/**
+	 *请求服务器：我的浏览记录、收藏记录总数
+	 */
+	function browseCollectedNum(call) {
+		var url = window.myServerUrl + "order/app/shoesValuate/getBrowseCollectedNum?token=" + token;
+		console.log("获取'浏览记录'、'我的收藏'数量:" + url);
+		_ajax(url, "browseCollectedNum", function(ret, err) {
+			var res = [];
+			if (ret) {
+				console.log("_ajax.browseCollectedNum.ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					res = ret.result;
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				_toast(window.ajaxErrorMessage);
+			}
+			call(res);
+		});
+	}
+
+	function initUi() {
+		if (userInfo.factoryUserFlag) {
+			//公司
+			if ($api.hasCls($api.dom(".account-manager"), "aui-hide")) {
+				$api.removeCls($api.dom(".account-manager"), "aui-hide");
+			}
+		} else {
+			//订货方
+			if (!$api.hasCls($api.dom(".account-manager"), "aui-hide")) {
+				$api.addCls($api.dom(".account-manager"), "aui-hide");
+			}
+		}
+		$api.text($api.byId("accountName"), userInfo.userName);
+		if (userInfo.headImg.slice(-4) == 'null') {
+			$api.attr($api.dom(".user-icon"), "src", "../image/noavatar.gif");
+		} else {
+			$api.attr($api.dom(".user-icon"), "src", userInfo.headImg);
+		}
+
+		new auiLazyload({
+			errorImage: "../image/noavatar.gif"
+		});
+	}
+
+	function initData() {
+		userInfo = $api.getStorage("userInfoKey");
+		console.log("用户信息:" + $api.jsonToStr(userInfo));
+		token = $api.getStorage("tokenKey");
+	}
+
+	var userInfo;
+	var token;
+	//登录账号名
+	apiready = function() {
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		$api.fixTabBar($api.dom("body"));
+		initData();
+		initUi();
+		browseCollectedNum(function(datas) {
+			if (!_isArrayNull(datas)) {
+				$api.text($api.dom(".history-num"), datas[0].browseNum);
+				$api.text($api.dom(".collection-num"), datas[0].collectedNum);
+			}
+		});
+
+		$api.text($api.dom(".version"), "当前版本：v" + api.appVersion);
+
+		//修改用户信息事件监听
+		_addEventListener("userInfoUpdateKey", function(ret, err) {
+			initData();
+			initUi();
+			browseCollectedNum(function(datas) {
+				if (!_isArrayNull(datas)) {
+					$api.text($api.dom(".history-num"), datas[0].browseNum);
+					$api.text($api.dom(".collection-num"), datas[0].collectedNum);
+				}
+			});
+		});
+		//修改"我的收藏", "浏览记录"数量事件监听
+		_addEventListener("updateBrowseCollectedNum", function(ret, err) {
+
+			browseCollectedNum(function(datas) {
+				console.log("我的收藏:" + datas[0].collectedNum + ", 浏览记录:" + datas[0].browseNum);
+				if (!_isArrayNull(datas)) {
+					$api.text($api.dom(".history-num"), datas[0].browseNum);
+					$api.text($api.dom(".collection-num"), datas[0].collectedNum);
+				}
+			});
+		});
+	};
+</script>
+
+</html>

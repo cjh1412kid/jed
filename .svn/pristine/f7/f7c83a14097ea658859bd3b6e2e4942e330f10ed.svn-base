@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="io.nuite.modules.order_platform_app.dao.TargetSalesDao">
+	<!-- 新增导购员指标 -->
+	<insert id="insertTargetSales"
+		parameterType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		INSERT INTO
+		JedOrderPlatform.dbo.YHSR_Target_Sales(Money,Del,Creator,Sales_Seq,Target_Week,Target_Day,Target_Shop_Seq,InputTime,Tag)
+		VALUES
+		<foreach collection="list" index="index" item="item" open=""
+			close="" separator=",">
+			(#{item.money},0,#{item.creator},#{item.salesSeq},#{item.targetWeek},#{item.targetDay},#{item.targetShopSeq},#{item.inputTime},#{item.tag})
+		</foreach>
+	</insert>
+
+	<!-- 修改导购员指标 -->
+	<update id="updateTargetSales"
+		parameterType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		<foreach collection="list" index="index" item="item" open=""
+			close="" separator=";">
+			UPDATE
+			JedOrderPlatform.dbo.YHSR_Target_Sales
+			SET
+			Money = #{item.money}
+			WHERE Seq = #{item.seq}
+		</foreach>
+	</update>
+
+	<!-- 获取总指标 -->
+	<select id="selectTotalTarget" parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		bs.Seq AS seq,
+		ts.Target_Year AS targetYear,
+		SUM(ts.Money) AS totalMoney
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop ts
+		ON ts.Shop_Seq = bs.Seq
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Sales tsa
+		ON tsa.Target_Shop_Seq = ts.Seq
+		WHERE bs.Seq = #{shopSeq} AND ts.Del = 0 AND ts.Target_Year = #{targetYear}
+		AND ts.Tag=#{tag}
+		GROUP BY bs.seq,ts.Target_Year
+	</select>
+
+	<!-- 获取总月指标 -->
+	<select id="selectTotalMonthTarget"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		bs.Seq AS seq,
+		ts.Target_Year AS targetYear,
+		ts.Target_Month AS targetMonth,
+		SUM(ts.Money) AS totalMoney
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop ts
+		ON ts.Shop_Seq = bs.Seq
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Sales tsa
+		ON tsa.Target_Shop_Seq = ts.Seq
+		WHERE bs.Seq = #{shopSeq} AND ts.Del = 0 AND ts.Target_Year = #{targetYear}
+		AND ts.Tag=#{tag}
+		GROUP BY bs.Seq,ts.Target_Year,ts.Target_Month
+	</select>
+
+	<!-- 获取单个月指标 -->
+	<select id="selectMonthTarget" parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		bs.Seq AS seq,
+		ts.Target_Year AS targetYear,
+		ts.Target_Month AS targetMonth,
+		SUM(ts.money) AS monthMoney
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		LEFT JOIN
+		JedOrderPlatform.dbo.YHSR_Target_Shop ts
+		ON ts.Shop_Seq = bs.Seq
+		WHERE bs.Seq = #{shopSeq} AND ts.Del = 0 AND ts.Target_Year = #{targetYear}
+		AND ts.Target_Month = #{targetMonth} AND ts.tag=#{tag} AND bs.Is_Active = 1
+		GROUP BY bs.Seq,ts.Target_Year,ts.Target_Month
+	</select>
+
+	<!-- 获取单个月导购员指标列表 -->
+	<select id="selectMonthSalesTarget"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		bs.Seq AS SalesSeq,
+		bs.Name AS SalesName,
+		tas.Money AS standardMoney,tas.Seq AS standardSeq,tah.Seq AS standardShopSeq,
+		tbs.Money AS middleMoney,tbs.Seq AS middleSeq,tbh.Seq AS middleShopSeq,
+		tcs.Money AS advanceMoney,tcs.Seq AS advanceSeq,tch.Seq AS advanceShopSeq
+		FROM
+		JedSmartRetail.dbo.YHSR_Base_Sales bs
+		LEFT JOIN
+		(SELECT tsa.Sales_Seq,tsa.Del,tsa.Seq,tsa.Money FROM 	JedOrderPlatform.dbo.YHSR_Target_Sales tsa RIGHT JOIN JedOrderPlatform.dbo.YHSR_Target_Shop tsh 		ON tsa.Target_Shop_Seq=tsh.Seq WHERE tsh.Tag=1 AND tsh.Target_Year =
+		#{targetYear} AND tsh.Target_Month =  #{targetMonth} AND tsa.Del=0) tas
+		ON tas.Sales_Seq=bs.Seq
+			LEFT JOIN
+		(SELECT tsb.Sales_Seq,tsb.Del,tsb.Seq,tsb.Money FROM 	JedOrderPlatform.dbo.YHSR_Target_Sales tsb RIGHT JOIN JedOrderPlatform.dbo.YHSR_Target_Shop tsh 		ON tsb.Target_Shop_Seq=tsh.Seq WHERE tsh.Tag=2 AND tsh.Target_Year =
+		#{targetYear} AND tsh.Target_Month =  #{targetMonth} AND tsb.Del=0) tbs
+		ON  tbs.Sales_Seq=bs.Seq
+			LEFT JOIN
+			(SELECT tsc.Sales_Seq,tsc.Del,tsc.Seq,tsc.Money FROM 	JedOrderPlatform.dbo.YHSR_Target_Sales tsc RIGHT JOIN JedOrderPlatform.dbo.YHSR_Target_Shop tsh 		ON tsc.Target_Shop_Seq=tsh.Seq WHERE tsh.Tag=3 AND tsh.Target_Year =
+		#{targetYear} AND tsh.Target_Month =  #{targetMonth} AND tsc.Del=0) tcs
+		ON   tcs.Sales_Seq=bs.Seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bsh
+		ON bsh.Seq = bs.ShopSeq
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_Target_Shop tah ON tah.Shop_Seq=bsh.Seq AND tah.Tag=1 AND tah.Target_Year=#{targetYear}
+		AND tah.Target_Month= #{targetMonth} AND tah.Del=0
+			LEFT JOIN JedOrderPlatform.dbo.YHSR_Target_Shop tbh ON tbh.Shop_Seq=bsh.Seq AND tbh.Tag=2 AND tbh.Target_Year=#{targetYear}
+		AND tbh.Target_Month= #{targetMonth} AND tbh.Del=0
+			LEFT JOIN JedOrderPlatform.dbo.YHSR_Target_Shop tch ON tch.Shop_Seq=bsh.Seq AND tch.Tag=3 AND tch.Target_Year=#{targetYear}
+		AND tch.Target_Month= #{targetMonth} AND tah.Del=0
+		WHERE  bsh.Seq =#{shopSeq} AND bs.DEL=0 AND bs.Is_Dimission = 0
+	</select>
+
+	<!-- 获取单个月导购员周指标列表 -->
+	<select id="selectWeekSalesTarget" parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		ts.Sales_Seq AS SalesSeq,
+		ts.Target_Year AS targetYear,
+		ts.Target_Month AS targetMonth,
+		ts.Target_Week AS targetWeek,
+		SUM(ts.money) AS monthMoney
+		FROM
+		JedOrderPlatform.dbo.YHSR_Target_Sales ts
+		WHERE ts.Del = 0 AND ts.Sales_Seq = #{SalesSeq} AND ts.Target_Year =
+		#{targetYear} AND ts.Target_Month = #{targetMonth}
+		GROUP BY ts.Sales_Seq,ts.Target_Year,ts.Target_Month,ts.Target_Week
+	</select>
+
+	<!-- 获取每周导购员日指标列表 -->
+	<select id="selectDaySalesTarget" parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		ts.Sales_Seq AS SalesSeq,
+		ts.Target_Year AS targetYear,
+		ts.Target_Month AS targetMonth,
+		ts.Target_Week AS targetWeek,
+		ts.Target_Day AS targetDay,
+		SUM(ts.money) AS monthMoney
+		FROM
+		JedOrderPlatform.dbo.YHSR_Target_Sales ts
+		WHERE ts.Del = 0 AND ts.Sales_Seq = #{SalesSeq} AND ts.Target_Year =
+		#{targetYear} AND ts.Target_Month = #{targetMonth} AND ts.Target_Week
+		= #{targetWeek}
+		GROUP BY
+		ts.Sales_Seq,ts.Target_Year,ts.Target_Month,ts.Target_Week,ts.Target_Day
+	</select>
+
+	<!-- 获取门店当前年度指标和当前月度指标 -->
+	<select id="selectSalesTotalTarget"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		SUM(ts.money) AS SalesYearMoney,
+		(SELECT SUM(money) FROM JedOrderPlatform.dbo.YHSR_Target_Sales WHERE Del = 0
+		AND Target_Year = DATENAME(YEAR,GETDATE()) AND Target_Month =
+		DATEPART(MM,GETDATE()) AND Sales_Seq = #{SalesSeq}) AS SalesMonthMoney
+		FROM
+		JedOrderPlatform.dbo.YHSR_Target_Sales ts
+		WHERE ts.Del = 0 AND ts.Target_Year = DATENAME(YEAR,GETDATE()) AND
+		ts.Sales_Seq = #{SalesSeq}
+	</select>
+
+	<!-- 获取门店销售指标分析 -->
+	<select id="selectSalesTargetAnalyze"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		s.*,
+		CASE s.totalMoney WHEN 0 THEN 0 ELSE (s.completeMoney/s.totalMoney) END AS
+		completePercent
+		FROM
+		(SELECT
+		SUM(sh.Money) AS totalMoney,
+		(SELECT SUM(sdd.RealPrice*sdd.SaleCount) FROM
+		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail sdd WHERE DATENAME(YY,
+		sdd.SaleDate) = #{targetYear}
+		<if test="targetMonth != null">
+			AND DATEPART(MM, sdd.SaleDate) = #{targetMonth}
+		</if>
+		AND sdd.ShopSeq = #{shopSeq})/10000 AS completeMoney
+		FROM
+		JedOrderPlatform.dbo.YHSR_Target_Shop sh
+		WHERE sh.Del = 0 AND sh.Target_Year = #{targetYear}
+		<if test="targetMonth != null">
+			AND sh.Target_Month = #{targetMonth}
+		</if>
+		AND sh.Shop_Seq = #{shopSeq}
+		<if test="tag != null">
+			AND sh.Tag=#{tag}
+		</if>
+		)s
+	</select>
+
+	<!-- 获取门店周指标列表 -->
+	<select id="selectSalesWeekTargetAnalyze"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		ts.Sales_Seq AS SalesSeq,
+		SUM(ts.Money) AS totalMoney,
+		ts.Target_Year AS targetYear,
+		ts.Target_Month AS targetMonth,
+		ts.Target_Week AS targetWeek
+		FROM
+		JedOrderPlatform.dbo.YHSR_Target_Sales ts
+		WHERE ts.Del = 0 AND ts.Target_Year = #{targetYear}
+		<if test="targetMonth != null">
+			AND ts.Target_Month = #{targetMonth}
+		</if>
+		AND ts.Sales_Seq = #{SalesSeq}
+		GROUP BY ts.Sales_Seq,ts.Target_Year,ts.Target_Month,ts.Target_Week
+	</select>
+
+	<!-- 获取门店每周的日销售指标分析 -->
+	<select id="selectSalesDayTargetAnalyze"
+		parameterType="java.util.Map"
+		resultType="io.nuite.modules.order_platform_app.entity.TargetSalesEntity">
+		SELECT
+		ts.Sales_Seq AS SalesSeq,
+		SUM(ts.Money) AS totalMoney,
+		ts.Target_Year AS targetYear,
+		ts.Target_Month AS targetMonth,
+		ts.Target_Week AS targetWeek,
+		ts.Target_Day AS targetDay
+		FROM
+		JedOrderPlatform.dbo.YHSR_Target_Sales ts
+		WHERE ts.Del = 0 AND ts.Target_Year = #{targetYear} AND ts.Target_Month =
+		#{targetMonth} AND ts.Target_Week = #{targetWeek} AND ts.Sales_Seq =
+		#{SalesSeq}
+		GROUP BY
+		ts.Sales_Seq,ts.Target_Year,ts.Target_Month,ts.Target_Week,ts.Target_Day
+	</select>
+	<select id="getSaleSumByMonth" resultType="java.math.BigDecimal"
+		parameterType="java.util.Map">
+		SELECT
+		SUM(ssd.RealPrice*ssd.SaleCount/10000) as salesSum
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail ssd
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		ON bs.Seq = ssd.ShopSeq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Area ba
+		ON ba.Seq = bs.Area_seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Brand bb
+		ON bb.Seq = ba.Brand_Seq
+		WHERE DATENAME(YY, ssd.SaleDate) = #{targetYear}
+		<if test="targetMonth != null">
+			AND DATEPART(MM, ssd.SaleDate) = #{targetMonth}
+		</if>
+		AND bb.Seq = #{brandSeq}
+	</select>
+	<select id="getSaleSumByDate" resultType="java.math.BigDecimal"
+		parameterType="java.util.Map">
+		SELECT
+		SUM(ssd.RealPrice*ssd.SaleCount/10000) as salesSum
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail ssd
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		ON bs.Seq = ssd.ShopSeq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Area ba
+		ON ba.Seq = bs.Area_seq
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Brand bb
+		ON bb.Seq = ba.Brand_Seq
+		WHERE CONVERT( VARCHAR ( 12 ),ssd.SaleDate, 23 ) BETWEEN #{beginTime} AND
+		#{endTime}
+		AND bb.Seq = #{brandSeq}
+	</select>
+	<select id="getShopSaleSumByMonth" resultType="java.math.BigDecimal"
+		parameterType="java.util.Map">
+		SELECT
+		SUM(ssd.RealPrice*ssd.SaleCount/10000) as salesSum
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail ssd
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		ON bs.Seq = ssd.ShopSeq
+		WHERE DATENAME(YY, ssd.SaleDate) = #{targetYear}
+		<if test="targetMonth != null">
+			AND DATEPART(MM, ssd.SaleDate) = #{targetMonth}
+		</if>
+		AND bs.Seq = #{shopSeq}
+	</select>
+
+	<select id="querySaleSumByDate" resultType="java.math.BigDecimal"
+		parameterType="java.util.Map">
+		SELECT
+		SUM(ssd.RealPrice*ssd.SaleCount/10000) as salesSum
+		FROM
+		JedOrderPlatform.dbo.YHSR_OP_SaleShoesDetail ssd
+		LEFT JOIN
+		JedSmartRetail.dbo.YHSR_Base_Shop bs
+		ON bs.Seq = ssd.ShopSeq
+		WHERE CONVERT( VARCHAR ( 12 ),ssd.SaleDate, 23 ) BETWEEN #{beginTime} AND
+		#{endTime}
+		AND bs.Seq = #{shopSeq}
+	</select>
+
+
+
+</mapper>

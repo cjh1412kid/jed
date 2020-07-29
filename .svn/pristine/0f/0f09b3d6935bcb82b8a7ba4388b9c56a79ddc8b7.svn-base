@@ -1,0 +1,1042 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>应用管理</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/manage_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left back-btn" tapmode onclick="closeWin()"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-btn aui-pull-left cancel-btn aui-hide" tapmode onclick="edit(this)"> <span class="aui-text-default">取消</span> </a>
+        <a class="aui-btn aui-pull-right complete-btn aui-hide" tapmode onclick="edit(this);"><span class="aui-text-default">完成</span></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16">应用管理</div>
+    </header>
+    <div class="content flex-con uneditable">
+        <section class="aui-grid my-grid">
+            <div class="group-name flex-wrap">
+                我的应用
+            </div>
+            <div class="title ">
+                您可以将常用的功能点击添加到我的应用,同时可以进行<span class="aui-text-info">拖拽排序</span>
+            </div>
+            <div class="my-grid-row">
+                <div class="aui-row">
+                </div>
+            </div>
+
+        </section>
+
+        <div class="edit-blank aui-padded-10">
+            <div class="edit-btn aui-text-center" tapmode onclick="edit(this)">
+                <div class="row aui-text-center">
+                    <div class="aui-col-xs-12">
+                        <i class="aui-iconfont aui-icon-plus aui-text-default"></i>
+                        <p class="aui-font-size-12 aui-text-default">编辑</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="more aui-margin-t-10">
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../script/common/sortable.js"></script>
+<script type="text/javascript" src="../script/modules.js"></script>
+<script type="text/javascript">
+    function closeWin() {
+        if (!canBack) {
+            return;
+        }
+        console.log("myModules:" + $api.jsonToStr(myModules));
+        myModules.push(moreModule);
+        console.log("myModules:" + $api.jsonToStr(myModules));
+        $api.setStorage('myModulesKey', myModules);
+        _sendEvent("myModulesChangedEvent");
+        api.closeWin();
+        canBack = false;
+    }
+
+    function toggleBtn(className) {
+        if ($api.hasCls($api.dom("." + className), "aui-hide")) {
+            $api.removeCls($api.dom("." + className), 'aui-hide');
+        } else {
+            $api.addCls($api.dom("." + className), 'aui-hide');
+        }
+    }
+
+    function hideOrShowLable(type) {
+        switch (type) {
+            case "hide":
+                if (!$api.hasCls($api.dom(".content"), "uneditable")) {
+                    $api.addCls($api.dom(".content"), "uneditable");
+                }
+                break;
+            case "show":
+                if ($api.hasCls($api.dom(".content"), "uneditable")) {
+                    $api.removeCls($api.dom(".content"), "uneditable");
+                }
+                break;
+            default:
+
+        }
+    }
+
+    function edit(_obj) {
+        toggleBtn("cancel-btn");
+        toggleBtn("back-btn");
+        toggleBtn("complete-btn");
+        toggleBtn("edit-blank");
+        console.log("allModules:" + $api.jsonToStr(allModules));
+        if (_obj == $api.dom(".cancel-btn")) {
+            //点击的取消按钮
+            if ($api.jsonToStr(allModules) == $api.jsonToStr(newAllModules)) {
+                hideOrShowLable('hide');
+                sortable.option('disabled', false);
+            } else {
+                _confirm("提示", "是否保存已修改的内容", ["保存", "取消"], function(ret, err) {
+                    if (ret.buttonIndex == 1) {
+                        //保存
+                        newAllModules = $api.strToJson($api.jsonToStr(allModules));
+                        newMyModules = $api.strToJson($api.jsonToStr(myModules));
+                        $api.setStorage('allModulesKey', newAllModules);
+                        hideOrShowLable('hide');
+                        _toast("已保存", 1000, "middle");
+                        sortable.option('disabled', false);
+                    } else {
+                        //取消
+                        allModules = $api.strToJson($api.jsonToStr(newAllModules));
+                        myModules = $api.strToJson($api.jsonToStr(newMyModules));
+                        initUI();
+                        hideOrShowLable('hide');
+                        creatSortable();
+                        sortable.option('disabled', false);
+                    }
+                    console.log("allModules:" + $api.jsonToStr(allModules));
+                });
+            }
+        } else if (_obj == $api.dom(".complete-btn")) {
+            //点击的完成按钮
+            newAllModules = $api.strToJson($api.jsonToStr(allModules));
+            newMyModules = $api.strToJson($api.jsonToStr(myModules));
+            $api.setStorage('allModulesKey', newAllModules);
+            hideOrShowLable('hide');
+            _toast("已保存", 1000, "middle");
+            creatSortable();
+            sortable.option('disabled', false);
+        } else if (_obj == $api.dom(".edit-btn")) {
+            //点击的添加按钮
+            hideOrShowLable('show');
+            // sortable.destroy();
+            sortable.option('disabled', true);
+        }
+    }
+
+    function openSaleTargetWin() {
+        if (_isObjectNull(userInfo)) {
+            visitorAlert("");
+        } else {
+            if (userInfo.factoryUserFlag) {
+                _openWin('sale_allindicator_win', 'sale/sale_allindicator_win.html');
+            } else {
+                var pageParam = {
+                    shopName: userInfo.shopName,
+                    month: new Date().getMonth() + 1,
+                    shopSeq: userInfo.shopSeq,
+                }
+                _openWin('sale_indicator_win', 'sale/sale_indicator_win.html', pageParam);
+            }
+        }
+    }
+
+    function openShoppingGuideWin() {
+        if (_isObjectNull(userInfo)) {
+            visitorAlert("");
+        } else {
+            if (userInfo.factoryUserFlag) {
+                var pageParam = {
+                    flag: "shopping-guide",
+                    shopSeqList: []
+                }
+                console.log('pageParam:' + $api.jsonToStr(pageParam));
+                api.openDrawerLayout({
+                    name: "shopping_guide_win",
+                    url: "shopping/shopping_guide_win.html",
+                    pageParam: pageParam,
+                    animation: {
+                        type: 'push'
+                    },
+                    softInputMode: "resize",
+                    softInputBarEnabled: false,
+                    overScrollMode: "always",
+                    slidToOpenPane: false,
+                    slidToClosePane: false,
+                    rightPane: {
+                        edge: 60,
+                        pageParam: pageParam,
+                        softInputMode: "resize",
+                        softInputBarEnabled: false,
+                        name: 'filter_win',
+                        url: 'filter_win.html'
+                    }
+                });
+            } else {
+                _openWin("guider_list_win", "shopping/guider_list_win.html");
+            }
+        }
+    }
+
+    function toSaleAnalysis() {
+        var now = new Date().setDate(1);
+        if (_isObjectNull(userInfo)) {
+            visitorAlert("");
+        } else {
+            var selectedSeasonList = $api.getStorage('seasonListKey');
+            var seasonSeqList = [];
+            for (var i = 0; i < selectedSeasonList.length; i++) {
+                seasonSeqList.push(selectedSeasonList[i].seq);
+            }
+            var shoesCategoryList = $api.getStorage('shoesCategoryKey');
+            var categorySeqList = [];
+            for (var i = 0; i < shoesCategoryList.length; i++) {
+                categorySeqList.push(shoesCategoryList[i].seq);
+            }
+            var thisYear = new Date().getFullYear();
+            var yearList = [];
+            yearList.push(thisYear - 1);
+            yearList.push(thisYear);
+            console.log(now);
+            console.log(new Date().getDate());
+            if (new Date().getDate() == 1) {
+                var pageParam = {
+                    flag: "saleAnalysis",
+                    // rangeType: "",
+                    // dataType: "",
+                    // categorySeq: "",
+                    // name: "",
+                    // yearList: yearList,
+                    shopSeqList: userInfo.factoryUserFlag ? [] : [userInfo.shopSeq],
+                    oldOrNew: '',
+                    startPrice: '',
+                    endPrice: '',
+                    // shopSeq: _isStringNull(userInfo.shopSeq) ? "" : userInfo.shopSeq,
+                    // shopName: _isStringNull(userInfo.shopName) ? "总部" : userInfo.shopName,
+                    yearList: [],
+                    // seasonSeqList: seasonSeqList,
+                    seasonSeqList: [],
+                    // categorySeqList: categorySeqList,
+                    categorySeqList: [],
+                    colorSeqList: [],
+                    sXMap: "",
+                    type: '1',
+                    // fuzzySearchParam: "",
+                    // sizeType: "",
+                    // sizeSeqStart: "",
+                    // sizeSeqEnd: "",
+                    cateSeqList: [],
+                    orderBy: 1,
+                    orderDir: 0,
+                    timeRange: "0",
+                    saleTimeStart: _getFormatedDate(new Date().setDate(1), "yyyy/MM/dd"),
+                    saleTimeEnd: _getFormatedDate(new Date().setDate(1), "yyyy/MM/dd"),
+                    // saleTimeStart: "",
+                    // saleTimeEnd: "",
+                };
+            } else {
+                var pageParam = {
+                    flag: "saleAnalysis",
+                    // rangeType: "",
+                    // dataType: "",
+                    // categorySeq: "",
+                    // name: "",
+                    // yearList: yearList,
+                    shopSeqList: userInfo.factoryUserFlag ? [] : [userInfo.shopSeq],
+
+                    oldOrNew: '',
+                    startPrice: '',
+                    endPrice: '',
+                    // shopSeq: _isStringNull(userInfo.shopSeq) ? "" : userInfo.shopSeq,
+                    // shopName: _isStringNull(userInfo.shopName) ? "总部" : userInfo.shopName,
+                    yearList: [],
+                    // seasonSeqList: seasonSeqList,
+                    seasonSeqList: [],
+                    // categorySeqList: categorySeqList,
+                    categorySeqList: [],
+                    colorSeqList: [],
+                    sXMap: "",
+                    type: '1',
+                    // fuzzySearchParam: "",
+                    // sizeType: "",
+                    // sizeSeqStart: "",
+                    // sizeSeqEnd: "",
+                    cateSeqList: [],
+                    orderBy: 1,
+                    orderDir: 0,
+                    timeRange: "0",
+                    saleTimeStart: _getFormatedDate(now, "yyyy/MM/dd"),
+                    saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+                    // saleTimeStart: "",
+                    // saleTimeEnd: "",
+                };
+            }
+            console.log('pageParam:' + $api.jsonToStr(pageParam));
+            api.openDrawerLayout({
+                name: "sale_analysis_win",
+                url: "sale/sale_analysis_win.html",
+                pageParam: pageParam,
+                animation: {
+                    type: 'push'
+                },
+                softInputMode: "resize",
+                softInputBarEnabled: false,
+                overScrollMode: "always",
+                slidToOpenPane: false,
+                slidToClosePane: false,
+                rightPane: {
+                    edge: 60,
+                    pageParam: pageParam,
+                    softInputMode: "resize",
+                    softInputBarEnabled: false,
+                    name: 'filter_win',
+                    url: 'filter_win.html'
+                }
+            });
+        }
+    }
+    //4.打开"扫码订"页面
+    function openOrderMetting() {
+        if (_isObjectNull(userInfo)) {
+            visitorAlert("");
+        } else {
+            //跳转至订货计划页面,打开侧滑式布局
+            var selectedSeasonList = $api.getStorage('seasonListKey');
+            var seasonSeqList = [];
+            for (var i = 0; i < selectedSeasonList.length; i++) {
+                seasonSeqList.push(selectedSeasonList[i].seq);
+            }
+            var thisYear = new Date().getFullYear();
+            var yearList = [];
+            yearList.push(thisYear - 2);
+            yearList.push(thisYear - 1);
+            yearList.push(thisYear);
+            yearList.push(thisYear + 1);
+            var pageParam = {
+                flag: "ordermetting",
+                rangeType: "",
+                dataType: "",
+                name: "",
+                // yearList: yearList,
+                yearList: [yearList[yearList.length - 1]],
+                // seasonSeqList: seasonSeqList,
+                seasonSeqList: [seasonSeqList[0]],
+                // categorySeqList: categorySeqList,
+                categorySeqList: [],
+                colorSeqList: [],
+                sXMap: "",
+                fuzzySearchParam: "",
+                sizeType: "",
+                sizeSeqStart: "",
+                sizeSeqEnd: "",
+                orderBy: 1,
+                orderDir: 0,
+                timeRange: "30",
+                saleTimeStart: "2017/01/02",
+                saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+                // saleTimeStart: "",
+                // saleTimeEnd: "",
+            };
+            console.log('pageParam:' + $api.jsonToStr(pageParam));
+            api.openDrawerLayout({
+                name: 'order_metting_win',
+                url: 'ordermetting/order_metting_win.html',
+                pageParam: pageParam,
+                animation: {
+                    type: 'push'
+                },
+                softInputMode: "resize",
+                softInputBarEnabled: false,
+                overScrollMode: "always",
+                slidToOpenPane: false,
+                slidToClosePane: false,
+                rightPane: {
+                    edge: 60, // 侧滑打开后，漏出的半透明区域宽度，默认值为60。此时侧滑window的宽度为屏幕宽度减去edge
+                    name: 'filter_win', // window名字（字符串类型）
+                    url: 'filter_win.html', // 页面地址，可以为本地文件路径，支持相对路径和绝对路径，以及widget://、fs://等协议路径，也可以为远程地址
+                    pageParam: pageParam, //（可选项）页面参数，页面中可以通过api.pageParam获取，JSON对象
+                    bgColor: '', //（可选项）背景色，支持图片和颜色，格式为#fff、#ffffff、rgba(r,g,b,a)等，图片路径支持fs://、widget://等APICloud自定义文件路径协议，同时支持相对路径
+                    bounces: false, //（可选项）是否弹动，默认值：若在 config.xml 里面配置了pageBounce，则默认值为配置的值，否则为false
+                    scrollToTop: false, //（可选项）当点击状态栏，页面是否滚动到顶部。若当前屏幕上不止一个页面的scrollToTop属性为true，则所有的都不会起作用。默认值：true。只iOS有效
+                    scrollEnabled: true, //（可选项）页面内容超出后是否可以滚动，默认为true，只支持iOS
+                    vScrollBarEnabled: false, //（可选项）是否显示垂直滚动条，默认true
+                    hScrollBarEnabled: false, //（可选项）是否显示水平滚动条，默认true
+                    scaleEnabled: false, //（可选项）页面是否可以缩放，布尔型，默认值：false
+                    allowEdit: false, //（可选项）是否允许长按页面时弹出选择菜单
+                    softInputMode: 'auto', //（可选项）当键盘弹出时，输入框被盖住时，当前页面的调整方式，只iOS有效    取值范围：resize(若键盘盖住输入框，页面会自动上移), pan (若键盘盖住输入框，页面不会自动上移), auto(默认值，由系统决定如何处理，iOS平台该字段等同于resize)
+                    softInputBarEnabled: false, //（可选项）是否显示键盘上方的工具条，布尔型，默认值：true，只iOS有效
+                    customRefreshHeader: '' //（可选项）设置使用自定义下拉刷新模块的名称，设置后可以使用api.setCustomRefreshHeaderInfo方法来使用自定义下拉刷新组件
+                },
+            });
+
+        }
+    }
+
+    function toGoodsDetailWin(_seq) {
+        var pageParam = {
+            seq: _seq,
+            isSearch: 0,
+            timeRange: '30',
+        };
+        api.openDrawerLayout({
+            name: "goods_detail_win",
+            url: "goods/detail/goods_detail_win.html",
+            pageParam: pageParam,
+            animation: {
+                type: "push", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            },
+            softInputMode: "resize",
+            softInputBarEnabled: false,
+            overScrollMode: "always",
+            slidToOpenPane: false,
+            slidToClosePane: false,
+            rightPane: {
+                edge: 60,
+                pageParam: pageParam,
+                softInputMode: "resize",
+                softInputBarEnabled: false,
+                name: 'filter_sale_graph_win',
+                url: 'goods/detail/filter_sale_graph_win.html'
+            }
+        });
+    }
+
+    function openSearchWin() {
+        if (_isObjectNull(userInfo)) {
+            visitorAlert("");
+        } else {
+            var animation = {
+                type: "fade", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300 //动画过渡时间，默认300毫秒
+            };
+            // var shoesCategoryList = $api.getStorage('shoesCategoryKey');
+            // var categorySeqList = [];
+            // for (var i = 0; i < shoesCategoryList.length; i++) {
+            //     categorySeqList.push(shoesCategoryList[i].seq);
+            // }
+            var thisYear = new Date().getFullYear();
+            var yearList = [];
+            yearList.push(thisYear - 1);
+            yearList.push(thisYear);
+            var pageParam = {
+                searchType: 'tab_content_1',
+                flag: "goodsList",
+                rangeType: 0,
+                dataType: 0,
+                name: '搜索列表',
+                yearList: [],
+                seasonSeqList: [],
+                supplement: '',
+                // categorySeqList: categorySeqList,
+                categorySeqList: [],
+                cateSeqList: [],
+                colorSeqList: [],
+                sXMap: "",
+                fuzzySearchParam: "",
+                sizeType: "",
+                sizeSeqStart: "",
+                sizeSeqEnd: "",
+                orderBy: 1,
+                orderDir: 0,
+                timeRange: "30",
+                saleTimeStart: "2017/01/02",
+                saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+                // saleTimeStart: "",
+                // saleTimeEnd: "",
+            };
+            console.log('pageParam:' + $api.jsonToStr(pageParam));
+            _openWin('search_win', 'search/search_win.html', pageParam, false, true, animation);
+        }
+    }
+
+    /*
+     *打开二维码扫描器
+     */
+    function openScanner() {
+        FNScanner.open({
+            autorotation: false, // 描述:可选项, 扫描页面是否自动旋转(横竖屏默认值：false)
+            encoding: 1,
+            hintText: "对准货品货号生成的二维码，扫码找货",
+            isAlbum: true,
+        }, function(ret, err) {
+            if (ret) {
+                console.log(JSON.stringify(ret));
+                //1. eventType: 'cancel',   //字符串类型；扫码事件类型:show（模块显示）  cameraError（访问摄像头失败）   albumError（访问相册失败）  cancel（用户取消扫码）     selectImage（用户从系统相册选取二维码图片）    success（识别二维码/条码图片成功）   7.fail（扫码失败）
+                //2. imgPath: '',       //字符串类型；需要保存的二维码图片绝对路径（自定义路径）
+                //3. albumPath: '',     //字符串类型；需要保存的二维码图片绝对路径（相册路径）
+                //4. content: ''        //扫描的二维码/条形码信息
+                if (ret.eventType == "cameraError") {
+                    _toast("访问摄像头失败", 3000, "bottom", function() {});
+                } else if (ret.eventType == "fail") {
+                    _toast("扫码失败", 3000, "bottom", function() {});
+                } else if (ret.eventType == "success") {
+                    console.log("扫描到鞋子货号:" + ret.content);
+                    var url = window.myServerUrl + "order/app/goodsData/getGoodsViewByGoodId?goodId=" + $api.trim(ret.content);
+                    console.log("通过扫码获取商品详情:" + url);
+                    _ajax(url, '通过扫码获取商品详情', function(ret, err) {
+                        if (ret) {
+                            console.log($api.jsonToStr(ret));
+                            if (ret.code == 0) {
+                                if (!_isStringNull(ret.result.result)) {
+                                    toGoodsDetailWin(ret.result.result);
+                                } else {
+                                    _toast("扫描结果与鞋子信息不匹配", 3000, "bottom", function() {});
+                                }
+                            } else {
+                                _toast("扫描结果与鞋子信息不匹配", 3000, "bottom", function() {});
+                            }
+                        } else {
+                            _toast(window.ajaxErrorMessage);
+                        }
+                    });
+                    // var allGoodIdData = $api.getStorage("allGoodIdKey"); //用户可查看的所有鞋子货号
+                    // console.log("该用户所有鞋子货号为:" + $api.jsonToStr(allGoodIdData));
+                    // if (!_isArrayNull(allGoodIdData)) {
+                    //     var isMatch = false; //扫描值是否与鞋子货号匹配
+                    //     var seq, goodId; //匹配成功的鞋子序号和货号
+                    //     for (var i = 0; i < allGoodIdData.length; i++) {
+                    //         if ($api.trim(allGoodIdData[i].goodId) == ret.content) { //根据扫描出的值, 匹配鞋子货号
+                    //             seq = allGoodIdData[i].seq;
+                    //             goodId = allGoodIdData[i].goodId;
+                    //             isMatch = true;
+                    //             break;
+                    //         }
+                    //     }
+                    //     if (isMatch) {
+                    //         toGoodsDetailWin(seq, goodId, true);
+                    //     } else {
+                    //         _toast("扫描结果与鞋子信息不匹配", 3000, "bottom", function() {});
+                    //     }
+                    // } else {
+                    //     _toast("此用户暂无鞋子数据", 3000, "bottom", function() {});
+                    // }
+                }
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+    }
+
+    function toDevelopingWin(_name) {
+        var pageParam = {
+            name: _name
+        }
+        _openWin('developwin', 'goods/developing_win.html', pageParam);
+    }
+    /*
+     *打开商品列表界面
+     *_rangeType：0公司 ，1本店
+     *_dataType：0全部货品 ，1新品推荐 ，2主推款
+     *_categorySeqList：默认为-1，否则为分类seq,多个以逗号隔开
+     *_name：名称
+     */
+    function toGoodsListWin(_rangeType, _dataType, _categorySeqs, _name) {
+        nearSeasonList = $api.getStorage('TwoNearSeasonListKey');
+        var shoesCategoryList = $api.getStorage('shoesCategoryKey');
+        if (_isObjectNull(userInfo)) {
+            visitorAlert("");
+        } else {
+            var thisYear = new Date().getFullYear();
+            var yearListKey = $api.getStorage('yearListKey');
+            var allYearList = [];
+            for (var i = 0; i < yearListKey.length; i++) {
+                if (yearListKey[i] >= thisYear) {
+                    continue;
+                } else {
+                    allYearList.push(yearListKey[i]);
+                }
+            }
+            var yearList = [];
+            var saleType;
+            yearList.push(thisYear - 1);
+            yearList.push(thisYear);
+            var pageParam = {
+                flag: "goodsList",
+                rangeType: _rangeType,
+                dataType: _dataType,
+                name: _name,
+                seasonSeqList: [],
+                supplement: '',
+                categorySeqList: _categorySeqs != -1 ? _categorySeqs.split(",") : [],
+                colorSeqList: [],
+                cateSeqList: [],
+                sXMap: "",
+                fuzzySearchParam: "",
+                sizeType: "",
+                sizeSeqStart: "",
+                sizeSeqEnd: "",
+                orderBy: 1,
+                orderDir: 0,
+                saleTimeStart: "2017/01/02",
+                saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+                stockMinNum: "",
+                stockMaxNum: "",
+            };
+            if (_name == '全部货品') {
+                pageParam.yearList = [];
+                pageParam.timeRange = "30";
+                pageParam.shopSeqList = [];
+            } else if (_name == '畅销款' || _name == '滞销款') {
+                pageParam.yearList = [thisYear];
+                pageParam.timeRange = "7";
+                pageParam.ranking = "1";
+                pageParam.supplement = "";
+                pageParam.saleType = _name == '畅销款' ? '1' : '0';
+                pageParam.shopSeqList = userInfo.factoryUserFlag ? [] : [userInfo.shopSeq];
+                if (_name == '滞销款') {
+                    pageParam.orderBy = 3;
+                    pageParam.seasonSeqList = nearSeasonList;
+                }
+            } else if (_name == '老款') {
+                pageParam.seasonSeqList = nearSeasonList;
+                pageParam.yearList = allYearList;
+                pageParam.timeRange = "30";
+                pageParam.supplement = "";
+                pageParam.shopSeqList = userInfo.factoryUserFlag ? [] : [userInfo.shopSeq];
+            } else if (_name == '断缺码') {
+                pageParam.yearList = [thisYear];
+                pageParam.timeRange = "30";
+                pageParam.supplement = "";
+                pageParam.shopSeqList = userInfo.factoryUserFlag ? [] : [userInfo.shopSeq];
+            } else if (_name == '主推款') {
+                pageParam.timeRange = "7";
+                pageParam.supplement = "";
+                pageParam.shopSeqList = userInfo.factoryUserFlag ? [] : [userInfo.shopSeq];
+            } else if (_name == '调配仓') {
+                pageParam.yearList = [thisYear];
+                pageParam.timeRange = "7";
+                pageParam.shopSeqList = [];
+                pageParam.isTransferOut = 0;
+            } else if (_name == '存销比') {
+                pageParam.yearList = [thisYear];
+                pageParam.timeRange = "30";
+                pageParam.cateSeqList = [];
+                pageParam.supplement = "";
+                pageParam.shopSeqList = userInfo.factoryUserFlag ? [] : [userInfo.shopSeq];
+            } else if (_name == '总仓货品') {
+                pageParam.rangeType = "2";
+                pageParam.timeRange = "30";
+                pageParam.yearList = [];
+                pageParam.supplement = "";
+                pageParam.shopSeqList = [];
+            } else {
+                pageParam.timeRange = "30";
+                pageParam.yearList = [];
+                pageParam.supplement = "";
+                pageParam.shopSeqList = userInfo.factoryUserFlag ? [] : [userInfo.shopSeq];
+            }
+            console.log('pageParam:' + $api.jsonToStr(pageParam));
+            if (_name == '库存结构') {
+                api.openDrawerLayout({
+                    name: "goods_inventory_structure_win",
+                    url: "goods/goods_inventory_structure_win.html",
+                    pageParam: pageParam,
+                    animation: {
+                        type: 'push'
+                    },
+                    softInputMode: "resize",
+                    softInputBarEnabled: false,
+                    overScrollMode: "always",
+                    slidToOpenPane: false,
+                    slidToClosePane: false,
+                    rightPane: {
+                        edge: 60,
+                        pageParam: pageParam,
+                        softInputMode: "resize",
+                        softInputBarEnabled: false,
+                        name: 'filter_win',
+                        url: 'filter_win.html'
+                    }
+                });
+            } else if (_name == '存销比') {
+                api.openDrawerLayout({
+                    name: "goods_sellandinventory_win",
+                    url: "goods/goods_sellandinventory_win.html",
+                    pageParam: pageParam,
+                    animation: {
+                        type: 'push'
+                    },
+                    softInputMode: "resize",
+                    softInputBarEnabled: false,
+                    overScrollMode: "always",
+                    slidToOpenPane: false,
+                    slidToClosePane: false,
+                    rightPane: {
+                        edge: 60,
+                        pageParam: pageParam,
+                        softInputMode: "resize",
+                        softInputBarEnabled: false,
+                        name: 'filter_win',
+                        url: 'filter_win.html'
+                    }
+                });
+            } else {
+                api.openDrawerLayout({
+                    name: "list_win",
+                    url: "goods/goods_list_win.html",
+                    pageParam: pageParam,
+                    animation: {
+                        type: 'push'
+                    },
+                    softInputMode: "resize",
+                    softInputBarEnabled: false,
+                    overScrollMode: "always",
+                    slidToOpenPane: false,
+                    slidToClosePane: false,
+                    rightPane: {
+                        edge: 60,
+                        pageParam: pageParam,
+                        softInputMode: "resize",
+                        softInputBarEnabled: false,
+                        name: 'filter_win',
+                        url: 'filter_win.html'
+                    }
+                });
+            }
+        }
+    }
+
+    function toReplenishment() {
+        if (_isObjectNull(userInfo)) {
+            visitorAlert("");
+        } else {
+            _openWin('replenishment_list_win', 'replenishment/replenishment_list_win.html');
+        }
+    }
+    var mkeyTime = new Date().getTime();
+
+    function itemClick(_obj) {
+        //如果当前时间减去标志时间大于2秒，说明是第一次点击返回键，反之为2秒内点了2次，则退出。
+        if ((new Date().getTime() - mkeyTime) < 300) {
+            // mkeyTime = new Date().getTime();
+            return;
+        } else {
+            mkeyTime = new Date().getTime();
+        }
+        var groupIndex = $api.attr(_obj, "data-group-index");
+        var itemIndex = $api.attr(_obj, "data-item-index");
+        var index = $api.attr(_obj, "data-index");
+        console.log("groupIndex:" + groupIndex);
+        console.log("itemIndex:" + itemIndex);
+        console.log("index:" + index);
+        var group = allModules[groupIndex];
+        console.log("group:" + $api.jsonToStr(group));
+        var clickedItem = allModules[groupIndex].items[itemIndex];
+        clickedItem.groupSeq = group.groupSeq;
+        clickedItem.groupIndex = groupIndex;
+        clickedItem.ownIndex = itemIndex;
+        console.log("clickedItem:" + $api.jsonToStr(clickedItem));
+        // if (clickedItem.isDefault) {
+        //     _toast("默认应用，无法编辑。", 1000, "middle");
+        //     return;
+        // }
+        if ($api.hasCls($api.dom(".edit-blank"), "aui-hide")) {
+            if (clickedItem.isAdd) {
+                //已被添加
+                console.log("myModules:" + $api.jsonToStr(myModules));
+                for (var i = 0; i < myModules.length; i++) {
+                    if (myModules[i].itemSeq == clickedItem.itemSeq && myModules[i].groupSeq == clickedItem.groupSeq) {
+                        clickedItem.isAdd = !clickedItem.isAdd;
+                        myModules.splice(i, 1);
+                        break;
+                    }
+                }
+                console.log("myModules:" + $api.jsonToStr(myModules));
+            } else {
+                //未被添加
+                console.log("myModules:" + $api.jsonToStr(myModules));
+                clickedItem.isAdd = !clickedItem.isAdd;
+                myModules.push(clickedItem);
+                console.log("myModules:" + $api.jsonToStr(myModules));
+            }
+            initUI();
+            return;
+        }
+        if (!_isObjectNull(index)) {
+            return;
+        }
+        switch (clickedItem.itemName) {
+            case "全部货品":
+            case "本店货品":
+            case "畅销款":
+            case "滞销款":
+            case "老款":
+            case "主推款":
+            case "调配仓":
+            case "存销比":
+            case "断缺码":
+            case "库存结构":
+            case "补货动态":
+            case "总仓货品":
+                toGoodsListWin(0, 0, '-1', clickedItem.itemName);
+                break;
+            case "会员管理":
+            case "线上销售":
+                toDevelopingWin(clickedItem.itemName);
+                break;
+            case "扫一扫":
+                openScanner();
+                break;
+            case "搜索货品":
+                openSearchWin();
+                break;
+            case "新品推荐":
+                toGoodsListWin(0, '1', '-1', clickedItem.itemName);
+                break;
+                // case "补货动态":
+                //     toReplenishment();
+                //     break;
+            case "订货会":
+                openOrderMetting();
+                break;
+            case "人员管理":
+                openShoppingGuideWin();
+                break;
+            case "销售指标":
+                _openWin('sale_win', 'my/target/sale_win.html');
+                break;
+            case "销售分析":
+                toSaleAnalysis();
+                break;
+            default:
+                _toast("开发中,敬请期待~");
+        }
+    }
+
+    function initMoreModulesUI() {
+        var htmlStr = "";
+        for (var i = 0; i < allModules.length; i++) {
+            var group = allModules[i];
+            if (group.groupSeq == 999) {
+                continue;
+            }
+            htmlStr += '<section class="aui-grid more-grid-' + i + '">';
+            htmlStr += '<div class="group-name flex-wrap">';
+            htmlStr += group.groupName;
+            htmlStr += '</div>';
+            htmlStr += '<div class="aui-row">';
+            var items = group.items;
+            for (var j = 0; j < items.length; j++) {
+                var item = items[j];
+                if (userInfo.factoryUserFlag) {
+                    if (item.itemName == '本店货品') {
+                        continue;
+                    }
+                }
+                if (item.isDefault || item.isAdd) {
+                    continue;
+                } else {
+                    //未添加
+                    htmlStr += '<div class="aui-col-xs-3" data-group-index="' + i + '" data-item-index="' + j + '" tapmode onclick="itemClick(this)">';
+                    htmlStr += '<span class="add-lable aui-iconfont aui-icon-plus"></span>';
+                    htmlStr += '<img src="../image/' + item.itemIcon + '" />';
+                    htmlStr += '<div class="aui-grid-label aui-font-size-12">';
+                    htmlStr += item.itemName;
+                    htmlStr += '</div>';
+                    htmlStr += '</div>';
+                }
+            }
+            htmlStr += '</div>';
+            htmlStr += '</section>';
+        }
+        // console.log("htmlStr:" + htmlStr);
+        $api.html($api.dom(".more"), htmlStr);
+        // for (var i = 0; i < allModules.length; i++) {
+        //     var group = allModules[i];
+        //     if (group.groupSeq == 999) {
+        //         continue;
+        //     }
+        //     new Sortable($api.dom(".more-grid-" + i + " .aui-row"), {
+        //         animation: 300,
+        //         ghostClass: 'blue-background-class',
+        //         easing: 'cubic-bezier(1, 0, 0, 1)',
+        //     });
+        // }
+    }
+
+    function moveItem(arr, index, tindex) {
+        //如果当前元素在拖动目标位置的下方，先将当前元素从数组拿出，数组长度-1，我们直接给数组拖动目标位置的地方新增一个和当前元素值一样的元素，
+        //我们再把数组之前的那个拖动的元素删除掉，所以要len+1
+        if (index > tindex) {
+            arr.splice(tindex, 0, arr[index]);
+            arr.splice(index + 1, 1)
+        } else {
+            //如果当前元素在拖动目标位置的上方，先将当前元素从数组拿出，数组长度-1，我们直接给数组拖动目标位置+1的地方新增一个和当前元素值一样的元素，
+            //这时，数组len不变，我们再把数组之前的那个拖动的元素删除掉，下标还是index
+            arr.splice(tindex + 1, 0, arr[index]);
+            arr.splice(index, 1)
+        }
+    }
+
+    function creatSortable() {
+        sortable = new Sortable($api.dom(".my-grid .aui-row"), {
+            animation: 300,
+            ghostClass: 'blue-background-class',
+            easing: 'cubic-bezier(1, 0, 0, 1)',
+            onEnd: function( /**Event*/ evt) {
+                console.log('onEnd');
+                var itemEl = evt.item; // dragged HTMLElement
+                // for (var variable in evt) {
+                //     if (evt.hasOwnProperty(variable)) {
+                //         console.log(variable + ":" + evt[variable]);
+                //     }
+                // }
+                if (evt.oldIndex == evt.newIndex) {
+                    return;
+                }
+                console.log(evt.oldIndex + ":" + evt.newIndex);
+                var myModulesName1 = [];
+                for (var i = 0; i < myModules.length; i++) {
+                    myModulesName1.push(myModules[i].itemName);
+                }
+                console.log('myModulesName1:' + $api.jsonToStr(myModulesName1));
+                var newIndex = evt.newIndex == myModules.length ? myModules.length - 1 : evt.newIndex;
+                console.log("newIndex:" + newIndex);
+                // var tempNewModule = myModules[newIndex];
+                // myModules[newIndex] = myModules[evt.oldIndex];
+                // myModules[evt.oldIndex] = tempNewModule;
+                moveItem(myModules, evt.oldIndex, newIndex);
+                // myModules.splice(evt.oldIndex, 1, ...myModules.splice(newIndex, 1, myModules[evt.oldIndex]))
+                var myModulesName2 = [];
+                for (var i = 0; i < myModules.length; i++) {
+                    myModulesName2.push(myModules[i].itemName);
+                }
+                console.log('myModulesName2:' + $api.jsonToStr(myModulesName2));
+                setTimeout(function() {
+                    initMyModulesUI();
+                    creatSortable();
+                }, 300);
+            },
+            // 元素被选中
+            onChoose: function( /**Event*/ evt) {
+                evt.oldIndex; // element index within parent
+                // console.log('onChoose');
+            },
+            // 元素未被选中的时候（从选中到未选中）
+            onUnchoose: function( /**Event*/ evt) {
+                // same properties as onEnd
+                // console.log('onUnchoose');
+            },
+            // 开始拖拽的时候
+            onStart: function( /**Event*/ evt) {
+                evt.oldIndex; // element index within parent
+                // console.log('onStart');
+            },
+            // 列表的任何更改都会触发
+            onSort: function( /**Event*/ evt) {
+                // same properties as onEnd
+                // console.log('onSort');
+            },
+            // 拖拽移动的时候
+            onMove: function( /**Event*/ evt, /**Event*/ originalEvent) {
+                // Example: https://jsbin.com/nawahef/edit?js,output
+                evt.dragged; // dragged HTMLElement
+                evt.draggedRect; // DOMRect {left, top, right, bottom}
+                evt.related; // HTMLElement on which have guided
+                evt.relatedRect; // DOMRect
+                evt.willInsertAfter; // Boolean that is true if Sortable will insert drag element after target by default
+                originalEvent.clientY; // mouse position
+                // return false; — for cancel
+                // return -1; — insert before target
+                // return 1; — insert after target
+                // console.log('onMove');
+            },
+            // 拖拽元素改变位置的时候
+            onChange: function( /**Event*/ evt) {
+                evt.newIndex // most likely why this event is used is to get the dragging element's current index
+                    // same properties as onEnd
+                console.log('onChange');
+            }
+        });
+    }
+
+    function initMyModulesUI() {
+        var htmlStr = "";
+        htmlStr += '<div class="aui-row">';
+        for (var i = 0; i < myModules.length; i++) {
+            var item = myModules[i];
+            if (item.itemName == '本店货品') {
+                if (!_isObjectNull(userInfo)) {
+                    if (userInfo.factoryUserFlag) {
+                        continue;
+                    }
+                }
+            }
+            htmlStr += '<div class="aui-col-xs-3" data-group-index="' + item.groupIndex + '" data-item-index="' + item.ownIndex + '" data-index="' + i + '" tapmode onclick="itemClick(this)">';
+            htmlStr += '<img src="../image/' + item.itemIcon + '" />';
+            htmlStr += '<div class="aui-grid-label aui-font-size-12">';
+            htmlStr += item.itemName;
+            htmlStr += '</div>';
+            htmlStr += '</div>';
+        }
+        htmlStr += '</div>';
+        // console.log("htmlStr:" + htmlStr);
+        $api.html($api.dom(".my-grid-row"), htmlStr);
+    }
+
+    function initUI() {
+        initMyModulesUI();
+        initMoreModulesUI();
+    }
+
+    function initData() {
+        userInfo = $api.getStorage("userInfoKey");
+        FNScanner = api.require('FNScanner');
+        allModules = $api.getStorage('allModulesKey');
+        newAllModules = $api.strToJson($api.jsonToStr(allModules));
+        myModules = $api.getStorage("myModulesKey");
+        console.log("myModules:" + $api.jsonToStr(myModules));
+        moreModule = myModules.pop();
+        newMyModules = $api.strToJson($api.jsonToStr(myModules));
+        console.log("moreModule:" + $api.jsonToStr(moreModule));
+        console.log("myModules:" + $api.jsonToStr(myModules));
+    }
+
+    var allModules;
+    var newAllModules;
+    var myModules;
+    var newMyModules;
+    var userInfo;
+    var nearSeasonList;
+    var FNScanner;
+    var moreModule;
+    var sortable;
+    var canBack = true;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        initData();
+        initUI();
+        creatSortable();
+        _addEventListener("keyback", function() {
+            closeWin();
+        });
+    }
+</script>
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/search/search_frm.css" />
+		<style>			
+		</style>
+	</head>
+	<body class="flex-wrap flex-vertical">
+		<div class="content-area flex-con">
+			<div class="aui-content">
+				<ul class="aui-list aui-list-in aui-list-noborder">
+					<!--<li class="aui-list-item aui-font-size-14" tapmode onclick="toGoodsDetailWin(this)">
+						<div name="1" class="aui-list-item-inner">
+							B7132667C19
+						</div>
+					</li>-->										
+				</ul>
+			</div>
+		</div>
+		<!--<div id="headlist" class="aui-bg-danger"></div>-->
+	</body>
+	
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript">		
+		//获取所点击商品的详细信息, 参数isSearch:是否搜索(0:不是, 1:是)
+		function toGoodsDetailWin(_obj) {
+			var _seq = $api.attr($api.first(_obj), "name");
+			var _goodId = $api.trimAll($api.text($api.first(_obj)));
+//			console.log("seq:"+_seq+" , goodId:"+_goodId);
+			// 指定frame执行脚本
+			_execScript(api.winName, "search_history_frm", "addHistory("+_seq+", '"+_goodId+"')");// 跳转商品详情前, 新增一条搜索记录
+			
+			var pageParam = {
+				seq : parseInt(_seq),
+				isSearch : 1
+			};									
+			_openWin("goods_detail_win", "../goods/detail/goods_detail_win.html", pageParam);
+		}	
+		
+		//初始化"该用户能见的所有货号"(数据从本地缓存中获取)
+		function initAllGoodId(allGoodIdData, msg){
+			console.log("输入的值----->"+msg+", 所有货号为:"+$api.jsonToStr(allGoodIdData));
+			var allGoodIdHTML = "";
+			var matchGoodId = new Array();//匹配的数据集合
+			for(var i = 0; i < allGoodIdData.length; i++){								
+				if(matchString(msg , allGoodIdData[i].goodId)){//根据输入的值, 匹配鞋子编号(模糊查询,不区分大小写)
+					matchGoodId.push(allGoodIdData[i]);
+				}
+			}	
+			
+			for(var i = 0; i < matchGoodId.length; i++){								
+				allGoodIdHTML += '<li class="aui-list-item aui-font-size-14" tapmode onclick="toGoodsDetailWin(this)">';
+				allGoodIdHTML += 	'<div name="'+matchGoodId[i].seq+'" class="aui-list-item-inner">'+matchGoodId[i].goodId+'</div>';
+				allGoodIdHTML += '</li>';		
+			}	
+//			console.log(allGoodIdHTML);			
+			$api.html($api.dom("ul.aui-list"), allGoodIdHTML);
+		}
+		
+
+		function initData(){
+			token = $api.getStorage("tokenKey");
+			allGoodIdData = $api.getStorage("allGoodIdKey");	
+		}
+		
+		//判断字符串中是否存在子字符串，不区分大小写
+		function matchString(subStr,str){
+		   var reg = eval("/"+subStr+"/ig");
+		   return reg.test(str);
+		}
+		
+		function initUI(){
+			initAllGoodId(allGoodIdData, msg)
+		}
+		
+		var token;//令牌
+		var msg;//输入的值
+		var allGoodIdData;//当前用户能查看的所有鞋子相关信息(包括:鞋子序号seq, 鞋子货号goodId, 鞋子类别categorySeq)
+		apiready = function() {
+			api.parseTapmode();
+			
+			api.addEventListener({
+	            name:'likeSearchEvent'
+            },function(ret,err){
+            	console.log("likeSearchEvent.ret"+ $api.jsonToStr(ret));            	
+            	msg = ret.value.msg;
+				initUI();
+            });
+			
+			initData();
+			
+		};
+	</script>
+</html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.nuite.modules.order_platform_app.dao.AllocateTransferTransferInApplicationDao">
+	<select id="getallocateTransferTransferInApplication" resultType="io.nuite.modules.order_platform_app.entity.AllocateTransferTransferInApplicationEntity">
+		SELECT * FROM  [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_TransferInApplication] 
+		WHERE Type=1 AND InShop_Seq=#{inShopSeq} AND Shoes_Seq=#{shoesSeq} AND OutShop_Seq=#{outShopSeq}
+		AND CONVERT(CHAR(16),InputTime,120) =#{inputTime}
+	
+	</select>
+	<select id="getList" resultType="io.nuite.modules.order_platform_app.entity.AllocateTransferTransferInApplicationEntity">
+	SELECT * FROM  [JedOrderPlatform].[dbo].[YHSR_OP_AllocateTransfer_TransferInApplication] 
+	WHERE Type=1 AND  Shoes_Seq=#{shoesSeq} AND CONVERT(CHAR(16),InputTime,120) =#{inputTime}
+	</select>
+</mapper>

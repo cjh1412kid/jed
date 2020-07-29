@@ -1,0 +1,69 @@
+#aui-header{
+	position:fixed; 
+	z-index: 999;
+}
+.aui-content{
+	margin-top: 2.25rem;
+}
+.aui-tips {
+    padding: 0 0.75rem;
+	padding-right:0.5rem;
+    width: 100%;
+    z-index: 99;
+    height: 2.0rem;
+    line-height: 2.0rem;
+   	position: relative;
+    background-color: rgba(255, 218, 218, 1);
+    color: #212121;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+            justify-content: space-between;
+    -webkit-align-items: center;
+    		align-items: center;
+}
+.aui-tips .aui-tips-title {
+	padding: 0 0.5rem;
+	font-size: 0.7rem;
+    position: relative;
+    width:-webkit-calc(100% - 2.6rem);
+    max-width: 100%;
+}
+input::-webkit-input-placeholder {
+	color: #999999;
+	font-size: 0.7rem;
+}
+.aui-input,
+input[type="text"],
+input[type="password"],
+input[type="search"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="number"],
+select,
+textarea {
+    border: none;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    display: block;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 2.0rem;
+    line-height: normal;
+    color: #737373;
+    font-size: 0.8rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    -webkit-user-select: text;
+            user-select: text;
+    -webkit-appearance: none;
+            appearance: none;
+}

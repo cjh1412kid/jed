@@ -1,0 +1,249 @@
+body {
+    background-color: rgba(243, 243, 243, 1);
+}
+.flex-style{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex-style1{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.own-goal-area {
+    position: relative;
+    width: -webkit-calc(100% - 1.0rem);
+    margin: 0.5rem;
+    height: 6rem;
+    /*background: linear-gradient(144deg, rgba(250, 217, 97, 1) 0%, rgba(255, 130, 59, 1) 100%);*/
+    background-image: url(../../../image/img_shape1.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    box-shadow: 0rem 0.5rem 0.5rem -0.5rem rgba(255, 104, 0, 1);
+    border-radius: 0.5rem;
+}
+
+.goal-name {
+    position: absolute;
+    height: 0.98rem;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    left: .5rem;
+    top: .6rem;
+}
+
+.goal-value {
+    position: absolute;
+    height: 2.27rem;
+    font-size: 1.6rem;
+    font-family: Arial-Black;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 1);
+    left: 8.52rem;
+    top: .6rem;
+}
+
+.goal-value span:last-child {
+    font-family: PingFangSC-Regular;
+    font-size: 0.8rem;
+}
+
+.own-goal-area .icon {
+    width: 3.95rem;
+    height: 3.95rem;
+    background-image: url(../../../image/img_own_goal.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-left: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.own-goal-area .title {
+    margin-top: 0.5rem;
+    height: 1.27rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    margin-left: 2.0rem;
+    height: 1.27rem;
+}
+
+.own-goal-area .value {
+    font-size: 2.0rem;
+    font-family: Arial-Black;
+    font-weight: 900;
+    color: rgba(255, 125, 0, 1);
+    margin-left: 2.0rem;
+    margin-bottom: 0.25rem;
+}
+
+.title-icon {
+    width: 0.83rem;
+    height: 0.95rem;
+    margin-right: 0.52rem;
+}
+
+.aui-grid {
+    width: -webkit-calc(100% - 1.0rem)!important;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    background-color: rgba(0, 0, 0, 0);
+    display: table;
+    table-layout: fixed;
+}
+
+.aui-grid [class*=aui-col-xs-]:active {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.aui-col-xs-6:nth-of-type(1) .child-name {
+    	border-top-left-radius: 0.5rem;
+}
+
+.aui-col-xs-6:nth-of-type(2) .child-name {
+    	border-top-right-radius: 0.5rem;
+}
+
+.aui-col-xs-6:last-of-type .value-icon {
+  	border-bottom-right-radius: 0.5rem;
+}
+
+.aui-col-xs-6:nth-last-of-type(2) .value-icon {
+    	border-bottom-left-radius: 0.5rem;
+}
+
+.aui-col-xs-6 .child-name, .aui-col-xs-6 .value-icon {
+    background-color: rgba(255, 255, 255, 1);
+    padding-left: 0.6rem;
+    line-height: 1.45rem;
+    text-align: left;
+}
+
+.aui-col-xs-6 .child-name {
+    font-weight: 400;
+    color: rgba(151, 151, 151, 1)!important;
+    padding-top: 0.25rem;
+    font-size: 0.6rem;
+    font-family: PingFangSC-Regular;
+}
+
+.aui-col-xs-6 .value-icon {
+    font-size: 1.2rem;
+    padding-bottom: 0.53rem;
+    font-weight: 700;
+    font-family: PingFangSC-Regular;
+    color: rgba(151, 151, 151, 1);
+}
+
+.aui-col-xs-6 .value-icon .icon {
+    width: 1.0rem;
+    height: 1.0rem;
+    margin: 0.3rem 0.5rem 0 0.3rem;
+}
+
+.aui-col-xs-6:nth-of-type(2n) {
+    padding-left: 0.25rem;
+    padding-top: 0rem;
+    !important;
+    padding-bottom: 0.5rem;
+    !important;
+}
+
+.aui-col-xs-6:nth-of-type(2n+1) {
+    padding-right: 0.25rem;
+    padding-top: 0rem;
+    !important;
+    padding-bottom: 0.5rem;
+    !important;
+}
+
+.uneditable img {
+    display: none !important;
+}
+/*2.0版本*/
+.month-width{
+  width: 28%;
+}
+.month-text{
+  font-size:0.7rem;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(255,255,255,1);
+}
+.month-text1{
+font-size:0.6rem;
+font-family:PingFangSC-Regular;
+font-weight:400;
+color:rgba(255,255,255,1);
+
+}
+.month-text2{
+
+font-size:1.2rem;
+font-family:Arial-Black;
+font-weight:900;
+color:rgba(255,255,255,1);
+
+}
+.month-text3{
+
+font-size:.8rem;
+font-family:PingFangSC-Regular;
+font-weight:500;
+color:rgba(255,255,255,1);
+line-height:1.68rem;
+transform: translateY(.1rem);
+}
+.content{
+  margin: 0 .5rem .5rem .5rem;
+  padding: 0 .5rem .5rem .5rem;
+  border-radius: .5rem;
+  background: #fff;
+}
+.tittle{
+   width: 100%;
+   height: 1.92rem;
+}
+.tittle-text{
+
+font-size:0.6rem;
+font-family:PingFangSC-Regular;
+font-weight:400;
+color:rgba(151,151,151,1);
+
+}
+.shop-list{
+  overflow-y: scroll;
+}
+.list-item{
+  width: 100%;
+  height: 2.14rem;
+
+}
+.list-text{
+
+font-size:0.7rem;
+font-family:PingFangSC-Regular;
+font-weight:400;
+color:rgba(151,151,151,1);
+
+}
+input{
+  width: 80%!important;
+text-align: center;
+font-size:0.9rem!important;
+font-family:Arial-Black!important;
+font-weight:900;
+color:#424242!important;
+
+}
+.item-text{
+  font-size:0.6rem;
+  font-family:PingFangSC-Regular;
+  font-weight:500;
+  color:rgba(151,151,151,1);
+
+}

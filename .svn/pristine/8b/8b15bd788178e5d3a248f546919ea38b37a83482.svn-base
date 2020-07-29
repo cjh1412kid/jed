@@ -1,0 +1,955 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="./css/common/style.css" />
+    <style type="text/css">
+        html {
+            height: 100%;
+            background-color: #fff;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            background-image: url(launch/img_launch.pxxng);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+        }
+
+        .alert-loading-container {
+            width: 30%;
+            height: 0;
+            padding-bottom: 30%;
+            position: relative;
+        }
+
+        #alert-loading {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 1px 1px 100px #000000;
+        }
+    </style>
+</head>
+
+<body class="box-wrap box-vertical-center box-horizontal-center">
+    <div class="alert-loading-container aui-hide">
+        <div id="alert-loading"></div>
+    </div>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/common/common.js"></script>
+<script type="text/javascript" src="./script/lottie/lottie.js"></script>
+<script type="text/javascript">
+    function openTabWin() {
+        var thisYear = new Date().getFullYear();
+        var yearList = [];
+        yearList.push(thisYear - 1);
+        yearList.push(thisYear);
+        yearList.push(thisYear + 1);
+        var seasonSeqList = [];
+        for (var i = 0; i < seasonList.length; i++) {
+            seasonSeqList.push(seasonList[i].seq);
+        }
+        var param = {
+            name: 'tab',
+            title: 'tabBar',
+            url: 'html/main.html',
+            bgColor: '#fff',
+            slidBackEnabled: false,
+            animation: {
+                type: "fade", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300,
+            },
+            tabBar: {
+                height: 50, //（可选项）标签栏高度。默认值54。数字类型
+                background: "#fff", //（可选项）标签栏背景。支持颜色值和图片，默认值#fff，字符串类型
+                shadow: "#ddd", //（可选项）标签栏顶部阴影线颜色。默认值#ddd，字符串类型
+                color: "rgba(84,84,84,1)", //（可选项）标签栏各项的文字颜色。默认值#000，字符串类型
+                selectedColor: "rgba(255,81,0,1)", //（可选项）标签栏各项选中状态的文字颜色。默认值#000，字符串类型
+                animated: false, //（可选项）选中标签栏每项时，切换对应的页面是否带有动画效果，默认值false。布尔类型
+                scrollEnabled: false, //（可选项）标签栏每项对应的页面间是否能够左右滚动切换，默认值true。布尔类型
+                index: 0, //（可选项）默认选中项的索引。默认值0。数字类型
+                list: [{
+                        text: "首页",
+                        iconPath: "widget://image/nav_tab_14.png",
+                        selectedIconPath: "widget://image/nav_tab_1_on4.png"
+                    }, {
+                        text: "消息",
+                        iconPath: "widget://image/nav_tab_24.png",
+                        selectedIconPath: "widget://image/nav_tab_2_on4.png"
+                    },
+                    // {
+                    //     text: "订单",
+                    //     iconPath: "widget://image/nav_tab_34.png",
+                    //     selectedIconPath: "widget://image/nav_tab_3_on4.png"
+                    // },
+                    {
+
+                        text: "调拨",
+                        iconPath: "widget://image/nav_tab_tiaobo1.png",
+                        selectedIconPath: "widget://image/nav_tab_3_tiaobo22.png"
+                    }, {
+                        text: "我的",
+                        iconPath: "widget://image/nav_tab_44.png",
+                        selectedIconPath: "widget://image/nav_tab_4_on4.png"
+                    }
+                ],
+                frames: [{
+                        title: "首页", //tab切换时对应的标题
+                        name: "tab_content_1",
+                        url: "html/tab_content_1.html",
+                        pageParam: {},
+                        //其他继承自openFrame的参数
+                    }, {
+                        title: "消息",
+                        name: "tab_content_2",
+                        url: "html/tab_content_2.html",
+                        pageParam: {},
+                        //其他继承自openFrame的参数
+                    },
+                    // {
+                    //     title: "订单",
+                    //     name: "tab_content_3",
+                    //     url: "html/tab_content_3.html",
+                    //     pageParam: {
+                    //         flag: "order",
+                    //         rangeType: "",
+                    //         dataType: "",
+                    //         name: "",
+                    //         // yearList: yearList,
+                    //         yearList: [yearList[yearList.length - 2]],
+                    //         // seasonSeqList: seasonSeqList,
+                    //         seasonSeqList: [seasonSeqList[0]],
+                    //         // categorySeqList: categorySeqList,
+                    //         categorySeqList: [],
+                    //         colorSeqList: [],
+                    //         sXMap: "",
+                    //         fuzzySearchParam: "",
+                    //         sizeType: "",
+                    //         sizeSeqStart: "",
+                    //         sizeSeqEnd: "",
+                    //         orderBy: 1,
+                    //         orderDir: 0,
+                    //         timeRange: "30",
+                    //         saleTimeStart: "2017/01/02",
+                    //         saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+                    //         // saleTimeStart: "",
+                    //         // saleTimeEnd: "",
+                    //     },
+                    //     //其他继承自openFrame的参数
+                    // },
+                    {
+                        title: "调拨",
+                        name: "tab_content_allot",
+                        url: "html/tab_content_allot.html",
+                        pageParam: {},
+                        //其他继承自openFrame的参数
+                    }, {
+                        title: "我的",
+                        name: "tab_content_4",
+                        url: "html/tab_content_4.html",
+                        pageParam: {},
+                        //其他继承自openFrame的参数
+                    }
+                ]
+            }
+        }
+        api.openTabLayout(param);
+    }
+
+    function openNavTabWin() {
+        var param = {
+            name: 'nav-tab',
+            title: 'nav-tab',
+            url: 'html/main.html',
+            bgColor: '#fff',
+            slidBackEnabled: false,
+            animation: {
+                type: "fade", //动画类型（详见动画类型常量）
+                subType: "from_right", //动画子类型（详见动画子类型常量）
+                duration: 300,
+            },
+            navigationBar: {
+                height: 45, //（可选项）导航栏高度。只支持Android，默认值45。数字类型
+                background: "#fff", //（可选项）导航栏背景。支持颜色值和图片，默认值#fff，字符串类型
+                shadow: "#fff", //（可选项）导航栏底部阴影线颜色。默认值#ddd，字符串类型
+                color: "#505050", //（可选项）导航栏标题文字颜色。默认值#000，字符串类型
+                fontSize: 18, //（可选项）导航栏标题字体大小。默认值17，数字类型
+                hideBackButton: true, //（可选项）是否隐藏默认返回按钮。如果传了leftButtons，hideBackButton参数失效。返回按钮由箭头图标和前一个页面的标题组成，若前一个页面未设置标题，则按钮文字为“返回”。可以通过监听navbackbtn或keyback事件来处理返回按钮的点击事件。布尔类型
+                leftButtons: //（可选项）导航栏左边按钮组。左边按钮会替换掉默认的返回按钮，按钮按照数组顺序从左至右显示，按钮建议最多2个，可以通过监听navitembtn事件来处理按钮点击事件，JSON对象数组类型
+                    [{
+                    text: "", //（可选项）按钮标题文字，可以和icon同时存在，字符串类型
+                    color: "", //（可选项）按钮标题文字颜色，默认值#000，字符串类型
+                    fontSize: 17, //（可选项）按钮标题字体大小。默认值17，数字类型
+                    iconPath: "image/icon_scanner015.png", //（可选项）按钮icon图标路径，可以和text同时存在，图片尺寸需要为4倍图，例如设备上面期望显示的图标尺寸为25*25，则图片实际尺寸需要为100*100，字符串类型
+                }],
+                rightButtons: //（可选项）导航栏右边按钮组。按钮按照数组顺序从右至左显示，按钮建议最多2个，可以通过监听navitembtn事件来处理按钮点击事件，JSON对象数组类型
+                    [{
+                    text: "", //（可选项）按钮标题文字，可以和icon同时存在，字符串类型
+                    color: "", //（可选项）按钮标题文字颜色，默认值#000，字符串类型
+                    fontSize: 17, //（可选项）按钮标题字体大小。默认值17，数字类型
+                    iconPath: "image/nav_btn_search.png" //（可选项）按钮icon图标路径，可以和text同时存在，图片尺寸需要为4倍图，例如设备上面期望显示的图标尺寸为25*25，则图片实际尺寸需要为100*100，字符串类型
+                }]
+            },
+            tabBar: {
+                height: 50, //（可选项）标签栏高度。默认值54。数字类型
+                background: "#fff", //（可选项）标签栏背景。支持颜色值和图片，默认值#fff，字符串类型
+                shadow: "#ddd", //（可选项）标签栏顶部阴影线颜色。默认值#ddd，字符串类型
+                color: "rgba(84,84,84,1)", //（可选项）标签栏各项的文字颜色。默认值#000，字符串类型
+                selectedColor: "rgba(255,81,0,1)", //（可选项）标签栏各项选中状态的文字颜色。默认值#000，字符串类型
+                animated: false, //（可选项）选中标签栏每项时，切换对应的页面是否带有动画效果，默认值false。布尔类型
+                scrollEnabled: false, //（可选项）标签栏每项对应的页面间是否能够左右滚动切换，默认值true。布尔类型
+                index: 0, //（可选项）默认选中项的索引。默认值0。数字类型
+                list: [{
+                        text: "首页",
+                        iconPath: "widget://image/nav_tab_14.png",
+                        selectedIconPath: "widget://image/nav_tab_1_on4.png"
+                    }, {
+                        text: "消息",
+                        iconPath: "widget://image/nav_tab_24.png",
+                        selectedIconPath: "widget://image/nav_tab_2_on4.png"
+                    },
+                    // {
+                    //     text: "订单",
+                    //     iconPath: "widget://image/nav_tab_34.png",
+                    //     selectedIconPath: "widget://image/nav_tab_3_on4.png"
+                    // },
+                    {
+                        text: "我的",
+                        iconPath: "widget://image/nav_tab_44.png",
+                        selectedIconPath: "widget://image/nav_tab_4_on4.png"
+                    }
+                ],
+                frames: [{
+                        title: "首页", //tab切换时对应的标题
+                        name: "tab_content_1",
+                        url: "html/tab_content_1.html",
+                        pageParam: {},
+                        //其他继承自openFrame的参数
+                    }, {
+                        title: "消息",
+                        name: "tab_content_2",
+                        url: "html/tab_content_2.html",
+                        pageParam: {},
+                        //其他继承自openFrame的参数
+                    },
+                    // {
+                    //     title: "订单",
+                    //     name: "tab_content_3",
+                    //     url: "html/tab_content_3.html",
+                    //     pageParam: {},
+                    //     //其他继承自openFrame的参数
+                    // },
+                    {
+                        title: "我的",
+                        name: "tab_content_4",
+                        url: "html/tab_content_4.html",
+                        pageParam: {},
+                        //其他继承自openFrame的参数
+                    }
+                ]
+            }
+        }
+        api.openTabLayout(param);
+    }
+    /**
+     *获取:所有季节
+     */
+    function getSeasonList(call) {
+        var url = window.myServerUrl + "order/app/seasonCategorySx/seasonList";
+        console.log("获取所有季节-->url:" + url);
+        _ajax(url, "getSeasonList", function(ret, err) {
+            seasonList = [];
+            if (ret) {
+                console.log("获取所有季节-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    seasonList = ret.result;
+                    if (!_isArrayNull(seasonList)) {
+                        $api.setStorage("seasonListKey", seasonList);
+                        call();
+                    }
+                } else {
+                    _toast("未获取到所有季节数据！");
+                }
+            } else {
+                console.log("获取所有季节-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+        });
+    }
+    /**
+     *获取:最近俩季节
+     */
+    function getNearSeason(call) {
+        var nearSeasonList = [];
+        var url = window.myServerUrl + "order/app/shoesInfo/selectLastSeason";
+        console.log("获取最近两个季节-->url:" + url);
+        _ajax(url, "selectLastSeason", function(ret, err) {
+            if (ret) {
+                console.log("获取最近两个季节-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    nearSeasonList = ret.result;
+
+                } else {
+                    _toast("未获取到获取最近两个季节数据！");
+
+                }
+            } else {
+                console.log("获取获取最近两个季节季节-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            if (_isArrayNull(nearSeasonList)) {
+                $api.rmStorage('TwoNearSeasonListKey');
+            } else {
+                $api.setStorage("TwoNearSeasonListKey", nearSeasonList);
+            }
+            call();
+        });
+    }
+
+    function expressCompanyList(call) {
+        var logisticsList = [];
+        var url = window.myServerUrl + "order/app/order/expressCompanyList";
+        console.log("获取物流信息-->url:" + url);
+        _ajax(url, "expressList", function(ret, err) {
+            if (ret) {
+                console.log("获取物流信息-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    logisticsList = ret.result;
+
+                } else {
+                    _toast(ret.msg);
+
+                }
+            } else {
+                console.log("获取物流信息-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            if (_isArrayNull(logisticsList)) {
+                $api.rmStorage('logisticsListKey');
+            } else {
+                $api.setStorage("logisticsListKey", logisticsList);
+            }
+            call();
+        });
+    }
+
+    function initJPush(call) {
+        if (api.systemType == "ios") {
+            call();
+            return;
+        }
+        jpush.init(function(ret) {
+            //				console.log("jpush init ret:" + $api.jsonToStr(ret) + " typeof ret:" + typeof ret);
+            if (ret && ret.status) {
+                call();
+            } else {
+                _toast("推送初始化失败！", 3000, "bottom");
+            }
+        });
+    }
+    /**
+     * 绑定用户别名和标签。服务端可以指定别名和标签进行消息推送
+     */
+    function bindAliasAndTagsJPush(call, userInfo) {
+        var param = {
+            alias: userInfo.accountName,
+            //				tags : userInfo.accountName
+        };
+        //			console.log("param:" + $api.jsonToStr(param));
+        jpush.bindAliasAndTags(param, function(_ret) {
+            //				console.log("绑定用户别名和标签bindAliasAndTags   ret:" + $api.jsonToStr(_ret));
+            var statusCode = _ret.statusCode;
+            if (statusCode == 0) {
+                console.log("推送绑定" + userInfo.accountName + "成功");
+            } else {
+                _toast("推送绑定市县失败！", 3000, "bottom");
+            }
+            call();
+        });
+    }
+    /**
+     * 集成了JPush SDK的应用程序在第一次成功注册到JPush服务器时，JPush服务器会给客户端返回一个唯一的该设备的标识RegistrationID。JPush SDK会以广播的形式发送RegistrationID到应用程序。
+     * 应用程序可以把此RegistrationID保存于自己的应用服务器上，然后就可以根据 RegistrationID来向设备推送消息或者通知
+     */
+    function getRegistrationIdJPush(call) {
+        jpush.getRegistrationId(function(ret) {
+            console.log("jpush getRegistrationId ret:" + $api.jsonToStr(ret));
+            var registrationId = ret.id;
+            if (!_isStringNull(registrationId)) {
+                call();
+            } else {
+                _toast("推送获取该设备唯一标识失败！", 3000, "bottom");
+            }
+        });
+    }
+
+    //统计-app恢复
+    function onResume() {
+        jpush.onResume();
+        console.log('JPush onResume');
+        var param = {
+            id: -1
+        };
+        jpush.clearNotification(param, function(_ret) {
+            console.log("清除极光推送发送到状态栏的通知。ret:" + $api.jsonToStr(_ret));
+            if (_ret && _ret.status) {}
+        });
+    }
+
+    //统计-app暂停
+    function onPause() {
+        jpush.onPause();
+        console.log('JPush onPause');
+    }
+
+    function initAppData(call) {
+        var is_company_recommend_checked = $api.getStorage('company_recommend_key');
+        var is_new_recommend_checked = $api.getStorage('new_recommend_key');
+        var is_all_recommend_checked = $api.getStorage('all_recommend_key');
+        // $api.setStorage('company_recommend_key', 1);
+        // $api.setStorage('new_recommend_key', 0);
+        if (_isStringNull(is_company_recommend_checked)) {
+            $api.setStorage('company_recommend_key', 1);
+        }
+        if (_isStringNull(is_new_recommend_checked)) {
+            $api.setStorage('new_recommend_key', 1);
+        }
+        $api.setStorage('all_recommend_key', 0);
+        // if (_isStringNull(is_all_recommend_checked)) {
+        //     $api.setStorage('all_recommend_key', 0);
+        // }
+        initJPush(function() {
+            if (api.systemType == "ios") {
+                jpush.setBadge({
+                    badge: 0
+                });
+            }
+            var param = {
+                id: -1
+            };
+            jpush.clearNotification(param, function(_ret) {
+                //					console.log("jpush.clearNotification.ret:" + $api.jsonToStr(_ret));
+                if (_ret && _ret.status) {}
+            });
+            jpush.setListener(function(ret) {
+                console.log("ajpush setListener ret:" + $api.jsonToStr(ret));
+                _sendEvent("receivedPushMessageEvent", ret);
+            });
+            call();
+        });
+    }
+
+    function loginAction(type1, type2) {
+        var accountName = $api.getStorage("accountNameKey");
+        var password = $api.getStorage("passwordKey");
+        //**************************** 模拟登录成功  *************************
+        //			userInfo = {}
+        //			$api.setStorage("userInfoKey", userInfo);
+        //			$api.setStorage("accountNameKey", "fl");
+        //			$api.setStorage("passwordKey", "123");
+        //			var bounces = false, reload = true, delay = 150;
+        //			//_openWin("main", "html/main.html");
+        //          openTabWin();
+        //          openNavTabWin();
+        //			return;
+        //***************************************************************
+        if (_isStringNull(accountName) || _isStringNull(password)) {
+            _openWin("login_win", "html/login/login_win.html", {
+                type: "index"
+            });
+            return;
+        }
+        var url = window.myServerUrl + "order/app/onLogin";
+        isRequesting = true;
+        var data = {
+            values: {
+                "accountName": accountName,
+                "password": password
+            }
+        };
+        var method = 'post';
+        var timeout = 15;
+        console.log("登录-->url:" + url);
+        console.log("登录-->data:" + $api.jsonToStr(data));
+        //			if (type1 && type1 == "longin_win") {
+        //				_execScript("login_win", "", "__showProgress()");
+        //			} else {
+        _showProgress("登录中...", "", true);
+        //			}
+        // var mLottie=lottie.loadAnimation({
+        // 	  container: $api.byId("alert-loading"), // the dom element that will contain the animation
+        // 	  renderer: 'svg',
+        // 	  loop: false,
+        // 	  autoplay: true,
+        // 	  path: 'json/loading_and_done.json' // the path to the animation json
+        // 	});
+        // 	mLottie.setSpeed(0.7);
+        _ajax(url, "onLogin", function(ret, err) {
+            console.log("登录-->ret:" + $api.jsonToStr(ret));
+            if (ret) {
+                if (ret.code == 0) {
+                    //有效期
+                    var expire = ret.result[0].expire;
+                    //token密匙
+                    var token = ret.result[0].token;
+                    //用户信息
+                    var userInfo = ret.result[0].userInfo;
+                    $api.setStorage("expireKey", expire);
+                    $api.setStorage("tokenKey", token);
+                    $api.setStorage("userInfoKey", userInfo);
+                    $api.setStorage("accountNameKey", accountName);
+                    $api.setStorage("passwordKey", password);
+                    // 8.0 初始化并连接融云
+                    rong_init();
+                    bindAliasAndTagsJPush(function() {}, userInfo);
+                    if (type1 && type1 == "longin_win") {
+                        if (type2 && type2 == "my_win") { //从"我的"里面注销后登录
+                            getSeasonList(function() {
+                                getNearSeason(function() {
+                                    expressCompanyList(function() {
+                                        api.hideProgress();
+                                        api.closeWin({
+                                            name: "login_win"
+                                        });
+                                    })
+                                })
+
+
+                            });
+                        } else { //自动登录, 首次登录(欢迎页)
+                            getSeasonList(function() {
+                                getNearSeason(function() {
+                                    expressCompanyList(function() {
+                                        api.hideProgress();
+                                        // _openWin("main", "html/main.html");
+                                        openTabWin();
+                                        // openNavTabWin();
+                                    });
+                                });
+
+                            });
+                        }
+                        console.log("type1:" + type1 + "(输入账号,密码登录成功！)");
+                        _sendEvent("userInfoUpdateKey");
+                        _execScript("login_win", "", "__toast(" + ret.code + ",'" + ret.msg + "')");
+                    } else {
+                        console.log("自动登录成功！");
+                        getSeasonList(function() {
+                            getNearSeason(function() {
+                                expressCompanyList(function() {
+                                    api.hideProgress();
+                                    _toast(ret.msg, 1000, "bottom", function() {
+                                        // _openWin("main", "html/main.html");
+                                        openTabWin();
+                                        // openNavTabWin();
+                                    });
+                                });
+                            });
+
+                        });
+                    }
+                } else {
+                    if (type1 && type1 == "longin_win") {
+                        console.log("type1:" + type1 + "(输入账号,密码登录失败！)");
+                        _execScript("login_win", "", "__toast(" + ret.code + ",'" + ret.msg + "')");
+                        $api.rmStorage("userInfoKey");
+                        $api.rmStorage("accountNameKey");
+                        $api.rmStorage("passwordKey");
+                    } else if (type1 && type1 == "welcom_win") {
+                        console.log("type1:" + type1 + "(首次登录！)");
+                        _openWin("login_win", "html/login/login_win.html", {
+                            type: "welcome_win"
+                        });
+                    } else { //自动登录失败, 跳转登录页面
+                        console.log("自动登录失败！");
+                        _toast("自动登录失败！", 3000, "bottom", function() {
+                            $api.rmStorage("userInfoKey");
+                            $api.rmStorage("accountNameKey");
+                            $api.rmStorage("passwordKey");
+                            _openWin("login_win", "html/login/login_win.html", {
+                                type: "index"
+                            });
+                        });
+                    }
+                }
+            } else {
+                if (type1 && type1 == "longin_win") { //输入账号,密码登录时,ret为空
+                    _execScript("login_win", "", "__toast(" + ret.code + ",'" + window.ajaxErrorMessage + "')");
+                    $api.rmStorage("userInfoKey");
+                    $api.rmStorage("accountNameKey");
+                    $api.rmStorage("passwordKey");
+                } else { //自动登录时,ret为空
+                    _toast(window.ajaxErrorMessage, 3000, "bottom", function() {
+                        $api.rmStorage("userInfoKey");
+                        $api.rmStorage("accountNameKey");
+                        $api.rmStorage("passwordKey");
+                        _openWin("login_win", "html/login/login_win.html", {
+                            type: "index"
+                        });
+                    });
+                }
+            }
+        }, method, data, timeout, "json");
+    }
+
+    // 4.0 消息监听器，负责监听所有的消息
+    function rong_onMsgListener() {
+        rong.setOnReceiveMessageListener(function(ret, err) {
+            console.log("rong.setOnReceiveMessageListener():" + $api.jsonToStr(ret));
+            // 4.1 广播接收到消息了
+            _sendEvent("receivedMsg", ret.result.message);
+            _sendEvent("receiveMessage", ret.result.message);
+            // 判断是否首次获取，避免重复插入
+            //					if (!isFirst) {
+            //						// 发送者ID
+            //						var rongID = ret.result.message.senderUserId;
+            //						// 判断是否是单聊
+            //						if (ret.result.message.conversationType == "PRIVATE") {
+            //							rongID = ret.result.message.senderUserId;
+            //						}
+            //						// 判断是否是群聊
+            //						else if (ret.result.message.conversationType == "GROUP") {
+            //							rongID = ret.result.message.targetId;
+            //						}
+            //						// 判断该会话是否存在了，如果存在就上移并更新数据
+            //						if ($("#msglist ul li[data-targetId='" + rongID + "']").size() > 0) {
+            //							var $newMsg = $("#msglist ul li[data-targetId='" + rongID + "']");
+            //							$newMsg.find(".msgnr").text(setLastMsgText(ret.result.message, false));
+            //							$newMsg.find(".btime").text(_formatDate(ret.result.message.receivedTime));
+            //							var $clone = $newMsg.clone();
+            //							// 移除
+            //							$newMsg.remove();
+            //							// 在第一次插入
+            //							$('#msglist ul').prepend($clone);
+            //						} else {
+            //							// 插入新的
+            //							var msgObj = ret.result.message;
+            //							getUserByID(rongID, msgObj);
+            //						}
+            //					}
+            //					if (!isFirst) {
+            if (!_isObjectNull(ret.result.message)) {
+                // 状态栏提醒
+                api.notification({
+                    vibrate: [300, 500],
+                    sound: 'default',
+                    light: false,
+                    notify: {
+                        title: '您有新消息',
+                        content: ret.result.message.content.text != undefined ? ret.result.message.content.text : "",
+                        updateCurrent: true,
+                        extra: JSON.stringify(ret.result.message)
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        console.log("notification.ret:" + $api.jsonToStr(ret));
+                        api.cancelNotification({
+                            id: ret.id
+                        });
+                    } else {
+                        console.log("notification.err:" + $api.jsonToStr(err));
+                    }
+                });
+            }
+            //					}
+        });
+    }
+
+    // 3.4 连接融云
+    function rong_content() {
+        //			var _token = $api.getStorage("rong_token");
+        var userInfo = $api.getStorage("userInfoKey");
+        if (_isObjectNull(userInfo)) {
+            return;
+        }
+        var _token = userInfo.rongCloudToken;
+        if (_token) {
+            rong.connect({
+                token: _token
+            }, function(ret, err) {
+                console.log("连接融云rong.connect()   ret:" + $api.jsonToStr(ret) + ", err:" + $api.jsonToStr(err));
+                if (ret.status == 'success') {
+                    // 获取会话列表
+                    //							rong_getConversationList();
+                } else {
+                    console.log("连接融云rong.connect()失败！");
+                }
+            });
+        }
+    }
+
+    // 3、融云初始化并连接监听
+    function rong_init() {
+        //3.1 初始化融云
+        rong.init(function(ret, err) {
+            console.log("融云初始化rong.init()	ret:" + $api.jsonToStr(ret) + ", err:" + $api.jsonToStr(err));
+            if (ret.status == 'error') {
+                console.log("融云初始化rong.init()失败！");
+            }
+        });
+        // 3.2 监听融云连接状态
+        // 监听连接状态
+        //CONNECTED // 连接成功
+        //CONNECTING // 连接中
+        //DISCONNECTED // 断开连接
+        //KICKED // 用户账户在其他设备登录，本机会被踢掉线
+        //NETWORK_UNAVAILABLE // 网络不可用
+        //SERVER_INVALID // 服务器异常或无法连接
+        //TOKEN_INCORRECT // Token 不正确
+        rong.setConnectionStatusListener(function(ret, err) {
+            console.log("监听融云连接状态		ret:" + $api.jsonToStr(ret) + ", err:" + $api.jsonToStr(err));
+            var statuMsg = "";
+            var rong_statu = ret.result.connectionStatus;
+            switch (rong_statu) {
+                case "CONNECTED":
+                    statuMsg = "连接成功";
+                    break;
+                case "CONNECTING":
+                    statuMsg = "连接中";
+                    break;
+                case "DISCONNECTED":
+                    statuMsg = "断开连接";
+                    break;
+                case "KICKED":
+                    statuMsg = "您的帐号于" + _getFormatedDate("", "HH:mm") + "在其他设备进行了登录，如非本人操作，则密码可能已泄露，建议联系管理员修改密码。";
+                    tickedStatus(statuMsg);
+                    break;
+                case "NETWORK_UNAVAILABLE":
+                    statuMsg = "网络不可用";
+                    break;
+                case "SERVER_INVALID":
+                    statuMsg = "服务器异常或无法连接";
+                    break;
+                case "TOKEN_INCORRECT":
+                    statuMsg = "Token 不正确";
+                    break;
+                default:
+                    statuMsg = "未知错误";
+                    break;
+            }
+            //									_toast(statuMsg);
+        });
+        // 3.3 监听是否有消息进入
+        rong_onMsgListener();
+
+        //3.4连接融云
+        rong_content();
+    }
+
+    // 20、退出登录
+    function rong_logout() {
+        rong.logout(function(ret, err) {
+            //				console.log("退出登录rong.logout()    ret:" + $api.jsonToStr(ret) + ", err:" + $api.jsonToStr(err));
+            if (ret.status == 'error') {}
+        });
+    }
+
+    // 22 断开连接
+    function rong_disconnect() {
+        rong.disconnect({
+            isReceivePush: true
+        }, function(ret, err) {
+            console.log(" 断开融云连接rong.disconnect()    ret:" + $api.jsonToStr(ret) + ", err:" + $api.jsonToStr(err));
+            if ('success' == ret.status) {}
+        });
+    }
+
+
+    function tickedStatus(statuMsg) {
+        // 1.注销融云, 2.推送绑定logoutAlias
+        rong.logout(function(ret, err) {
+            if (ret.status == 'error') {
+                api.toast({
+                    msg: "注销融云失败！"
+                });
+            } else {
+                console.log("注销融云成功！");
+                var param = {
+                    alias: "logoutAlias",
+                    //				tags : userInfo.accountName
+                };
+                console.log("param:" + $api.jsonToStr(param));
+                jpush.bindAliasAndTags(param, function(_ret) {
+                    console.log("jpush bindAliasAndTags ret:" + $api.jsonToStr(_ret));
+                    var statusCode = _ret.statusCode;
+                    if (statusCode == 0) {
+                        console.log("推送绑定logoutAlias成功");
+                    } else {
+                        _toast("推送绑定logoutAlias失败！", 3000, "bottom");
+                    }
+                });
+            }
+        });
+        var dialogBox = api.require('dialogBox');
+        dialogBox.alert({
+            texts: {
+                title: '下线通知',
+                content: statuMsg,
+                leftBtnTitle: '退出',
+                rightBtnTitle: '重新登录'
+            },
+            styles: {
+                bg: '#fff',
+                corner: 5,
+                w: 300,
+                title: {
+                    marginT: 10,
+                    //									icon : 'widget://res/gou.png',
+                    iconSize: 40,
+                    titleSize: 16,
+                    titleColor: '#212121'
+                },
+                content: {
+                    marginT: 10,
+                    marginB: 10,
+                    color: '#212121',
+                    size: 14
+                },
+                left: {
+                    marginB: 0,
+                    marginL: 0,
+                    w: 150,
+                    h: 45,
+                    corner: 2,
+                    bg: '#fff',
+                    size: 16,
+                    color: '#212121'
+                },
+                right: {
+                    marginB: 0,
+                    marginL: 0,
+                    w: 150,
+                    h: 45,
+                    corner: 2,
+                    bg: '#fff',
+                    size: 16,
+                    color: '#212121'
+                },
+                horizontalLine: {
+                    color: 'rgba(221,221,221,1)', //（可选项）字符串类型；左右按钮上边横线的颜色，支持rgb、rgba、#；默认：'rgba(245,245,245,0)'
+                    height: 1 //（可选项）数字类型；左右边按钮横线的高度；默认：0
+                },
+                verticalLine: {
+                    color: 'rgba(221,221,221,1)', //（可选项）字符串类型；左右按钮中间竖线的颜色，支持rgb、rgba、#；默认：'rgba(245,245,245,0)'
+                    width: 1 //（可选项）数字类型；左右边按钮竖线的高度；默认：0
+                }
+            },
+            tapClose: false
+        }, function(ret) {
+            dialogBox.close({
+                dialogName: 'alert'
+            });
+            if (ret.eventType == 'left') { //退出
+                //用户信息
+                $api.rmStorage("userInfoKey");
+                //缓存的"热搜商品"数据
+                $api.rmStorage("hotSearchKey");
+                //缓存的"所有商品"货号
+                $api.rmStorage("allGoodIdKey");
+                _openWin("login_win", "html/login/login_win.html", {
+                    type: "my_win"
+                });
+            } else { //重新登录
+                rong_init();
+            }
+        });
+    }
+
+    function toNextWin() {
+        // var isFirstLaunch = $api.getStorage("isFirstLaunch");
+        // console.log("是否第一次启动该应用:" + isFirstLaunch);
+        // 1、判断是否第一次启动该应用
+        // if (_isStringNull(isFirstLaunch)) {
+        //     // 第一次启动应用，进入欢迎界面
+        //     setTimeout(function() {
+        //         _openWin('welcom_win', 'html/welcome/welcom_win.html');
+        //     }, 2000);
+        // } else {
+        // 不是第一次启动应用
+        var userInfo = $api.getStorage("userInfoKey");
+        //判断是否登录过
+        if (!_isObjectNull(userInfo)) {
+            //登录过，自动登录
+            loginAction();
+        } else {
+            // //没有登录，打开登录界面进行登录
+            // _openWin("login_win", "html/login/login_win.html", {
+            //     type: "index"
+            // });
+            //
+            // openNavTabWin();
+            // openTabWin();
+            $api.setStorage("accountNameKey", "test");
+            $api.setStorage("passwordKey", "123");
+            loginAction();
+        }
+        // }
+    }
+
+    var currentAjaxTag;
+    var isRequesting = false;
+    var userInfo;
+    var jpush;
+    var rong;
+    var seasonList = [];
+    apiready = function() {
+        api.setStatusBarStyle({
+            style: 'light',
+            animated: true,
+            color: "rgba(0,0,0,0)"
+        });
+        //引入极光推送模块
+        jpush = api.require('ajpush');
+        //引入融云推送模块
+        rong = api.require('rongCloud2');
+        //			$api.clearStorage();
+        initAppData(function() {
+            api.removeLaunchView();
+            //数据初始化成功，进入下个界面
+            toNextWin();
+        });
+        // 双击退出应用
+        _twoClickCloseApp();
+        // 8.0 初始化并连接融云
+        //rong_init();
+        // 10.0 监听网络连接
+        _addEventListener("online", function(ret) {
+            // 11 重新初始化并连接融云
+            rong_init();
+        });
+        // 21、监听是否退出登录
+        _addEventListener("logOut", function(ret) {
+            rong_logout();
+        });
+        // 12. 监听用户信息更新时，重新初始化
+        _addEventListener(window.userInfoUpdateKey, function(ret) {
+            // 先断开连接
+            rong_disconnect();
+            // 13 重新初始化并连接融云
+            rong_init();
+            // 18、重新获取数据
+            //api.refreshHeaderLoading();
+        });
+        api.addEventListener({
+            name: 'smartupdatefinish'
+        }, function(ret, err) {
+            api.rebootApp();
+        });
+    }
+</script>
+
+</html>

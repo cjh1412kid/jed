@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title></title>
+		<!--AUI样式框架-->
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="_closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+			<a class="aui-pull-right aui-btn aui-hide" onclick="fnClipShare();"> <span class="aui-iconfont aui-icon-share"></span> </a>
+			<div class="aui-title aui-text-default">
+				我的资料
+			</div>
+		</header>
+	</body>
+	<!--APICloud自带前端脚本-->
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<!--通用脚本库-->
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript">
+		function _closeWin() {
+			api.closeWin();
+		}
+
+		var headerPos;
+		apiready = function() {
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			$api.fixTabBar($api.dom("body"));
+			headerPos = $api.offset(header);
+			var rect = {
+				x : 0,
+				//				y : headerPos.h,
+				y : 0,
+				w : 'auto',
+				h : 'auto',
+				marginLeft : 0, //相对父 window 左外边距的距离
+				marginTop : headerPos.h, //相对父 window 上外边距的距离
+				marginBottom : 0, //相对父 window 下外边距的距离
+				marginRight : 0 //相对父 window 右外边距的距离
+			};
+			var bounces = false;
+			var reload = true;
+			var allowEdit = false;
+			var animation = {
+				type : "fade", //动画类型（详见动画类型常量）
+				//			subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 0 //动画过渡时间，默认300毫秒
+			};
+			_openFrame("personalCenter_frm", "personalCenter_frm.html", rect, api.pageParam, bounces, reload, allowEdit, animation);
+		};
+	</script>
+</html>

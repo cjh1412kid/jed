@@ -1,0 +1,198 @@
+<!-- 品牌管理页面 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>订货会货品</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<link rel="stylesheet" href="../../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../../css/font-awesome.min.css">
+<link rel="stylesheet"
+	href="../../../plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet"
+	href="../../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet"
+	href="../../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../../css/main.css">
+  <link rel="stylesheet" href="../../../plugins/datepicker/datepicker3.css">
+<script src="../../../libs/jquery.min.js"></script>
+<script src="../../../libs/jquery.form.js"></script>
+<script src="../../../plugins/layer/layer.js"></script>
+<script src="../../../libs/bootstrap.min.js"></script>
+<script src="../../../libs/vue.min.js"></script>
+<script src="../../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../../plugins/daterangepicker/moment.min.js"></script>
+<script src="../../../plugins/daterangepicker/daterangepicker.js"></script>
+<script src="../../../plugins/datepicker/bootstrap-datepicker.js"></script>
+<script
+	src="../../../plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script src="../../../js/common.js"></script>
+<style>
+.dropdown-menu a {
+	cursor: pointer;
+}
+
+.select-wrapper {
+	display: inline-block;
+	/*font-size: 16px;*/
+}
+
+.select-wrapper span {
+	color: #3c8dbc;
+}
+
+.select-wrapper select {
+	background-color: #eee;
+	width: 160px;
+	height: 30px;
+	margin-right: 20px;
+}
+</style>
+</head>
+<body>
+	<div id="rrapp" v-cloak>
+		<div v-show="showList">
+
+			<div class="form-group col-sm-8">
+				<div class="col-xs-1 select-wrapper" style="height: 100%">
+					<span>年份选择:</span>
+				</div>
+				<div class="col-xs-2">
+					<div class="dropdown">
+						<a role="button" data-toggle="dropdown" class="btn btn-default"
+							style="width: 100%;"> {{year || '年份选择'}} <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu multi-level" role="menu"
+							aria-labelledby="dropdownMenu">
+							<li v-for="item in years"><a tabindex="-1"
+								@click="yearSelect(item)">{{item}}</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-xs-3control-label">
+					<a class="btn btn-default" @click="search">搜索</a>
+				</div>
+			</div>
+
+			<div class="form-group">
+
+				<!-- 分类选择 -->
+				<div class="col-xs-12">
+					<div class="grid-btn">
+						<!--<a class="btn btn-primary" style="margin-left: 10px;" @click="addGoods"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
+						<form method="POST" v-if="hasPermission('sys:goods:import')"
+							enctype="multipart/form-data" id="goodsExcelForm"
+							style="display: none">
+							<input id="goodsExcelFile" type="file" name="goodsExcelFile"
+								@change="uploadGoodsExcel"
+								accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+							<input type="text" class="form-control" v-model="year"
+								name="year">
+						</form>
+						<a class="btn btn-primary"
+							onclick="$('input[id=goodsExcelFile]').click(); ">指标导入</a> <a
+							href="../../../media/指标模板.xls" style="margin-left: 10px;"
+							download="指标模板"> 下载指标导入模板 </a>
+						<form id="exportExcelForm" method="POST" style="display: none">
+							<input type="hidden" name="token"> <input type="hidden"
+								name="year"> <input type="hidden" name="seasonSeq">
+						</form>
+						<a class="btn btn-primary" style="margin-left: 10px;"
+							@click="addGoods"> <i class="fa fa-plus"></i>&nbsp;新增
+						</a>
+					</div>
+
+					<table id="jqGrid"></table>
+					<div id="jqGridPager"></div>
+				</div>
+
+			</div>
+		</div>
+
+		<div v-show="!showList">
+
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">门店名称</label>
+					<div class="col-sm-10">
+						<div class="dropdown">
+						<a role="button" data-toggle="dropdown" class="btn btn-default"
+							style="width: 100%;"> {{shopName || '门店选择'}} <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu multi-level" role="menu"
+							aria-labelledby="dropdownMenu">
+							<li v-for="item in shops"><a tabindex="-1"
+								@click="shopSelect(item.seq,item.name)">{{item.name}}</a></li>
+						</ul>
+					</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">年份</label>
+					<div class="col-sm-10">
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right"
+								id="periodYearPicker" readonly="readonly"
+								v-model="edit.targetYear">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">月份</label>
+					<div class="col-sm-10">
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control pull-right"
+								id="periodMonthPicker" readonly="readonly"
+								v-model="edit.targetMonth">
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label">标准指标</label>
+					<div class="col-sm-10">
+						<input type="number" class="form-control"
+							v-model.trim="edit.standardMoney">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">中级指标</label>
+					<div class="col-sm-10">
+						<input type="number" class="form-control"
+							v-model.trim="edit.middleMoney">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">高级指标</label>
+					<div class="col-sm-10">
+						<input type="number" class="form-control"
+							v-model.trim="edit.advanceMoney">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-4">
+						<button class="btn btn-warning" @click="saveOrUpdate">保存</button>
+					</div>
+					<div class="col-sm-4">
+						<button class="btn btn-default" @click="toMain">返回</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="../../../js/modules/system/order_platform/target_shop.js"></script>
+</body>
+</html>

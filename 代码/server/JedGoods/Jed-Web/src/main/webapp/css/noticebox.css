@@ -1,0 +1,32 @@
+/*右下角弹出提示框*/
+.tipfloat {
+	display: none;
+	z-index: 999;
+	border: 1px #3c8dbc solid;
+	position: absolute;
+	bottom: 35px;
+	right: 15px;
+	width: 360px;
+	height: 220px;
+	background: #fff
+}
+
+.tipfloat_head {
+	padding: 0px;
+	margin: 0px;
+	height: 40px;
+	line-height: 40px;
+	background: #3c8dbc;
+	padding: 0px 20px;
+	font-size: 18px;
+	color: #fff;
+}
+
+.tipfloat_data {
+	font-size: 16px;
+	color: #333;
+	text-align: center;
+	padding: 40px 20px;
+	line-height: 26px;
+	cursor:pointer;
+}

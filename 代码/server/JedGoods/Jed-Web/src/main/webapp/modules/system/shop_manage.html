@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>门店管理</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    name="viewport">
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/font-awesome.min.css">
+  <link rel="stylesheet"
+        href="../../plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="../../plugins/datepicker/datepicker3.css">
+  <link rel="stylesheet"
+        href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet"
+        href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <script src="../../libs/jquery.min.js"></script>
+  <script src="../../plugins/layer/layer.js"></script>
+  <script src="../../libs/bootstrap.min.js"></script>
+  <script src="../../libs/vue.min.js"></script>
+  <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script src="../../plugins/daterangepicker/moment.min.js"></script>
+  <script src="../../plugins/daterangepicker/daterangepicker.js"></script>
+  <script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
+  <script
+    src="../../plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+  <script src="../../js/common.js"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=f1yhniOlzp6esabFkWMeOEii5LrdcbCS"></script>
+  <style>
+    .demo {
+      position: relative;
+    }
+
+    .demo i {
+      position: absolute;
+      bottom: 10px;
+      right: 24px;
+      top: auto;
+      cursor: pointer;
+    }
+
+    .choose-image {
+      position: absolute;
+      font-size: 0;
+      top: 5px;
+      left: 5px;
+      width: 93%;
+      height: 12rem;
+    }
+
+    input.choose-image::-webkit-file-upload-button {
+      background: rgba(0, 0, 0, .08);
+      border: 0;
+      padding: 5.3rem 42%;
+      font-size: 15px;
+      color: #ffffff;
+    }
+
+    #areaNameSelect a{
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+  <div v-show="showList">
+    <div class="grid-btn">
+      <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+     <!-- <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+      <a class="btn btn-danger" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
+    </div>
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+  </div>
+
+  <div v-show="!showList" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-2 control-label">门店编号</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" v-model="shop.id"
+                 placeholder="门店编号"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">门店名称</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" v-model="shop.name"
+                 placeholder="门店名称"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">门店地址</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" v-model="shop.address" placeholder="门店地址"/>
+        </div>
+        <div class="col-sm-1">
+          <button type="button" class="btn btn-default btn-sm" @click="initMap">
+            <span class="glyphicon glyphicon-map-marker"></span> 定 位
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">经度</div>
+        <div class="col-sm-3">
+          <input type="text" class="form-control" v-model="shop.lng" placeholder="经度"/>
+        </div>
+        <div class="col-sm-2 control-label">纬度</div>
+        <div class="col-sm-3">
+          <input type="text" class="form-control" v-model="shop.lat" placeholder="纬度"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-5 control-label">门店图片（1080X375）</div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <div class="col-sm-10" style="position: relative;">
+          <a class="thumbnail" style="height: 13rem; width: 100%">
+            <img :src="shop.shopImage" style="width: 100%; height: 100%">
+          </a>
+          <input class="choose-image" type="file"
+                 @change="handleShopFileChange($event)" value="点击选择"
+                 accept="image/png, image/jpeg"/>
+        </div>
+      </div>
+      <!--<div class="form-group">
+        <div class="col-sm-2 control-label">安装时间</div>
+        <div class="col-sm-8 demo">
+          <input type="text" id="config-demo" class="form-control" readonly="readonly"
+                 v-model="shop.installDate" placeholder="安装时间"/>
+          <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+        </div>
+
+      </div>-->
+      <div class="form-group">
+        <div class="col-sm-2 control-label">备注</div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" v-model="shop.remark"
+                 placeholder="备注"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">门店类型</div>
+        <div class="dropdown col-sm-8">
+          <a id="dLabel" role="button" data-toggle="dropdown"
+             class="btn btn-default">{{shop.typeOfStore || '请选择门店类型'}} <span
+            class="caret"></span>
+          </a>
+          <ul class="dropdown-menu multi-level"
+              aria-labelledby="dropdownMenu">
+            <li class="" v-for="item in typeOfStoreList"><a
+              @click="categoryChoosetOpic(item)">{{item.typeOfStore}}</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-2 control-label">所在分公司</div>
+        <div class="dropdown col-sm-8" id="areaNameSelect">
+          <a @click="getAreaList" role="button"
+             data-toggle="dropdown" class="btn btn-default">{{shop.areaName
+            || '分公司选择'}} <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu multi-level" role="menu"
+              aria-labelledby="dropdownMenu">
+            <li class="dropdown-submenu" v-for="item in areaList"
+                v-if="item.parentSeq==0"><a tabindex="-1">{{item.name}}</a>
+              <ul class="dropdown-menu">
+                <li v-for="secondItem in areaList"
+                    v-if="secondItem.parentSeq==item.seq"><a tabindex="-1"
+                                                             @click="categoryChoose(secondItem)">{{secondItem.name}}</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <div class="col-sm-2 control-label">所在区域</div>
+        <div class="dropdown col-sm-8" id="regionNameSelect">
+          <a @click="getRegionList" role="button"
+             data-toggle="dropdown" class="btn btn-default">{{shop.regionName
+            || '区域选择'}} <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu"
+              aria-labelledby="dropdownMenu">
+            <li v-for="item in regionList"
+                v-if="item.parentSeq==0"><a tabindex="-1"
+                                                             @click="regionChoose(item)">{{item.name}}</a>
+              <!-- <ul class="dropdown-menu">
+                <li v-for="secondItem in regionList"
+                    v-if="secondItem.parentSeq==item.seq"><a tabindex="-1"
+                                                             @click="regionChoose(secondItem)">{{secondItem.name}}</a>
+                </li>
+              </ul> -->
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-1 control-label"></div>
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-primary" @click="saveOrUpdate"
+                 value="确定"/>
+        </div>
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-warning" @click="reload"
+                 value="返回"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 百度地图窗口 -->
+<div id="BMapLayer" style="display: none;padding:10px;">
+  <div id="allmap" style="width: 790px;height: 400px;overflow: hidden;margin:0;font-family:'微软雅黑';"></div>
+</div>
+
+<script src="../../js/modules/system/shop_manage.js"></script>
+</body>
+</html>

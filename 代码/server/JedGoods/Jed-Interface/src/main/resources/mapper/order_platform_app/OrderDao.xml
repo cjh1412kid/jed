@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.OrderDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+  <resultMap type="io.nuite.modules.order_platform_app.entity.OrderEntity" id="orderMap">
+    <result property="seq" column="Seq"/>
+    <result property="userSeq" column="User_Seq"/>
+    <result property="orderNum" column="OrderNum"/>
+    <result property="isSplit" column="IsSplit"/>
+    <result property="parentSeqs" column="ParentSeqs"/>
+    <result property="classifySplitOrder" column="ClassifySplitOrder"/>
+    <result property="importErpState" column="ImportErpState"/>
+    <result property="orderPrice" column="OrderPrice"/>
+    <result property="paid" column="Paid"/>
+    <result property="orderStatus" column="OrderStatus"/>
+    <result property="companySeq" column="Company_Seq"/>
+    <result property="receiverName" column="ReceiverName"/>
+    <result property="telephone" column="Telephone"/>
+    <result property="fullAddress" column="FullAddress"/>
+    <result property="expressCompanySeq" column="ExpressCompany_Seq"/>
+    <result property="expressNo" column="ExpressNo"/>
+    <result property="expressImg" column="ExpressImg"/>
+    <result property="inputTime" column="InputTime"/>
+    <result property="requireTime" column="RequireTime"/>
+    <result property="paymentTime" column="PaymentTime"/>
+    <result property="deliverTime" column="DeliverTime"/>
+    <result property="receiveTime" column="ReceiveTime"/>
+    <result property="remark" column="Remark"/>
+    <result property="suggestion" column="Suggestion"/>
+    <result property="del" column="Del"/>
+  </resultMap>
+
+
+  <!-- 定义订单汇总返回的resultMap，type为HashMap -->
+  <resultMap id="orderSummaryMap" type="java.util.HashMap">
+    <id column="ShoesData_Seq" property="shoesDataSeq" jdbcType="INTEGER"/>
+    <result column="TotalCount" property="totalCount" jdbcType="INTEGER"/>
+    <result column="ColorCode" property="colorCode" jdbcType="VARCHAR"/>
+    <result column="ColorName" property="colorName" jdbcType="VARCHAR"/>
+    <result column="SizeCode" property="sizeCode" jdbcType="VARCHAR"/>
+    <result column="SizeName" property="size" jdbcType="VARCHAR"/>
+    <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+    <result column="GoodID" property="goodId" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <!-- 定义订单汇总每种鞋子订单购买量返回的resultMap，type为HashMap -->
+  <resultMap id="summaryDetailMap" type="java.util.HashMap">
+    <id column="Order_Seq" property="orderSeq" jdbcType="INTEGER"/>
+    <result column="BuyCount" property="buyCount" jdbcType="INTEGER"/>
+    <result column="OrderNum" property="orderNum" jdbcType="VARCHAR"/>
+  </resultMap>
+
+
+  <!-- 订单汇总 -->
+  <select id="getOrderSummary" resultMap="orderSummaryMap">
+		SELECT
+			A.ShoesData_Seq,
+			A.TotalCount,
+			E.Code AS ColorCode,
+			E.Name AS ColorName,
+			F.SizeCode,
+			F.SizeName,
+			B.Remark,
+			C.GoodID
+		FROM
+			(
+				SELECT
+					TOP ${num} 
+					ShoesData_Seq, SUM (BuyCount) AS TotalCount 
+				FROM
+					JedOrderPlatform.dbo.YHSR_OP_OrderProducts
+				WHERE
+					ShoesData_Seq NOT IN(
+						SELECT
+							TOP ${start} ShoesData_Seq
+						FROM
+							JedOrderPlatform.dbo.YHSR_OP_OrderProducts
+						WHERE
+							Del = 0 AND Order_Seq IN (${orderSeq}) 
+						GROUP BY
+							ShoesData_Seq
+						) AND 
+					Del = 0 AND Order_Seq IN (${orderSeq}) 
+				GROUP BY
+					ShoesData_Seq
+			) A
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesData B ON A.ShoesData_Seq = B.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Color E ON B.Color_Seq = E.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Size F ON B.Size_Seq = F.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes C ON B.Shoes_Seq = C.Seq
+		WHERE
+			B.Del = 0 AND C.Del = 0
+		ORDER BY
+			C.GoodID ASC, B.Color_Seq ASC, B.Size_Seq ASC
+	</select>
+
+
+  <!-- 汇总中一个鞋子数据序号，每个订单的购买量 -->
+  <select id="getSummaryDetailList" resultMap="summaryDetailMap">
+		SELECT
+			A.Order_Seq,
+			A.BuyCount,
+			B.OrderNum
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_OrderProducts A
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_Order B ON A.Order_Seq = B.Seq
+		WHERE
+			A.Del = 0 AND B.Del = 0
+		AND A.Order_Seq IN (${orderSeq})
+		AND A.ShoesData_Seq = #{shoesDataSeq}
+		ORDER BY
+			B.InputTime ASC
+	</select>
+
+
+  <!-- 根据公司Seq，分页查询订单列表 -->
+  <select id="getOrderListByCompanySeq" resultType="io.nuite.modules.order_platform_app.entity.OrderEntity">
+		SELECT
+			TOP ${num} A.*
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_Order A
+			LEFT JOIN JedSmartRetail.dbo.YHSR_Base_User B ON A.User_Seq = B.Seq
+		WHERE
+			A.Seq NOT IN (
+				SELECT
+					TOP ${start} A.Seq
+				FROM
+					JedOrderPlatform.dbo.YHSR_OP_Order A
+					LEFT JOIN JedSmartRetail.dbo.YHSR_Base_User B ON A.User_Seq = B.Seq
+				WHERE
+					A.Company_Seq = #{companySeq}
+					<if test="orderStatus != null and orderStatus >= 0">
+						AND A.OrderStatus = #{orderStatus}
+					</if>
+				AND A.Del = 0 AND A.IsSplit = 0 AND B.Del = 0
+				ORDER BY A.Seq DESC
+			)
+			AND A.Company_Seq = #{companySeq}
+			<if test="orderStatus != null and orderStatus >= 0">
+				AND A.OrderStatus = #{orderStatus}
+			</if>
+			AND A.Del = 0 AND A.IsSplit = 0 AND B.Del = 0
+		ORDER BY A.Seq DESC
+	</select>
+	
+	
+  <!-- 根据用户Seq，分页查询订单列表 -->
+  <select id="getOrderListByUserSeq" resultType="io.nuite.modules.order_platform_app.entity.OrderEntity">
+		SELECT
+			TOP ${num} *
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_Order
+		WHERE
+			Seq NOT IN (
+				SELECT
+					TOP ${start} Seq
+				FROM
+					JedOrderPlatform.dbo.YHSR_OP_Order
+				WHERE
+					User_Seq = #{userSeq}
+					<if test="orderStatus != null and orderStatus >= 0">
+						AND OrderStatus = #{orderStatus}
+					</if>
+				AND Del = 0 AND IsSplit = 0
+				ORDER BY InputTime DESC, Seq DESC
+			)
+			AND User_Seq = #{userSeq}
+			<if test="orderStatus != null and orderStatus >= 0">
+				AND OrderStatus = #{orderStatus}
+			</if>
+			AND Del = 0 AND IsSplit = 0
+		ORDER BY InputTime DESC, Seq DESC
+	</select>
+
+
+  <!-- 定义订单购买商品的resultMap，type为HashMap -->
+  <resultMap id="orderProductsMap" type="java.util.HashMap">
+    <id column="Seq" property="orderProductsSeq" jdbcType="INTEGER"/>
+    <result column="ProductPrice" property="productPrice" jdbcType="DECIMAL"/>
+    <result column="BuyCount" property="buyCount" jdbcType="INTEGER"/>
+    <result column="DeliverNum" property="deliverNum" jdbcType="INTEGER"/>
+    <result column="ShoesDataSeq" property="shoesDataSeq" jdbcType="INTEGER"/>
+    <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+    <result column="ColorCode" property="colorCode" jdbcType="VARCHAR"/>
+    <result column="ColorName" property="colorName" jdbcType="VARCHAR"/>
+    <result column="SizeCode" property="sizeCode" jdbcType="VARCHAR"/>
+    <result column="SizeName" property="size" jdbcType="VARCHAR"/>
+    <result column="ShoesSeq" property="shoesSeq" jdbcType="INTEGER"/>
+    <result column="Category_Seq" property="categorySeq" jdbcType="INTEGER"/>
+    <result column="GoodID" property="goodId" jdbcType="VARCHAR"/>
+    <result column="Img1" property="img" jdbcType="VARCHAR"/>
+    <result column="Introduce" property="introduce" jdbcType="VARCHAR"/>
+  </resultMap>
+
+
+  <!-- 订单购买商品详细 -->
+  <select id="getOrderProductsList" resultMap="orderProductsMap">
+		SELECT
+			A.Seq, A.ProductPrice, A.BuyCount, A.DeliverNum, B.Seq AS ShoesDataSeq, B.Remark, E.Code AS ColorCode, E.Name AS ColorName, F.SizeCode, F.SizeName, C.Seq AS ShoesSeq, C.Category_Seq, C.GoodID, C.Img1, C.Introduce
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_OrderProducts A
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesData B ON A.ShoesData_Seq = B.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Color E ON B.Color_Seq = E.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Size F ON B.Size_Seq = F.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes C ON B.Shoes_Seq = C.Seq
+		WHERE
+			A.Del = 0
+		AND A.Order_Seq = #{0} 
+	</select>
+
+  <!--按日期分组后获取最近7天的日订单数量-->
+  <select id="getOrderDataByDate"
+          resultType="io.nuite.modules.system.entity.echart.OrderDataVo">
+		select top(7) convert(char(10),[InputTime],120) as date,
+		count(*) as orderCount
+		from  [JedOrderPlatform].[dbo].[YHSR_OP_Order]
+		where Del = 0 AND IsSplit = 0
+		group by convert(char(10),[InputTime],120) order by date desc
+	</select>
+
+  <!--获取指定下单时间和工厂的订单数据-->
+  <select id="getOrdersByDateAndCompanySeq" resultType="io.nuite.modules.order_platform_app.entity.OrderEntity">
+		select [Seq] as seq
+      ,[User_Seq] as userSeq
+      ,[OrderStatus] as orderStatus
+      ,[Company_Seq] as companySeq
+      ,convert(char(10),[InputTime],120) as dateStr
+    from  [JedOrderPlatform].[dbo].[YHSR_OP_Order]
+    where Company_Seq=#{companySeq} and OrderStatus != 7 and Del =0 and IsSplit = 0
+    and convert(char(10),[InputTime],120) between convert(char(10),#{startTime},120) and convert(char(10),#{endTime},120)
+	</select>
+
+  <select id="getOrdersCountByDay"
+          resultType="io.nuite.modules.system.entity.echart.OrderDataVo">
+		select  convert(char(10),[InputTime],120) as datestr,
+		count(*) as orderCount
+		from  [JedOrderPlatform].[dbo].[YHSR_OP_Order]
+		where Company_Seq=#{companySeq} and OrderStatus != 7 and Del =0 and IsSplit = 0
+          and convert(char(10),[InputTime],120) between convert(char(10),#{startTime},120) and convert(char(10),#{endTime},120)
+		group by convert(char(10),[InputTime],120)
+		order by datestr asc
+	</select>
+
+  <select id="getOrdersCountByMonthOfYear"
+          resultType="io.nuite.modules.system.entity.echart.OrderDataVo">
+    select  convert(char(7),[InputTime],120) as datestr,
+		count(*) as orderCount
+		from  [JedOrderPlatform].[dbo].[YHSR_OP_Order]
+		where Company_Seq=#{companySeq} and OrderStatus != 7 and Del =0 and IsSplit = 0
+          and convert(char(4),[InputTime],120) = convert(char(4),#{pramDate},120)
+		group by convert(char(7),[InputTime],120)
+		order by datestr desc
+	</select>
+  <!--根据工厂号获取当天的所有订单序号列表  -->
+  <select id="getOrderSeqsByCompanySeqAndToday" resultType="java.lang.Integer">
+    select Seq
+		from  [JedOrderPlatform].[dbo].[YHSR_OP_Order]
+		where Company_Seq=#{companySeq} and OrderStatus != 7 and Del =0
+    and convert(char(10),[InputTime],120) = convert(char(10),getdate(),120)
+	</select>
+
+
+
+  <!-- 修改订单已付金额 -->
+  <update id="updateOrderPaid">
+	    UPDATE
+			JedOrderPlatform.dbo.YHSR_OP_Order
+		SET
+			Paid = (Paid + #{paid})
+		WHERE
+			Seq = #{orderSeq};
+	</update>
+
+</mapper>

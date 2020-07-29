@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>收货地址列表</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/aui1x2x1/aui_iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/my/address.css" />
+		<style type="text/css">
+
+		</style>
+	</head>
+	<body class="aui-hide">
+		<section class="aui-content aui-margin-t-5">
+
+	     <!--<div class="aui-card-list aui-margin-b-5" tapmode onclick="chooseAddress(1)">
+	            <div class="aui-card-list-header aui-card-list-user">
+	                <div class="aui-card-list-user-name name-telephone">
+	                    <div>熊芳平</div><div class="aui-font-size-16">15862508094</div>
+	                </div>
+	            </div>
+	            <div class="aui-card-list-content-padded aui-padded-t-0 aui-text-address">我oh福诶无回复IE外婆覅偶维护费我 </div>
+	            <div class="aui-card-list-user-name address-btn aui-border-t">
+                    <div>
+				        <label class="aui-padded-10" tapmode onclick="setDefaultAddress(this, 1)"><input class="aui-radio aui-checked active" type="radio" name="defaultAddress"> 设为默认地址</label>
+                    </div>
+                    <div class="edit-delete">
+	                	<span class="edit-btn" tapmode onclick="editReceiverInfo(3)">编辑</span>
+	                	<span class="remove-btn" tapmode onclick="deleteReceiverInfo(2)">删除</span>
+                    </div>
+                </div>
+	        </div>-->
+
+		</section>
+		<div class="footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			到底了<i class="aui-iconfont aui-icon-activity aui-font-size-12"></i>
+		</div>
+		<div class="footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			暂无数据
+		</div>
+		<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			加载更多<i class="aui-iconfont aui-icon-more aui-font-size-12"></i>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../../script/api.js" ></script>
+	<script type="text/javascript" src="../../../script/common/common.js" ></script>
+	<script type="text/javascript" src="../../../script/common/my_common.js" ></script>
+	<script type="text/javascript">
+		//设置默认收货人
+		function setDefaultAddress(obj, _seq){
+			var url = window.myServerUrl + "order/app/receiverInfo/setReceiverDefault";
+			var data = {
+				values:{
+					seq: _seq,
+					token: token
+				}
+			}
+			console.log("设置默认收货人("+_seq+"):" + url);
+			isAjaxing = true;
+//			_showProgress("请稍后...", "", true);
+			_ajax(url, "setReceiverDefault", function(ret, err) {
+//				api.hideProgress();
+				if (ret) {
+					console.log("_ajax.setReceiverDefault.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						if (!$api.hasCls($api.dom(obj, ".aui-radio"), "active")) {
+							$api.addCls($api.dom(".aui-radio.active"), "aui-disabled");
+							$api.removeCls($api.dom(".aui-radio.active"), "active");
+							$api.removeCls($api.dom(obj, ".aui-radio"), "aui-disabled");
+							$api.addCls($api.dom(obj, ".aui-radio"), "active");
+						}
+					} 
+					_toast(ret.msg);
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", data);
+		}
+
+		//选择收货地址
+		function chooseAddress(_index){
+			if(api.pageParam.type == "fill_order_win"){//从下单页跳转
+				_sendEvent("chooseAddress", receiverInfoList[_index]); //选择收货地址 广播
+				setTimeout(function(){
+					api.closeWin({});
+				},350);
+			}
+		}
+
+		function initUI(res) {
+//			console.log("res:" + $api.jsonToStr(res));
+			receiverInfoList = res;
+			var htmlStr = '';
+			if (!_isArrayNull(receiverInfoList)) {
+				for(var i = 0; i < receiverInfoList.length; i++){
+					htmlStr +='<div class="aui-card-list aui-margin-b-5" tapmode onclick="chooseAddress('+i+')">';
+		            htmlStr += 	'<div class="aui-card-list-header aui-card-list-user">';
+		            htmlStr += 		'<div class="aui-card-list-user-name name-telephone">';
+		            htmlStr += 			'<div>'+receiverInfoList[i].receiverName+'</div><div class="aui-font-size-16">'+_hideCellphone(receiverInfoList[i].telephone)+'</div>';
+		            htmlStr += 		'</div>';
+		            htmlStr += 	'</div>';
+		            htmlStr += 	'<div class="aui-card-list-content-padded aui-padded-t-0 aui-text-address">'+receiverInfoList[i].province+','+receiverInfoList[i].city+','+receiverInfoList[i].district+','+receiverInfoList[i].detailAddress+'</div>';
+		            htmlStr += 	'<div class="aui-card-list-user-name address-btn aui-border-t">';
+		            if(receiverInfoList[i].isDefault == 1){
+		                htmlStr += 		'<div><label class="aui-padded-10" tapmode onclick="setDefaultAddress(this, '+receiverInfoList[i].seq+')">';
+		                htmlStr += 		'<input class="aui-radio aui-checked active" type="radio" name="defaultAddress"> 设为默认地址</label></div>';
+
+		            }else{
+		                htmlStr += 		'<div><label class="aui-padded-10" tapmode onclick="setDefaultAddress(this, '+receiverInfoList[i].seq+')">';
+		                htmlStr += 		'<input class="aui-radio aui-checked aui-disabled" type="radio" name="defaultAddress"> 设为默认地址</label></div>';
+		            }
+		            if(api.pageParam.type == "fill_order_win"){//从下单页跳转
+		                htmlStr += 		'<div class="edit-delete aui-invisible">';
+		            }else{
+		                htmlStr += 		'<div class="edit-delete">';
+		            }
+	                htmlStr += 			'<span class="edit-btn" tapmode onclick="editReceiverInfo('+i+')">编辑</span>';
+	                htmlStr += 			'<span class="remove-btn" tapmode onclick="deleteReceiverInfo('+receiverInfoList[i].seq+')">删除</span>';
+	                htmlStr += 		'</div>';
+	                htmlStr += 	'</div>';
+		        	htmlStr +='</div>';
+	        	}
+				$api.html($api.dom(".aui-content"), htmlStr);
+				showOverMsg();
+			} else {
+				$api.html($api.dom(".aui-content"), "");
+				showEmptyMsg();
+			}
+			setTimeout(function() {
+				api.refreshHeaderLoadDone();
+				api.parseTapmode();
+				if ($api.hasCls($api.dom("body"), "aui-hide")) {
+					$api.removeCls($api.dom("body"), "aui-hide");
+				}
+				closeUILoading();
+			}, window.refreshLoadDoneTimeOut);
+
+		}
+
+		//编辑收货地址
+		function editReceiverInfo(_index){
+//			console.log($api.jsonToStr(receiverInfoList[index]));
+			if(api.pageParam.type == "fill_order_win"){//从下单页跳转
+				return;
+			}
+			_openWin('edit_address_win', 'address_manage/edit_address_win.html', {receiverInfo: receiverInfoList[_index]});
+		}
+
+		/**
+		 *请求服务器：删除收货地址
+		 */
+		function deleteReceiverInfo(_seq){
+			if(api.pageParam.type == "fill_order_win"){//从下单页跳转
+				return;
+			}
+			_myAlert("确认删除该收货地址?", "取消", "删除", function() {
+				var url = window.myServerUrl + "order/app/receiverInfo/deleteReceiverInfo";
+				var data = {
+					values:{
+						seq: _seq,
+						token: token
+					}
+				}
+				console.log("删除收货地址:" + url);
+				isAjaxing = true;
+				_ajax(url, "deleteReceiverInfo", function(ret, err) {
+					if (ret) {
+						console.log("_ajax.deleteReceiverInfo.ret:" + $api.jsonToStr(ret));
+						if (ret.code == 0) {
+							initpage();
+						} else {
+							_toast(ret.msg);
+						}
+					} else {
+						_toast(window.ajaxErrorMessage);
+					}
+				}, "post", data);
+			});
+		}
+
+
+		/**
+		 *请求服务器：查询收货地址列表
+		 */
+		function getReceiverInfoList(call) {
+			var url = window.myServerUrl + "order/app/receiverInfo/receiverInfoList?token=" + token;
+			console.log("查询收货地址列表:" + url);
+			isAjaxing = true;
+			_ajax(url, "getReceiverInfoList", function(ret, err) {
+				var res = [];
+				if (ret) {
+					console.log("_ajax.getReceiverInfoList.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						res = ret.result;
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+				call(res);
+			});
+		}
+
+		function closeUILoading() {
+			UILoading.closeKeyFrame();
+		}
+
+		function openUILoading() {
+			UILoading.keyFrame({
+				rect : {
+					w : 102,
+					h : 102
+				},
+				styles : {
+					bg : 'rgba(0,0,0,0)',
+					corner : 5,
+					interval : 50,
+					frame : {
+						w : 102,
+						h : 102
+					}
+				},
+				//				content : [{
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}, {
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}],
+				mask : "rgba(255,0,0,0)"
+			}, function(ret) {
+				//								alert(JSON.stringify(ret));
+				console.log(12345);
+			});
+		}
+
+		function initpage(){
+			setTimeout(function() {
+				api.refreshHeaderLoading();
+			}, 450);
+		}
+
+		function initData() {
+			token = $api.getStorage("tokenKey");
+			UILoading = api.require('UILoading');
+		}
+
+		var token;
+		var receiverInfoList = new Array();//收货人信息
+		var UILoading;
+		apiready = function() {
+			initData();
+
+			//下拉刷新
+			api.setRefreshHeaderInfo({
+				loadingImg : 'widget://image/loading_more.gif',
+				bgColor : 'rgba(255,255,255,0)',
+				textColor : '#212121',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...'
+			}, function(ret, err) {
+				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+				getReceiverInfoList(function(res) {
+					initUI(res);
+					setTimeout(function() {
+						api.refreshHeaderLoadDone();
+					}, window.ajaxTimeout);
+				});
+			});
+
+			//设置下拉刷新延迟时间
+			setTimeout(function() {
+				openUILoading();
+				getReceiverInfoList(function(res) {
+					initUI(res);
+					setTimeout(function() {
+						api.refreshHeaderLoadDone();
+					}, window.ajaxTimeout);
+				});
+			}, 150);
+
+			_addEventListener("viewappear", function(ret) {
+				setTimeout(function() {
+					//						alert("viewappear");
+				}, 200);
+			});
+		}
+	</script>
+</html>

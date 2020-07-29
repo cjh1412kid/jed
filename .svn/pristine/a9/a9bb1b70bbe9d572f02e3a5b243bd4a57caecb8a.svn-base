@@ -1,0 +1,663 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/order/order_detail/order_detail_win.css" />
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="closeWin()"><span class="aui-iconfont aui-icon-left aui-text-default"></span></a>
+			<div class="aui-title aui-text-default">
+				订单详情
+			</div>
+			<div class="aui-btn aui-pull-right" tapmode onclick="openMessage()">
+                <!--<div class="aui-badge">8</div>-->
+                <img class="order-icon" src="../../../image/order/sale_after.png" />
+            </div>
+		</header>
+		
+	<!-- 订单流程:0:待确认, 1:待审核/待支付, 2:待入库, 3:未/待发货, 4:部分发货, 5:已发货, 6:已到/收货, 7:已取消 -->		
+	<!-- 待确认(厂家) -->
+		<footer class="footer_cj_dqr aui-bar aui-bar-tab aui-hide">
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '取消', 'dqr')" style="width:25%; background-color:#abb0a1;">
+				取消
+			</div>
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '确认接单', 'dqr')" style="width:auto;">
+				确认接单
+			</div>
+		</footer>
+	<!-- 待确认(商家) -->
+		<footer class="footer_sj_dqr aui-bar aui-bar-tab aui-hide">
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '取消', 'dqr')" style="width:25%; background-color:#abb0a1;">
+				取消
+			</div>
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '修改订单', 'dqr')" style="width:auto;">
+				修改订单
+			</div>		
+		</footer>		
+			
+	<!-- 待审核(厂家) -->	
+		<footer class="footer_cj_dsh aui-bar aui-bar-tab aui-hide">	
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '取消', 'dsh')" style="width:25%; background-color:#abb0a1;">
+				取消
+			</div>
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '审核订单', 'dsh')" style="width:auto;">
+				审核订单
+			</div>
+		</footer>		
+	<!-- 待支付(商家) -->	
+		<footer class="footer_sj_dzf aui-bar aui-bar-tab aui-hide">	
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '取消', 'dzf')">
+				取消
+			</div>				
+			<div class="pay-order aui-bar-tab-item aui-text-disabled aui-hide" tapmode onclick="clickFooter(this, '支付', 'dzf')" style="width:75%; background-color:#FFA500;"></div>
+		</footer>
+		
+	<!-- 待入库(厂家) -->	
+		<footer class="footer_cj_drk aui-bar aui-bar-tab aui-hide">
+			<div class="aui-bar-tab-item bottom-btns drk-cancel" tapmode onclick="clickFooter(this, '取消', 'drk')" style="width:25%; background-color:#abb0a1;">
+				取消
+			</div>				
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '确认入库', 'drk')" style="width:auto;">
+				确认入库
+			</div>
+			<div class="aui-bar-tab-item bottom-btns sk-btns" tapmode onclick="clickFooter(this, '收款', 'drk')" style="width:25%; background-color:#cfa972;">
+				收款
+			</div>	
+		</footer>
+					
+		
+	<!-- 未发货,部分发货(厂家) -->
+		<footer class="footer_cj_wfh aui-bar aui-bar-tab aui-hide">
+			<div class="aui-bar-tab-item bottom-btns wfh-cancel" tapmode onclick="clickFooter(this, '取消', 'wfh')" style="width:25%; background-color:#abb0a1;">
+				取消
+			</div>
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '立即发货', 'wfh')" style="width:auto;">
+				立即发货
+			</div>
+			<div class="aui-bar-tab-item bottom-btns sk-btns" tapmode onclick="clickFooter(this, '收款', 'wfh')" style="width:25%; background-color:#cfa972;">
+				收款
+			</div>					
+		</footer>
+	<!-- 待发货,部分发货(商家) -->
+		<!-- 无  -->
+		
+		
+	<!-- 已发货(厂家) -->	
+		<footer class="footer_cj_yfh aui-bar aui-bar-tab aui-hide">				
+			<div class="aui-bar-tab-item aui-text-disabled" tapmode onclick="clickFooter(this, '延长收货', 'yfh')" style="width:auto; background-color:#abb0a1;">
+				延长收货
+			</div>
+			<div class="aui-bar-tab-item bottom-btns sk-btns" tapmode onclick="clickFooter(this, '收款', 'yfh')" style="width:25%;">
+				收款
+			</div>
+		</footer>
+	<!-- 已发货(商家) -->
+		<footer class="footer_sj_yfh aui-bar aui-bar-tab aui-hide">				
+			<div class="return-goods aui-bar-tab-item aui-text-disabled" tapmode onclick="clickFooter(this, '退/换', 'yfh')" style="width:25%; background-color:#abb0a1;">
+				退/换
+			</div>
+			<div class="confirm-goods aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '确认收货', 'yfh')" style="width:auto;">
+				确认收货
+			</div>
+		</footer>
+		
+	<!-- 已到货(厂家) -->
+		<footer class="footer_cj_ydh aui-bar aui-bar-tab aui-hide">				
+			<div class="aui-bar-tab-item bottom-btns sk-btns" tapmode onclick="clickFooter(this, '收款', 'ydh')">
+				收款
+			</div>
+		</footer>
+	<!-- 已收货(商家) -->
+		<footer class="footer_sj_ysh aui-bar aui-bar-tab aui-hide">				
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '再次预定', 'ysh')">
+				再次预定
+			</div>
+		</footer>
+		
+	<!-- 已取消(厂家) -->
+		<!-- 无  -->
+	<!-- 已取消(商家) -->
+		<footer class="footer_sj_yqx aui-bar aui-bar-tab aui-hide">				
+			<div class="aui-bar-tab-item bottom-btns" tapmode onclick="clickFooter(this, '删除', 'yqx')">
+				删除
+			</div>
+		</footer>
+		
+	</body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+	<script type="text/javascript">		
+		
+		//根据订单"状态",显示对应footer
+		function showFooterBy(footerName){
+			if ($api.hasCls($api.dom("."+footerName), "aui-hide")){
+				$api.removeCls($api.dom("."+footerName), "aui-hide");
+				$api.addCls($api.dom("."+footerName), getStatusColor(orderStatus));	
+			}	
+			footerPos = $api.offset($api.dom("footer."+footerName));			
+		}
+		//"收款"按钮
+		function SKBtn(footerName){
+			if(parseFloat(paid) >= parseFloat(orderPrice)){//如订货方已支付全部金额, 不再收款
+//				alert("不再收款--> 已付:¥"+paid+" , 应付:¥"+orderPrice);
+				$api.addCls($api.last($api.dom("."+footerName)), "aui-hide");
+			}
+		}		
+		
+		//判断是否为工厂方
+		function isFactory(){
+			if((userInfo.attachType == 1 || userInfo.attachType == 4) && userInfo.saleType == 1){
+				return true;
+			}else{
+				return false
+			}
+		}
+		
+		function requireDateSelected(_requireDate){			
+			requireDate = _requireDate;
+		}
+		
+		//显示底部(0:待确认, 1:待审核/待支付, 2:待入库, 3:未/待发货, 4:部分发货, 5:已发货, 6:已到/收货, 7:已取消)
+		function showFooter(orderStatus){
+//			footerPos = 0;
+//			return;
+			switch(orderStatus){
+				case 0://待确认										
+					if(isFactory()){//厂家("确认接单")							
+						showFooterBy("footer_cj_dqr");						
+					}else{//商家("取消")	
+						showFooterBy("footer_sj_dqr");						
+					}
+					break;			
+				case 1://待支付
+					if(isFactory()){//厂家("审核订单")
+						showFooterBy("footer_cj_dsh");						
+					}else{//商家("取消")
+						showFooterBy("footer_sj_dzf");												
+					}
+					break;
+				case 2://待入库(厂家)				
+					if(isFactory()){//厂家("确认入库")
+						showFooterBy("footer_cj_drk");							
+						SKBtn("footer_cj_drk");//动态"收款"按钮					
+					}else{//商家
+						footerPos = 0;		
+					}				
+					break;
+				case 3://未发货
+					if(isFactory()){ //厂家("立即发货")
+						if($api.hasCls($api.dom(".wfh-cancel"), "aui-hide")){
+							$api.removeCls($api.dom(".wfh-cancel"), "aui-hide");//因为还没有发货,可以取消订单
+						}
+						showFooterBy("footer_cj_wfh");
+						SKBtn("footer_cj_wfh");//动态"收款"按钮							
+					}else{//商家
+						footerPos = 0;
+					}				
+					break;
+				case 4://部分发货
+					if(isFactory()){ //厂家("立即发货")
+						if(!$api.hasCls($api.dom(".wfh-cancel"), "aui-hide")){
+							$api.addCls($api.dom(".wfh-cancel"), "aui-hide");//因为已经有过发货,不可以取消订单
+						}
+						showFooterBy("footer_cj_wfh");	
+						SKBtn("footer_cj_wfh");//动态"收款"按钮						
+					}else{//商家
+						footerPos = 0;
+					}			
+					break;
+				case 5://已发货	
+					if(isFactory()){//厂家
+						showFooterBy("footer_cj_yfh");
+						SKBtn("footer_cj_yfh");//动态"收款"按钮
+					}else{//商家("退/换"或"确认收货")
+						showFooterBy("footer_sj_yfh");
+					}
+					break;
+				case 6://已收/到货
+					if(isFactory()){//厂家
+						if(parseFloat(paid) < parseFloat(orderPrice)){//如订货方未支付全部金额, 显示收款
+							showFooterBy("footer_cj_ydh");
+						}else{
+							footerPos = 0;
+						}
+					}else{//商家("再次预定")
+//						footerPos = 0;	
+						showFooterBy("footer_sj_ysh");//暂时隐藏商家"再次预定"功能, 原因:订单详情中商品数据为返回字段shoesDataSeq
+					}
+					break;
+				case 7://已取消
+					if(isFactory()){//厂家
+						footerPos = 0;			
+					}else{//商家("再次预定")
+						showFooterBy("footer_sj_yqx");
+					}
+					break;				
+			}						
+		}
+		
+		//点击底部按钮(0:待确认, 1:待审核/待支付, 2:待入库, 3:未/待发货, 4:部分发货, 5:已发货, 6:已到/收货, 7:已取消), 参数_type:订货状态首字母,如:dqr(待确认)
+		function clickFooter(_obj, _text, _type) {
+//			$api.css(_obj,"background-color:#565656; opacity: 0.5;");
+			switch(_text){
+				case '取消':	//待确认, 待支付(商家)	
+					var rightBtnText = $api.trim($api.text($api.next(_obj)));
+//					alert("右边按钮的内容为:"+rightBtnText);
+					if ($api.trim($api.text(_obj)) == _text && rightBtnText.indexOf("已") == -1) {							
+						_myInput("是否取消订单?", "填写备注...", "", "否", "是", function(ret) {						
+							console.log("备注:"+ret.text);
+							if(_isStringNull(ret.text)){
+								_toast("请填写备注！");	 	
+							}else{
+								cancelOrder(_obj, ret.text);
+							}
+						})
+					}					
+					break;
+				case '修改订单':	//待确认(商家)	
+					var leftBtnText = $api.trim($api.text($api.prev(_obj)));
+//					alert("左边按钮的内容为:"+leftBtnText);
+					if ($api.trim($api.text(_obj)) == _text && leftBtnText.indexOf("已") == -1) {																					
+						changeOrder(_obj);								
+					}			
+					break;
+				case '确认接单'://待确认(厂家)
+					var leftBtnText = $api.trim($api.text($api.prev(_obj)));
+//					alert("左边按钮的内容为:"+leftBtnText);
+					if ($api.trim($api.text(_obj)) == _text && leftBtnText.indexOf("已") == -1) {
+//						alert(requireDate);
+						if(requireDate == ""){
+							_toast("请先选择到货日期！");	
+						}else{
+							_myAlert("确认该订单?", "取消", "确认", function() {
+								updateOrderSuggestion(function() {									
+									confirmOrder(_obj);
+								});
+							}) 
+						}	
+					}
+					break;
+				case '审核订单'://待审核(厂家)
+					var leftBtnText = $api.trim($api.text($api.prev(_obj)));
+//					alert("左边按钮的内容为:"+leftBtnText);
+					if ($api.trim($api.text(_obj)) == _text && leftBtnText.indexOf("已") == -1) {
+						console.log("修正前, 应付金额:"+orderPrice+" , 已付金额:"+paid); 
+						_myInput("已收: ¥"+paid+" , 应收: ¥"+orderPrice, "输入本次收款金额...", "forbid", "取消", "确认", function(ret) {
+							console.log("修正后, 本次收款金额为:"+ret.text); 
+							receiveMoney(_obj, parseFloat(ret.text));//审核订单
+						})
+					} 
+					break;					
+				case '收款'://厂家
+					var cancelBtnText = ""
+					if(orderStatus == 2){//待入库
+						cancelBtnText = $api.trim($api.text($api.dom(".drk-cancel")));											
+					}else if(orderStatus == 3){//未发货
+						cancelBtnText = $api.trim($api.text($api.dom(".wfh-cancel")));					
+					}
+//					alert("最左边按钮的内容为:"+cancelBtnText);					
+					if (cancelBtnText.indexOf("已") == -1) {
+						console.log("修正前, 应付金额:"+orderPrice+" , 已付金额:"+paid); 
+						_myInput("已收: ¥"+paid+" , 应收: ¥"+orderPrice, "输入本次收款金额...", "forbid", "取消", "确认", function(ret) {
+							console.log("修正后, 本次收款金额为:"+ret.text);							
+							updateOrderPaid(_obj, parseFloat(ret.text));//修改付款金额							
+						})
+					} 
+					break;					
+				case '确认入库'://待入库(厂家)
+					var leftBtnText = $api.trim($api.text($api.prev(_obj)));
+//					alert("左边按钮的内容为:"+leftBtnText);
+					if ($api.trim($api.text(_obj)) == _text && leftBtnText.indexOf("已") == -1) {						
+						_myAlert("是否已入库?", "否", "是", function() {
+							orderStore(_obj); 
+						})
+					} 
+					break;					
+				case '立即发货'://未发货(厂家)
+					var leftBtnText = $api.trim($api.text($api.prev(_obj)));
+//					alert("左边按钮的内容为:"+leftBtnText);
+					if ($api.trim($api.text(_obj)) == _text && leftBtnText.indexOf("已") == -1) {
+						deliverGoods(_obj);
+					}
+					break;
+				case '退/换'://已发货(商家)
+					var rightBtnText = $api.trim($api.text($api.next(_obj)));
+//					alert("右边按钮的内容为:"+rightBtnText);
+					if ($api.trim($api.text(_obj)) == _text && rightBtnText.indexOf("已") == -1) {
+						//TODO
+						return;//暂时不做"退/换"功能
+						_myAlert("是否退/换货?", "否", "是", function() {
+							returnGoods(_obj);
+						})
+					} 
+					break;	
+				case '确认收货'://已发货(商家)
+					var leftBtnText = $api.trim($api.text($api.prev(_obj)));
+//					alert("左边按钮的内容为:"+leftBtnText);					
+					if ($api.trim($api.text(_obj)) == _text && leftBtnText.indexOf("已") == -1) {
+						_myAlert("是否已收货?", "否", "是", function() {
+							receiveGoods(_obj);
+						})
+					} 
+					break;
+				case '再次预定'://已收货(商家)
+					_execScript("order_detail_win", "order_detail_frm", "toFillOrderWin()");					
+					break;
+				case '删除'://已取消(商家)
+					_execScript("cancel_order_win", "cancel_order_frm", "deleteOrder("+orderSeq+", 'orderDetail')");					
+					break;
+			}	
+		}
+
+		//取消订单(商家), 参数_remark:订货方取消订单时填写的备注
+		function cancelOrder(_obj, _remark){			
+			var url = window.myServerUrl + "order/app/order/cancelOrder";
+			var data = {
+				values:{
+					token : token,
+					orderSeq : orderSeq,
+					remark : _remark
+				}
+			}				
+			currentAjaxTag = "cancelOrder";
+			isRequesting = true;
+			console.log("取消订单:" + url);
+			console.log("ajax.data:" + $api.jsonToStr(data));
+//			console.log("ajax.tag:" + currentAjaxTag);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				if (ret) {
+					console.log("_ajax.cancelOrder.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {					
+						$api.text(_obj, "已取消");		       
+				    	_toast(ret.msg,1000,"bottom",function(){
+				    		_sendEvent("orderStatusChangedEvent");
+				    		api.closeWin({});
+				    	});
+					}else{
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			},"post", data);		    	
+		}
+		
+		//修改订单要求到货日期(厂家)
+		function updateOrderSuggestion(call){			
+			var url = window.myServerUrl + "order/app/order/updateOrderSuggestion?token="+token+"&orderSeq="+orderSeq+"&requireTime="+requireDate;	
+			currentAjaxTag = "updateOrderSuggestion";
+			console.log("修改要求到货日期:" + url);
+//			console.log("ajax.tag:" + currentAjaxTag);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				if (ret) {
+					console.log("_ajax."+currentAjaxTag+".ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {											       
+//				    	_toast("修改成功！");
+				    	call();
+					}else{
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}				
+			});		    	
+		}				
+		
+		//确认接单(厂家)
+		function confirmOrder(_obj){			
+			var url = window.myServerUrl + "order/app/order/orderConfirmed";	
+			var data = {
+				values:{
+					token : token,
+					orderSeq : orderSeq
+				}
+			}				
+			currentAjaxTag = "confirmOrder";
+			isRequesting = true;
+			console.log("确认接单:" + url);
+			console.log("ajax.data:" + $api.jsonToStr(data));
+//			console.log("ajax.tag:" + currentAjaxTag);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				if (ret) {
+					console.log("_ajax.confirmOrder.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {					
+						$api.text(_obj, "已接单");	       
+				    	_toast(ret.msg,1000,"bottom",function(){
+				    		_sendEvent("orderStatusChangedEvent");
+				    		api.closeWin({});
+				    	});
+					}else{
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", data);		    	
+		}
+		
+		//财务修改订单已付金额
+		function updateOrderPaid(_obj, _text){
+			var url = window.myServerUrl + "order/app/order/updateOrderPaid";
+			var data = {
+				values:{
+					token : token,
+					orderSeq : orderSeq,
+					paid : _text
+				}
+			}				
+			var currentAjaxTag = "updateOrderPaid";
+			isRequesting = true;
+			console.log("修改订单已付金额("+_text+"):" + url);
+			console.log("ajax.data:" + $api.jsonToStr(data));
+//			console.log("ajax.tag:" + currentAjaxTag);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				if (ret) {
+					console.log("_ajax.updateOrderPaid.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						$api.text(_obj, "已收款");							       			       				    	
+				    	_toast(ret.msg,1000,"bottom",function(){
+				    		_sendEvent("orderStatusChangedEvent");
+				    		api.closeWin({});
+				    	});
+					}else{
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", data);
+		}
+		
+		//审核订单(厂家), 财务审核订单（确认支付 1 -> 2）
+		function receiveMoney(_obj, _text){
+			var url = window.myServerUrl + "order/app/order/orderConfirmedPay";
+			var data = {
+				values:{
+					token : token,
+					orderSeq : orderSeq,
+					paid : _text
+				}
+			}				
+			var currentAjaxTag = "receiveMoney";
+			isRequesting = true;
+			console.log("审核通过, 已付金额("+_text+"):"+url);			
+			console.log("ajax.data:" + $api.jsonToStr(data));
+//			console.log("ajax.tag:" + currentAjaxTag);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				if (ret) {
+					console.log("_ajax.receiveMoney.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {					
+						$api.text(_obj, "已审核");	       				    	
+				    	_toast(ret.msg,1000,"bottom",function(){
+				    		_sendEvent("orderStatusChangedEvent");
+				    		api.closeWin({});
+				    	});
+					}else{
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", data);
+		}
+		
+		//仓库管理员入库
+		function orderStore(_obj){
+			console.log("您点击了'确认入库'");
+			var url = window.myServerUrl + "order/app/order/orderStore";				
+			var data = {
+				values:{
+					token : token,
+					orderSeq : orderSeq
+				}
+			}				
+			var currentAjaxTag = "orderStore";
+			isRequesting = true;
+			console.log("确认入库:" + url);
+			console.log("ajax.data:" + $api.jsonToStr(data));
+//			console.log("ajax.tag:" + currentAjaxTag);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				if (ret) {
+					console.log("_ajax.orderStore.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {					
+						$api.text(_obj, "已入库");		       				    	
+				    	_toast(ret.msg,1000,"bottom",function(){
+				    		_sendEvent("orderStatusChangedEvent");
+				    		api.closeWin({});
+				    	});
+					}else{
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", data);
+		}
+		
+		//立即发货(厂家)
+		function deliverGoods(_obj){
+			console.log("您点击了'立即发货'");
+			_execScript(api.winName, "order_detail_frm", "openProdectNumPop()"); //打开"发货清单"页面				
+		}
+		
+		//修改订单(商家家)
+		function changeOrder(_obj){
+			console.log("您点击了'修改订单'");
+			_execScript(api.winName, "order_detail_frm", "openProdectNumPop2()"); //打开"订货清单"页面					
+		}
+		
+		//退/换货(商家)
+		function returnGoods(_obj){
+			console.log("您点击了'退/换'");
+		}	
+			
+		//确认收货(商家)
+		function receiveGoods(_obj){
+			console.log("您点击了'确认收货'");
+			var url = window.myServerUrl + "order/app/order/orderConfirmReceived";				
+			var data = {
+				values:{
+					token : token,
+					orderSeq : orderSeq
+				}
+			}				
+			var currentAjaxTag = "receiveGoods";
+			isRequesting = true;
+			console.log("确认收货:" + url);
+			console.log("ajax.data:" + $api.jsonToStr(data));
+//			console.log("ajax.tag:" + currentAjaxTag);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				if (ret) {
+					console.log("_ajax.receiveGoods.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {					
+						$api.text(_obj, "已收货");		       				    	
+				    	_toast(ret.msg,1000,"bottom",function(){
+				    		_sendEvent("orderStatusChangedEvent");
+				    		api.closeWin({});
+				    	});
+					}else{
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", data);		    	
+		}		
+
+		function initUI(){
+			showFooter(orderStatus);//根据订单"状态",显示对应footer		
+		}
+		
+		function initData(){
+			userInfo = $api.getStorage("userInfoKey");
+			token = $api.getStorage("tokenKey");
+			orderSeq = api.pageParam.orderSeq;
+			orderStatus = api.pageParam.orderStatus;
+			paid = api.pageParam.paid;
+			orderPrice = api.pageParam.orderPrice;
+		}
+	
+		var userInfo;//用户信息
+		var token; //令牌
+		var orderSeq;//订单序号
+		var orderStatus;//订单状态
+		var paid, orderPrice ;//订单已付金额, 应付金额
+		var footerPos;
+		var requireDate = "";//到货日期
+		apiready = function() {
+			api.parseTapmode();
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			var headerPos = $api.offset(header);//header位置与宽高	
+			
+			initData();
+			initUI();
+			
+			var rect = {
+				x : 0, //左上角x坐标
+				y : 0, //左上角y坐标
+				w : 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+				h : 'auto', //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+				marginLeft : 0, //相对父 window 左外边距的距离
+				marginTop : headerPos.h, //相对父 window 上外边距的距离
+				marginBottom : footerPos.h, //相对父 window 下外边距的距离
+				marginRight : 0 //相对父 window 右外边距的距离
+			};
+			var bounces = false, reload = true, allowEdit = false;
+			var pageParam = {
+				orderSeq:orderSeq, 
+				orderStatus:orderStatus,
+				footerHeight: footerPos.h
+			}; 
+			var animation = {
+				type : "fade", //动画类型（详见动画类型常量）
+				subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 0 //动画过渡时间，默认300毫秒
+			};
+			_openFrame("order_detail_frm", "order_detail_frm.html", rect, pageParam, bounces, reload, allowEdit, animation);
+		};
+		
+		//如果取消订单后, 返回时重定向到订单列表页
+		function closeWin() {
+			api.closeWin({
+			});
+		}
+		
+		//打开客服列表页
+        function openMessage() {
+            _openWin("message_win", "../../message/message_win.html");
+        }
+	</script>
+</html>

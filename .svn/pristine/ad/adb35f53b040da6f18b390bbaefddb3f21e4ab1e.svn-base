@@ -1,0 +1,109 @@
+.aui-hide {
+	display: none !important;
+}		
+.aui-show {
+	display: block !important;
+}
+.goods-name{
+	font-size:0.8rem; 
+	color: #212121;
+}
+.goods-attribute{
+	font-size:0.7rem; 
+	color: #888888;
+}
+.no-data{
+	width: 100%;
+}
+.no-data img{
+	display:inline-block;
+	width: 50%;
+	margin-left:25%;
+	margin-top:30px;
+	height: auto;
+}
+.no-data-btn{
+	margin-top:20px;
+	border:1px solid #BC9761;
+	border-radius: 4px;
+	font-size: 16px;
+	height:28px;
+	width:78px;
+	color: #BC9761;
+}
+/* ********* start ******** */
+td.textfield-black input{
+	color: #505050 !important;
+}
+td.textfield-blue input{
+	color: #5CACEE !important;
+}
+.textfield-total{
+	color: #505050 !important;
+	font-weight: 650 !important;
+}
+
+.aui-collapse-content{
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+}
+/* 标题行, 统计行 */
+table .row-title, table .row-total{
+	text-align: center;
+	height: 2.0rem !important;
+}
+table .row-title td{
+	font-weight: 450;
+}
+table .row-title td:first-of-type,
+table .row-title td:last-of-type{
+	font-weight: 650;
+}
+table .row-title td.size{
+	font-size: 0.8rem;	
+}
+table .row-title td:nth-child(odd) {
+	background-color: #9bd3ff;	
+}
+table .row-title td:nth-child(even){
+	background-color: #f4f4f4;
+}
+/* 非标题行 */
+table tr:not(:first-of-type) {
+	text-align: center;
+	height: 3.6rem;
+}
+table tr td input.item {
+	display: list-item !important;
+}
+table input{
+	text-align: center;
+}
+table tr:not(:last-child) td:not(:last-child) input{
+	border: 1px solid #ddd;
+	text-align: center;
+}
+table tr:not(:last-child) td:not(:last-child) input:focus {
+	border: 2px solid #f08a58;
+}
+/* 订购总数量 */
+input[class*="totalCount-"]{
+	color: #f08a58 !important;
+	font-size: 0.9rem !important;
+}
+table img{
+	width: 2.4rem;
+	height: 2.4rem;
+	margin: 0 auto;
+	border-radius: 0.2rem
+}
+.aui-padded-t-20{
+	padding-top: 1.1rem !important
+}
+.color{
+	vertical-align: bottom;
+	line-height: 0.8rem;
+}
+
+
+

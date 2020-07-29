@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.HomeCarouselDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.sr_base.entity.HomeCarouselEntity" id="homeCarouselMap">
+        <result property="seq" column="Seq"/>
+        <result property="brandSeq" column="Brand_Seq"/>
+        <result property="image" column="Image"/>
+        <result property="type" column="Type"/>
+        <result property="linkSeq" column="Link_Seq"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+
+</mapper>

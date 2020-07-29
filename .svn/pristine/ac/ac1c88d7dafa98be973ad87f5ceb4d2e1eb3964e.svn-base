@@ -1,0 +1,71 @@
+r342
+  +empty_dir: css/buy
+  +empty_dir: feature
+  +empty_dir: html/buy
+  +empty_dir: html/community
+  +empty_dir: html/customerservice
+  +empty_dir: html/feedback
+  +empty_dir: html/goods/list/all
+  +empty_dir: html/goods/list/bk
+  +empty_dir: html/goods/list/xp
+  +empty_dir: html/hotsummary
+  +empty_dir: html/manage
+  +empty_dir: html/normal
+  +empty_dir: html/orderplan
+  +empty_dir: wgt
+  +empty_dir: widget/css/goods
+  +empty_dir: widget/css/my/target
+  +empty_dir: widget/css/sale
+  +empty_dir: widget/css/shopping
+  +empty_dir: widget/html/goods/detail
+  +empty_dir: widget/html/my/authority/add_account
+  +empty_dir: widget/html/my/target
+  +empty_dir: widget/html/sale
+  +empty_dir: widget/html/search
+  +empty_dir: widget/html/shopping
+  +empty_dir: widget/image/shopping
+  +empty_dir: widget/script/common
+  +file_prop: icon/icon150x150.png svn:mime-type image/png
+  +file_prop: image/loading_more.gif svn:mime-type image/gif
+  +file_prop: launch/launch1080x1920.png svn:mime-type image/png
+r343
+r344
+r345
+r346
+r347
+r348
+r349
+r350
+r351
+r352
+r353
+r354
+r355
+r356
+r357
+r358
+r359
+r360
+r361
+r362
+r363
+r364
+r365
+r366
+r367
+r368
+r369
+r370
+r371
+r372
+r373
+r374
+r375
+r376
+r377
+r378
+r379
+r380
+r381
+r382
+r383

@@ -1,0 +1,187 @@
+var modules = {
+    version: "15",
+    updates: [{
+        time: "2019/10/25 13:51:00",
+        content: "1.添加新品推荐模块；2.将原有模块isDefault设置为true；3.修改module.js结构",
+    },{
+        time: "2019/10/30 13:51:00",
+        content: "1.isDefault为true时修改为false同时isAdd变为true",
+    },{
+        time: "2019/10/31 13:51:00",
+        content: "1.添加本店货品按钮",
+    },{
+        time: "2019/10/31 13:51:00",
+        content: "1.修改更多图标",
+    },{
+        time: "2019/11/5 13:51:00",
+        content: "1.隐藏销售结构;2.销售VS库存改为存销比",
+    },{
+        time: "2019/11/12 09:36:00",
+        content: "虚拟调配仓去掉虚拟，调换调配仓和库存结构icon",
+    },{
+        time: "2019/12/16 09:36:00",
+        content: "隐藏人员管理功能",
+    },{
+        time: "2019/12/18 09:36:00",
+        content: "新增会员管理和线上销售功能",
+    },{
+        time: "2019/12/18 09:36:00",
+        content: "新增扫一扫和搜索",
+    },{
+        time: "2019/12/23 17:25:00",
+        content: "新增myModules以支持拖拽排序",
+    },{
+        time: "2019/12/24 17:25:00",
+        content: "新增总仓货品",
+    },{
+        time: "2019/12/24 17:25:00",
+        content: "总仓货品图标修改",
+    }],
+    datas: [{
+        groupSeq: 0,
+        groupName: "商品管理",
+        items: [{
+            itemSeq: 0,
+            itemName: "新品推荐",
+            itemIcon: "icon_xptj3.png",
+            isDefault: false,
+            isAdd: true
+        }, {
+            itemSeq: 1,
+            itemName: "主推款",
+            itemIcon: "icon_ztk3.png",
+            isDefault: false,
+            isAdd: true
+        }, {
+            itemSeq: 2,
+            itemName: "畅销款",
+            itemIcon: "icon_cxk3.png",
+            isDefault: false,
+            isAdd: false
+        }, {
+            itemSeq: 3,
+            itemName: "滞销款",
+            itemIcon: "icon_zxk3.png",
+            isDefault: false,
+            isAdd: false
+        }, {
+            itemSeq: 4,
+            itemName: "老款",
+            itemIcon: "icon_lk3.png",
+            isDefault: false,
+            isAdd: false
+        }, {
+            itemSeq: 5,
+            itemName: "断缺码",
+            itemIcon: "icon_dmqm3.png",
+            isDefault: false,
+            isAdd: false
+        }, {
+            itemSeq: 6,
+            itemName: "全部货品",
+            itemIcon: "icon_qbhp3.png",
+            isDefault: false,
+            isAdd: true
+        }, {
+            itemSeq: 7,
+            itemName: "调配仓",
+            itemIcon: "icon_kcjg3.png",
+            isDefault: false,
+            isAdd: false
+        }, {
+            itemSeq: 9,
+            itemName: "库存结构",
+            itemIcon: "icon_xsfx2.png",
+            isDefault: false,
+            isAdd: false
+        }, {
+            itemSeq: 10,
+            itemName: "存销比",
+            itemIcon: "icon_xsvskc3.png",
+            isDefault: false,
+            isAdd: false
+        }, {
+            itemSeq: 11,
+            itemName: "补货动态",
+            itemIcon: "icon_bhdt3.png",
+            isDefault: false,
+            isAdd: true
+        }, {
+            itemSeq: 12,
+            itemName: "订货会",
+            itemIcon: "icon_dhh3.png",
+            isDefault: false,
+            isAdd: true
+        },{
+            itemSeq: 13,
+            itemName: "本店货品",
+            itemIcon: "icon_bdhp2.png",
+            isDefault: false,
+            isAdd: false
+        },{
+            itemSeq: 14,
+            itemName: "总仓货品",
+            itemIcon: "icon_zc1.png",
+            isDefault: false,
+            isAdd: false
+        }]
+    }, {
+        groupSeq: 1,
+        groupName: "营运管理",
+        items: [{
+            itemSeq: 0,
+            itemName: "销售分析",
+            itemIcon: "icon_xsfx3.png",
+            isDefault: false,
+            isAdd: true
+        }, {
+            itemSeq: 1,
+            itemName: "销售指标",
+            itemIcon: "icon_xszb3.png",
+            isDefault: false,
+            isAdd: true
+        },{
+            itemSeq: 2,
+            itemName: "会员管理",
+            itemIcon: "icon_rygl3.png",
+            isDefault: false,
+            isAdd: false
+        },{
+            itemSeq: 3,
+            itemName: "线上销售",
+            itemIcon: "icon_xsxs.png",
+            isDefault: false,
+            isAdd: false
+        },{
+            itemSeq: 4,
+            itemName: "扫一扫",
+            itemIcon: "icon_sys.png",
+            isDefault: false,
+            isAdd: true
+        },{
+            itemSeq: 5,
+            itemName: "搜索货品",
+            itemIcon: "icon_sshp.png",
+            isDefault: false,
+            isAdd: true
+        }
+      ]
+    }, {
+        groupSeq: 999,
+        groupName: "其它",
+        items: [{
+            itemSeq: 0,
+            itemName: "更多",
+            itemIcon: "icon_xsfx5.png",
+            isDefault: true,
+            isAdd: false
+        }]
+    }]
+};
+// {
+//     itemSeq: 8,
+//     itemName: "销售结构",
+//     itemIcon: "icon_tpc3.png",
+//     isDefault: false,
+//     isAdd: false
+// },

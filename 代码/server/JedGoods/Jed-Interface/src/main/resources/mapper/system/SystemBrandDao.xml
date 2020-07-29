@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.system.dao.SystemBrandDao">
+  <select id="queryBrandByUser" resultType="io.nuite.modules.system.model.CompanyBrand">
+		select
+			ybc.Name as companyName,ybc.Remark as companyDescript,ybc.Address as companyAddress,ybc.Seq as companySeq,
+			ybb.Name as brandName,ybb.Image as BrandImage,ybb.Remark as brandDescript,ybb.Seq as brandSeq
+		from JedSmartRetail.dbo.YHSR_Base_Brand ybb
+		left join JedSmartRetail.dbo.YHSR_Base_User ybu on ybb.Seq=ybu.Brand_Seq
+		left join JedSmartRetail.dbo.YHSR_Base_Company ybc on ybb.Company_Seq=ybc.Seq
+		where ybu.Seq=#{userSeq} and ybu.Del=0 and ybb.Del=0 and ybc.Del=0
+  </select>
+
+  <select id="queryUserCompany" resultType="io.nuite.modules.system.model.CompanyBrand">
+		select
+			ybc.Name as companyName,ybc.Remark as companyDescript,ybc.Address as companyAddress,ybc.Seq as companySeq
+		from JedSmartRetail.dbo.YHSR_Base_User ybu
+		left join JedSmartRetail.dbo.YHSR_Base_Company ybc on ybu.Company_Seq=ybc.Seq
+		where ybu.Seq=#{userSeq} and ybu.Del=0 and ybc.Del=0
+	</select>
+
+  <select id="checkBrandAndCompany" resultType="java.util.Map">
+		select *
+		from JedSmartRetail.dbo.YHSR_Base_Brand ybb
+		left join JedSmartRetail.dbo.YHSR_Base_User ybu on ybb.Seq=ybu.Brand_Seq
+		left join JedSmartRetail.dbo.YHSR_Base_Company ybc on ybb.Company_Seq=ybc.Seq
+		where ybu.Seq=#{userSeq} and ybb.Seq=#{brandSeq} and ybc.Seq=#{companySeq} and ybu.Del=0 and ybb.Del=0 and ybc.Del=0
+	</select>
+
+  <select id="checkCompany" resultType="java.util.Map">
+		select
+			*
+		from JedSmartRetail.dbo.YHSR_Base_User ybu
+		left join JedSmartRetail.dbo.YHSR_Base_Company ybc on ybu.Company_Seq=ybc.Seq
+		where ybu.Seq=#{userSeq} and ybc.Seq=#{companySeq} and ybu.Del=0 and ybc.Del=0
+	</select>
+</mapper>

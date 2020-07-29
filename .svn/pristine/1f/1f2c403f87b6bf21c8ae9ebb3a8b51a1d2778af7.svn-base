@@ -1,0 +1,127 @@
+
+#aui-header{
+	width: 100%;
+	position: fixed;
+	z-index: 999;
+	background-color: rgba(0,0,0,0) !important;
+	padding-top: 1.0rem;
+}
+.top-container {
+	width: 100%;
+	height: 10.5rem !important;
+	background-image: url(../../image/bg_user.png);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	position: relative;
+}
+.user-icon {
+	width: 2.85rem;
+	height: 2.85rem;
+	position:relative;
+}
+.user-name {
+	height: 0.7rem;
+	line-height: 0.7rem;
+	font-size: 0.7rem;
+	color: rgba(255,255,255,1);
+}
+.btn-edit{
+	width: 1.0rem;
+	height: 1.0rem;
+}
+.focus-area,.focus-goods{
+	width: -webkit-calc(50% - 1px);
+	height: 2.85rem;
+	bottom: 2.11rem;
+	position: absolute;
+}
+.focus-name,.collection-num,.history-num{
+	text-align: center;
+	height:1.3rem;
+	line-height:1.3rem;
+	color: rgba(255,255,255,1);
+	font-size: 0.7rem;
+}
+.focus-goods{
+	right: 0;
+}
+.divider-vertical{
+	width:1px;
+	height: 1.5rem;
+	left: -webkit-calc(50% - 0px);
+	position: absolute;
+	background-color: rgba(255,255,255,0.6);
+	bottom: 2.11rem;
+}
+.aui-content{
+	position: fixed;
+	z-index: 999;
+	background-color: rgba(0,0,0,0) !important;
+	padding-top: 1.0rem;
+	width: -webkit-calc(100% - 1.0rem);
+	top:7.0rem;
+	border-radius: 0.5rem;
+}
+ul{
+	border-radius: 0.5rem;
+}
+.aui-list .aui-list-item {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 0.75rem;
+    color: #212121;
+    border-bottom: 1px solid #dddddd;
+    position: relative;
+    min-height: 2.5rem;
+    -webkit-box-sizing: border-box;
+    		box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    		justify-content: space-between;
+}
+.aui-list .aui-list-item-label-icon img{
+  width: 0.8rem;
+	height: 0.9rem;
+}
+.aui-list-item-right{
+	color: #999 !important;
+}
+.aui-list-item-title{
+	height: 0.7rem;
+	font-family: SourceHanSansCN-Regular;
+	font-size: 0.7rem !important;
+	font-weight: normal;
+	line-height: 0.7rem;
+}
+
+/* 退出登录 */
+.aui-list-item-login-out{
+	width: 100%;
+	text-align: center;
+}
+.version{
+	width: 100%;
+	position: absolute;
+	bottom: 1.0rem;
+	/*background: red;*/
+	font-size: 0.6rem;
+	color: rgba(0,0,0,0.38);
+	text-align: center;
+}
+.quit{
+	height: 2.5rem;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin-top: auto!important;
+	margin-bottom: auto;
+	margin-right: auto;
+	margin-left: auto;
+}

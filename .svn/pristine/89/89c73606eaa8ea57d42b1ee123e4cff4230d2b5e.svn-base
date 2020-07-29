@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>门店导购管理</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui2x1/aui_slide.css" />
+    <link rel="stylesheet" type="text/css" href="../css/shopping/notice_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-pull-right aui-btn aui-hide" tapmode onclick="openDrawerPane();"><img src="../../image/icon_filter.png" /></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16"></div>
+    </header>
+
+    <div class="content flex-con">
+
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+    function renderData(){
+      $api.text($api.dom('.aui-title.text-header-title'), api.pageParam.title);
+      var content = decodeURIComponent(api.pageParam.content).replace(/&nbsp;/g, '');
+      console.log(content);
+      $api.html($api.dom('.content'), content);
+
+    }
+    apiready = function() {
+      api.parseTapmode();
+      var header = $api.byId('aui-header');
+      $api.fixStatusBar(header);
+      $api.fixTabBar($api.dom("body"));
+      renderData();
+      console.log($api.jsonToStr(api.pageParam));
+    }
+</script>
+
+</html>

@@ -1,0 +1,25 @@
+.aui-pull-right img{
+	width: 1.2rem;
+	height: 1.2rem;
+}
+.tab-wrap{
+	width: 100%;
+	overflow-x: scroll;
+}
+#tab{
+    width: 43.2rem;
+}
+::-webkit-scrollbar{
+	width: 0;
+	height: 0;
+}
+.aui-tab-item {
+    color: #505050;
+    font-size: 0.8rem;
+		width: 3.6rem ;
+
+}
+
+.tab-wrap{
+	overflow-x: scroll;
+}

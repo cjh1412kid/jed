@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>筛选范围</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/common.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/goods/graph_filter.css" />
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<section class="aui-content">
+		<div class="aui-card-list">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">时间范围</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected">
+						单日
+					</div>
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+						近七天
+					</div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+						近15天
+					</div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+						近30天
+					</div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+						累计
+					</div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+						自定义
+					</div>
+          <div class="graphTime">
+            <div><span>2018</span>年<span>12</span>月<span>10</span>日</div>
+            <div>至</div>
+            <div><span>2019</span>年<span>12</span>月<span>10</span>日</div>
+          </div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">门店范围<span class="tips aui-font-size-12 aui-margin-l-5">(仅对销售曲线图有效)</span></div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center selected">
+					所有门店
+					</div>
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+           门店A
+					</div>
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+					门店B
+					</div>
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+					门店C
+					</div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+          门店C
+          </div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+          门店C
+          </div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+          门店C
+          </div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+          门店C
+          </div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+          门店C
+          </div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+          门店C
+          </div>
+          <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+          门店C
+          </div>
+				</div>
+			</div>
+		</div>
+
+
+	</section>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+	var collapse = new auiCollapse({
+		autoHide: false //是否自动隐藏已经展开的容器
+	});
+
+	apiready = function() {
+		api.parseTapmode();
+	};
+</script>
+
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>AUI快速完成布局</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/message/group/group_frm.css" />
+	</head>
+	<body>
+		<ul class="group-name aui-list aui-form-list aui-list-in aui-list-noborder">
+			<li class="aui-list-item aui-padded-0">
+				<div class="aui-list-item-inner aui-border-b aui-margin-l-10">
+					<div class="aui-list-item-label aui-font-size-16" style="width: 3.0rem;color: #212121;">
+						群名称：
+					</div>
+					<div class="aui-list-item-input aui-margin-r-10" style="width: 80%; height: 1.2rem;">
+						<input class="aui-font-size-16" type="text" placeholder="请输入" name="companyName" data-rule="*" data-nullmsg="请输入公司名称" data-errmsg="公司名称格式不正确" style="color: #212121;">
+					</div>
+				</div>
+			</li>
+		</ul>
+		<ul class="aui-list aui-collapse aui-list-noborder" style="margin-top: 2.2rem;">
+			<!--<div class='aui-collapse-item'>
+			<li class='aui-list-item aui-collapse-header' tapmode>
+			<div class='aui-list-item-inner'>
+			<div class='aui-list-item-title'>
+			A
+			</div>
+			<div class='aui-list-item-right aui-hide'>
+			<i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>
+			</div>
+			</div>
+			</li>
+			<div class='aui-collapse-content aui-show'>
+			<li class='aui-list-item aui-padded-0' data-company-type-seq='3' data-user-seq='17' tapmode onclick='itemClick(this)'>
+			<div class='aui-media-list-item-inner'>
+			<div class='aui-list-item-input box-wrap box-horizontal-center box-vertical-center'>
+			<label class='aui-font-size-12 aui-margin-l-10'>
+			<input class='aui-checkbox' type='checkbox' name='radio' onclick='return false;'>
+			</label>
+			</div>
+			<div class='aui-list-item-media aui-padded-10 aui-margin-t-10'><img src='../../../image/noavatar.gif' data-src='http://192.168.2.186:8080/picture/sr_base/Base_User/17/17_1526292169307_20180514180250.png'>
+			</div>
+			<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-border-b' style='display: block;'>
+			<div class='aui-list-item-text aui-margin-t-10'>
+			<div class='aui-list-item-title aui-font-size-14 aui-ellipsis-2'>
+			App端创建测试公司名
+			</div>
+			</div>
+			<div class='aui-list-item-text aui-margin-t-5'>
+			<div class='aui-ellipsis-1 aui-font-size-12'>
+			<span class='attr-name'>类型：</span><span class='attr-value'>批发商</span>
+			</div>
+			</div>
+			<div class='aui-list-item-text aui-margin-t-0 aui-margin-b-5'>
+			<div class='aui-ellipsis-1 aui-font-size-12'>
+			<span class='attr-name'>帐号：</span><span class='attr-value'>app</span>
+			</div>
+			</div>
+			</div>
+			</div>
+			</li>
+			<li class='aui-list-item aui-padded-0' data-company-type-seq='3' data-user-seq='18' tapmode onclick='itemClick(this)'>
+			<div class='aui-media-list-item-inner'>
+			<div class='aui-list-item-input box-wrap box-horizontal-center box-vertical-center'>
+			<label class='aui-font-size-12 aui-margin-l-10'>
+			<input class='aui-checkbox' type='checkbox' name='radio' onclick='return false;'>
+			</label>
+			</div>
+			<div class='aui-list-item-media aui-padded-10 aui-margin-t-10'><img src='../../../image/noavatar.gif' data-src='http://192.168.2.186:8080/picture/sr_base/Base_User/18/null'>
+			</div>
+			<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-border-b' style='display: block;'>
+			<div class='aui-list-item-text aui-margin-t-10'>
+			<div class='aui-list-item-title aui-font-size-14 aui-ellipsis-2'>
+			App端创建批发商公司
+			</div>
+			</div>
+			<div class='aui-list-item-text aui-margin-t-5'>
+			<div class='aui-ellipsis-1 aui-font-size-12'>
+			<span class='attr-name'>类型：</span><span class='attr-value'>批发商</span>
+			</div>
+			</div>
+			<div class='aui-list-item-text aui-margin-t-0 aui-margin-b-5'>
+			<div class='aui-ellipsis-1 aui-font-size-12'>
+			<span class='attr-name'>帐号：</span><span class='attr-value'>pfsapp</span>
+			</div>
+			</div>
+			</div>
+			</div>
+			</li>
+			<li class='aui-list-item aui-padded-0' data-company-type-seq='2' data-user-seq='20' tapmode onclick='itemClick(this)'>
+			<div class='aui-media-list-item-inner'>
+			<div class='aui-list-item-input box-wrap box-horizontal-center box-vertical-center'>
+			<label class='aui-font-size-12 aui-margin-l-10'>
+			<input class='aui-checkbox' type='checkbox' name='radio' onclick='return false;'>
+			</label>
+			</div>
+			<div class='aui-list-item-media aui-padded-10 aui-margin-t-10'><img src='../../../image/noavatar.gif' data-src='http://192.168.2.186:8080/picture/sr_base/Base_User/20/null'>
+			</div>
+			<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-border-b' style='display: block;'>
+			<div class='aui-list-item-text aui-margin-t-10'>
+			<div class='aui-list-item-title aui-font-size-14 aui-ellipsis-2'>
+			App端创建帖牌商公司
+			</div>
+			</div>
+			<div class='aui-list-item-text aui-margin-t-5'>
+			<div class='aui-ellipsis-1 aui-font-size-12'>
+			<span class='attr-name'>类型：</span><span class='attr-value'>贴牌商</span>
+			</div>
+			</div>
+			<div class='aui-list-item-text aui-margin-t-0 aui-margin-b-5'>
+			<div class='aui-ellipsis-1 aui-font-size-12'>
+			<span class='attr-name'>帐号：</span><span class='attr-value'>tpsapp</span>
+			</div>
+			</div>
+			</div>
+			</div>
+			</li>
+			</div>
+			</div>-->
+		</ul>
+		<div class="footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			到底了<i class="aui-iconfont aui-icon-flag aui-font-size-12"></i>
+		</div>
+		<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			加载更多<i class="aui-iconfont aui-icon-more aui-font-size-12"></i>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../../script/api.js" ></script>
+	<script type="text/javascript" src="../../../script/common/common.js" ></script>
+	<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js" ></script>
+	<script type="text/javascript" src="../../../script/aui2x1/aui_lazyload.js" ></script>
+	<script type="text/javascript" src="../../../script/aui2x1/aui_toast.js"></script>
+	<script type="text/javascript" src="../../../script/common/pingyin.js"></script>
+	<script type="text/javascript">
+		function startChat(ret) {
+			// 获取会话类型
+			var conversationType = "GROUP";
+			// 获取目标ID
+			var targetId =ret.result[0];
+			// 获取目标名称
+			var targetName = $api.trim($api.val($api.dom(".group-name input")));
+			// 打开会话页面
+			var pageParam = {
+				conversationType : conversationType,
+				targetId : targetId,
+				targetName : targetName,
+				framePage : "message_frm"
+			};
+			//			var bounces = false;
+			//			var reload = true;
+			//			var animation = {
+			//				type : "fade", //动画类型（详见动画类型常量）
+			//				subType : "", //动画子类型（详见动画子类型常量）
+			//				duration : 300 //动画过渡时间，默认300毫秒
+			//			};
+			//			var delay = 300;
+			//			var scaleEnabled = false;
+			//			var allowEdit = true;
+			//			_openWin("chat_win", "chat_win.html", pageParam, bounces, reload, animation, delay, scaleEnabled, allowEdit);
+			_openWin("chat_win", "../../chat/chat_win.html", pageParam);
+		}
+
+		/**
+		 *请求服务器：创建群
+		 */
+		function createGroup(seqList, call) {
+			var url = window.myServerUrl + "order/app/onlineGroup/createGroup";
+			var groupName = $api.trim($api.val($api.dom(".group-name input")));
+			if (_isStringNull(groupName)) {
+				new auiToast().custom({
+					title : "请先填写群名称",
+					maxnum : 5,
+					html : '<i class="aui-iconfont aui-icon-info"></i>',
+					duration : 1500
+				});
+				return;
+			}
+			var _data = {
+				values : {
+					token : token,
+					groupName : groupName,
+					userSeqArr : $api.jsonToStr(seqList),
+				}
+			};
+			console.log("url:" + url);
+			console.log("createGroup._data:" + $api.jsonToStr(_data));
+			_ajax(url, "createGroup", function(ret, err) {
+				if (ret) {
+					console.log("_ajax.createGroup.ret:" + $api.jsonToStr(ret));
+					call(ret);
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", _data);
+		}
+
+		function commit() {
+			var seqList = [];
+			var items = $api.domAll(".aui-collapse-content .aui-list-item");
+			var count = 0;
+			if (items) {
+				for (var i = 0; i < items.length; i++) {
+					if ($api.dom(items[i], ".aui-checkbox").checked) {
+						count++;
+						seqList.push(parseInt($api.attr(items[i], "data-user-seq")));
+					}
+				}
+			}
+			if (count == 0) {
+				new auiToast().custom({
+					title : "您还没有选中联系人哟",
+					maxnum : 5,
+					html : '<i class="aui-iconfont aui-icon-info"></i>',
+					duration : 1500
+				});
+				return;
+			}
+			createGroup(seqList, function(ret) {
+				new auiToast().custom({
+					title : ret.msg,
+					maxnum : 5,
+					html : '<i class="aui-iconfont aui-icon-info"></i>',
+					duration : 1500
+				});
+				if (ret.code == 0) {
+					setTimeout(function() {
+						startChat(ret);
+					}, 1500);
+				}
+			});
+		}
+
+		function showToBottom() {
+			if (!$api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+				$api.addCls($api.dom(".footer-more"), "aui-hide");
+			}
+			if ($api.hasCls($api.dom(".footer-over"), "aui-hide")) {
+				$api.removeCls($api.dom(".footer-over"), "aui-hide");
+			}
+		}
+
+		function showLoadMore() {
+			if (!$api.hasCls($api.dom(".footer-over"), "aui-hide")) {
+				$api.addCls($api.dom(".footer-over"), "aui-hide");
+			}
+			if ($api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+				$api.removeCls($api.dom(".footer-more"), "aui-hide");
+			}
+		}
+
+		function itemClick(_obj) {
+			//编辑状态，点击进行勾选与取消勾选
+			var checkbox = $api.dom(_obj, ".aui-checkbox");
+			if ((checkbox.checked)) {
+				checkbox.checked = false;
+			} else {
+				checkbox.checked = true;
+			}
+			var items = $api.domAll(".aui-collapse-content .aui-list-item");
+			var count = 0;
+			if (items) {
+				for (var i = 0; i < items.length; i++) {
+					if ($api.dom(items[i], ".aui-checkbox").checked) {
+						count++;
+					}
+				}
+			}
+			_execScript("", "", "changeSubmitStatu(" + count + ")");
+		}
+
+		function getItemHtmlStr(data) {
+			var htmlStr = "";
+			htmlStr += "<li class='aui-list-item aui-padded-0' data-user-seq='" + data.userSeq + "' tapmode onclick='itemClick(this)'>";
+			htmlStr += "<div class='aui-media-list-item-inner'>";
+			htmlStr += "<div class='aui-list-item-input box-wrap box-horizontal-center box-vertical-center'>";
+			htmlStr += "<label class='aui-font-size-12 aui-margin-l-10'>";
+			htmlStr += "<input class='aui-checkbox' type='checkbox' name='radio' onclick='return false;'>";
+			htmlStr += "</label>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-media aui-padded-10 aui-margin-t-10'>";
+			htmlStr += "<img src='../../../image/noavatar.gif' data-src='" + data.headImg + "'>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-border-b' style='display: block;'>";
+			htmlStr += "<div class='aui-list-item-text aui-margin-t-10'>";
+			htmlStr += "<div class='aui-list-item-title aui-font-size-14 aui-ellipsis-2'>";
+			htmlStr += data.companyName;
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-text aui-margin-t-5'>";
+			htmlStr += "<div class='aui-ellipsis-1 aui-font-size-12'>";
+			htmlStr += "<span class='attr-name'>类型：</span><span class='attr-value'>" + data.typeName + "</span>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-text aui-margin-t-0 aui-margin-b-5'>";
+			htmlStr += "<div class='aui-ellipsis-1 aui-font-size-12'>";
+			htmlStr += "<span class='attr-name'>帐号：</span><span class='attr-value'>" + data.accountName + "</span>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</li>";
+			return htmlStr;
+		}
+
+		function getHtmlStr() {
+			console.log("datas:" + $api.jsonToStr(datas));
+			var htmlStr = "";
+			console.log("currentIndex:" + currentIndex);
+			for (var i = currentIndex; i < datas.length; i++) {
+				currentIndex = i;
+				var browseTime = datas[i].browseTime;
+				var fontPin = chineseToPinYin(datas[i].companyName).slice(0, 1);
+				//				console.log("fontPin:" + fontPin);
+				//				console.log("tempFontPin:" + tempFontPin);
+				if (currentIndex == 0) {
+					tempFontPin = fontPin;
+					//					console.log("tempFontPin:" + tempFontPin);
+					htmlStr += "<div class='aui-collapse-item'>";
+					htmlStr += "<li class='aui-list-item aui-collapse-header' tapmode>";
+					htmlStr += "<div class='aui-list-item-inner'>";
+					htmlStr += "<div class='aui-list-item-title'>";
+					htmlStr += tempFontPin;
+					htmlStr += "</div>";
+					htmlStr += "<div class='aui-list-item-right aui-hide'>";
+					htmlStr += "<i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>";
+					htmlStr += "</div>";
+					htmlStr += "</div>";
+					htmlStr += "</li>";
+					htmlStr += "<div class='aui-collapse-content aui-show'>";
+				} else {
+					if (tempFontPin != fontPin) {
+						//该条记录的浏览时间跟上一条记录不一样，添加新的日期
+						tempFontPin = fontPin;
+						//						console.log("currentIndex:" + currentIndex);
+						htmlStr += "</div>";
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-collapse-item'>";
+						htmlStr += "<li class='aui-list-item aui-collapse-header' tapmode>";
+						htmlStr += "<div class='aui-list-item-inner aui-border-b'>";
+						htmlStr += "<div class='aui-list-item-title'>";
+						htmlStr += tempFontPin;
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-list-item-right aui-hide'>";
+						htmlStr += "<i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>";
+						htmlStr += "</div>";
+						htmlStr += "</div>";
+						htmlStr += "</li>";
+						htmlStr += "<div class='aui-collapse-content aui-show'>";
+					}
+				}
+				htmlStr += getItemHtmlStr(datas[i]);
+				if (currentIndex == datas.length - 1) {
+					//最后一条记录
+					currentIndex = datas.length;
+					htmlStr += "</div>";
+					htmlStr += "</div>";
+				}
+			}
+			return htmlStr;
+		}
+
+		function initUi() {
+			var htmlStr = "";
+			htmlStr += getHtmlStr();
+			console.log("htmlStr:" + htmlStr);
+			$api.html($api.dom(".aui-collapse"), htmlStr);
+			new auiLazyload({
+				errorImage : "../../../image/noavatar.gif"
+			});
+		}
+
+		/**
+		 *请求服务器：已添加的品牌方账号列表
+		 */
+		function createdUserList(call) {
+			var url = window.myServerUrl + "order/app/userJurisdiction/createdUserList?token=" + token;
+			console.log("url:" + url);
+			_ajax(url, "createdUserList", function(ret, err) {
+				var res = [];
+				if (ret) {
+					console.log("_ajax.createdUserList.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						res = ret.result;
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+				call(res);
+			});
+		}
+
+		function initData() {
+			token = $api.getStorage("tokenKey");
+			datas = [];
+		}
+
+		//		var collapse = new auiCollapse({
+		//			autoHide : false //是否自动隐藏已经展开的容器
+		//		});
+		var token;
+		var datas = new Array();
+		var tempFontPin = "";
+		var currentIndex = 0;
+		apiready = function() {
+			initData();
+			api.parseTapmode();
+			datas = [];
+			tempFontPin = "";
+			createdUserList(function(ret) {
+				datas = ret;
+				currentIndex = 0;
+				initUi();
+				showToBottom();
+				api.refreshHeaderLoadDone();
+			});
+		}
+	</script>
+</html>

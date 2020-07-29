@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.ReceiverInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.ReceiverInfoEntity" id="receiverInfoMap">
+        <result property="seq" column="Seq"/>
+        <result property="userSeq" column="User_Seq"/>
+        <result property="receiverName" column="ReceiverName"/>
+        <result property="telephone" column="Telephone"/>
+        <result property="province" column="Province"/>
+        <result property="provinceCode" column="ProvinceCode"/>
+        <result property="city" column="City"/>
+        <result property="cityCode" column="CityCode"/>
+        <result property="district" column="District"/>
+        <result property="districtCode" column="DistrictCode"/>
+        <result property="detailAddress" column="DetailAddress"/>
+        <result property="isDefault" column="IsDefault"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+</mapper>

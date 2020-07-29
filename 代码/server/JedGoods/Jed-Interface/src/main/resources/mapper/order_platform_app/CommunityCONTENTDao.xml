@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.CommunityCONTENTDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.CommunityCONTENTEntity" id="communityCONTENTMap">
+        <result property="seq" column="Seq"/>
+        <result property="shoesSeq" column="Shoes_Seq"/>
+        <result property="userSeq" column="User_Seq"/>
+        <result property="content" column="Content"/>
+        <result property="contentTypeSeq" column="ContentType_Seq"/>
+        <result property="img1" column="Img1"/>
+        <result property="img2" column="Img2"/>
+        <result property="img3" column="Img3"/>
+        <result property="img4" column="Img4"/>
+        <result property="img5" column="Img5"/>
+        <result property="img6" column="Img6"/>
+        <result property="img7" column="Img7"/>
+        <result property="img8" column="Img8"/>
+        <result property="img9" column="Img9"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="state" column="State"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+	
+
+	<!-- 根据用户Seq，分页查询社区内容列表 -->
+	<select id="getCommunityCONTENTList" resultType="io.nuite.modules.order_platform_app.entity.CommunityCONTENTEntity">
+		SELECT
+			TOP ${num} 
+			A.Seq AS Seq,A.User_Seq AS User_Seq,A.Content AS Content,A.ContentType_Seq AS ContentType_Seq,A.Img1 AS Img1,A.Img2 AS Img2,A.Img3 AS Img3,
+			A.Img4 AS Img4,A.Img5 AS Img5,A.Img6 AS Img6,A.Img7 AS Img7,A.Img8 AS Img8,A.Img9 AS Img9,A.InputTime AS InputTime,A.State AS State
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_CommunityCONTENT A
+		WHERE
+			A.Seq NOT IN 
+				(SELECT 
+					TOP ${start} Seq 
+				FROM JedOrderPlatform.dbo.YHSR_OP_CommunityCONTENT 
+				WHERE 
+					Shoes_Seq = #{shoesSeq} AND State = 1 AND Del = 0 
+				ORDER BY 
+					InputTime DESC, Seq DESC)
+			AND A.Shoes_Seq = #{shoesSeq}
+			AND A.State = 1
+			AND A.Del = 0
+		ORDER BY 
+			A.InputTime DESC, A.Seq DESC
+	</select>
+	
+</mapper>

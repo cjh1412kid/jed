@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title></title>
+		<!--AUI样式框架-->
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<style type="text/css">
+			@media screen and (-webkit-min-device-pixel-ratio: 1.5) {
+				.aui-list {
+					border: none;
+					background-size: 100% 0;
+					background-image: none;
+				}
+				.aui-list .aui-list-item {
+					border: none;
+					background-size: 100% 0;
+					background-image: none;
+				}
+				.aui-list.aui-list-noborder, .aui-list.aui-list-noborder .aui-list-item:last-child {
+					border: none;
+					background-size: 100% 0;
+					background-image: none;
+				}
+			}
+			.aui-list, .aui-list-item {
+				background-color: rgba(0,0,0,0) !important;
+				border-bottom: 1px solid rgba(0,0,0,0) !important;
+			}
+			.tips {
+				border-top: 1px solid #999999;
+				color: #999999;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="_closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+			<a class="aui-pull-right aui-btn" onclick="submit();"> <span class="aui-font-size-14" style="color: #212121">保存</span> </a>
+			<div class="aui-title aui-text-default">
+				修改昵称
+			</div>
+		</header>
+		<ul  class="aui-list aui-form-list aui-list-noborder aui-margin-t-10 aui-margin-r-15">
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label-icon">
+						<i class="aui-iconfont aui-icon-my"></i>
+					</div>
+					<div class="aui-list-item-input">
+						<input id="nickNameInput" type="text" placeholder="请输入昵称" name="surePassword" data-rule="*" data-nullmsg="请输入确认密码" data-errmsg="密码格式不正确"/>
+					</div>
+					<div class="aui-list-item-label-icon aui-hide">
+						<i class="aui-iconfont aui-icon-display"></i>
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div  class="aui-list-item-inner aui-font-size-12 tips">
+					可由中英文、数字、“_”、“-”组成
+				</div>
+			</li>
+		</ul>
+	</body>
+	<!--APICloud自带前端脚本-->
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<!--通用脚本库-->
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript">
+		function _closeWin() {
+			api.closeWin();
+		}
+
+		/**
+		 *请求服务器：修改用户基本信息
+		 */
+		function submit() {
+			var nickNameInputEl = $api.byId("nickNameInput");
+			var nickName = $api.trim($api.val(nickNameInputEl));
+			if (_isStringNull(nickName)) {
+				_toast("请输入昵称");
+				return;
+			}
+			var url = window.myServerUrl + "order/app/baseUser/updateBaseUser";
+			var currentAjaxTag = "updateBaseUser";
+			var method = 'post';
+			var data = {
+				values : {
+					token : $api.getStorage("tokenKey"),
+					userName : nickName,
+				},  //以表单方式提交参数（JSON对象）, 如 {"field1": "value1", "field1": "value2"} (直接传JSON对像.)
+			};
+			isRequesting = true;
+			console.log("ajax.url:" + url);
+			console.log("ajax.tag:" + currentAjaxTag);
+			console.log("ajax.data:" + $api.jsonToStr(data));
+			_showProgress("昵称修改中...", "", true);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				api.hideProgress();
+				//					api.refreshHeaderLoadDone();
+				if (ret) {
+					console.log("ajax." + currentAjaxTag + ".ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						//						$api.setStorage("loginBodyParam", bodyParam);
+						//						$api.setStorage("nickName", nickName);
+						//						$api.setStorage("imgUrl", imgUrl);
+						var userInfo = $api.getStorage("userInfoKey");
+						userInfo.userName = nickName;
+						//						alert($api.jsonToStr(userInfo));
+						$api.setStorage("userInfoKey", userInfo);
+						_sendEvent("userInfoUpdateKey");
+						_toast("修改成功", 2000, "bottom", function() {
+							api.closeWin({
+							});
+						});
+					} else {
+						_toast(ret.msg, 2000, "bottom");
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+					console.log("ajax." + currentAjaxTag + ".err:" + $api.jsonToStr(err));
+				}
+			}, method, data);
+		};
+		var headerPos;
+		apiready = function() {
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			headerPos = $api.offset(header);
+			var rect = {
+				x : 0,
+				//				y : headerPos.h,
+				y : 0,
+				w : 'auto',
+				h : 'auto',
+				marginLeft : 0, //相对父 window 左外边距的距离
+				marginTop : headerPos.h, //相对父 window 上外边距的距离
+				marginBottom : 0, //相对父 window 下外边距的距离
+				marginRight : 0 //相对父 window 右外边距的距离
+			};
+			var bounces = true;
+			var reload = true;
+			var allowEdit = false;
+			var animation = {
+				type : "fade", //动画类型（详见动画类型常量）
+				//			subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 300 //动画过渡时间，默认300毫秒
+			};
+			//			_openFrame("changeNickName_frm", "changeNickName_frm.html", rect, api.pageParam, bounces, reload, allowEdit, animation);
+		};
+	</script>
+</html>

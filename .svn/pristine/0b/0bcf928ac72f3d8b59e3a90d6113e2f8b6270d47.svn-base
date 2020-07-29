@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>订货清单</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui1x2x1/aui_list_swipe.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/common/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/order/order_detail/fill_order_deliver_pop.css"/>
+		<style type="text/css">
+		</style>
+	</head>
+	<body class="flex-wrap flex-vertical">
+		<div class="dark-bg flex-con" tapmode onclick="api.closeFrame();"></div>
+		<div class="content flex-wrap flex-vertical aui-">
+			<header class="popTitle flex-wrap aui-margin-15">
+				<div class="flex-con box-wrap box-vertical-center box-horizontal-center aui-font-size-16" >
+					<span>订货清单</span>
+				</div>
+			</header>		
+			<!--****** 订货清单  ******-->
+			<section class="aui-content flex-con" style="margin-bottom: 2.5rem !important;">
+				<div class="aui-padded-l-10 aui-padded-r-10">
+					<div class="aui-collapse-item">
+						<div class="aui-collapse-content aui-padded-0 aui-show">
+							<div class="flex-con flex-wrap aui-font-size-14" style="background-color: #f5f5f5;height: 1.6rem; border-radius: 0.2rem;">
+								<div class="flex-4 box-wrap box-horizontal-center box-vertical-center">
+									货号
+								</div>
+								<div class="flex-2 box-wrap box-horizontal-center box-vertical-center">
+									颜色
+								</div>
+								<div class="flex-1 box-wrap box-horizontal-center box-vertical-center">
+									尺码
+								</div>
+								<div class="flex-5 box-wrap box-horizontal-center box-vertical-center">
+									修改数量
+								</div>
+							</div>
+						</div>
+					</div>
+					<ul class="selected-list aui-list aui-media-list aui-list-noborder aui-list-view aui-in aui-font-size-14">
+					
+						<!--<li class="aui-list-item aui-list-view-cell flex-wrap" id="li1" data-order-products-seq="110" tapmode>
+							<div class="aui-list-item-inner aui-swipe-handle flex-wrap">
+								<div class="aui-text-center flex-4">FCVB5655</div>
+								<div class="aui-text-center flex-2">黑色</div>
+								<div class="list-1 count aui-text-center flex-1">38</div>
+								<div class="aui-text-center flex-5">
+									<div class="aui-bar aui-bar-btn aui-bar-btn-sm" >
+										<span class="aui-bar-btn-item aui-bg-gray" id="minus1" tapmode onclick="minus(this, 1)"><i class="aui-iconfont aui-icon-minus"></i></span>
+										<span class="aui-bar-btn-item">
+											<input type="number" class="aui-input aui-text-center" id="count1" data-count-max="100" oninput="countChange(this, 1, true)" value="1">
+										</span>
+										<span class="aui-bar-btn-item" id="plus1" tapmode onclick="plus(this, 1)"><i class="aui-iconfont aui-icon-plus"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="aui-swipe-right-btn aui-bg-danger" tapmode onclick="deleteShoppingCart(this.parentNode)">删除</div>
+						</li>-->		
+						
+					</ul>
+										
+				</div>
+			</section>
+			<footer class="aui-bar aui-bar-tab aui-border-t">
+				<div class="aui-bar-tab-item edit-preivew aui-font-size-14" style="width: auto;">
+					应付：<span class='money-style-2'>¥</span><span id="orderPriceTotal" class="aui-font-size-14 aui-margin-l-5"><span class='money-style-1'>0</span><span class='money-style-2'>.00</span></span>
+				</div>
+				<div class="aui-bar-tab-item aui-font-size-16 btn-sure" tapmode onclick="sure()" style="width: auto;">
+					确定
+				</div>
+			</footer>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../../script/aui1x2x1/aui_list_swipe.js"></script>
+	<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+	<!--<script type="text/javascript" src="../../../script/common/alert_tips.js"></script>-->
+	<!--<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js" ></script>-->
+	<script type="text/javascript">
+		
+		function sure(){
+			if(parseInt(orderPriceTotal) != 0){
+				$api.setStorage("productsNumArr2Key", productsNumArr2);
+				_execScript(api.winName, "order_detail_frm", "changeOrderGoods("+parseFloat(orderPriceTotal)+")");//确认修改		
+			}else{
+				_toast("订货清单为空！");
+			}
+		}
+			
+		var isInput;
+		//是否是手动输入(数量)
+		//减(数量)
+		function minus(obj, index) {
+			isInput = false;
+			var valueInput = document.getElementById("count"+index).value
+//			var countMax = $api.attr($api.byId("count"+index), "data-count-max");
+			if (valueInput != "") {
+				var count = parseInt(document.getElementById("count"+index).value);
+				if (count > 1) {
+					document.getElementById("count"+index).value = count-1;
+					if (count == 2) {
+						if (!$api.hasCls(obj, "aui-bg-gray")) {
+							$api.addCls(obj, "aui-bg-gray");
+						}
+					}
+				}
+				isValid = true;
+				//改变订货清单
+				changeCount();
+			} else {
+				isValid = false;
+			}
+		}
+
+		var tempValue = "0";
+		//临时存放输入前的值;
+		//input的值改变时触发
+		function countChange(obj, index, isInput) {
+			if (isInput) {//手动输入
+//				var countMax = $api.attr(obj, "data-count-max");
+				var value = $api.val(obj);
+				var count;
+				if (_isStringNull(value)) {//为空
+					$api.val(obj, value);
+				} else {
+					if (isValidInteger(value)) {
+						count = parseInt(value);
+						console.log("手动输入的值为:--->" + count);
+						var minus = $api.byId("minus"+index);
+						if (count == 0 && !$api.hasCls(minus, "aui-bg-gray")) {
+							$api.addCls(minus, "aui-bg-gray");
+						} else {
+							$api.removeCls(minus, "aui-bg-gray");
+						}
+//						if (count > parseInt(countMax)) {
+//							isValid = false;
+//							_toast("超出最大发货量("+countMax+")", 2000, "bottom", function() {
+//							});
+//							$api.val(obj, countMax);
+//							//改变订货清单
+//							changeCount();
+//						} else {
+							isValid = true;
+							//改变订货清单
+							changeCount();
+//						}
+					} else {//非法字符(如:"+", "-"等), 会忽略小数点"."
+						isValid = false;
+						_toast("数量无效！", 2000, "bottom", function() {
+						});
+						//改变订货清单
+						changeCount();
+					}
+				}
+			}
+		}
+
+		//加
+		function plus(obj, index){
+		    console.log("第"+(index+1)+"个===>加");
+			isInput = false;
+			var valueInput = document.getElementById("count"+index).value
+//			var countMax = $api.attr($api.byId("count"+index), "data-count-max");
+			if (valueInput != "") {
+				var count = parseInt(valueInput);		
+//			    if(count >= parseInt(countMax)){
+//			    	isValid = false;
+//					_toast("超出最大发货量("+countMax+")！", 2000, "bottom", function() {
+//					});
+//			    }else{
+			    	document.getElementById("count"+index).value = count+1;	
+			    	var minus = $api.byId("minus"+index);
+					$api.removeCls(minus, "aui-bg-gray");
+			    	isValid = true;	 
+			    	//改变订货清单
+					changeCount();   	
+//			    }
+			}else{
+				isValid = false;
+			}		
+		}
+		
+		//改变订货清单
+		function changeCount(){
+			productsNumArr2 = [];
+			var orderPrice = 0.00;
+			var listObjs = $api.domAll(".selected-list li");
+//			console.log($api.html($api.dom(".selected-list")));
+			if (listObjs.length != 0) {
+				for (var i = 0; i < goodsOrderList.length; i++) {
+					var indexNum = $api.byId("count"+i) == undefined? 0 : $api.val($api.byId("count"+i)); 
+					if(parseInt(indexNum) != 0){//数量为0时, 则订货清单里清除该款鞋子
+						var indexOrderProductsSeq = $api.attr($api.byId("li"+i), "data-order-products-seq");
+						var goodsPrice = $api.attr($api.byId("li"+i), "data-goods-price");
+						console.log("订单商品序号orderProductsSeq:" + indexOrderProductsSeq + ", 购买数量buyCount:" + indexNum);
+						productsNumArr2.push({orderProductsSeq : parseInt(indexOrderProductsSeq), buyCount : parseInt(indexNum)});					
+						orderPrice += goodsPrice * indexNum;
+					}
+				}
+				orderPriceTotal = parseFloat(orderPrice).toFixed(2);
+				var orderPriceTotalArr = orderPriceTotal.split(".");
+				$api.html($api.byId("orderPriceTotal"), "<span class='money-style-1'>"+orderPriceTotalArr[0]+"</span><span class='money-style-2'>."+orderPriceTotalArr[1]+"</span>");
+			} else {
+				$api.html($api.byId("orderPriceTotal"), "<span class='money-style-1'>0</span><span class='money-style-2'>.00</span>");
+			}
+		}
+		
+		function initUI(goodsOrderList) {
+			console.log("initUI.goodsOrderList:"+$api.jsonToStr(goodsOrderList));					
+			var htmlStr = '';
+			var orderPrice = 0.00;
+			for(var i = 0; i < goodsOrderList.length; i++){			
+				var goodsPrice = goodsOrderList[i].productPrice * goodsOrderList[i].buyCount;
+				htmlStr += '<li class="aui-list-item aui-list-view-cell flex-wrap" id="li'+i+'" data-order-products-seq="'+goodsOrderList[i].orderProductsSeq+'" data-goods-price="'+goodsOrderList[i].productPrice+'" tapmode>';
+				htmlStr += '<div class="aui-list-item-inner aui-swipe-handle flex-wrap">';
+				htmlStr += '<div class="aui-text-center flex-4">'+goodsOrderList[i].goodId+'</div>';
+				htmlStr += '<div class="aui-text-center flex-2">'+goodsOrderList[i].colorName+'</div>';
+				htmlStr += '<div class="list-1 count aui-text-center flex-1">'+goodsOrderList[i].size+'</div>';
+				htmlStr += '<div class="aui-text-center flex-5">';
+				htmlStr += '<div class="aui-bar aui-bar-btn aui-bar-btn-sm" >';
+				htmlStr += '<span class="aui-bar-btn-item aui-bg-gray" id="minus'+i+'" tapmode onclick="minus(this,'+i+')"><i class="aui-iconfont aui-icon-minus"></i></span>';
+				htmlStr += '<span class="aui-bar-btn-item">';
+//				var countMax =  goodsOrderList[i].buyCount - goodsOrderList[i].deliverNum;//可发货的最大数量(总数量-已发货量)
+				htmlStr += '<input type="number" class="aui-input aui-text-center" id="count'+i+'" oninput="countChange(this, '+i+', true)" value="'+goodsOrderList[i].buyCount+'">';
+				htmlStr += '</span>';
+				htmlStr += '<span class="aui-bar-btn-item" id="plus'+i+'" tapmode onclick="plus(this,'+i+')"><i class="aui-iconfont aui-icon-plus"></i></span>';
+				htmlStr += '</div>';
+				htmlStr += '</div>';
+				htmlStr += '</div>';
+				htmlStr += '<div class="aui-swipe-right-btn aui-bg-danger" tapmode onclick="deleteBuyGoods(this.parentNode)">删除</div>';
+				htmlStr += '</li>';
+				
+				orderPrice += goodsPrice;
+			}			
+			$api.prepend($api.dom("ul.selected-list"), htmlStr);
+			
+			if(type == "orderGoods"){//订货清单
+				orderPriceTotal = parseFloat(orderPrice).toFixed(2);
+				var orderPriceTotalArr = orderPriceTotal.split(".");
+				$api.html($api.byId("orderPriceTotal"), "<span class='money-style-1'>"+orderPriceTotalArr[0]+"</span><span class='money-style-2'>."+orderPriceTotalArr[1]+"</span>");
+			}
+		}
+		
+		function deleteBuyGoods(_obj){
+			var orderProductsSeq = parseInt($api.attr(_obj, "data-order-products-seq"));			
+			_myAlert("删除该货号商品?", "取消", "删除", function() {
+				$api.remove(_obj);
+				setTimeout(function(){
+					changeCount();
+				},200);
+			});			
+		}
+
+		function initData() {
+			token = $api.getStorage("tokenKey");
+			goodsOrderList = api.pageParam.goodsOrderList;
+			type = api.pageParam.type;
+			$api.setStorage("productsNumArr2Key", []);	
+		}
+
+		var token;
+		var type; //deliverGoods(发货清单) 或 orderGoods(订货清单)
+		var orderPriceTotal = "0.00"; //订单总金额
+		var goodsOrderList = new Array();//订单中商品数据
+		var productsNumArr2 = new Array();; //修改订单时需要之参数
+		var swipe = new ListSwipe(); //左滑显示按钮
+		apiready = function() {
+			initData();
+			
+			initUI(goodsOrderList);
+		}
+		
+		//提示消息
+		function showMsg(el) {
+			if (!el.classList.contains("aui-swipe-selected")) {
+				api.alert({
+					title : '提示消息',
+					msg : '正常点击操作'
+				});
+			}
+		}
+		
+	</script>
+</html>

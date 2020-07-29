@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>AUI快速完成布局</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css"/>
+		<style>
+			html, body {
+				background-color: rgba(0,0,0,0);
+			}
+			.clip-control {
+				top: 0px;
+				width: 100%;
+				height: 45px;
+				background-color: #bc9761;
+				color: #FFFFFF;
+				position: absolute;
+			}
+			.clip-control-correct, .clip-control-close {
+				width: 45px;
+				height: 45px;
+				text-align: center;
+				line-height: 45px;
+				position: absolute;
+				font-size: 20px;
+				font-weight: bold;
+			}
+			.clip-control-correct {
+				left: 0px;
+			}
+			.clip-control-close {
+				right: 0px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="clip-control">
+			<i class="clip-control-correct aui-iconfont aui-icon-correct" onclick="clipSave()"></i>
+			<i class="clip-control-close aui-iconfont aui-icon-close" onclick="clipClose()"></i>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js" ></script>
+	<script type="text/javascript" src="../../script/common/common.js" ></script>
+	<script type="text/javascript">
+		function clipSave() {
+			_execScript(api.winName, api.pageParam.frameName, "clipSave();");
+		}
+
+		function clipClose() {
+			_execScript(api.winName, api.pageParam.frameName, "clipClose();");
+		}
+
+		var footerHeight; //win中footer高度
+		apiready = function() {
+			footerHeight = api.pageParam.footerHeight;
+			console.log("footerHeight:"+footerHeight);
+			$api.css($api.dom('.clip-control'), 'height:'+footerHeight+'px !important;');
+		}
+	</script>
+</html>

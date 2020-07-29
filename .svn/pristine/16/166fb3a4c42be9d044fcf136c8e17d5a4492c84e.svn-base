@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/common.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/goods/call_out_shop_frm.css" />
+	<style>
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical aui-invisible">
+	<div class="blank flex-con" tapmode onclick="api.closeFrame()"></div>
+	<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick="api.closeFrame()"> <span class="aui-iconfont aui-icon-close aui-text-default"></span> </a>
+		<div class="aui-title text-header-title aui-text-default aui-font-size-16">调出门店<span class='aui-margin-l-5 aui-text-default aui-font-size-14'>（<span class="shopNum">0</span>个门店<span class="shoesNum aui-margin-l-5">0</span>双）</span>
+		</div>
+	</header>
+	<div class="content">
+		<section class="aui-content aui-padded-b-10">
+			<div class="aui-card-list">
+				<div class="aui-card-list-header aui-collapse-header aui-bg-default aui-active" tapmode>
+					<div class="aui-font-size-14">门店1</div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-show">
+					<div class="aui-row aui-row-padded flex-wrap aui-margin-b-5">
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">1</div>
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">2</div>
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">3</div>
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">4</div>
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">5</div>
+					</div>
+					<div class="aui-row aui-row-padded flex-wrap aui-margin-b-5">
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">1</div>
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">2</div>
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">3</div>
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">4</div>
+						<div class="flex-con box-wrap box-horizontal-center box-vertical-center">5</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/order/order_status.js"></script>
+<script type="text/javascript" src="../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+	function closeAction() {
+		if (pageParam.pageName == "metting_order_win") {
+			_execScript("", "", "closeDropPop()");
+		} else {
+			api.closeDrawerPane();
+		}
+	}
+
+	function initUI() {
+		var htmlStr = '';
+		if (!_isArrayNull(datas)) {
+			$api.text($api.dom(".shopNum"), _isObjectNull(datas[0].shopNum) ? "0" : datas[0].shopNum);
+			$api.text($api.dom(".shoesNum"), _isObjectNull(datas[0].shoesNum) ? "0" : datas[0].shoesNum);
+			var shopList = datas[0].shopList;
+			for (var m = 0; m < shopList.length; m++) {
+				htmlStr += '<div class="aui-card-list">';
+				htmlStr += '<div class="aui-card-list-header aui-collapse-header aui-bg-default aui-active" tapmode>';
+				htmlStr += '<div class="aui-font-size-14">' + shopList[m].shopName + '</div>';
+				htmlStr += '<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>';
+				htmlStr += '</div>';
+				htmlStr += '\n';
+				htmlStr += '<div class="aui-card-list-content aui-collapse-content aui-show">';
+				var sizeHtmlStr = "";
+				var numHtmlStr = "";
+				var sizeNum = shopList[m].sizeNum;
+				for (var i = 0; i < sizeNum.length; i++) {
+					sizeHtmlStr += '<div class="flex-con box-wrap box-horizontal-center box-vertical-center">' + sizeNum[i].size + '</div>';
+					numHtmlStr += '<div class="flex-con box-wrap box-horizontal-center box-vertical-center">' + sizeNum[i].transferOutNum + '</div>';
+				}
+				//尺码行
+				htmlStr += '<div class="aui-row aui-row-padded flex-wrap aui-margin-b-5">';
+				htmlStr += '<div class="flex-con box-wrap box-horizontal-center box-vertical-center size">尺码</div>';
+				htmlStr += sizeHtmlStr;
+				htmlStr += '</div>';
+				//调出行
+				htmlStr += '<div class="aui-row aui-row-padded flex-wrap aui-margin-b-5">';
+				htmlStr += '<div class="flex-con box-wrap box-horizontal-center box-vertical-center num">调出</div>';
+				htmlStr += numHtmlStr;
+				htmlStr += '</div>';
+
+				htmlStr += '</div>';
+				htmlStr += '</div>';
+			}
+		} else {
+
+		}
+		$api.html($api.dom(".aui-content"), htmlStr);
+		collapse = new auiCollapse({
+			autoHide: false //是否自动隐藏已经展开的容器
+		});
+		if ($api.hasCls($api.dom("body"), "aui-invisible")) {
+			$api.removeCls($api.dom("body"), "aui-invisible");
+		}
+		$api.css($api.dom(".content"), "height:" + $api.offset($api.dom(".content")).h + "px");
+	}
+
+	/**
+	 *获取获取调出货品的门店及尺码数量
+	 */
+	function getData(call) {
+		datas = [];
+		var url = window.myServerUrl;
+		url += "order/app/allocateTransfer/selectExportShop";
+		url += "?shoesSeq=" + api.pageParam.seq;
+		console.log("获取获取调出货品的门店及尺码数量-->url:" + url);
+		_ajax(url, "selectExportShop", function(ret, err) {
+			if (ret) {
+				console.log("获取获取调出货品的门店及尺码数量-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					datas = ret.result;
+					// datas = [{
+					// 	"shopList": [{
+					// 		"shopName": "胜利路",
+					// 		"sizeNum": [{
+					// 			"transferOutNum": 1,
+					// 			"size": "35"
+					// 		}, {
+					// 			"transferOutNum": 1,
+					// 			"size": "36"
+					// 		}]
+					// 	}, {
+					// 		"shopName": "胜利路",
+					// 		"sizeNum": [{
+					// 			"transferOutNum": 1,
+					// 			"size": "35"
+					// 		}, {
+					// 			"transferOutNum": 1,
+					// 			"size": "36"
+					// 		}]
+					// 	}],
+					// 	"shoesNum": 7,
+					// 	"shopNum": 2
+					// }];
+				}
+			} else {
+				console.log("获取获取调出货品的门店及尺码数量-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			call();
+		});
+	}
+
+	var collapse = new auiCollapse({
+		autoHide: false //是否自动隐藏已经展开的容器
+	});
+	var pageParam;
+	var datas = [];
+	apiready = function() {
+		api.parseTapmode();
+		pageParam = api.pageParam;
+		getData(function() {
+			initUI();
+		});
+	};
+</script>
+
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/goods/goods_sellandinventory_frm.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="box">
+      <div class="title-top">
+        <div class="title">
+            <div class="width1">排名</div>
+            <div class="width2">店名</div>
+            <div class="width3 sort-btn active stockSaleRatio" tapmode data-orderBy="stockSaleRatio" onclick="sort(this)">
+                <span>存销比</span>
+                <span class="tri">▼</span>
+            </div>
+            <div class="width2 sort-btn" tapmode data-orderBy="saleNum" onclick="sort(this)">
+                <span class="sell-day"></span>
+                <span class="tri">▼</span>
+            </div>
+            <div class="width2 sort-btn" tapmode data-orderBy="stock" onclick="sort(this)">
+                <span>当前库存</span>
+                <span class="tri">▼</span>
+            </div>
+            <div class="width3 sort-btn" tapmode data-orderBy="SKUs" onclick="sort(this)">
+                <span>SKU数</span>
+                <span class="tri">▼</span>
+            </div>
+        </div>
+      </div>
+
+        <div class="content">
+            <!-- <div class="item">
+                <div class="width1">1</div>
+                <div class="width2">宁波石浦店</div>
+                <div class="width3">0.4</div>
+                <div class="width2">
+                    9999
+                </div>
+                <div class="width2">
+                    9999
+                </div>
+                <div class="width3">
+                    9999
+                </div>
+            </div> -->
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../script/common/echarts_min.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript" src="../../script/common/linq.js"></script>
+<script type="text/javascript">
+function initBtn(){
+  var domList = $('.sort-btn');
+  for (var i = 0; i < domList.length; i++) {
+    $(domList[i]).removeClass('active');
+    $($(domList[i]).find('.tri')).text('▼')
+  }
+  $('.stockSaleRatio').addClass('active')
+}
+    function sort(_obj) {
+        var dataOrderBy = $api.attr(_obj, "data-orderBy");
+        console.log("dataOrderBy:" + dataOrderBy);
+        // console.log("allShopDatas:" + $api.jsonToStr(allShopDatas));
+        if ($api.hasCls(_obj, "active")) {
+            if ($api.hasCls(_obj, "active-sort")) {
+                // $api.text($api.dom(_obj, ".tri"), '▲');
+                $($(_obj).find('.tri')).text('▲')
+                $api.removeCls(_obj, "active-sort");
+                // pageParam.orderDir = 1;
+                goodsList = Enumerable.From(goodsList).OrderBy("$." + dataOrderBy).ToArray();
+            } else {
+                $api.addCls(_obj, "active-sort");
+                $($(_obj).find('.tri')).text('▼')
+                // $api.text($api.dom(_obj, ".tri"), '▼');
+                // pageParam.orderDir = 0;
+                goodsList = Enumerable.From(goodsList).OrderByDescending("$." + dataOrderBy).ToArray();
+            }
+        } else {
+            $api.removeCls($api.dom(".sort-btn.active"), "active-sort");
+            $($('.sort-btn.active').find('.tri')).text('▼')
+            // $api.text($api.dom($api.dom(".sort-btn.active"), ".tri"), "▼");
+            // $api.text($api.dom(_obj, ".tri"), '▼');
+            $($(_obj).find('.tri')).text('▼')
+            $api.addCls(_obj, "active-sort");
+            // pageParam.orderDir = 0;
+            goodsList = Enumerable.From(goodsList).OrderByDescending("$." + dataOrderBy).ToArray();
+            $api.removeCls($api.dom(".sort-btn.active"), "active");
+            $api.addCls(_obj, "active");
+        }
+        //广播
+        // _sendEvent("query_filter_changed_event", pageParam);
+         initUI();
+    }
+  function goNextFrm(obj) {
+    console.log();
+    pageParam.shopSeqList=[$(obj).attr('data-seq')];
+    var obj={
+      seq:$(obj).attr('data-seq'),
+      shopName:$(obj).attr('data-name')
+    }
+
+    api.setFrameGroupIndex({
+        name: 'goods_sellandinventory_group',
+        index: 1
+    });
+    setTimeout(function(){
+      _sendEvent('changeShopSeqEvent',obj);
+    },600)
+  }
+    function initUI() {
+        var str = '';
+        for (var i = 0; i < goodsList.length; i++) {
+            str += '<div class="item" tapmode data-seq="'+goodsList[i].shopSeq+'" data-name="'+goodsList[i].shopName+'" onclick="goNextFrm(this)">';
+            str += '<div class="width1">' + (i+1)+ '</div>';
+            str += '<div class="width2">' + goodsList[i].shopName + '</div>';
+            str += '<div class="width3">' + goodsList[i].stockSaleRatio + '</div>';
+            str += '<div class="width2">' + goodsList[i].saleNum + '</div>';
+            str += '<div class="width2">' + goodsList[i].stock + '</div>';
+            str += '<div class="width3">' + goodsList[i].SKUs + '</div>';
+            str += '</div>';
+        }
+        $('.content').html(str);
+        api.refreshHeaderLoadDone();
+        closeUILoading();
+    }
+    /*
+     *获取鞋子列表数据
+     */
+    function getDatas(call) {
+      if (pageParam.timeRange == '30') {
+        $('.sell-day').text('30天销量');
+      } else if (pageParam.timeRange == '15') {
+        $('.sell-day').text('15天销量');
+      } else if (pageParam.timeRange == '7') {
+        $('.sell-day').text('7天销量');
+      } else if (pageParam.timeRange == '1') {
+        $('.sell-day').text('1天销量');
+      } else if (pageParam.timeRange == '999') {
+        $('.sell-day').text('累计销量');
+      } else {
+        $('.sell-day').text('销量');
+      }
+        var url = window.myServerUrl;
+        url += 'order/app/shoesInfo/stockSaleRatioByCategory';
+        url += "?yearList=" + pageParam.yearList;
+        url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+        url += "&categorySeqList=" + pageParam.cateSeqList; //分类 数据类型：Array[integer]
+        url += "&shopSeqList=" + pageParam.shopSeqList; //店铺序号
+        if (pageParam.timeRange == '0') {
+            url += "&saleTimeStart=" + pageParam.saleTimeStart; //销售时间区间：起始时间 数据类型：date-time
+            url += "&saleTimeEnd=" + pageParam.saleTimeEnd; //销售时间区间：结束时间 数据类型：date-time
+        } else {
+            url += "&saleTimeStart=" + _getStartDateByNum(pageParam.timeRange); //销售时间区间：起始时间 数据类型：date-time
+            url += "&saleTimeEnd=" + pageParam.saleTimeEnd; //销售时间区间：结束时间 数据类型：date-time
+        }
+        console.log("存销比(品类维度)-->url:" + url);
+        isAjaxing = true;
+        _ajax(url, "stockSaleRatioByCategory", function(ret, err) {
+            var tempGoodsList = [];
+            if (ret) {
+                console.log("存销比(品类维度)-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    tempGoodsList = ret.result;
+                    tempGoodsList = Enumerable.From(tempGoodsList).OrderByDescending("$.stockSaleRatio").ToArray();
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("存销比(品类维度)-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            call(tempGoodsList);
+        });
+    }
+
+    function closeUILoading() {
+        UILoading.closeKeyFrame();
+    }
+
+    function openUILoading() {
+        UILoading.keyFrame({
+            rect: {
+                w: 102,
+                h: 102
+            },
+            styles: {
+                bg: 'rgba(0,0,0,0)',
+                corner: 5,
+                interval: 50,
+                frame: {
+                    w: 102,
+                    h: 102
+                }
+            },
+            mask: "rgba(255,0,0,0)"
+        }, function(ret) {
+            console.log(12345);
+        });
+    }
+
+    function initData() {
+        start = 1;
+        num = 10;
+        UILoading = api.require('UILoading');
+        pageParam = api.pageParam;
+        goodsList = [];
+    }
+
+
+    var goodsList;
+    var UILoading;
+    var pageParam;
+    var userInfo = $api.getStorage('userInfoKey');
+
+    var apiready = function() {
+        initData();
+        //下拉刷新
+        api.setRefreshHeaderInfo({
+            loadingImg: 'widget://image/loading_more.gif',
+            bgColor: 'rgba(255,255,255,0)',
+            textColor: '#212121',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...'
+        }, function(ret, err) {
+            //在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+            getDatas(function(ret) {
+                goodsList = ret;
+                initBtn();
+                initUI();
+            });
+        });
+        //设置下拉刷新延迟时间
+        setTimeout(function() {
+            openUILoading()
+            getDatas(function(ret) {
+                goodsList = ret;
+                initUI();
+            });
+        }, 150);
+
+        _addEventListener("query_filter_changed_event", function(ret) {
+            console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+            pageParam = ret.value;
+            api.refreshHeaderLoading();
+
+        });
+
+
+
+    }
+</script>
+
+</html>

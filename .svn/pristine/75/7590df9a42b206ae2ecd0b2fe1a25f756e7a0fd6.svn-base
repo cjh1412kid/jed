@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>门店导购管理</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui_slide.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/shopping/guider_detail_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-right" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-close aui-text-default"></span> </a>
+        <a class="aui-pull-right aui-btn aui-hide" tapmode onclick="openDrawerPane();"><img src="../../image/icon_filter.png" /></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16" tapmode onclick="openSearchWin();">员工信息</div>
+    </header>
+
+    <div class="content flex-con flex-wrap">
+
+        <div class="listContent flex-con aui-margin-10">
+            <div class="flex-wrap listspe  aui-border-b">
+                <div class="flex-1 flex-wrap _flex1">
+                    <img src="../../image/shopping/icon.png" alt="" class="icon ">
+                    <span class=" _flex1 name aui-margin-l-10"></span>
+                </div>
+                <div class="flex-1 flex-wrap _flex1">
+                    <img src="../../image/shopping/age.png" alt="" class="ages aui-margin-r-5">
+                    <span class="age"></span>
+                </div>
+                <div class="flex-1 flex-wrap _flex1">
+                    <img src="" alt="" class="pic aui-margin-r-5">
+                    <span class="sex"></span>
+                </div>
+            </div>
+            <div class="list aui-border-b flex-wrap">
+              <img src="../../image/shopping/native.png" alt="" class="native position">
+              <div class="flex-spe _flex">籍&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;贯</div>
+              <div class="nativePlace flex-con _flex2 line"></div>
+            </div>
+            <div class="list aui-border-b flex-wrap">
+              <img src="../../image/shopping/idcard.png" alt="" class="idcard position">
+              <div class="flex-spe _flex">身&nbsp;&nbsp;份&nbsp;&nbsp;证</div>
+              <div class="idCardNo flex-con _flex2 line"></div>
+            </div>
+            <div class="list aui-border-b flex-wrap">
+              <img src="../../image/shopping/duty.png" alt="" class="dutys position">
+              <div class="flex-spe _flex">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务</div>
+              <div class="duty flex-con _flex2 line"></div>
+            </div>
+            <div class="list aui-border-b flex-wrap">
+              <img src="../../image/shopping/time.png" alt="" class="time position">
+              <div class="flex-spe _flex">入职时间</div>
+              <div class="hireDate flex-con _flex2 line"></div>
+            </div>
+            <div class="list aui-border-b flex-wrap phone">
+              <img src="../../image/shopping/phone.png" alt="" class="phones position">
+              <div class="flex-spe _flex">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话</div>
+              <div class="tel flex-con _flex2 line"></div>
+            </div>
+
+             <div class="btns _flex1" tapmode onclick="call()">拨打电话</div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+function call() {
+    api.call({
+        type: 'tel_prompt',
+        number: api.pageParam.tel
+    });
+}
+  function  renderData() {
+        $api.text($api.dom('.name'), api.pageParam.name);
+        $api.text($api.dom('.sex'), api.pageParam.sex);
+        if(api.pageParam.sex==='男'){
+          $api.attr($api.dom('.pic'), 'src', '../../image/shopping/man.png');
+
+        }else if (api.pageParam.sex==='女'){
+          $api.attr($api.dom('.pic'), 'src', '../../image/shopping/women.png');
+        }
+        $api.text($api.dom('.age'), api.pageParam.age);
+        $api.text($api.dom('.nativePlace'), api.pageParam.nativePlace);
+        $api.text($api.dom('.idCardNo'), api.pageParam.idCardNo);
+        $api.text($api.dom('.duty'), api.pageParam.duty);
+        $api.text($api.dom('.tel'), api.pageParam.tel);
+        $api.text($api.dom('.hireDate'), api.pageParam.hireDate);
+
+    }
+
+
+
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        renderData();
+        // console.log($api.jsonToStr(api.pageParam));
+    }
+</script>
+
+</html>

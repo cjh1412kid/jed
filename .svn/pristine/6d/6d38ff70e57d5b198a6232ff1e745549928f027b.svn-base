@@ -1,0 +1,705 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>浏览记录</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/history/history_frm.css" />
+	</head>
+	<body class="aui-hide">
+		<ul class="aui-list aui-collapse aui-list-noborder aui-margin-t-5">
+
+			<!--<div class='aui-collapse-item'>
+				<li class='aui-list-item aui-collapse-header' tapmode>
+					<div class='aui-list-item-inner aui-border-b'>
+						<div class='aui-list-item-title'>
+							今天
+						</div>
+						<div class='aui-list-item-right aui-hide'>
+							<i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>
+						</div>
+					</div>
+				</li>
+				<div class='aui-collapse-content aui-show'>
+					<li class='aui-list-item aui-padded-0' data-shoes-seq='1' data-seq='60' tapmode onclick='itemClick(this)'>
+						<div class='aui-media-list-item-inner'>
+							<div class='aui-list-item-input aui-hide box-wrap box-horizontal-center box-vertical-center'>
+								<label class='aui-font-size-12 aui-margin-l-10'>
+									<input class='aui-radio' type='checkbox' name='radio'>
+								</label>
+							</div>
+							<div class='aui-list-item-media aui-margin-l-5 aui-padded-0 aui-margin-t-5 aui-margin-b-5'>
+								<img src='../../image/load_small_img.png'>
+							</div>
+							<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-margin-l-5 aui-border-b' style='display: block;'>
+								<div class='aui-list-item-text aui-margin-t-5'>
+									<div class='aui-list-item-title goods-title'>
+										带有媒体的列表二
+									</div>
+								</div>
+								<div class='aui-list-item-text aui-margin-t-5'>
+									<div class='aui-ellipsis-1 aui-font-size-12'>
+										<span class='attr-name'>货号：</span><span class='attr-value'>A54641635161</span>
+									</div>
+									<div class='aui-ellipsis-1 aui-font-size-12'><span class='attr-name'>已下架</span></div>
+								</div>
+								<div class='aui-info aui-font-size-12 aui-padded-0'>
+									<div class='aui-info-item'>
+										<div class='goods-price aui-text-left aui-text-theme'>
+											<span class='price-name aui-font-size-12 aui-margin-t-5'>￥</span><span class='price-value-left aui-font-size-18'>223</span><span class='price-value-right aui-font-size-12 aui-margin-t-5'>.00</span>
+										</div>
+									</div>
+									<div class='aui-info-item aui-hide'>
+										<i class='aui-iconfont aui-icon-cart aui-text-danger' data-contentSeq='1' tapmode onclick='laudAction(this)'></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li class='aui-list-item aui-padded-0' data-shoes-seq='2' data-seq='61' tapmode onclick='itemClick(this)'>
+						<div class='aui-media-list-item-inner'>
+							<div class='aui-list-item-input aui-hide box-wrap box-horizontal-center box-vertical-center'>
+								<label class='aui-font-size-12 aui-margin-l-10'>
+									<input class='aui-radio' type='checkbox' name='radio'>
+								</label>
+							</div>
+							<div class='aui-list-item-media aui-margin-l-5 aui-padded-0 aui-margin-t-5 aui-margin-b-5'>
+								<img src='../../image/load_small_img.png'>
+							</div>
+							<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-margin-l-5 aui-border-b' style='display: block;'>
+								<div class='aui-list-item-text aui-margin-t-5'>
+									<div class='aui-list-item-title goods-title'>
+										带有媒体的列表二带有媒体的列表二带有媒体的列表二带有媒体的列表二
+									</div>
+								</div>
+								<div class='aui-list-item-text aui-margin-t-5'>
+									<div class='aui-ellipsis-1 aui-font-size-12'>
+										<span class='attr-name'>货号：</span><span class='attr-value'>A54641635161</span>
+									</div>
+									<div class='aui-ellipsis-1 aui-font-size-12'><span class='attr-name'>已下架</span></div>
+								</div>
+								<div class='aui-info aui-font-size-12 aui-padded-0'>
+									<div class='aui-info-item'>
+										<div class='goods-price aui-text-left aui-text-theme'>
+											<span class='price-name aui-font-size-12 aui-margin-t-5'>￥</span><span class='price-value-left aui-font-size-18'>223</span><span class='price-value-right aui-font-size-12 aui-margin-t-5'>.00</span>
+										</div>
+									</div>
+									<div class='aui-info-item aui-hide'>
+										<i class='aui-iconfont aui-icon-cart aui-text-danger' data-contentSeq='1' tapmode onclick='laudAction(this)'></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</div>
+			</div>-->
+
+		</ul>
+		<div class="footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			到底了<i class="aui-iconfont aui-icon-activity aui-font-size-12"></i>
+		</div>
+		<div class="footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			暂无浏览记录
+		</div>
+		<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			加载更多<i class="aui-iconfont aui-icon-more aui-font-size-12"></i>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js" ></script>
+	<script type="text/javascript" src="../../script/common/common.js" ></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js" ></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js" ></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_toast.js"></script>
+	<script type="text/javascript">
+	function toGoodsDetailWin(_seq) {
+		var pageParam = {
+			seq: _seq,
+			isSearch: 0,
+		};
+		api.openDrawerLayout({
+			name: "goods_detail_win",
+			url: "../goods/detail/goods_detail_win.html",
+			pageParam: pageParam,
+			animation: {
+				type: "push", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			},
+			softInputMode: "resize",
+			softInputBarEnabled: false,
+			overScrollMode: "always",
+			slidToOpenPane: false,
+			slidToClosePane: false,
+			rightPane: {
+				edge: 60,
+				pageParam: pageParam,
+				softInputMode: "resize",
+				softInputBarEnabled: false,
+				name: 'filter_sale_graph_win',
+				url: '../goods/detail/filter_sale_graph_win.html'
+			}
+		});
+	}
+		/**
+		 *请求服务器：全部删除浏览历史记录
+		 */
+		function deleteAllBrowse(call) {
+			var url = window.myServerUrl + "order/app/shoesValuate/deleteAllBrowse";
+			var _data = {
+				values : {
+					token : token,
+				}
+			};
+			console.log("url:" + url);
+			console.log("deleteAllBrowse._data:" + $api.jsonToStr(_data));
+			_ajax(url, "deleteAllBrowse", function(ret, err) {
+				if (ret) {
+					console.log("_ajax.deleteAllBrowse.ret:" + $api.jsonToStr(ret));
+					call(ret);
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", _data);
+		}
+
+		/**
+		 *请求服务器：批量删除浏览历史记录
+		 */
+		function deleteBrowse(seqList, call) {
+			var url = window.myServerUrl + "order/app/shoesValuate/deleteBrowse";
+			var _data = {
+				values : {
+					token : token,
+					seqArr : $api.jsonToStr(seqList),
+				}
+			};
+			console.log("url:" + url);
+			console.log("deleteBrowse._data:" + $api.jsonToStr(_data));
+			_ajax(url, "deleteBrowse", function(ret, err) {
+				if (ret) {
+					console.log("_ajax.deleteBrowse.ret:" + $api.jsonToStr(ret));
+					call(ret);
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", _data);
+		}
+
+		function deleteAction() {
+			if (isSelectedAll) {
+				//全选
+				deleteAllBrowse(function(ret) {
+					new auiToast().custom({
+						title : ret.msg,
+						maxnum : 5,
+						html : '<i class="aui-iconfont aui-icon-info"></i>',
+						duration : 1500
+					});
+					if (ret.code == 0) {
+						setTimeout(function() {
+							api.refreshHeaderLoading();
+						}, 1500);
+						_sendEvent("updateBrowseCollectedNum");
+					}
+				});
+			} else {
+				//非全选
+				var seqList = [];
+				var items = $api.domAll(".aui-collapse-content .aui-list-item");
+				var count = 0;
+				if (items) {
+					for (var i = 0; i < items.length; i++) {
+						if ($api.dom(items[i], ".aui-radio").checked) {
+							count++;
+							//							if (!$api.hasCls(items[i], "aui-hide")) {
+							//								$api.addCls(items[i], "aui-hide");
+							//							}
+							seqList.push(parseInt($api.attr(items[i], "data-seq")));
+						}
+					}
+				}
+				if (count == 0) {
+					new auiToast().custom({
+						title : "您还没有选中商品哟",
+						maxnum : 5,
+						html : '<i class="aui-iconfont aui-icon-info"></i>',
+						duration : 1500
+					});
+					return;
+				}
+				deleteBrowse(seqList, function(ret) {
+					new auiToast().custom({
+						title : ret.msg,
+						maxnum : 5,
+						html : '<i class="aui-iconfont aui-icon-info"></i>',
+						duration : 1500
+					});
+					if (ret.code == 0) {
+						setTimeout(function() {
+							api.refreshHeaderLoading();
+						}, 1500);
+						_sendEvent("updateBrowseCollectedNum");
+					}
+				});
+			}
+		}
+
+		function setPageEditable(_editable) {
+			editable = _editable;
+			var doms = $api.domAll(".aui-list-item-input");
+			if (_editable) {
+				for (var i = 0; i < doms.length; i++) {
+					if ($api.hasCls(doms[i], "aui-hide")) {
+						$api.removeCls(doms[i], "aui-hide");
+					}
+				}
+			} else {
+				for (var i = 0; i < doms.length; i++) {
+					if (!$api.hasCls(doms[i], "aui-hide")) {
+						$api.addCls(doms[i], "aui-hide");
+					}
+				}
+			}
+		}
+
+		function selectAll(_type) {
+			var doms = $api.domAll(".aui-radio");
+			isSelectedAll = _type;
+			if (_type) {
+				//全选
+				for (var i = 0; i < doms.length; i++) {
+					if (!(doms[i].checked)) {
+						doms[i].checked = true;
+					}
+				}
+			} else {
+				//取消全选
+				for (var i = 0; i < doms.length; i++) {
+					if ((doms[i].checked)) {
+						doms[i].checked = false;
+					}
+				}
+			}
+		}
+
+		//显示"暂无数据"
+		function showEmptyMsg(){
+			if (!$api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+				$api.addCls($api.dom(".footer-more"), "aui-hide");
+			}
+			if (!$api.hasCls($api.dom(".footer-over"), "aui-hide")) {
+				$api.addCls($api.dom(".footer-over"), "aui-hide");
+			}
+			if ($api.hasCls($api.dom(".footer-empty"), "aui-hide")) {
+				$api.removeCls($api.dom(".footer-empty"), "aui-hide");
+			}
+		}
+		//显示"加载更多..."
+		function showMoreMsg(){
+			if (!$api.hasCls($api.dom(".footer-over"), "aui-hide")) {
+				$api.addCls($api.dom(".footer-over"), "aui-hide");
+			}
+			if (!$api.hasCls($api.dom(".footer-empty"), "aui-hide")) {
+				$api.addCls($api.dom(".footer-empty"), "aui-hide");
+			}
+			if ($api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+				$api.removeCls($api.dom(".footer-more"), "aui-hide");
+			}
+		}
+		//显示"到底了"
+		function showOverMsg(){
+			if (!$api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+				$api.addCls($api.dom(".footer-more"), "aui-hide");
+			}
+			if (!$api.hasCls($api.dom(".footer-empty"), "aui-hide")) {
+				$api.addCls($api.dom(".footer-empty"), "aui-hide");
+			}
+			if ($api.hasCls($api.dom(".footer-over"), "aui-hide")) {
+				$api.removeCls($api.dom(".footer-over"), "aui-hide");
+			}
+		}
+
+		//获取所点击商品的详细信息, 参数isSearch:是否搜索(0:不是, 1:是)
+		// function toGoodsDetailWin(_seq) {
+		// 	var pageParam = {
+		// 		seq : _seq,
+		// 		isSearch : 0
+		// 	};
+		// 	var bounces = false;
+		// 	var reload = true;
+		// 	var animation = {
+		// 		type : "movein", //动画类型（详见动画类型常量）
+		// 		subType : "from_right", //动画子类型（详见动画子类型常量）
+		// 		duration : 300 //动画过渡时间，默认300毫秒
+		// 	}
+		// 	var delay = 0;
+		// 	_openWin("goods_detail_win", "../goods/detail/goods_detail_win.html", pageParam);
+		// }
+
+		function itemClick(_obj) {
+			if (editable) {
+				//编辑状态，点击进行勾选与取消勾选
+				var checkbox = $api.dom(_obj, ".aui-radio");
+				if ((checkbox.checked)) {
+					checkbox.checked = false;
+				} else {
+					checkbox.checked = true;
+				}
+			} else {
+				//不可编辑状态，点击进入商品详情界面
+				if($api.attr(_obj, "data-onsale") == "0"){//已下架
+					_toast("已下架！");
+				}else{
+					toGoodsDetailWin($api.attr(_obj, "data-shoes-seq"));
+				}
+			}
+		}
+
+		function getItemHtmlStr(data) {
+			var htmlStr = "";
+			htmlStr += "<li class='aui-list-item aui-padded-0' data-shoes-seq='" + data.shoesSeq + "' data-seq='" + data.seq + "' data-onsale='" + data.onSale + "' tapmode onclick='itemClick(this)'>";
+			htmlStr += "<div class='aui-media-list-item-inner'>";
+			if (editable) {
+				htmlStr += "<div class='aui-list-item-input box-wrap box-horizontal-center box-vertical-center'>";
+			} else {
+				htmlStr += "<div class='aui-list-item-input aui-hide box-wrap box-horizontal-center box-vertical-center'>";
+			}
+			htmlStr += "<label class='aui-font-size-12 aui-margin-l-10'>";
+			htmlStr += "<input class='aui-radio' type='checkbox' name='radio' onclick='return false;'>";
+			htmlStr += "</label>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-media aui-margin-l-5 aui-padded-0 aui-margin-t-5 aui-margin-b-5'>";
+			htmlStr += "<img src='../../image/load_small_img.png' data-src='" + data.img + "'>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-inner aui-padded-t-0 aui-padded-b-0 aui-margin-l-5 aui-border-b' style='display: block;'>";
+			htmlStr += "<div class='aui-list-item-text aui-margin-t-5'>";
+			htmlStr += "<div class='aui-list-item-title aui-font-size-14  goods-title'>";
+			htmlStr += data.goodId;
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-list-item-text aui-margin-t-5'>";
+			htmlStr += "<div class='aui-ellipsis-1 aui-font-size-12'>";
+			//采购价, 包括:1.oemPrice(贴牌商价格), 2.wholesalerPrice(批发商价格), 3.storePrice(直营店价格)
+
+			// priceParts = data.purchasePrice.toFixed(2).split(".");
+			var priceParts = _isStringNull(data.dealPrice) ? ["0", "0"] : data.dealPrice.toFixed(1).split(".");
+			htmlStr += "<span class='price-name aui-font-size-12 aui-margin-t-5'>平均成交价:&nbsp￥</span><span class='price-value-left aui-font-size-18'>" + priceParts[0] + "</span><span class='price-value-right aui-font-size-12 aui-margin-t-5'>." + priceParts[1] + "</span>";
+
+			htmlStr += "</div>";
+			//已下架
+			// if(data.onSale == 0){
+			// 	htmlStr += "<div class='aui-ellipsis-1 aui-font-size-12'><span class='attr-name'>已下架</span></div>";
+			// }
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-info aui-font-size-12 aui-padded-0'>";
+			htmlStr += "<div class='aui-info-item price-list'>";
+			htmlStr += "<div class='goods-price  aui-text-theme flex-wrap '>";
+			htmlStr +="<div class='flex-6'>";
+			htmlStr += "<span class='attr-name '>总销量:</span><span class='attr-value'>" + _getShortNum(data.salesNum) + "</span>";
+			htmlStr +="</div>";
+			htmlStr +="<div  class='flex-6'>";
+			htmlStr += "<span class='attr-name flex-6'>总库存:</span><span class='attr-value'>" + _getShortNum(data.stock) + "</span>";
+			htmlStr +="</div>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "<div class='aui-info-item aui-hide'>";
+			htmlStr += "<i class='aui-iconfont aui-icon-cart aui-text-danger' data-contentSeq='1' tapmode onclick='laudAction(this)'></i>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</div>";
+			htmlStr += "</li>";
+			return htmlStr;
+		}
+
+		function getHtmlStr() {
+			console.log("historyList:" + $api.jsonToStr(historyList));
+			var htmlStr = "";
+//			console.log("currentIndex:" + currentIndex);
+			for (var i = currentIndex; i < historyList.length; i++) {
+				currentIndex = i;
+				var browseTime = historyList[i].browseTime;
+				var browseDate = _getFormatedDate(browseTime, "MM月dd日");
+//				console.log("browseDate:" + browseDate);
+//				console.log("tempBrowseDate:" + tempBrowseDate);
+				if (currentIndex == 0) {
+					tempBrowseDate = browseDate;
+//					console.log("tempBrowseDate:" + tempBrowseDate);
+					htmlStr += "<div class='aui-collapse-item'>";
+					htmlStr += "<li class='aui-list-item aui-collapse-header' tapmode>";
+					htmlStr += "<div class='aui-list-item-inner aui-border-b'>";
+					htmlStr += "<div class='aui-list-item-title'>";
+					htmlStr += tempBrowseDate;
+					htmlStr += "</div>";
+					htmlStr += "<div class='aui-list-item-right aui-hide'>";
+					htmlStr += "<i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>";
+					htmlStr += "</div>";
+					htmlStr += "</div>";
+					htmlStr += "</li>";
+					htmlStr += "<div class='aui-collapse-content aui-show'>";
+				} else {
+					if (tempBrowseDate != browseDate) {
+						//该条记录的浏览时间跟上一条记录不一样，添加新的日期
+						tempBrowseDate = browseDate;
+//						console.log("currentIndex:" + currentIndex);
+						if (isInsert) {
+							isInsert = false;
+						} else {
+							htmlStr += "</div>";
+							htmlStr += "</div>";
+						}
+						htmlStr += "<div class='aui-collapse-item'>";
+						htmlStr += "<li class='aui-list-item aui-collapse-header' tapmode>";
+						htmlStr += "<div class='aui-list-item-inner aui-border-b'>";
+						htmlStr += "<div class='aui-list-item-title'>";
+						htmlStr += tempBrowseDate;
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-list-item-right aui-hide'>";
+						htmlStr += "<i class='aui-iconfont aui-icon-down aui-collapse-arrow'></i>";
+						htmlStr += "</div>";
+						htmlStr += "</div>";
+						htmlStr += "</li>";
+						htmlStr += "<div class='aui-collapse-content aui-show'>";
+					} else {
+						//在上一次数据后面追加商品数据，直到浏览时间不相等
+//						console.log("isInsert:" + isInsert);
+						if (isInsert) {
+							var tempHtmlStr = "";
+							tempHtmlStr += getItemHtmlStr(historyList[i]);
+							console.log("tempHtmlStr:" + tempHtmlStr);
+							$api.append($api.last($api.dom(".aui-collapse-item")), tempHtmlStr);
+							if (currentIndex == historyList.length - 1) {
+								//最后一条记录
+								currentIndex = historyList.length;
+							}
+							continue;
+						}
+					}
+				}
+				htmlStr += getItemHtmlStr(historyList[i]);
+				if (currentIndex == historyList.length - 1) {
+					//最后一条记录
+					currentIndex = historyList.length;
+					htmlStr += "</div>";
+					htmlStr += "</div>";
+				}
+			}
+			return htmlStr;
+		}
+
+		function initUi() {
+			var htmlStr = "";
+			htmlStr += getHtmlStr();
+//			console.log("htmlStr:" + htmlStr);
+			if (currentIndex <= num) {
+				//下拉刷新
+				$api.html($api.dom(".aui-collapse"), htmlStr);
+			} else {
+				//加载更多
+				$api.append($api.dom(".aui-collapse"), htmlStr);
+			}
+			new auiLazyload({
+				errorImage : "../../image/error_small_img.png"
+			});
+			setTimeout(function() {
+				api.parseTapmode();
+				api.refreshHeaderLoadDone();
+				if ($api.hasCls($api.dom("body"), "aui-hide")) {
+					$api.removeCls($api.dom("body"), "aui-hide");
+				}
+				closeUILoading();
+			}, window.refreshLoadDoneTimeOut);
+		}
+
+		//获取浏览记录
+		function getDatas(call) {
+			var url = window.myServerUrl + "/order/app/shoesValuate/getBrowse?start=" + start + "&num=" + num + "&token=" + token;
+			console.log("获取浏览记录:" + url);
+			isAjaxing = true;
+			_ajax(url, "getMyBrowse", function(ret, err) {
+				var tempHistoryList = [];
+				if (ret) {
+					console.log("_ajax.getMyBrowse.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						tempHistoryList = ret.result.result;
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+				call(tempHistoryList);
+			});
+		}
+
+		function closeUILoading() {
+			UILoading.closeKeyFrame();
+		}
+
+		function openUILoading() {
+			UILoading.keyFrame({
+				rect : {
+					w : 102,
+					h : 102
+				},
+				styles : {
+					bg : 'rgba(0,0,0,0)',
+					corner : 5,
+					interval : 50,
+					frame : {
+						w : 102,
+						h : 102
+					}
+				},
+				//				content : [{
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}, {
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}],
+				mask : "rgba(255,0,0,0)"
+			}, function(ret) {
+				//								alert(JSON.stringify(ret));
+				console.log(12345);
+			});
+		}
+
+		function initData() {
+			token = $api.getStorage("tokenKey");
+			historyList = [];
+			start = 1;
+			num = 15;
+			UILoading = api.require('UILoading');
+		}
+
+		//		var collapse = new auiCollapse({
+		//			autoHide : false //是否自动隐藏已经展开的容器
+		//		});
+		var editable = false;
+		var token;
+		var historyList = new Array();
+		var start;
+		var num;
+		var isAjaxing = false;
+		var tempBrowseDate = "";
+		var currentIndex = 0;
+		var isInsert = false;
+		var isSelectedAll = false;
+		var UILoading;
+		apiready = function() {
+			initData();
+			api.setRefreshHeaderInfo({
+				loadingImg : 'widget://image/loading_more.gif',
+				bgColor : 'rgba(255,255,255,0)',
+				textColor : '#212121',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...'
+			}, function(ret, err) {
+				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+				start = 1;
+				historyList = [];
+				tempBrowseDate = "";
+				getDatas(function(ret) {
+					historyList = ret;
+					currentIndex = 0;
+					isInsert = false;
+					if (!_isArrayNull(historyList)) {
+						initUi();
+						if (ret.length < num) {
+							//当前页数据不够一整页,没有更多数据了
+							isAjaxing = true;
+							showOverMsg();
+						} else {
+							//提示加载更多
+							showMoreMsg();
+							isAjaxing = false;
+						}
+					} else {
+						//当前页数据不够一整页,没有更多数据了
+						isAjaxing = true;
+						showEmptyMsg()
+						api.refreshHeaderLoadDone();
+						api.parseTapmode();
+						if ($api.hasCls($api.dom("body"), "aui-hide")) {
+							$api.removeCls($api.dom("body"), "aui-hide");
+						}
+						closeUILoading();
+						$api.html($api.dom(".aui-collapse"), "");
+					}
+				});
+			});
+			setTimeout(function() {
+				openUILoading();
+				getDatas(function(ret) {
+					historyList = ret;
+					currentIndex = 0;
+					isInsert = false;
+					if (!_isArrayNull(historyList)) {
+						initUi();
+						if (ret.length < num) {
+							//当前页数据不够一整页,没有更多数据了
+							isAjaxing = true;
+							showOverMsg();
+						} else {
+							//提示加载更多
+							showMoreMsg();
+							isAjaxing = false;
+						}
+					} else {
+						//没有数据
+						setTimeout(function() {
+						isAjaxing = true;
+						api.refreshHeaderLoadDone();
+						api.parseTapmode();
+						if ($api.hasCls($api.dom("body"), "aui-hide")) {
+							$api.removeCls($api.dom("body"), "aui-hide");
+						}
+						closeUILoading();
+						showEmptyMsg();
+						$api.html($api.dom(".aui-collapse"), "");
+						}, window.refreshLoadDoneTimeOut);
+					}
+				});
+			}, 150);
+			api.parseTapmode();
+			api.addEventListener({
+				name : 'scrolltobottom',
+				extra : {
+					threshold : 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+				}
+			}, function(ret, err) {
+				console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+				if (!isAjaxing) {
+					start += num;
+					getDatas(function(ret) {
+						if (!_isArrayNull(ret)) {
+							isInsert = true;
+							historyList = historyList.concat(ret);
+							initUi();
+							if (ret.length < num) {
+								//当前页数据不够一整页,没有更多数据了
+								isAjaxing = true;
+								showOverMsg();
+							} else {
+								//提示加载更多
+								showMoreMsg();
+								isAjaxing = false;
+							}
+						} else {
+							//没有更多数据了
+							isAjaxing = true;
+							showOverMsg();
+							closeUILoading();
+							api.refreshHeaderLoadDone();
+						}
+					});
+				}
+			});
+			_addEventListener("historyUpdateEndEvent", function(ret) {
+				selectAll(ret.value.type);
+			});
+		}
+	</script>
+</html>

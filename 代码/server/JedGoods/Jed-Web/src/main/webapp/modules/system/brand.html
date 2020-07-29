@@ -1,0 +1,131 @@
+<!-- 品牌管理页面 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>品牌管理</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+      name="viewport">
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/font-awesome.min.css">
+  <link rel="stylesheet"
+        href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet"
+        href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <style>
+    .choose-image {
+      position: absolute;
+      font-size: 0;
+      top: 5px;
+      left: 5px;
+      width: 93%;
+      height: 12rem;
+    }
+
+    input.choose-image::-webkit-file-upload-button {
+      background: rgba(0, 0, 0, .08);
+      border: 0;
+      padding: 5.3rem 42%;
+      font-size: 15px;
+      color: #ffffff;
+    }
+  </style>
+  <script src="../../libs/jquery.min.js"></script>
+  <script src="../../plugins/layer/layer.js"></script>
+  <script src="../../libs/bootstrap.min.js"></script>
+  <script src="../../libs/vue.min.js"></script>
+  <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script src="../../js/common.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+  <div v-show="showList">
+    <div class="grid-btn">
+      <!--<div class="form-group col-sm-2">
+      <input type="text" class="form-control" v-model="q.key" @keyup.enter="query" placeholder="用户名、用户操作">
+    </div>-->
+      <a class="btn btn-primary" style="margin-left: 10px;" @click="add">
+        <i class="fa fa-plus"></i>&nbsp;新增
+      </a>
+    </div>
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+  </div>
+
+  <div v-show="!showList" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-2 control-label">公司名称</div>
+        <div class="col-sm-10">
+          <input type="text" class="form-control"
+                 v-model="companyBrand.companyName"
+                 placeholder="公司名称"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">公司描述</div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" maxlength="1000"
+                 v-model="companyBrand.companyDescript" placeholder="公司描述"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">公司地址</div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <div class="col-sm-10">
+          <input type="text" class="form-control"
+                 v-model="companyBrand.companyAddress" placeholder="公司地址"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">品牌名称</div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <div class="col-sm-10">
+          <input type="text" class="form-control"
+                 v-model="companyBrand.brandName" placeholder="品牌名称"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-5 control-label">品牌图片（1080X375）</div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <div class="col-sm-10" style="position: relative;">
+          <a class="thumbnail" style="height: 13rem; width: 100%"> <img
+              :src="companyBrand.brandImage" style="width: 100%; height: 100%">
+          </a> <input class="choose-image" type="file"
+                      @change="handleFileChange" value="点击选择"
+                      accept="image/png, image/jpeg"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-1 control-label"></div>
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-primary" @click="saveOrUpdate"
+                 value="确定"/>
+        </div>
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-warning" @click="reload"
+                 value="返回"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="../../js/modules/system/brand.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.NoticeDao">
+
+  <insert id="save" parameterType="io.nuite.modules.order_platform_app.entity.NoticeEntity" >
+<!--
+    <selectKey resultType="java.lang.Integer" keyColumn="seq" order="AFTER">
+      SELECT IDENT_CURRENT('[JedOrderPlatform].[dbo].[YHSR_OP_Notice]') as seq
+    </selectKey>
+-->
+
+    insert into [JedOrderPlatform].[dbo].[YHSR_OP_Notice]
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="seq != null">
+        Seq,
+      </if>
+      <if test="name != null">
+        Name,
+      </if>
+      <if test="imageName != null">
+        ImageName,
+      </if>
+      <if test="companySeq != null">
+        CompanySeq,
+      </if>
+      <if test="inputTime != null">
+        InputTime,
+      </if>
+      <if test="del != null">
+        Del,
+      </if>
+      <if test="detailedPage != null">
+        DetailedPage,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="seq != null">
+        #{seq},
+      </if>
+      <if test="name != null">
+        #{name},
+      </if>
+      <if test="imageName != null">
+        #{imageName},
+      </if>
+      <if test="companySeq != null">
+        #{companySeq},
+      </if>
+      <if test="inputTime != null">
+        #{inputTime},
+      </if>
+      <if test="del != null">
+        #{del},
+      </if>
+      <if test="detailedPage != null">
+        #{detailedPage},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateNameBySeq">
+      update  [JedOrderPlatform].[dbo].[YHSR_OP_Notice]
+      set Name=#{newName},InputTime=GETDATE()
+      where Seq=#{seq}
+  </update>
+</mapper>

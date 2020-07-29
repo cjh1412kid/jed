@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.system.dao.order_platform.OrderProductManagementDao">
+
+  <!-- 货品列表 -->
+  <select id="selectGoodsList" resultType="io.nuite.modules.sr_base.entity.GoodsViewEntity">
+    SELECT
+    A.*
+    ,S.SeasonName as seasonName
+    ,C.Name as categoryName,
+    D.IsMainpush AS isMainpush, D.IsNewest AS isNewest
+    FROM (
+    select * from
+    [JedSmartRetail].[dbo].[YHSR_Goods_View]
+    WHERE
+    Company_Seq= #{companySeq} and Del = 0
+    <if test="categorySeqs!=null and categorySeqs!=''">
+      AND Category_Seq IN (${categorySeqs})
+    </if>
+    <if test="year !=null and year !='' and year != -1">
+      AND Year = #{year}
+    </if>
+    <if test="seasonSeq !=null and seasonSeq !='' and seasonSeq != -1">
+      AND Season_Seq = #{seasonSeq}
+    </if>
+    <if test="goodNameId!=null and goodNameId!=''">
+      AND (GoodName LIKE ('%'+ #{goodNameId}+'%') OR GoodID LIKE ('%'+#{goodNameId}+'%'))
+    </if>
+    ) A
+    LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Season] S ON S.seq=A.Season_Seq
+    LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Category] C ON C.seq=A.Category_Seq
+    LEFT JOIN [JedOrderPlatform].[dbo].[YHSR_OP_ShoesInfo] D ON D.Shoes_Seq=A.Seq  
+    WHERE
+    1=1
+    <if test="IsMainpush !=null and IsMainpush !=''">
+       AND IsMainpush = #{IsMainpush}
+    </if>
+    <if test="IsNewest !=null and IsNewest !=''">
+      AND IsNewest = #{IsNewest}
+    </if> 
+     <if test="IsReplenish !=null and IsReplenish !=''">
+    	AND A.Seq IN (SELECT Shoes_Seq FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesReplenish])
+    </if>
+    <if test="colorName!=null and colorName!=''">
+        AND A.Seq In (SELECT S.Shoes_Seq FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData] S 
+        JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Color] G ON S.Color_Seq=G.Seq AND G.Name LIKE ('%'+ #{colorName}+'%')  )
+    </if>
+    ORDER BY A.InputTime desc
+  </select>
+
+
+  <!--查询所有的分类-->
+  <select id="getCategorySeqList" resultType="java.lang.Integer">
+        select Seq FROM [JedSmartRetail].[dbo].YHSR_Goods_Category where 
+    ParentSeq = #{categorySeq} and Del = 0 
+ </select>
+
+  <!--根据上级seq查询子类别列表-->
+  <select id="getCategoryByParentSeq" resultType="io.nuite.modules.sr_base.entity.GoodsCategoryEntity">
+  select * FROM [JedSmartRetail].[dbo].YHSR_Goods_Category
+        WHERE ParentSeq = #{seq} and Del = 0
+ </select>
+
+  <!--修改商品del为1 表示删除-->
+  <update id="delete" parameterType="java.lang.Integer">
+        UPDATE [JedSmartRetail].[dbo].YHSR_Goods_Shoes SET
+        Del = 1 WHERE seq = #{seq}
+ </update>
+  <!--根据用户seq查询该用户所有的波次-->
+  <select id="getPeriodSeqList" resultType="java.lang.Integer">
+  select gp.Seq 
+    FROM 
+  [JedSmartRetail].[dbo].YHSR_Base_User bu
+  LEFT JOIN [JedSmartRetail].[dbo].YHSR_Goods_Period gp on bu.Brand_Seq = gp.Brand_Seq
+        WHERE bu.Seq = #{userSeq} and gp.Del = 0
+ </select>
+
+  <!--根据Seq返回鞋子的详细信息-->
+  <select id="edit" resultType="io.nuite.modules.system.model.GoodsShoesForm">
+     select         
+                gs.Seq as seq,
+                gs.Year as year,
+                gs.Season_Seq as seasonSeq,
+                s.SeasonName as seasonName,
+                gs.Category_Seq as categorySeq,
+                gc.Name as categoryName,
+                gs.GoodName as goodName,
+                gs.GoodID as goodId,
+                gs.SX1 as sx1,
+                gs.SX2 as sx2,
+                gs.SX3 as sx3,
+                gs.SX4 as sx4,
+                gs.SX5 as sx5,
+                gs.SX6 as sx6,
+                gs.SX7 as sx7,
+                gs.SX8 as sx8,
+                gs.SX9 as sx9,
+                gs.SX10 as sx10,
+                gs.SX11 as sx11,
+                gs.SX12 as sx12,
+                gs.SX13 as sx13,
+                gs.SX14 as sx14,
+                gs.SX15 as sx15,
+                gs.SX16 as sx16,
+                gs.SX17 as sx17,
+                gs.SX18 as sx18,
+                gs.SX19 as sx19,
+                gs.SX20 as sx20,
+                gs.Introduce as introduce,
+                gs.Description as description,
+                gs.Video as video,
+                gs.Img1 as img1,
+                gs.Img2 as img2,
+                gs.Img3 as img3,
+                gs.Img4 as img4,
+                gs.Img5 as img5,
+                gs.InputTime as inputTime
+        from 
+                [JedSmartRetail].[dbo].YHSR_Goods_Shoes gs
+                LEFT JOIN [JedSmartRetail].[dbo].YHSR_Goods_Category gc on gs.Category_Seq = gc.Seq
+                INNER JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Season] s ON  gs.Season_Seq = s.Seq
+WHERE gs.Seq=#{seq} and gs.Del = 0 
+ </select>
+
+
+  <select id="listGoods" resultType="java.util.Map">
+    select
+     Seq as seq,
+     Img1 as img1,
+     GoodName as goodName,
+     GoodID as goodID,
+     Introduce as introduce,
+     InputTime as inputTime
+    from    [JedSmartRetail].[dbo].[YHSR_Goods_View]
+    WHERE    Company_Seq= #{companySeq} and Del = 0
+    ORDER BY InputTime desc
+  </select>
+
+
+</mapper>

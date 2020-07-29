@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>订单汇总</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/category_pop.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/order/summary_order_frm.css" />
+		<style type="text/css">
+		</style>
+	</head>
+	<body class="aui-hide">
+		<section class="aui-content flex-con">
+			<ul class="aui-list aui-collapse aui-list-noborder">
+			
+				<!--<div class="aui-collapse-item">
+					<li class="aui-list-item aui-collapse-header flex-wrap" tapmode>
+						<div class="aui-list-item-inner flex-wrap">
+							<div class="aui-text-center flex-4">A5648531545</div>
+							<div class="aui-text-center flex-3">红色</div>	
+							<div class="aui-text-left flex-3">38<span><span class="aui-font-size-14 aui-text-gray">&nbsp;尺码偏大</span></div>
+							<div class="aui-text-center flex-3">550</div>
+						</div>
+					</li>
+					<div class="aui-collapse-content aui-font-size-14 aui-bg-gray">
+						<div class="aui-padded-t-10 aui-padded-b-10 flex-wrap"  tapmode onclick="toGoodsListWin(1569567594848)">
+							<div class="flex-8 aui-text-center">订单编号：1564564845634547</div>
+							<div class="flex-4 aui-padded-l-10">数量：55</div>
+						</div>
+						<div class="aui-padded-t-10 aui-padded-b-10 flex-wrap"  tapmode onclick="toGoodsListWin(1564489416251)">
+							<div class="flex-8 aui-text-center">订单编号：1564564845634547</div>
+							<div class="flex-4 aui-padded-l-10">数量：5555</div>
+						</div>
+					</div>
+				</div>-->
+				
+			</ul>
+		</section>
+	
+		<div class="footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			到底了<i class="aui-iconfont aui-icon-activity aui-font-size-12"></i>
+		</div>
+		<div class="footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			暂无数据
+		</div>
+		<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			加载更多<i class="aui-iconfont aui-icon-more aui-font-size-12"></i>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js" ></script>
+	<script type="text/javascript" src="../../script/common/common.js" ></script>
+	<script type="text/javascript" src="../../script/common/my_common.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js" ></script>
+	<script type="text/javascript">
+	
+		//跳转商品详情页
+		function toOrderDetailWin(_orderSeq){
+			var bounces = false, reload = true, delay = 0;
+			var pageParam = {
+				orderSeq : _orderSeq , 
+				orderStatus : 2
+			}
+			var animation = {
+				type : "movein",
+				subType : "from_right",
+				duration : 300
+			}
+			_openWin("order_detail_win", "./order_detail/order_detail_win.html", pageParam);
+		}
+	
+		function initUI(data, type) {				
+			switch(type) {
+				case "down":
+					if (_isArrayNull(data)) {
+						//第一页没数据，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						$api.html($api.dom("ul.aui-list"), "");
+						showEmptyMsg();//显示"暂无数据"
+					} else {
+						var htmlStr = getSummaryHTML(data);
+//						console.log(htmlStr);
+						$api.html($api.dom("ul.aui-list"), htmlStr);
+				
+						if (data.length < num) {
+							//第一页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+							isAjaxing = true;
+							showOverMsg();//显示"到底了"
+						}else{
+							//第一页数据等于每页总数，false，用户向上滑动就再次请求服务器获取后面页数的数据
+							isAjaxing = false;
+							showMoreMsg();//显示"加载更多"
+						}					
+					}					
+					break;
+				case "up":
+					if (_isArrayNull(data)) {
+						//当前页没数据了，则将isAjaxing置为true，防止继续上滑频繁请求服务器
+						isAjaxing = true;
+						showOverMsg();//显示"到底了"
+					} else {
+						var htmlStr = getSummaryHTML(data);					
+//						console.log(htmlStr);
+						$api.append($api.dom("ul.aui-list"), htmlStr);
+						
+						if (data.length < num) {
+							//新获取页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+							isAjaxing = true;
+							showOverMsg();//显示"到底了"
+						}else{
+							isAjaxing = false;
+							showMoreMsg();//显示"加载更多"
+						}
+					}
+					break;
+			}
+			collapse = new auiCollapse({
+				autoHide : true //是否自动隐藏已经展开的容器
+			});	
+//			new auiLazyload({
+//				errorImage : "../../image/error_small_img.png"
+//			});
+			setTimeout(function() {
+				api.refreshHeaderLoadDone();
+				api.parseTapmode();
+				if ($api.hasCls($api.dom("body"), "aui-hide")) {
+					$api.removeCls($api.dom("body"), "aui-hide");
+				}
+				closeUILoading();
+			}, window.refreshLoadDoneTimeOut);
+		}
+
+		function getSummaryHTML(data){
+			var summaryHTML = "";
+			if(!_isArrayNull(data)){
+				for (var i = 0; i < data.length; i++) {				
+					summaryHTML += '<div class="aui-collapse-item">';
+					summaryHTML += 	'<li class="aui-list-item aui-collapse-header flex-wrap" tapmode>';
+					summaryHTML += 		'<div class="aui-list-item-inner flex-wrap">';
+					summaryHTML += 			'<div class="aui-text-center flex-4">'+ data[i].goodId +'</div>';
+					summaryHTML += 			'<div class="aui-text-center flex-3">'+ data[i].colorName +'</div>';	
+					summaryHTML += 			'<div class="aui-text-left flex-3">'+ data[i].size +'<span><span class="aui-font-size-14 aui-text-gray">&nbsp;'+ data[i].remark +'</span></div>';	
+					summaryHTML += 			'<div class="aui-text-center flex-3">'+ _getShortNum(data[i].totalCount) +'</div>';
+					summaryHTML += 		'</div>';
+					summaryHTML += 	'</li>';
+					summaryHTML += 	'\n';
+					summaryHTML += 	'<div class="aui-collapse-content aui-font-size-14 aui-bg-gray">';					
+					if(!_isArrayNull(data[i].summaryDetail)){
+						for(var j = 0; j < data[i].summaryDetail.length; j++){
+							summaryHTML += '<div class="aui-padded-t-10 aui-padded-b-10 flex-wrap"  tapmode onclick="toOrderDetailWin('+ data[i].summaryDetail[j].orderSeq +')">';
+							summaryHTML += 	'<div class="flex-8 aui-text-center">订单编号：'+ data[i].summaryDetail[j].orderNum +'</div>';
+							summaryHTML += 	'<div class="flex-4 aui-padded-l-10">数量：'+ _getShortNum(data[i].summaryDetail[j].buyCount) +'</div>';
+							summaryHTML += '</div>';												
+						}
+					}				
+					summaryHTML += 	'</div>';
+					summaryHTML += '</div>';
+				}
+			}
+			return summaryHTML;			
+		}
+		
+		//获取已审核单未发货的订单之汇总(厂家)
+		function getDatas(call) {
+			console.log("获取订单之汇总...");			
+			var url = window.myServerUrl + "order/app/order/orderSummary?token=" + token+"&start="+start+"&num="+num;
+			var currAjaxTag = "orderSummary";
+			
+			console.log("url:" + url);
+			isAjaxing = true;
+			_ajax(url, currAjaxTag, function(ret, err) {
+				var tempSummaryData = [];//存放临时数据
+				if (ret) {
+					console.log("_ajax."+currAjaxTag+".ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						tempSummaryData = ret.result;
+						//list数组
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+				call(tempSummaryData);
+			});
+		}
+
+		function closeUILoading() {
+			UILoading.closeKeyFrame();
+		}
+
+		function openUILoading() {
+			UILoading.keyFrame({
+				rect : {
+					w : 102,
+					h : 102
+				},
+				styles : {
+					bg : 'rgba(0,0,0,0)',
+					corner : 5,
+					interval : 50,
+					frame : {
+						w : 102,
+						h : 102
+					}
+				},
+				//				content : [{
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}, {
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}],
+				mask : "rgba(255,0,0,0)"
+			}, function(ret) {
+				//								alert(JSON.stringify(ret));
+				console.log(12345);
+			});
+		}
+		
+		function initData() {
+			start = 1;
+			num = 20;
+			token = $api.getStorage("tokenKey");					
+			summaryList = [];
+			UILoading = api.require('UILoading');				
+		}
+
+		var start; //起始条数
+		var num; //每页显示条数	
+		var summaryList; //订单汇总列表
+		var token;
+		var collapse;
+		var isAjaxing = false;
+		var UILoading;
+		var isFirst=true;
+		var apiready = function() {					
+			initData();
+			
+			//下拉刷新
+			api.setRefreshHeaderInfo({
+				loadingImg : 'widget://image/loading_more.gif',
+				bgColor : 'rgba(255,255,255,0)',
+				textColor : '#505050',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...'
+			}, function(ret, err) {
+				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+				start = 1;
+				summaryList = [];
+				getDatas(function(ret) {
+					summaryList = ret;
+					initUI(ret, "down");
+				});
+			});
+
+			//设置下拉刷新延迟时间
+			setTimeout(function() {
+				getDatas(function(ret) {
+					isFirst=false;
+					summaryList = ret;
+					initUI(ret, "down");
+				});
+				openUILoading();
+			}, 200);
+		
+			//上拉加载
+			api.addEventListener({
+				name : 'scrolltobottom',
+				extra : {
+					threshold : 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+				}
+			}, function(ret, err) {
+				console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+				if (!isAjaxing) {
+					start += num;
+					getDatas(function(ret) {
+						summaryList = summaryList.concat(ret);
+						initUI(ret, "up");
+					});
+				}
+			});
+		}
+	</script>
+</html>

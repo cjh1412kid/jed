@@ -1,0 +1,250 @@
+html, body {
+    height: 100%;
+}
+
+.aui-iconfont {
+    font-weight: bold!important;
+    color: #505050!important;
+}
+
+.aui-btn img {
+    width: 1.05rem;
+    height: 1.05rem;
+}
+
+.ana_flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ana_flex1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.ana_flex2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.anaTitle {
+    width: 100%;
+    height: 1.83rem;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+}
+
+.hot {
+    color: #FE5C00
+}
+
+.ana_all1 {
+    transform: translateX(1rem);
+}
+
+.ana_all2 {
+    transform: translateX(1.7rem);
+}
+
+.ana_all3 {
+    transform: translateX(1.3rem);
+}
+
+.ana_all4 {
+    transform: translateX(.4rem);
+}
+
+.ana_all5 {
+    transform: translateX(-.6rem);
+}
+
+.ana_ico {
+    width: 0.32rem;
+    height: 0.18rem;
+    font-size: .5rem;
+}
+
+.shopMes {
+    /*width: 100%;*/
+    height: 6rem;
+    padding: .3rem .5rem .5rem .5rem;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0rem 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+		margin: 0 .5rem;
+    margin-bottom: .5rem;
+}
+
+.anaTittle {
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+    width: 100%;
+    height: 1.83rem;
+    padding: 0 .5rem;
+}
+
+.shopMesTittle {
+    width: 100%;
+    height: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    color: #505050;
+    margin-bottom: .5rem;
+}
+
+.shopMesTittle span:last-child {
+    color: #979797;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+}
+
+.shopMesCon {
+    flex: 1;
+    width: 100%;
+    display: flex;
+}
+
+.Con_L {
+    width: 33%;
+    height: 100%;
+}
+
+.Con_L div:last-child {
+    display: flex;
+}
+
+.Con_L div:last-child span {
+    align-items: flex-end;
+}
+
+.spe {
+    transform: translateY(.04rem);
+}
+
+.Con_Lspe {
+    width: 100%;
+    height: 2rem;
+    background: linear-gradient(180deg, rgba(255, 137, 2, 1) 0%, rgba(239, 136, 0, 1) 100%);
+    border-radius: 0.25rem;
+    padding: .2rem .5rem;
+    font-size: 0.5rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+}
+
+.Con_Lspe span:last-child {
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.Con_M {
+    width: 33%;
+    height: 100%;
+}
+
+.Con_M div {
+    display: flex;
+}
+
+.Con_item {
+    font-size: 0.6rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(155, 155, 155, 1);
+    margin-right: .3rem;
+}
+
+.Con_num {
+    font-weight: bold;
+    color: #505050;
+    font-size: .6rem;
+}
+
+.Con_list {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.Con_R {
+    width: 33%;
+    height: 100%;
+}
+
+#mychart {
+    width: 3.7rem;
+    height: 3.7rem;
+    margin: auto;
+}
+
+.anaList {
+    /*width: 100%;*/
+    background: rgba(255, 255, 255, 1);
+    border-radius: 0.5rem;
+		overflow-y: scroll;
+		margin: 0 .5rem;
+		margin-bottom: .5rem;
+}
+
+.anaList::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    visibility: hidden;
+}
+
+.anaList li {
+    width: 100%;
+    height: 2.08rem;
+    padding: 0 .5rem;
+}
+
+.item_spes {
+    display: flex;
+    align-items: center;
+}
+
+.item_spes img {
+    width: 1.39rem;
+    height: 1.1rem;
+    background: red;
+    margin-right: .2rem;
+}
+
+.ana_item {
+    font-size: 0.7rem;
+    font-family: Arial-Black;
+    font-weight: 900;
+    color: rgba(80, 80, 80, 1);
+}
+
+.item_spe {
+    font-size: 0.6rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+}
+
+.item_nor {
+    font-size: 0.7rem;
+    font-family: Arial-Black;
+    font-weight: 900;
+    color: rgba(151, 151, 151, 1);
+}
+
+.itme_spe2 {
+    color: #FB8541
+}

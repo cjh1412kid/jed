@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.ShoesDataDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.ShoesDataEntity" id="shoesDataMap">
+        <result property="seq" column="Seq"/>
+        <result property="shoesSeq" column="Shoes_Seq"/>
+        <result property="colorSeq" column="Color_Seq"/>
+        <result property="sizeSeq" column="Size_Seq"/>
+        <result property="num" column="Num"/>
+        <result property="stockDate" column="StockDate"/>
+        <result property="stock" column="Stock"/>
+        <result property="remark" column="Remark"/>
+        <result property="del" column="Del"/>
+        <result property="companySeq" column="Company_Seq"/>
+        <result property="goodsType" column="goods_type"/>
+    </resultMap>
+
+    <insert id="insertShoesData" parameterType="java.util.List">
+        INSERT INTO
+        JedOrderPlatform.dbo.YHSR_OP_ShoesData(Shop_Seq,Shoes_Seq,Color_Seq,Size_Seq,Num,StockDate,Stock,Del)
+        VALUES
+        <foreach collection="list" index="index" item="item" open="" close="" separator=",">
+            (#{item.shopSeq},#{item.shoesSeq},#{item.colorSeq},#{item.sizeSeq},#{item.num},#{item.stockDate},#{item.stock},0)
+        </foreach>
+    </insert>
+
+    <update id="updateShoesData" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" open="" close="" separator=";">
+            UPDATE
+            JedOrderPlatform.dbo.YHSR_OP_ShoesData
+            SET
+            Num = #{item.num},
+            StockDate = #{item.stockDate},
+            Stock = #{item.stock}
+            WHERE Seq = #{item.seq}
+        </foreach>
+    </update>
+
+    <update id="updateShoesDataNum" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" open="" close="" separator=";">
+            UPDATE
+            JedOrderPlatform.dbo.YHSR_OP_ShoesData
+            SET
+            Num = #{item.num}
+            WHERE Seq = #{item.seq}
+        </foreach>
+    </update>
+
+  <!-- 修改库存 -->
+    <update id="changeShoesDataStock">
+	    UPDATE
+			JedOrderPlatform.dbo.YHSR_OP_ShoesData
+		SET
+			Stock = (Stock + #{changNum})
+		WHERE
+			Seq = #{shoesDataSeq};
+	</update>
+
+
+    <select id="queryDataAndColorName" resultType="io.nuite.modules.order_platform_app.entity.ShoesDataEntity">
+		SELECT
+			A.*,
+			B.Name AS colorName,
+			B.Code AS code,
+			C.SizeCode AS sizeCode,
+			C.SizeName AS sizeName
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_ShoesData A
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Color B ON A.Color_Seq = B.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Size C ON A.Size_Seq = C.Seq
+		WHERE
+			A.Shoes_Seq = #{goodsSeq} AND A.Del = 0
+	</select>
+
+    <select id="selectByGoodsseqAndColorseqAndSizeseq" resultMap="shoesDataMap">
+		SELECT *
+ 	  FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData]
+ 	  WHERE Shoes_Seq=#{goodsSeq} and Color_Seq=#{colorSeq} and Size_Seq=#{sizeSeq}
+	</select>
+    <select id="selectByShoeSeq" resultType="java.lang.Integer">
+		SELECT [Seq]
+        FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData]
+        WHERE  Shoes_Seq=#{shoeSeq} and Del=0
+	</select>
+    <select id="getShoesSeqsByShoesDataSeqs" resultType="java.lang.Integer">
+        SELECT DISTINCT
+        [Shoes_Seq]
+        FROM [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData]
+        WHERE Del=0 and Seq in
+        <foreach collection="list" item="seq" open="(" close=")" separator=",">
+            #{seq}
+        </foreach>
+    </select>
+
+
+    <update id="deleteByShoesSeq">
+		UPDATE [JedOrderPlatform].[dbo].YHSR_OP_ShoesData SET
+        Del = 1 WHERE Shoes_Seq = #{seq}
+	</update>
+    
+    <select id="selectShopStockByShoesSeq" parameterType="java.util.Map" resultType="io.nuite.modules.order_platform_app.entity.ShoesDataEntity">
+        SELECT
+        gs.SizeName AS sizeName,
+        Case sd.Shop_Seq when 0 then '总仓' else s.Name end AS shopName,
+        SUM(sd.Stock) AS stock
+        FROM
+        [JedOrderPlatform].[dbo].YHSR_OP_ShoesData sd
+        LEFT JOIN
+        JedSmartRetail.dbo.YHSR_Base_Shop s
+        ON s.Seq = sd.Shop_Seq
+        LEFT JOIN
+        JedSmartRetail.dbo.YHSR_Goods_Size gs
+        ON gs.Seq = sd.Size_Seq
+        WHERE sd.Del = 0 AND sd.Shoes_Seq = #{shoesSeq} AND sd.Size_Seq = #{sizeSeq}
+        GROUP BY sd.Shop_Seq,gs.SizeName,s.Name
+        ORDER BY stock desc,s.Name asc
+    </select>
+
+    <delete id="deleteShoesData">
+        delete from [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData]
+        where goods_type=#{goodsType} and Company_Seq=#{companySeq}
+    </delete>
+
+    <insert id="selectShoesDataCopyIntoShoesData">
+        INSERT INTO [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData](Shop_Seq,Shoes_Seq,Color_Seq,Size_Seq,Num,StockDate,Stock,Del,Remark,Company_Seq,goods_type)
+        (SELECT Shop_Seq,Shoes_Seq,Color_Seq,Size_Seq,Num,StockDate,Stock,Del,Remark,Company_Seq,goods_type FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_ShoesDataCopy] where goods_type=#{goodsType})
+    </insert>
+
+    <select id="selectYearStockStructure" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        gs.Year AS year,
+        SUM(sd.Stock) AS stock
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData] sd
+        LEFT JOIN
+        [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs
+        ON gs.Seq = sd.Shoes_Seq
+        WHERE sd.Del = 0 AND gs.Company_Seq = #{companySeq} 
+        <if test="shopSeqList != null and shopSeqList.size() > 0">
+            AND sd.Shop_Seq IN
+            <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        AND EXISTS
+        (
+            SELECT Seq FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] WHERE Del = 0 AND Seq = sd.Shoes_Seq
+            AND Company_Seq = #{companySeq}
+        )
+        GROUP BY gs.Year
+        ORDER BY gs.Year DESC
+    </select>
+
+    <select id="selectSeasonStockStructure" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        ss.Seq AS seq,
+        ss.SeasonName AS season,
+        CASE WHEN CHARINDEX('春',ss.SeasonName) > 0 THEN 1 WHEN CHARINDEX('夏',ss.SeasonName) > 0 THEN 2 WHEN CHARINDEX('秋',ss.SeasonName) > 0 THEN 3 WHEN CHARINDEX('冬',ss.SeasonName) > 0 THEN 4 END AS orderSort,
+        SUM(sd.Stock) AS stock
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData] sd
+        LEFT JOIN
+        [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs
+        ON gs.Seq = sd.Shoes_Seq
+        LEFT JOIN
+        [JedSmartRetail].[dbo].[YHSR_Goods_Season] ss
+        ON ss.Seq = gs.Season_Seq
+        WHERE sd.Del = 0 AND gs.Company_Seq = #{companySeq} 
+        <if test="shopSeqList != null and shopSeqList.size() > 0">
+            AND sd.Shop_Seq IN
+            <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        AND EXISTS
+        (
+            SELECT Seq FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] WHERE Del = 0 AND Seq = sd.Shoes_Seq
+            AND Company_Seq = #{companySeq}
+            <if test="yearList != null and yearList.size() > 0">
+                AND [Year] IN
+                <foreach collection="yearList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        )
+        GROUP BY ss.Seq,ss.SeasonName
+        ORDER BY orderSort
+    </select>
+
+    <select id="selectCategoryStockStructure" parameterType="java.util.Map" resultType="java.util.Map">
+        <if test="categorySeq != null">
+            ;WITH CategoryTree AS
+            (
+                SELECT * FROM [JedSmartRetail].[dbo].[YHSR_Goods_Category]  WHERE Seq = #{categorySeq}
+                UNION ALL
+                SELECT gc.* FROM CategoryTree
+                JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Category] gc on CategoryTree.Seq = gc.ParentSeq
+            )
+        </if>
+        SELECT
+        ISNULL(SUM(sd.Stock),0) AS stock
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData] sd
+        LEFT JOIN
+        [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs
+        ON gs.Seq = sd.Shoes_Seq
+        WHERE sd.Del = 0 AND gs.Company_Seq = #{companySeq} 
+        <if test="categorySeq != null">
+            AND EXISTS
+            (
+                SELECT Seq FROM CategoryTree
+                WHERE CategoryTree.Seq = gs.Category_Seq
+            )
+        </if>
+        <if test="shopSeqList != null and shopSeqList.size() > 0">
+            AND sd.Shop_Seq IN
+            <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        AND EXISTS
+        (
+            SELECT Seq FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] WHERE Del = 0 AND Seq = sd.Shoes_Seq
+            AND Company_Seq = #{companySeq}
+            <if test="yearList != null and yearList.size() > 0">
+                AND [Year] IN
+                <foreach collection="yearList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="seasonSeqList != null and seasonSeqList.size() > 0">
+                AND Season_Seq IN
+                <foreach collection="seasonSeqList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        )
+    </select>
+
+    <select id="selectShoesStock" parameterType="java.util.Map" resultType="java.util.Map">
+        <if test="categorySeqList != null and categorySeqList.size() > 0">
+            ;WITH CategoryTree AS
+            (
+                SELECT * FROM [JedSmartRetail].[dbo].[YHSR_Goods_Category]  WHERE ParentSeq IN
+                <foreach collection="categorySeqList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+                UNION ALL
+                SELECT gc.* FROM CategoryTree
+                JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Category] gc on CategoryTree.Seq = gc.ParentSeq
+            )
+        </if>
+        SELECT
+        gs.Seq AS seq,
+        gs.GoodID AS goodId,
+        gs.Img1 AS img,
+        SUM(sd.Stock) AS stock
+        FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData] sd
+        LEFT JOIN
+        [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] gs
+        ON gs.Seq = sd.Shoes_Seq
+        WHERE sd.Del = 0 AND gs.Company_Seq = #{companySeq} 
+        <if test="categorySeqList != null and categorySeqList.size() > 0">
+            AND EXISTS
+            (
+                SELECT Seq FROM CategoryTree
+                WHERE CategoryTree.Seq = gs.Category_Seq
+            )
+        </if>
+        <if test="shopSeqList != null and shopSeqList.size() > 0">
+            AND sd.Shop_Seq IN
+            <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        AND EXISTS
+        (
+            SELECT Seq FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] WHERE Del = 0 AND Seq = sd.Shoes_Seq
+            AND Company_Seq = #{companySeq}
+            <if test="yearList != null and yearList.size() > 0">
+                AND [Year] IN
+                <foreach collection="yearList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="seasonSeqList != null and seasonSeqList.size() > 0">
+                AND Season_Seq IN
+                <foreach collection="seasonSeqList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        )
+        GROUP BY gs.Seq,gs.GoodID,gs.Img1
+    </select>
+</mapper>

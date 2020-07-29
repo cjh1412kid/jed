@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.ShoesDataDailyDetailDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.ShoesDataDailyDetailEntity"
+               id="shoesDataDailyDetailMap">
+        <result property="seq" column="Seq"/>
+        <result property="erpOrderNum" column="ErpOrderNum"/>
+        <result property="shopSeq" column="Shop_Seq"/>
+        <result property="shopName" column="ShopName"/>
+        <result property="shoesSeq" column="Shoes_Seq"/>
+        <result property="shoesId" column="ShoesId"/>
+        <result property="type" column="Type"/>
+        <result property="color" column="Color"/>
+        <result property="size" column="Size"/>
+        <result property="count" column="Count"/>
+        <result property="updateTime" column="UpdateTime"/>
+        <result property="join" column="Join"/>
+        <result property="goodsType" column="goods_type"/>
+    </resultMap>
+
+    <insert id="insertShoesDataDailyDetail" parameterType="java.util.List">
+        INSERT INTO
+        JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail(ErpOrderNum,Shop_Seq,ShopName,Shoes_Seq,ShoesId,[Type],Color,[Size],[Count],UpdateTime,Price,Input_ERP_Time,Tag_Price)
+        VALUES
+        <foreach collection="list" index="index" item="item" open="" close="" separator=",">
+            (#{item.erpOrderNum},#{item.shopSeq},#{item.shopName},#{item.shoesSeq},#{item.shoesId},#{item.type},#{item.color},#{item.size},#{item.count},#{item.updateTime},#{item.price},#{item.inputERPTime},#{item.tagPrice})
+        </foreach>
+    </insert>
+    <select id="getNearOne" resultMap="shoesDataDailyDetailMap">
+    	select TOP 1 * from  JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+    	where Shoes_Seq =#{shoesSeq} AND Shop_Seq =#{shopSeq} order by Input_ERP_Time 
+    </select>
+    <select id="getOldOneByDepositTime" resultMap="shoesDataDailyDetailMap">
+    select TOP 1 * from  JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+    where Shoes_Seq =#{shoesSeq} AND Type=0 AND DATEDIFF(day,Input_ERP_Time,#{inTime}) >0
+    </select>
+    <select id="getOldOne" resultMap="shoesDataDailyDetailMap">
+    	select TOP 1 * from  JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail
+    	where Shoes_Seq =#{shoesSeq} AND Type=0 order by Input_ERP_Time asc
+    </select>
+
+    <insert id="selectSaleShoesDetailCopyIntoSaleShoesDetail">
+        INSERT INTO [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData_Daily_Detail](ErpOrderNum,Shop_Seq,ShopName,Shoes_Seq,ShoesId,[Type],Color,[Size],[Count],UpdateTime,[Join],Price,Tag_Price,Input_ERP_Time,Company_Seq,goods_type)
+        (SELECT ErpOrderNum,Shop_Seq,ShopName,Shoes_Seq,ShoesId,[Type],Color,[Size],[Count],UpdateTime,[Join],Price,Tag_Price,Input_ERP_Time,Company_Seq,goods_type FROM
+        [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData_Daily_Detail_Copy])
+    </insert>
+	
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.OnlineGroupMemberDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.OnlineGroupMemberEntity" id="onlineGroupMemberMap">
+        <result property="seq" column="Seq"/>
+        <result property="groupSeq" column="Group_Seq"/>
+        <result property="userSeq" column="User_Seq"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+	<!-- 定义群成员列表返回的resultMap，type为HashMap -->
+	<resultMap id="membersMap" type="java.util.HashMap">
+	    <id column="User_Seq" property="userSeq" jdbcType="INTEGER" />
+	    <result column="UserName" property="userName" jdbcType="VARCHAR" />
+	    <result column="HeadImg" property="headImg" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<!-- 根据群组seq获取群成员列表 -->
+	<select id="getMembersByGroupSeq" resultMap="membersMap">
+		SELECT
+			A.User_Seq,
+			B.UserName,
+			B.HeadImg
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_OnlineGroupMember A
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Base_User B ON A.User_Seq = B.Seq
+		WHERE
+			A.Del = 0 AND A.Group_Seq = #{0}
+	</select>
+
+
+
+</mapper>

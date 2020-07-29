@@ -1,0 +1,31 @@
+.card{
+  border-radius: 0.5rem;
+  background-color: white;
+}
+.title{
+  height:1rem;
+  font-size:0.8rem;
+  font-family:PingFangSC-Regular;
+  /*font-weight:bold;*/
+  color:rgba(80,80,80,1);
+  line-height:1rem;
+}
+  .content {
+    width: -webkit-calc(100% - 1.0rem);
+    height: auto;
+    margin: 0 0.5rem 0.5rem 0.5rem;
+    padding-bottom: 0.25rem;
+    box-sizing: border-box;
+  }
+
+  .demo-box {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    color: rgba(80, 80, 80, 1);
+  }
+
+  .demo-box::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    visibility: hidden;
+  }

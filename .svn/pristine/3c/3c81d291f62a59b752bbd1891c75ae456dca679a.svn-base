@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>门店导购管理</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/shopping/guider_list_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <!-- <i class="aui-icon-edit aui-iconfont aui-text-default"></i> -->
+        <!-- <i class="aui-icon-correct aui-iconfont aui-text-default"></i> -->
+        <a class="aui-pull-right aui-btn" tapmode onclick="openGuiderWin(-1);"><i class="aui-icon-plus aui-iconfont aui-text-default"></i></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16">人员管理</div>
+    </header>
+    <div class="sub-header flex-wrap">
+        <div class="flex-1 name box-wrap box-horizontal-center box-vertical-center">姓名</div>
+        <div class="age box-wrap box-horizontal-center box-vertical-center">职务</div>
+        <div class="flex-2 phone box-wrap box-horizontal-center box-vertical-center">手机</div>
+        <div class="update box-wrap box-horizontal-center box-vertical-center">修改</div>
+
+    </div>
+    <div class="content flex-con">
+        <div class="content-wrap">
+            <!-- <div class="content-item flex-wrap">
+                <div class="flex-1 name box-wrap box-horizontal-center box-vertical-center">
+                    张三
+                </div>
+                <div class="age box-wrap box-horizontal-center box-vertical-center">
+                    23
+                </div>
+                <div class="flex-2 phone box-wrap box-horizontal-center box-vertical-center">
+                    17312133234
+                </div>
+                <div class="update box-wrap box-horizontal-center box-vertical-center aui-iconfont aui-icon-edit"></div>
+            </div> -->
+        </div>
+        <div class='footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+            到底了<i class='aui-iconfont aui-icon-activity aui-font-size-12'></i>
+        </div>
+        <div class='footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+            暂无数据
+        </div>
+        <div class='footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+            加载更多<i class='aui-iconfont aui-icon-more aui-font-size-12'></i>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<script type="text/javascript">
+    function call(_num) {
+        api.call({
+            type: 'tel_prompt',
+            number: _num
+        });
+    }
+
+    function openGuiderWin(_index) {
+        console.log("_index:" + _index);
+        console.log("datas:" + $api.jsonToStr(datas));
+        var pageParam = {};
+        if (_index == -1) {
+            pageParam = {
+                type: "add",
+                guider: null,
+            };
+        } else {
+            pageParam = {
+                type: "edit",
+                guider: datas.sales[parseInt(_index)],
+            };
+        }
+        _openWin("guider_win", "guider_win.html", pageParam);
+    }
+
+    function initUI() {
+        //console.log($api.jsonToStr(datas.sales));
+
+        var htmlStr = "";
+        if (datas) {
+            //console.log($api.jsonToStr(datas.sales));
+            for (var i in datas.sales) {
+                htmlStr += '<div class="content-item flex-wrap">';
+                htmlStr += '<div class="flex-1 name box-wrap box-horizontal-center box-vertical-center">';
+                if (datas.sales[i].flag == 1) {
+                    htmlStr += datas.sales[i].name + "<span class='aui-margin-l-5'>店长</span>";
+                } else {
+                    htmlStr += datas.sales[i].name;
+                }
+                htmlStr += '</div>';
+                htmlStr += '<div class="age box-wrap box-horizontal-center box-vertical-center">';
+                htmlStr += datas.sales[i].duty;
+                htmlStr += '</div>';
+                htmlStr += '<div class="flex-2 phone box-wrap box-horizontal-center box-vertical-center" tapmode onclick="call('+datas.sales[i].tel+')">';
+                htmlStr += datas.sales[i].tel;
+                htmlStr += '</div>';
+                htmlStr += '<div class="update box-wrap box-horizontal-center box-vertical-center aui-iconfont aui-icon-edit" tapmode onclick="openGuiderWin(' + i + ')"></div>';
+                htmlStr += '<div class="phone-icon box-wrap box-horizontal-center box-vertical-center aui-iconfont aui-icon-phone" tapmode onclick="call('+datas.sales[i].tel+')"></div>';
+                htmlStr += '</div>';
+
+
+
+            }
+            showOverMsg(); //显示"到底了"
+        } else {
+            showEmptyMsg(); //显示"暂无数据"
+        }
+        $api.html($api.dom(".content-wrap"), htmlStr);
+        api.parseTapmode();
+    }
+    /**
+     *获取门店导购列表
+     */
+    function getDatas() {
+        var url = window.myServerUrl + "/order/app/sales/list";
+        console.log("获取门店导购列表-->url:" + url);
+        _ajax(url, "list", function(ret, err) {
+            datas = [];
+            if (ret) {
+                console.log("获取门店导购列表-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    datas = ret.result[0];
+
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("获取门店导购列表-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            initUI();
+        });
+    }
+
+    function initData() {
+        userInfo = $api.getStorage("userInfoKey");
+    }
+    var userInfo;
+    var datas = [];
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        initData();
+        getDatas();
+    }
+</script>
+
+</html>

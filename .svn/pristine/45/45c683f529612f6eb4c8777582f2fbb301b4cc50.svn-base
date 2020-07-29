@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>引导展示页</title>
+  <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../../plugins/ztree/css/metroStyle/metroStyle.css">
+  <link rel="stylesheet" href="../../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet" href="../../../css/main.css">
+
+  <script src="../../../libs/jquery.min.js"></script>
+  <script src="../../../plugins/layer/layer.js"></script>
+  <script src="../../../libs/bootstrap.min.js"></script>
+  <script src="../../../libs/vue.min.js"></script>
+  <script src="../../../plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script src="../../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+
+  <script src="../../../js/common.js"></script>
+  <style>
+    /*调整按钮的左间距*/
+    #btns button {
+      margin-left: 70px;
+    }
+
+    /*包含编辑器、按钮的容器宽度，用于编辑器在页面居中显示*/
+    #editorArea .container, #btns {
+      width: 650px;
+    }
+
+    /*设置模态框内图片显示宽度*/
+    #imgShow img, #videoPoster {
+      width: 200px;
+    }
+
+    #rMenu {
+      position: absolute;
+      visibility: hidden;
+      top: 0;
+      background-color: #0d6aad;
+      text-align: left;
+      padding: 2px;
+      cursor: pointer;
+    }
+
+    #templateArea {
+      background-color: rgb(238, 238, 238);
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-group">
+  <div id="templateArea" class="col-xs-3">
+    <ul id="templateTree" class="ztree"></ul>
+    <div id="rMenu">
+      <a class="list-group-item" onclick="createNewTemplate()" v-show="!isShowMenu">新建模版</a>
+      <a class="list-group-item" onclick="setMainTemplate()" v-show="isShowMenu">{{rMenuTitle}}</a>
+      <a class="list-group-item" onclick="editTemplate()" v-show="isShowMenu">编辑模版</a>
+      <a class="list-group-item" onclick="delTempalte()" v-show="isShowMenu">删除模版</a>
+    </div>
+  </div>
+
+  <div id="editorArea" class="col-xs-9">
+    <div class="container">
+      <!-- 加载编辑器的容器 -->
+      <script id="UEditor" name="content" type="text/plain"></script>
+    </div>
+
+    <br/>
+    <div id="btns" class="container">
+      <button class="btn btn-primary" onclick="clearContent()">清空内容</button>
+      <button class="btn btn-warning" onclick="getContentAndUpload()">保存</button>
+      <!--<button class="btn btn-success" onclick="getContent2()">获得内容</button>-->
+      <!--<button class="btn btn-success" onclick="getAllHtml()">获得整个html的内容</button>-->
+      <!--<button class="btn btn-success" onclick="getAllHtml()">上传网页</button>-->
+    </div>
+  </div>
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">图片链接商品</h4>
+      </div>
+      <div class="modal-body form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-2 control-label">选中图片</div>
+          <div class="col-sm-10" id="imgShow">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">关联类型选择</div>
+          <div class="col-sm-10">
+            <select class="form-control" v-model="sowingMap.type" @change="typeChange">
+              <option value="0">请选择关联类型</option>
+              <option value="1">关联商品</option>
+              <option value="2">关联分类</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">关联内容</div>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" style="cursor:pointer;" v-model="sowingMap.linkName"
+                   @click="contentSelect" readonly="readonly" placeholder="选择关联内容"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="ok()">提交</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
+</div>
+
+<!--视频设置缩略图-->
+<div class="modal fade" id="videoposterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2"
+     aria-hidden="true">
+  <div class="modal-dialog" style="width: 450px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel2">设置视频缩略图</h4>
+      </div>
+      <div class="modal-body form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-12">
+            <img src="" id="videoPoster"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputfile">选择图片</label>
+          <input type="file" id="inputfile" name="videoposter">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="ok2()">提交</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
+</div>
+
+
+<!-- 选择鞋子分类 -->
+<div id="categoryLayer" style="display: none;padding:10px;">
+  <ul id="categoryTree" class="ztree"></ul>
+</div>
+
+<!-- 选择鞋子列表 -->
+<div id="goodsLayer" style="display: none;padding:10px;">
+  <table id="jqGoodsGrid"></table>
+  <div id="jqGoodsGridPager"></div>
+</div>
+
+<div id="prompt" style="display: none;padding:20px;">
+  <div class="form-group">
+    <div class="col-sm-11">
+      <input type="text" v-model="templateName" class="form-control" :placeholder="promptTip">
+    </div>
+  </div>
+</div>
+
+</body>
+<!-- 配置文件 -->
+<script src="../../../plugins/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script src="../../../plugins/ueditor/ueditor.all.js"></script>
+<script src="../../../plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<!-- 实例化编辑器 -->
+<script src="../../../js/modules/system/order_platform/myEditor2.js"></script>
+</html>

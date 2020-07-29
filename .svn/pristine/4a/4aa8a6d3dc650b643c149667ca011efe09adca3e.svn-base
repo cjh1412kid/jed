@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>轮播图管理</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    name="viewport">
+  <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet" href="../../../plugins/ztree/css/metroStyle/metroStyle.css">
+  <link rel="stylesheet" href="../../../css/bootstrap-table.min.css">
+  <link rel="stylesheet" href="../../../css/main.css">
+  <link rel="stylesheet" href="../../../plugins/treegrid/jquery.treegrid.css">
+  <style>
+    .choose-image {
+      position: absolute;
+      font-size: 0;
+      top: 5px;
+      left: 5px;
+      width: 93%;
+      height: 12rem;
+    }
+
+    input.choose-image::-webkit-file-upload-button {
+      background: rgba(0, 0, 0, .08);
+      border: 0;
+      padding: 5.3rem 42%;
+      font-size: 15px;
+      color: #ffffff;
+    }
+
+    .select-wrapper {
+      display: inline-block;
+      /*font-size: 16px;*/
+    }
+
+    .select-wrapper span {
+      color: #3c8dbc;
+    }
+
+    .select-wrapper select {
+      background-color: #eee;
+      width: 100px;
+      height: 30px;
+      margin-right: 20px;
+    }
+  </style>
+  <script src="../../../libs/jquery.min.js"></script>
+  <script src="../../../plugins/layer/layer.js"></script>
+  <script src="../../../libs/bootstrap.min.js"></script>
+  <script src="../../../libs/vue.min.js"></script>
+  <script src="../../../libs/bootstrap-table.min.js"></script>
+  <script src="../../../plugins/treegrid/jquery.treegrid.min.js"></script>
+  <script src="../../../plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+  <script src="../../../plugins/treegrid/jquery.treegrid.extension.js"></script>
+  <script src="../../../plugins/treegrid/tree.table.js"></script>
+  <script src="../../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../../plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script src="../../../js/common.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+  <div v-show="showList">
+    <div class="grid-btn">
+      <a class="btn btn-primary" style="margin-left: 10px;" @click="add">
+        <i class="fa fa-plus"></i>&nbsp;新增
+      </a>
+    </div>
+    <table id="jqGrid"></table>
+  </div>
+
+  <div v-show="!showList" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-5 control-label">轮播图片（1080X600）</div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <div class="col-sm-10" style="position: relative;">
+          <a class="thumbnail" style="height: 13rem; width: 100%">
+            <img :src="sowingMap.image" style="width: 100%; height: 100%">
+          </a>
+          <input class="choose-image" type="file" @change="handleFileChange" value="点击选择"
+                 accept="image/png, image/jpeg"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">关联类型选择</div>
+        <div class="col-sm-10">
+          <select class="form-control" v-model="sowingMap.type" @change="typeChange">
+            <option value="0">请选择关联类型</option>
+            <option value="1">关联商品</option>
+            <option value="2">关联分类</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label">关联内容</div>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" style="cursor:pointer;" v-model="sowingMap.linkName"
+                 @click="contentSelect"
+                 readonly="readonly" placeholder="选择关联内容"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-1 control-label"></div>
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-primary" @click="saveOrUpdate"
+                 value="确定"/>
+        </div>
+        <div class="col-sm-2 control-label">
+          <input type="button" class="btn btn-warning" @click="reload"
+                 value="返回"/>
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+  <!-- 选择鞋子列表 -->
+  <div id="goodsLayer" style="display: none;padding:10px;">
+
+    <div class="select-wrapper">
+      <span>分类:</span>&nbsp;&nbsp;
+      <div class="dropdown" style="width: 200px;display: inline-block;">
+        <a role="button" data-toggle="dropdown" class="btn btn-default" style="width: 100%;">
+          {{selectCategoryName || '分类选择'}}<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+          <li>
+            <a tabindex="-1" @click="categorySelect({seq:-1, name: '所有分类'})">所有分类 </a>
+          </li>
+          <li class="dropdown-submenu" v-for="item in categoryList" v-if="item.parentSeq==0">
+            <a tabindex="-1" @click="categorySelect(item)">{{item.name}}</a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-submenu" v-for="secondItem in categoryList"
+                  v-if="secondItem.parentSeq==item.seq">
+                <a tabindex="-1" @click="categorySelect(secondItem)">{{secondItem.name}}</a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a tabindex="-1" v-for="thirdItem in categoryList"
+                       v-if="thirdItem.parentSeq==secondItem.seq"
+                       @click="categorySelect(thirdItem)">{{thirdItem.name}}</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <span>年份:</span>&nbsp;&nbsp;
+      <select v-model="year">
+        <option value="-1">所有年份</option>
+        <option v-for="item in yearList" :value="item">{{item}}</option>
+      </select>
+      <span>季节:</span>&nbsp;&nbsp;
+      <select v-model="seasonSeq">
+        <option value="-1">所有季节</option>
+        <option v-for="item in seasonList" :value="item.seq">{{item.seasonName}}</option>
+      </select>
+
+      <div style="padding-bottom: 10px;">
+        <span>货号:</span>&nbsp;&nbsp;
+        <input type="text" placeholder="货号" v-model.trim="keywords" style="width: 300px;">
+        <button class="btn btn-primary btn-sm" @click="search">搜索</button>
+      </div>
+
+    </div>
+
+    <table id="jqGoodsGrid"></table>
+    <div id="jqGoodsGridPager"></div>
+  </div>
+</div>
+
+<!-- 选择鞋子分类 -->
+<div id="categoryLayer" style="display: none;padding:10px;">
+  <ul id="categoryTree" class="ztree"></ul>
+</div>
+
+<script src="../../../js/modules/system/home_page_management/sowing_map.js"></script>
+</body>
+</html>

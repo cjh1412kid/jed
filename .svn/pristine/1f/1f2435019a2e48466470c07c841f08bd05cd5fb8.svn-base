@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>更新日志</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<!--<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />-->
+		<style type="text/css">
+			/*底部提示信息*/
+			.aui-card-list-footer{
+				min-height: 1.6rem;
+				color: #bc9761;
+			 	padding: 0!important;
+			}
+			.aui-card-list-footer i{
+				font-weight: bold;
+				color: #bc9761;
+			}
+			.aui-list .aui-list-item{
+				/*border-bottom:  0px solid #dddddd !important;*/
+				border-style: none !important;
+			}
+			.aui-media-list .aui-list-item-inner {
+				display: block;
+				padding-top: 0.75rem;
+				padding-bottom: 0.75rem;
+				border-bottom:  0px solid #dddddd !important;
+			}
+			.aui-list-item-title div:first-of-type{
+				font-weight: bold;
+				font-size: 0.7rem !important;
+			}
+			.aui-list-item-title div:last-of-type{
+				padding-top: 0.4rem;
+				font-size: 0.65rem !important;
+			}
+			.aui-list .aui-list-item-inner p {
+				overflow: auto !important;
+				padding: 0 0 0 0.6rem;
+				font-size: 0.6rem;
+			}
+		</style>
+	</head>
+	<body class="aui-hide">
+		<section class="aui-content">
+	        <ul class="aui-list aui-media-list aui-list-noborder">  
+	            
+	            <!--<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-title">
+							<div>2018年08月30日 15时</div><div class="">更新内容：</div>
+						</div>
+						<p>
+							1.修复app退款操作界面显示问题
+							<br>
+							2.已派单页面优化搜索
+							<br>
+							3.app扫码输入页面增加条码异常反馈
+						</p>
+						<div class="aui-row aui-row-padded">
+							<div class="aui-col-xs-4"><img src="../image/demo1.png"/></div>
+	                        <div class="aui-col-xs-4"><img src="../image/demo2.png" /></div>
+						</div>
+					</div>
+				</li>-->      
+	            
+	        </ul>
+		</section>
+	
+		<div class="footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			到底了<i class="aui-iconfont aui-icon-activity aui-font-size-12"></i>
+		</div>
+		<div class="footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			暂无数据
+		</div>
+		<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			加载更多<i class="aui-iconfont aui-icon-more aui-font-size-12"></i>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js" ></script>
+	<script type="text/javascript" src="../../script/common/common.js" ></script>
+	<script type="text/javascript" src="../../script/common/my_common.js"></script>
+	<script type="text/javascript">
+	
+		function initUI(data, type) {	
+			switch(type) {
+				case "down":
+					if (_isArrayNull(data)) {
+						//第一页没数据，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						$api.html($api.dom(".aui-list"), "");
+						showEmptyMsg();//显示"暂无数据"
+					} else {
+						var htmlStr = getLogHTML(data);
+//						console.log(htmlStr);
+						$api.html($api.dom(".aui-list"), htmlStr);
+				
+						if (data.length < num) {
+							//第一页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+							isAjaxing = true;
+							showOverMsg();//显示"到底了"
+						}else{
+							//第一页数据等于每页总数，false，用户向上滑动就再次请求服务器获取后面页数的数据
+							isAjaxing = false;
+							showMoreMsg();//显示"加载更多"
+						}					
+					}					
+					break;
+				case "up":
+					if (_isArrayNull(data)) {
+						//当前页没数据了，则将isAjaxing置为true，防止继续上滑频繁请求服务器
+						isAjaxing = true;
+						showOverMsg();//显示"到底了"
+					} else {
+						var htmlStr = getLogHTML(data);		
+//						console.log(htmlStr);
+						$api.append($api.dom(".aui-list"), htmlStr);
+						
+						if (data.length < num) {
+							//新获取页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+							isAjaxing = true;
+							showOverMsg();//显示"到底了"
+						}else{
+							isAjaxing = false;
+							showMoreMsg();//显示"加载更多"
+						}
+					}
+					break;
+			}			
+//			new auiLazyload({
+//				errorImage : "../../image/error_small_img.png"
+//			});
+			setTimeout(function() {
+//				api.refreshHeaderLoadDone();
+				api.parseTapmode();
+				if ($api.hasCls($api.dom("body"), "aui-hide")) {
+					$api.removeCls($api.dom("body"), "aui-hide");
+				}
+				closeUILoading();
+			}, window.refreshLoadDoneTimeOut);
+		}
+		
+	 /*2.用浏览器内部转换器实现html解码*/
+     function htmlDecode(text){
+         //1.首先动态创建一个容器标签元素，如DIV
+         var temp = document.createElement("div");
+         //2.然后将要转换的字符串设置为这个元素的innerHTML(ie，火狐，google都支持)
+         temp.innerHTML = text;
+         //3.最后返回这个元素的innerText(ie支持)或者textContent(火狐，google支持)，即得到经过HTML解码的字符串了。
+         var output = temp.innerText || temp.textContent;
+         temp = null;
+         return output;
+     }
+
+		function getLogHTML(data){
+//			console.log($api.jsonToStr(data));
+			var logHTML = '';
+			if(!_isArrayNull(data)){
+				for (var i = 0; i < data.length; i++) {					
+					logHTML += '<li class="aui-list-item">';
+	                logHTML += 		'<div class="aui-list-item-inner">';
+	                logHTML += 			'<div class="aui-list-item-title">';
+	                logHTML += 				'<div>'+_getFormatedDate(data[i].inputTime, "yyyy年MM月dd日  HH时")+'</div><div class="">更新内容：</div>';
+	                logHTML += 			'</div>';
+	                logHTML += 			'<p>'+htmlDecode(data[i].content)+'</p>';
+	                logHTML += 			'<div class="aui-row aui-row-padded">';
+	                logHTML += 			'</div>';
+	                logHTML += 		'</div>';
+	            	logHTML += '</li>';
+				}
+			}
+			return logHTML;			
+		}
+		
+		//获取版本更新日志列表
+		function getDatas(call) {
+			var url = window.myServerUrl + "order/app/log/list?token=" + token+"&start="+start+"&num="+num;
+			var currAjaxTag = "logList";		
+			console.log("获取更新日志列表:" + url);
+			isAjaxing = true;
+			_ajax(url, currAjaxTag, function(ret, err) {
+				var tempLogList = [];//存放临时数据
+				if (ret) {
+					console.log("_ajax."+currAjaxTag+".ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						tempLogList = ret.result;
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+				call(tempLogList);
+			});
+		}
+
+		function closeUILoading() {
+			UILoading.closeKeyFrame();
+		}
+
+		function openUILoading() {
+			UILoading.keyFrame({
+				rect : {
+					w : 102,
+					h : 102
+				},
+				styles : {
+					bg : 'rgba(0,0,0,0)',
+					corner : 5,
+					interval : 50,
+					frame : {
+						w : 102,
+						h : 102
+					}
+				},
+				//				content : [{
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}, {
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}],
+				mask : "rgba(255,0,0,0)"
+			}, function(ret) {
+				//								alert(JSON.stringify(ret));
+				console.log(12345);
+			});
+		}
+		
+		function initData() {
+			start = 1;
+			num = 10;
+			token = $api.getStorage("tokenKey");					
+			logList = [];
+			UILoading = api.require('UILoading');				
+		}
+
+		var start; //起始条数
+		var num; //每页显示条数	
+		var token;
+		var logList; //更新日志列表
+		var isAjaxing = false;
+		var UILoading;
+		var apiready = function() {					
+			initData();
+			
+			//下拉刷新
+//			api.setRefreshHeaderInfo({
+//				loadingImg : 'widget://image/loading_more.gif',
+//				bgColor : 'rgba(255,255,255,0)',
+//				textColor : '#505050',
+//				textDown : '下拉刷新...',
+//				textUp : '松开刷新...'
+//			}, function(ret, err) {
+//				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+//				start = 1;
+//				logList = [];
+//				getDatas(function(ret) {
+//					logList = ret;
+//					initUI(ret, "down");
+//				});
+//			});
+
+			//设置下拉刷新延迟时间
+			setTimeout(function() {
+				getDatas(function(ret) {
+					logList = ret;
+					initUI(ret, "down");
+				});
+				openUILoading();
+			}, 200);
+		
+			//上拉加载
+			api.addEventListener({
+				name : 'scrolltobottom',
+				extra : {
+					threshold : 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+				}
+			}, function(ret, err) {
+				console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+				if (!isAjaxing) {
+					start += num;
+					getDatas(function(ret) {
+						logList = logList.concat(ret);
+						initUI(ret, "up");
+					});
+				}
+			});
+		}
+	</script>
+</html>

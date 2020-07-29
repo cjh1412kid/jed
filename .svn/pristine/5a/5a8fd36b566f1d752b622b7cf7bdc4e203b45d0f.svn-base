@@ -1,0 +1,48 @@
+.aui-timeline:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 1.85rem;
+    width: 1px;
+    height: 100%;
+    background: #979797;
+    z-index: 0;
+}
+.aui-timeline .aui-timeline-item-header {
+	background-color: #7F85ED;
+	padding: 0.2rem 0.2rem;
+	margin: 0.5rem;
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    font-size: 0.7rem;
+    color: #FFFFFF;
+    border-radius:0.17rem;
+}
+.aui-timeline .aui-timeline-item-label {
+	width: 1.5rem;
+	height: 1.5rem;
+	line-height: 1.5rem;
+	font-size: 0.7rem;
+	background-color: #ececec;
+	position: absolute;
+	text-align: center;
+	left: 1.15rem;
+	top: 0;
+	border-radius: 50%;
+}
+.month{
+	font-size: 0.65rem;
+}
+.aui-card-list {
+	border-radius:0.5rem;
+	position: relative;
+    margin-bottom: 0.75rem;
+    background-color: rgba(75,57,129,1)!important;
+}
+.value{
+	font-family:Arial-Black;
+	font-weight:900;
+	color:rgba(255,125,0,1);
+}

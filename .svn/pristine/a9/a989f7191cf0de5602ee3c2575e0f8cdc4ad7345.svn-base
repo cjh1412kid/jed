@@ -1,0 +1,557 @@
+/* 页面的播放按钮 */
+input{
+  display: flex;
+  align-items: center;
+}
+#video {
+    width: 2.4rem;
+    height: 2.4rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+    right: -webkit-calc(50% - 1.2rem);
+    bottom: -webkit-calc(50% - 1.2rem);
+    z-index: 1;
+}
+
+
+/* 重写vedio.css的播放按钮(隐藏) */
+
+.video-js .vjs-big-play-button {
+    display: none;
+    //	width: 2.4rem;
+    //	height: 2.4rem;
+    //	background-color: rgba(0,0,0,0.2);
+    //	border: 1px solid #fff;
+    //	border-radius: 50%;
+    //	position: absolute;
+    //	right: -webkit-calc(50% - 1.2rem);
+    //	bottom: -webkit-calc(50% - 1.2rem);
+    //	z-index: 1;
+}
+
+
+/* 播放器返回按钮 */
+
+.back-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 99;
+}
+
+
+/*  商品展示图片容器 */
+
+.goods-images {
+    width: 100%;
+    min-height: 13.5rem;
+    background-color: #ffffff;
+}
+
+.aui-slide-wrap .aui-slide-node {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    overflow: hidden;
+    //  background-color: #FF2600;
+}
+
+.aui-slide-node img {
+    width: auto;
+    height: 100%;
+    display: block;
+    //  background-color: #00BCD4;
+    //  padding: 0.5rem;
+}
+
+
+/* 轮播圆点颜色 */
+
+.aui-slide-page-active {
+    background: #bc9761;
+    from {
+        opacity: 0.3;
+    }
+    to {
+        opacity: 1
+    }
+}
+
+.goods-id-div {
+    background-color: white;
+    height: 2.2rem;
+    line-height: 2.2rem;
+    font-weight: bold;
+}
+
+.goods-id-div .name {
+    font-size: 0.7rem;
+}
+
+.goods-id-div .value {
+    font-size: 0.8rem;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    color: rgba(80, 80, 80, 1);
+}
+
+.recommend {
+    width: 3.42rem;
+    height: 1.0rem;
+    text-align: center;
+    line-height: 1.0rem;
+    background: rgba(255, 81, 0, 0.1);
+    box-shadow: 0rem 0.03rem 0.25rem -0.03rem rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    border: 0.05rem solid rgba(255, 81, 0, 1);
+    font-size: 0.6rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(255, 81, 0, 1);
+    margin-top: 0.6rem;
+    margin-right: 0.5rem;
+}
+
+.table.header {
+    height: 1.52rem;
+    background: rgba(241, 241, 241, 1);
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.table.row {
+    height: 1.52rem;
+    background: rgba(255, 250, 248, 1);
+}
+
+.table.row:nth-of-type(2n+1) {
+    background: rgba(248, 252, 255, 1);
+}
+
+.table.row:nth-last-of-type(1) {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.goods-infos input {
+    height: auto;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
+    height: 1.0rem;
+}
+
+.sale-value, .score-value {
+    //	color: #666666;
+}
+.aui-col-xs-6.flex-wrap.aui-margin-t-5{
+  display: flex;
+  align-items: center;
+}
+.parameter-name {
+    width: 4.0rem;
+    text-align: right;
+    font-family: PingFang-SC-Regular;
+    font-size: 0.6rem;
+    color: #999999;
+
+}
+.spe-width{
+  width: 3.5rem!important;
+}
+.spe-width1{
+    width:5.5rem!important;
+}
+.parameter-value {
+    font-family: PingFang-SC-Regular;
+    font-size: 0.6rem!important;
+    height: 1.0rem!important;
+}
+
+.aui-text-brown {
+    color: #bc9761 !important;
+}
+
+.score {
+    height: 2.2rem;
+    background-color: white;
+}
+
+.score .name {
+    line-height: 2.2rem;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+}
+
+.avg-score{
+  padding-left: 5rem;
+}
+.avgScore{
+
+   color:rgba(255,186,0,1);
+}
+/*图文详情界面开始*/
+
+.aui-card-list {
+    position: relative;
+    margin-bottom: 0;
+    background: #ffffff;
+}
+
+.aui-collapse-header {
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    color: rgba(80, 80, 80, 1);
+}
+
+.aui-collapse-header.aui-active {
+    background: #ffffff;
+}
+
+.tips {
+    color: #979797;
+}
+
+.aui-card-list-content {
+    /*padding-left: 0.5rem;*/
+    /*padding-right: 0.5rem;*/
+    /*padding-bottom: 0.5rem;*/
+}
+
+
+/* 地步提示:点击查看... */
+
+.aui-card-list-footer {
+    min-height: 2.4rem;
+    color: #999999;
+    padding: 0!important;
+    background-color: #FFFFFF;
+}
+
+.aui-card-list-footer i {
+    font-weight: bold;
+    color: #999999;
+}
+
+.aui-text-gray {
+    color: rgba(80, 80, 80, 0.8)
+}
+
+
+/* 暂无商品描述图片 */
+
+.no-image {
+    width: 4.4rem;
+    margin-left: -webkit-calc(50% - 2.2rem);
+    margin-top: 50%;
+}
+
+.no-image img {
+    width: 4.4rem;
+    /*屏幕宽度的50%*/
+    height: 6.23;
+    /*屏幕宽度的70.8%*/
+}
+
+
+/*销量与库存*/
+
+.shoplist {
+    margin: 0 .48rem;
+}
+
+.shoplist li {
+    height: 1.55rem;
+    line-height: 1.55rem;
+}
+.flex-width{
+  width: 30%;
+}
+.flex-width1{
+   width: 17%;
+}
+.flex-width2{
+  width: 35%;
+}
+.flex-width3{
+width: 18%;
+}
+.shop-style {
+    height: 2.0rem;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(255, 81, 0, 1);
+    line-height: 2.0rem;
+    text-align: left;
+    padding-left: .45rem;
+}
+
+.text-style{
+    font-size: 0.6rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+    padding-left: .45rem;
+}
+.text-styles{
+  font-size: 0.6rem;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  color: rgba(80, 80, 80, 1);
+}
+.text-style1 {
+    font-size: 0.6rem;
+    font-family: Arial-Black;
+    font-weight: 900;
+    color: rgba(151, 151, 151, 1);
+    padding: 0 .55rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.text-style2{
+  width: 23%;
+}
+.text-style3{
+  width: 12.5%;
+}
+.text-style3.text-style1{
+  padding: 0!important;
+}
+.text-style4{
+  justify-content: flex-start!important;
+  padding: 0;
+}
+.text-spe{
+  padding: 0!important;
+  justify-content: center;
+  display: flex;
+}
+.text-spe2{
+  justify-content: flex-start;
+  display: flex;
+}
+.text-spe3{
+  text-decoration: underline;
+}
+/*销量数量曲线图*/
+
+.othershop {
+    margin: 0 .48rem;
+}
+
+.othershop.aui-border {
+    background-size: 100% 0, 1px 100%, 100% 1px, 1px 100%;
+}
+
+.othershop li {
+    height: 2.0rem;
+    line-height: 2.0rem;
+    padding: 0 .32rem;
+    justify-content: space-between;
+}
+.hot{
+    color: rgba(255, 81, 0, 1)!important;
+}
+/*.othershop li:first-child {
+    padding-left: .45rem;
+    height: 1.98rem;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+}*/
+
+.othershop li:first-child span {
+    margin-top: .2rem;
+    font-size: 0.5rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: #979797;
+    margin-left: .1rem;
+}
+
+.listSpe {
+    height: 1.45rem;
+
+}
+.position-hot{
+  position:  fixed;
+  /*width: -webkit-calc(100% - 1.0rem);*/
+  width: 100%;
+  left: 0rem;
+  /*right: 0.5rem;*/
+  top: 0rem;
+  background: #fff;
+  box-shadow: 0 0.05rem 0.5rem 0.1rem #ccc;
+
+  justify-content: space-between;
+  z-index: 9999!important;
+}
+.position-hot div:first-child{
+  margin-left: .5rem;
+}
+.listSpe div {
+    font-size: 0.6rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(80, 80, 80, 1);
+}
+
+.listSpe div span {
+    font-size: .48rem;
+}
+
+
+.othershop-width{
+  width: 10%;
+}
+.othershop-width1{
+  width:26%;
+
+}
+.othershop-width2{
+  width: 12%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.othershop-width3{
+  width: 18%;
+}
+.othershop-width4{
+  width: 20%
+}
+.othershop-width5{
+  width: 2%;
+}
+/*.listSpe div:nth-child(3) {
+    color: rgba(255, 81, 0, 1);
+
+}*/
+
+
+.listSpe div:last-child {
+    font-size: 0.4rem;
+    margin-right: 0;
+}
+
+/*.othershop li:nth-child(3) {
+    color: rgba(245, 166, 35, 1);
+}*/
+
+.os-list {
+    font-size: 0.7rem;
+    font-family: Arial-Black;
+    font-weight: 900;
+    color: rgba(151, 151, 151, 1);
+}
+
+
+/*销售数量曲线图*/
+
+.charsWrap {
+    /*height: 11.6rem;
+    margin: 0 .48rem;
+    position: relative;*/
+}
+
+#myChart {
+    height: 11.6rem;
+    width: 17rem;
+    margin: auto auto;
+    ;
+}
+
+.chartHidden {
+    position: fixed;
+    width: 2.28rem;
+    height: 1.86rem;
+    background: rgba(63, 63, 63, 1);
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: .25rem;
+    right: 0;
+    top: 50%;
+    color: #fff;
+    cursor: pointer;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .5rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+}
+
+.chartHidden span:first-child {
+    font-size: .8rem;
+    margin-right: .1rem;
+}
+
+
+/*公司补单状态*/
+
+.shopState {
+    margin: 0 .48rem;
+    height: 3rem;
+}
+
+.shopState li {
+    width: 100%;
+    height: 1rem;
+    color: #505050;
+    font-size: .6rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+}
+
+.shopState li:first-child {
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.7rem;
+}
+
+.shopState li:nth-child(2) {
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 1.7rem;
+}
+
+.shopState li:last-child {
+    font-size: 0.5rem;
+    color: rgba(151, 151, 151, 1);
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.sort-btn.active{
+	font-size: 0.6rem;
+	color: rgba(255,81,0,1);
+}
+.sellOutRate{
+  padding: 0 !important;
+}
+.shopSellOutRate{
+  padding: 0 !important;
+}
+.hots{
+  color: rgba(255, 186, 0, 1)!important;
+}

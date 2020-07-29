@@ -1,0 +1,88 @@
+/* 右上角消息图片 */
+.order-icon{
+	width: 1.5rem;
+	height: 1.35rem;
+}
+
+.aui-pull-right:active {
+    background-color: #f5f5f5;
+}
+
+/* 订单详情右上角角标 */
+.aui-badge{
+	margin-left:-0.1rem !important;
+}
+
+.order-tab{
+	border-top: 0.1rem solid rgba(80, 80, 80, 0.1);
+	background-color: #ffffff;
+}
+/* tab切换 */
+.aui-tab-item {
+	font-family: SourceHanSansCN-Regular;
+	font-size: 0.6rem !important;
+	font-weight: normal;
+	letter-spacing: 0rem;
+	color: #999999 !important;
+}
+//.aui-tab-null {
+//  width: 2px;
+//  height: 1.2rem;
+//  color: #505050;
+//	margin-top:0.5rem; 
+//	border-right: 1px solid rgba(221,221,221,0.5);
+//}
+
+/* 订单详情页footer字体*/
+.bottom-btns {
+	color: #FFFFFF;
+	font-size: 0.8rem !important;
+	text-align: center;
+}
+
+.bottom-btns:active {
+	background-color: #000000 !important;
+	color: #FFFFFF;
+	opacity:0.2 !important;
+}
+
+/**************  footer背景色  **************/
+/* 1.红色(待确认) */
+.aui-text-red{
+	background-color: #ff877e !important;
+}
+/* 2.橙色 (待审核/支付)*/
+.aui-text-orange{	
+	background-color: #FFA500 !important;
+}
+/* 3.黑色(待入库) */
+.aui-text-black{	
+	background-color: #565656 !important;	
+}
+/* 4.蓝色(未/待发货)*/
+.aui-text-blue{
+	background-color: #66A8CC !important;
+}
+/* 5.紫色(部分发货) */
+.aui-text-purple{
+	background-color: #9370DB !important;
+}
+/* 6.棕色(已发货) */
+.aui-text-brown{
+	background-color: #cfa972 !important;
+}
+/* 7.绿色(已到/收货) */
+.aui-text-green{
+	background-color: #1dc075 !important;
+}
+/* 8.灰色 (已取消)*/
+.aui-text-gray{	
+	background-color: #abb0a1 !important;
+}
+/***************************************/
+/* 退换&售后*/
+.aui-text-disabled{
+	color: #9D9D9D !important;
+}
+
+

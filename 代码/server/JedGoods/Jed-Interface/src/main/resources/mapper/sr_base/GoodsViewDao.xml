@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.GoodsViewDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+  <resultMap type="io.nuite.modules.sr_base.entity.GoodsViewEntity" id="goodsViewMap">
+    <result property="seq" column="Seq"/>
+    <result property="companySeq" column="Company_Seq"/>
+    <result property="periodSeq" column="Period_Seq"/>
+    <result property="categorySeq" column="Category_Seq"/>
+    <result property="goodName" column="GoodName"/>
+    <result property="goodID" column="GoodID"/>
+    <result property="introduce" column="Introduce"/>
+    <result property="description" column="Description"/>
+    <result property="video" column="Video"/>
+    <result property="img1" column="Img1"/>
+    <result property="img2" column="Img2"/>
+    <result property="img3" column="Img3"/>
+    <result property="img4" column="Img4"/>
+    <result property="img5" column="Img5"/>
+    <result property="inputTime" column="InputTime"/>
+    <result property="del" column="Del"/>
+    <result property="SX1" column="SX1"/>
+    <result property="SX2" column="SX2"/>
+    <result property="SX3" column="SX3"/>
+    <result property="SX4" column="SX4"/>
+    <result property="SX5" column="SX5"/>
+    <result property="SX6" column="SX6"/>
+    <result property="SX7" column="SX7"/>
+    <result property="SX8" column="SX8"/>
+    <result property="SX9" column="SX9"/>
+    <result property="SX10" column="SX10"/>
+    <result property="SX11" column="SX11"/>
+    <result property="SX12" column="SX12"/>
+    <result property="SX13" column="SX13"/>
+    <result property="SX14" column="SX14"/>
+    <result property="SX15" column="SX15"/>
+    <result property="SX16" column="SX16"/>
+    <result property="SX17" column="SX17"/>
+    <result property="SX18" column="SX18"/>
+    <result property="SX19" column="SX19"/>
+    <result property="SX20" column="SX20"/>
+  </resultMap>
+</mapper>

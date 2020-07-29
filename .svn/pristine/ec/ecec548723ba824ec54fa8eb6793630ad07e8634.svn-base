@@ -1,0 +1,1617 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>商品详情</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui_slide.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+	<!-- 星级评分  -->
+	<link rel="stylesheet" type="text/css" href="../../../css/goods/cygrad_min.css" />
+	<!-- 视频播放 -->
+	<link rel="stylesheet" type="text/css" href="../../../css/goods/video_js.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/goods/goods_detail_frm.css" />
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body>
+	<!-- <div class="content flex-wrap flex-vertical aui-invisible"> -->
+	<div class="content flex-wrap flex-vertical">
+		<div class="goods-images">
+			<div class="aui-slide-wrap">
+				<div id="video" class="box-wrap box-horizontal-center box-vertical-center aui-hide" tapmode onclick="openPlayer()">
+					<div style="width:1.6rem; height:1.6rem; padding:5px;padding-left: 7px;">
+						<img width="100%" height="100%" src="../../../image/common/icon_play.png">
+					</div>
+				</div>
+				<!-- 在此生成轮播图片HTML -->
+			</div>
+			<!--展示图片容器-->
+			<div class="aui-slide-page-wrap">
+			</div>
+		</div>
+		<!-- 视频播放  封面图片poster-->
+		<div class="goods-id-div flex-wrap">
+			<span class="aui-margin-l-10 name">货号：</span>
+			<span class="value flex-con"></span>
+			<div class="recommend active" tapmode onclick="setRecommendAction(this,true)">设为主推</div>
+		</div>
+		<div class="flex-wrap flex-vertical aui-font-size-12 aui-padded-l-10 aui-padded-r-10 aui-bg-white aui-hide">
+			<div class="table header flex-wrap">
+				<div class="type flex-con box-wrap box-vertical-center box-horizontal-center">档类</div>
+				<div class="price-pf flex-con box-wrap box-vertical-center box-horizontal-center">批发价</div>
+				<div class="price-cj flex-con box-wrap box-vertical-center box-horizontal-center">成交价</div>
+				<div class="price-dp flex-con box-wrap box-vertical-center box-horizontal-center">吊牌价</div>
+			</div>
+			<div class="table row flex-wrap price-1">
+				<div class="type flex-con box-wrap box-vertical-center box-horizontal-center">一类</div>
+				<div class="price-pf flex-con box-wrap box-vertical-center box-horizontal-center"></div>
+				<div class="price-cj flex-con box-wrap box-vertical-center box-horizontal-center"></div>
+				<div class="price-dp flex-con box-wrap box-vertical-center box-horizontal-center"></div>
+			</div>
+			<div class="table row flex-wrap price-2">
+				<div class="type flex-con box-wrap box-vertical-center box-horizontal-center">二类</div>
+				<div class="price-pf flex-con box-wrap box-vertical-center box-horizontal-center"></div>
+				<div class="price-cj flex-con box-wrap box-vertical-center box-horizontal-center"></div>
+				<div class="price-dp flex-con box-wrap box-vertical-center box-horizontal-center"></div>
+			</div>
+			<div class="table row flex-wrap price-3">
+				<div class="type flex-con box-wrap box-vertical-center box-horizontal-center">三类</div>
+				<div class="price-pf flex-con box-wrap box-vertical-center box-horizontal-center"></div>
+				<div class="price-cj flex-con box-wrap box-vertical-center box-horizontal-center"></div>
+				<div class="price-dp flex-con box-wrap box-vertical-center box-horizontal-center"></div>
+			</div>
+		</div>
+		<div class="score flex-con aui-font-size-12 box-wrap box-horizontal-center aui-border-b flex-wrap">
+			<div class="aui-margin-l-10 name">
+				我的评分：
+			</div>
+			<div id="cygrade" class="" style="margin-bottom: 0.15rem;">
+				<div class='grade_wrap' id='score'>
+					<a href='javascript:void(0);' class='star' number='2'></a>
+					<a href='javascript:void(0);' class="star" number='4'></a>
+					<a href='javascript:void(0);' class="star" number='6'></a>
+					<a href='javascript:void(0);' class="star" number='8'></a>
+					<a href='javascript:void(0);' class="star" number='10'></a>
+				</div>
+			</div>
+			<div class="flex-con name avg-score"><span>平均分:</span><span class="avgScore aui-padded-l-5"></span></div>
+		</div>
+		<section class="aui-content">
+			<div class="aui-card-list">
+				<!-- 规格参数 -->
+				<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+					<div class="aui-font-size-14">规格参数</div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-show">
+					<div class="aui-row goods-attributes aui-row-padded aui-hide">
+						<div class="aui-col-xs-8 flex-wrap aui-margin-t-5">
+							<div class="parameter-name spe-width">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;货&nbsp;&nbsp;号&nbsp;:&nbsp;
+							</div>
+							<input id="goodId" class="flex-con parameter-value aui-ellipsis" readOnly type="text" placeholder="" value="" />
+						</div>
+						<div class="aui-col-xs-4 flex-wrap aui-margin-t-5">
+							<div class="parameter-name spe-width">
+								年&nbsp;&nbsp;份&nbsp;:&nbsp;
+							</div>
+							<input id="year" class="flex-con parameter-value" readOnly type="text" placeholder="" value="" />
+						</div>
+
+						<div class="aui-col-xs-8 flex-wrap aui-margin-t-5">
+							<div class="parameter-name  spe-width">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;颜&nbsp;&nbsp;色&nbsp;:&nbsp;
+							</div>
+							<input id="color" class="flex-con parameter-value" readOnly type="text" placeholder="" value="" />
+						</div>
+
+
+
+						<div class="aui-col-xs-4 flex-wrap aui-margin-t-5">
+							<div class="parameter-name spe-width">
+								季&nbsp;&nbsp;节&nbsp;:&nbsp;
+							</div>
+							<input id="season" class="flex-con parameter-value" readOnly type="text" placeholder="" value="" />
+						</div>
+						<div class="aui-col-xs-6 flex-wrap aui-margin-t-5 aui-hide">
+							<div class="parameter-name spe-width">
+								商品名称:
+							</div>
+							<input id="goodName" class="flex-con parameter-value" readOnly type="text" placeholder="" value="" />
+						</div>
+						<!-- 自定义属性 start -->
+						<!-- 自定义属性 end -->
+					</div>
+					<ul class="shoplist flex-wrap flex-vertical aui-border shop-data">
+						<li class="flex-wrap aui-border-b">
+							<div class="text-style2 aui-border-r text-style">货号</div>
+							<div class="flex-con goodId text-style1 aui-border-r text-spe2"></div>
+						</li>
+
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-1 aui-border-r text-style">年份</div>
+							<div class="flex-1 year text-style1 aui-border-r"></div>
+							<div class="flex-1 aui-border-r text-style">颜色</div>
+							<div class="flex-1 color text-style1"></div>
+						</li>
+
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-1 aui-border-r text-style">季节</div>
+							<div class="flex-1 season text-style1 aui-border-r"></div>
+							<div class="flex-1 aui-border-r text-style">性别</div>
+							<div class="flex-1 sex text-style1"></div>
+						</li>
+						<li class="flex-wrap aui-border-b">
+							<div class="text-style2 aui-border-r text-style">分类</div>
+							<div class="flex-con categoryName text-style1 aui-border-r text-spe2"></div>
+						</li>
+						<li class="flex-wrap aui-border-b">
+							<div class="text-style2 aui-border-r text-style text-spe">总部入库时间</div>
+							<div class="flex-con inputHeadshopTime text-style1 aui-border-r text-spe2"></div>
+						</li>
+						<li class="flex-wrap aui-border-b shop-item">
+							<div class="text-style2 aui-border-r text-style text-spe">本店上市时间</div>
+							<div class="flex-con inputShopTime text-style1 aui-border-r text-spe2"></div>
+						</li>
+				</div>
+				<!-- 图文详情 -->
+				<div class="aui-card-list-header aui-collapse-header " tapmode>
+					<div class="aui-font-size-14">图文详情</div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content ">
+					<div class="aui-row img-text-desc">
+						<!-- <div class='aui-col-xs-12 box-wrap box-vertical-center box-horizontal-center selected'>
+								<img class='aui-margin-0' src='../../../image/load_img.png' data-src='../../../image/common/none_img.png'>
+							</div>
+							<div class='aui-col-xs-12 box-wrap box-vertical-center box-horizontal-center'>
+								<img class='aui-margin-0' src='../../../image/load_img.png' data-src='../../../image/error_img.png'>
+							</div> -->
+					</div>
+
+				</div>
+				<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+					<div class="aui-font-size-14 shops">销量与库存</div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-show sale-stock">
+					<ul class="shoplist flex-wrap flex-vertical aui-border shop">
+						<li class="aui-border-b shop-style saleShop">本店</li>
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-width aui-border-r text-style shopSaleNum1">销量</div>
+							<div class="flex-width1 shopSaleNum text-style1 aui-border-r"></div>
+							<div class="flex-width2 aui-border-r text-style dayAvgShopSaleNum1">日平均销量</div>
+							<div class="flex-width3 dayAvgShopSaleNum text-style1"></div>
+
+						</li>
+						<!-- <li class="flex-wrap aui-border-b">
+							<div class="flex-1 aui-border-r">销量排名</div>
+							<div class="flex-2 shopSaleNumRank"></div>
+						</li> -->
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-width aui-border-r text-style shopSaleNumRank1">销量排名</div>
+							<div class="flex-width1 shopSaleNumRank text-style1 aui-border-r"></div>
+							<div class="flex-width2 aui-border-r text-style shopAvgSalePrice1">平均售价/元</div>
+							<div class="flex-width3 shopAvgSalePrice text-style1 "></div>
+
+						</li>
+						<!-- <li class="flex-wrap aui-border-b">
+							<div class="flex-1 aui-border-r">售罄率</div>
+							<div class="flex-2 shopSellOutRate"></div>
+						</li> -->
+
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-width aui-border-r text-style shopSellOutRate1">售罄率</div>
+							<div class="flex-width1 shopSellOutRate text-style1 aui-border-r"></div>
+							<div class="flex-width2 aui-border-r text-style">累计销量</div>
+							<div class="flex-width3 shopTotalSaleNum text-style1 "></div>
+
+						</li>
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-width aui-border-r text-style">当前库存</div>
+							<div class="flex-width1 shopStock text-style1 aui-border-r"></div>
+							<div class="flex-width2 aui-border-r text-style">库存排名</div>
+							<div class="flex-width3 shopStockRank text-style1"></div>
+						</li>
+						<li class="flex-wrap aui-border-b">
+							<div class=" aui-border-r text-style text-style2">累计入库量</div>
+							<div class="flex-con totalShopStock text-style1 text-spe2"></div>
+						</li>
+						<!-- <li class="flex-wrap aui-border-b">
+							<div class="flex-1 aui-border-r">库存排名</div>
+							<div class="flex-2 shopStockRank"></div>
+						</li> -->
+						<div class="flex-wrap flex-vertical size-stock">
+							<!-- <li class="flex-wrap aui-border-b">
+								<div class="flex-1 aui-border-r aui-padded-0">尺码</div>
+								<div class="flex-2 flex-wrap"><span class="flex-con">35</span><span class="flex-con">36</span><span class="flex-con">37</span></div>
+							</li>
+							<li class="flex-wrap aui-border-b">
+								<div class="flex-1 aui-border-r">库存</div>
+								<div class="flex-2 flex-wrap inventory"><span class="flex-con">120</span><span class="flex-con">120</span><span class="flex-con">120</span></div>
+							</li>
+							<li class="flex-wrap aui-border-b">
+								<div class="flex-1 aui-border-r">尺码</div>
+								<div class="flex-2 flex-wrap"><span class="flex-con">38</span><span class="flex-con">39</span><span class="flex-con"></span></div>
+							</li>
+							<li class="flex-wrap aui-border-b">
+								<div class="flex-1 aui-border-r">库存</div>
+								<div class="flex-2 flex-wrap inventory"><span class="flex-con">120</span><span class="flex-con">120</span><span class="flex-con"></span></div>
+							</li> -->
+						</div>
+						<!-- <li class="aui-border-b">数据截止至2019-02-22</li> -->
+					</ul>
+					<ul class="shoplist flex-wrap flex-vertical company aui-border">
+						<li class="aui-border-b shop-style saleCompany">公司</li>
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-width aui-border-r text-style saleNum1">销量</div>
+							<div class="flex-width1 saleNum aui-border-r text-style1 "></div>
+							<div class="flex-width2 aui-border-r text-style dayAvgSaleNum1">日平均销量</div>
+							<div class="flex-width3 dayAvgSaleNum text-style1"></div>
+
+						</li>
+						<!-- <li class="flex-wrap aui-border-b">
+							<div class="flex-1 aui-border-r">销量排名</div>
+							<div class="flex-2 saleNumRank"></div>
+						</li> -->
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-width aui-border-r text-style saleNumRank1">销量排名</div>
+							<div class="flex-width1 saleNumRank text-style1 aui-border-r"></div>
+							<div class="flex-width2 aui-border-r text-style avgSalePrice1">平均售价/元</div>
+							<div class="flex-width3 avgSalePrice text-style1 "></div>
+
+						</li>
+						<!-- <li class="flex-wrap aui-border-b">
+							<div class="flex-1 aui-border-r">售罄率</div>
+							<div class="flex-2 sellOutRate"></div>
+						</li> -->
+
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-width aui-border-r text-style sellOutRate1">售罄率</div>
+							<div class="flex-width1 sellOutRate text-style1 aui-border-r"></div>
+							<div class="flex-width2 aui-border-r text-style">累计销量</div>
+							<div class="flex-width3 totalSaleNum text-style1 "></div>
+
+						</li>
+						<li class="flex-wrap aui-border-b">
+							<div class="flex-width aui-border-r text-style">当前库存</div>
+							<div class="flex-width1 stock text-style1 aui-border-r"></div>
+							<div class="flex-width2 aui-border-r text-style">库存排名</div>
+							<div class="flex-width3 stockRank text-style1"></div>
+						</li>
+						<li class="flex-wrap aui-border-b">
+							<div class=" aui-border-r text-style text-style2">累计入库量</div>
+							<div class="flex-con totalStock text-style1 text-spe2"></div>
+						</li>
+						<div class="flex-wrap flex-vertical size-stock">
+							<!-- <li class="flex-wrap aui-border-b">
+								<div class="flex-1 aui-border-r aui-padded-0">尺码</div>
+								<div class="flex-2 flex-wrap"><span class="flex-con">35</span><span class="flex-con">36</span><span class="flex-con">37</span></div>
+							</li>
+							<li class="flex-wrap aui-border-b">
+								<div class="flex-1 aui-border-r">库存</div>
+								<div class="flex-2 flex-wrap inventory"><span class="flex-con">120</span><span class="flex-con">120</span><span class="flex-con">120</span></div>
+							</li>
+							<li class="flex-wrap aui-border-b">
+								<div class="flex-1 aui-border-r">尺码</div>
+								<div class="flex-2 flex-wrap"><span class="flex-con">38</span><span class="flex-con">39</span><span class="flex-con"></span></div>
+							</li>
+							<li class="flex-wrap aui-border-b">
+								<div class="flex-1 aui-border-r">库存</div>
+								<div class="flex-2 flex-wrap inventory"><span class="flex-con">120</span><span class="flex-con">120</span><span class="flex-con"></span></div>
+							</li> -->
+						</div>
+
+						<!-- <li class="aui-border-b">数据截止至2019-02-22</li> -->
+					</ul>
+					<ul class="flex-wrap flex-vertical othershop aui-border">
+						<li class="aui-border-b">各门店<span>（点击库存可查看当前门店库存详情)</span></li>
+						<li class="flex-wrap aui-border-b listSpe">
+							<div class="box-wrap box-vertical-center box-horizontal-center othershop-width">排名</div>
+							<div class="box-wrap box-vertical-center box-horizontal-center othershop-width1">店名</div>
+							<div class="sort-btn othershop-width2 " tapmode onclick="sort(this)" data-orderBy="shopSaleNum">销量<span>▼</span></div>
+							<div class="sort-btn othershop-width2 active" tapmode onclick="sort(this) " data-orderBy="shopStock">库存<span>▼</span></div>
+							<!-- <div class="sort-btn box-wrap box-vertical-center box-horizontal-center othershop-width3" tapmode onclick="sort(this)" data-orderBy="salesDayAvg">日均销量<span>▼</span></div> -->
+							<div class="sort-btn box-wrap box-vertical-center box-horizontal-center othershop-width3" tapmode onclick="sort(this)" data-orderBy="stockDays">在仓天数<span>▼</span></div>
+							<div class="sort-btn box-wrap box-vertical-center box-horizontal-center othershop-width4" tapmode onclick="sort(this)" data-orderBy="shopAvgSalePrice">平均售价<span>▼</span></div>
+							<div class="box-wrap box-vertical-center box-horizontal-center othershop-width5"></div>
+						</li>
+						<div class="list">
+							<!-- <li class="flex-wrap os-list aui-border-b" tapmode onclick="goInv()">
+								<div>1</div>
+								<div>温州门店1号</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div><i class="aui-iconfont aui-icon-right aui-collapse-arrow"></i></li>
+							<li class="flex-wrap os-list aui-border-b" tapmode onclick="goInv()">
+								<div>2</div>
+								<div>沈阳门店1号</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div><i class="aui-iconfont aui-icon-right aui-collapse-arrow"></i></li>
+							<li class="flex-wrap os-list aui-border-b" tapmode onclick="goInv()">
+								<div>3</div>
+								<div>沈阳门店2号</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div><i class="aui-iconfont aui-icon-right aui-collapse-arrow"></i></li>
+							<li class="flex-wrap os-list aui-border-b" tapmode onclick="goInv()">
+								<div>4</div>
+								<div>哈尔滨门店1号</div>
+								<div>0</div>
+								<div>100</div>
+								<div>0</div>
+								<div>0</div><i class="aui-iconfont aui-icon-right aui-collapse-arrow"></i></li>
+							<li class="flex-wrap os-list aui-border-b" tapmode onclick="goInv()">
+								<div>5</div>
+								<div>温州门店2号</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div><i class="aui-iconfont aui-icon-right aui-collapse-arrow"></i></li>
+							<li class="flex-wrap os-list aui-border-b" tapmode onclick="goInv()">
+								<div>6</div>
+								<div>哈尔滨第二直营店</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div><i class="aui-iconfont aui-icon-right aui-collapse-arrow"></i></li>
+							<li class="flex-wrap os-list aui-border-b" tapmode onclick="goInv()">
+								<div>7</div>
+								<div>沈阳8号低店</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div>
+								<div>0</div><i class="aui-iconfont aui-icon-right aui-collapse-arrow"></i></li>
+							<li class="flex-wrap os-list aui-border-b" tapmode>
+								<div></div>
+								<div>汇总</div>
+								<div>0</div>
+								<div>600</div>
+								<div>0</div>
+								<div>0.00</div><i class="aui-iconfont aui-icon-right aui-collapse-arrow"></i></li> -->
+						</div>
+
+						<!-- <li>数据截止至2019-02-22</li> -->
+					</ul>
+				</div>
+				<!-- 补单信息 -->
+				<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+					<div class="aui-font-size-14">补单信息</div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-show">
+					<ul class="shoplist flex-wrap flex-vertical add-shops aui-border">
+
+					</ul>
+
+				</div>
+				<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+					<div class="aui-font-size-14">销量曲线图</div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-show">
+					<div class="charsWrap">
+						<div id="myChart">
+						</div>
+						<!-- <div class="chartHidden aui-hide" tapmode onclick="openRightPane('graph')">
+							<span>«</span>
+							<span>筛选</br>范围</span>
+						</div> -->
+					</div>
+				</div>
+				<div class="aui-card-list-header aui-collapse-header aui-active aui-hide" tapmode>
+					<div class="aui-font-size-14">公司补单状态</div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-hide">
+					<ul class="shopState">
+						<li>
+							<div>是否补单:是</div>
+							<div>补单数量:500</div>
+						</li>
+						<li>到货情况:三天后到货</li>
+						<li>截止至2019-02-20</li>
+					</ul>
+				</div>
+
+				<!-- 点击查看建议 -->
+				<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-b-5 aui-hide" tapmode onclick="toNextFrm()">
+					<i class="aui-iconfont aui-icon-forward aui-font-size-12"></i>点击查看建议<i class="aui-iconfont aui-icon-back aui-font-size-12"></i>
+				</div>
+			</div>
+		</section>
+	</div>
+	<div class="chartHidden aui-hide" tapmode onclick="openRightPane('sale')">
+		<span>«</span>
+		<span>筛选</br>范围</span>
+	</div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<!-- 星级评分  -->
+<script type="text/javascript" src="../../../script/goods/cygrade_min.js"></script>
+<!-- 视频播放 -->
+<script type="text/javascript" src="../../../script/goods/video_min.js"></script>
+<script type="text/javascript" src="../../../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_slide.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_toast.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript" src="../../../script/common/echarts_min.js"></script>
+<script type="text/javascript" src="../../../script/common/linq.js"></script>
+<script type="text/javascript">
+	function openSizeFrm(_goodId, _sizeSeq, _size) {
+		var rect = {
+			x: 0, //左上角x坐标
+			y: 0, //左上角y坐标
+			w: "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+			h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+			marginLeft: 0, //相对父 window 左外边距的距离
+			marginTop: 0, //相对父 window 上外边距的距离
+			marginBottom: 0, //相对父 window 下外边距的距离
+			marginRight: 0 //相对父 window 右外边距的距离
+		};
+		var animation = {
+			type: "fade", //动画类型（详见动画类型常量）
+			subType: "from_bottom", //动画子类型（详见动画子类型常量）
+			duration: 300
+		};
+		var sizePageParam = {
+			goodId: _goodId,
+			sizeSeq: _sizeSeq,
+			size: _size,
+		}
+		_openFrame("goods_size_frm", "goods_size_frm.html", rect, sizePageParam, false, true, false, animation);
+	}
+
+	//商品排序
+	function sort(_obj) {
+		var dataOrderBy = $api.attr(_obj, "data-orderBy");
+		console.log("dataOrderBy:" + dataOrderBy);
+		console.log("allShopDatas:" + $api.jsonToStr(allShopDatas));
+		if ($api.hasCls(_obj, "active")) {
+			if ($api.hasCls(_obj, "active-sort")) {
+				$api.text($api.dom(_obj, "span"), '▲');
+				$api.removeCls(_obj, "active-sort");
+				// pageParam.orderDir = 1;
+				allShopDatas[0].allShopSaleDetailList = Enumerable.From(allShopDatas[0].allShopSaleDetailList).OrderBy("$." + dataOrderBy).ToArray();
+			} else {
+				$api.addCls(_obj, "active-sort");
+				$api.text($api.dom(_obj, "span"), '▼');
+				// pageParam.orderDir = 0;
+				allShopDatas[0].allShopSaleDetailList = Enumerable.From(allShopDatas[0].allShopSaleDetailList).OrderByDescending("$." + dataOrderBy).ToArray();
+			}
+		} else {
+			$api.removeCls($api.dom(".sort-btn.active"), "active-sort");
+			$api.text($api.dom($api.dom(".sort-btn.active"), "span"), "▼");
+			$api.text($api.dom(_obj, "span"), '▼');
+			$api.addCls(_obj, "active-sort");
+			// pageParam.orderDir = 0;
+			allShopDatas[0].allShopSaleDetailList = Enumerable.From(allShopDatas[0].allShopSaleDetailList).OrderByDescending("$." + dataOrderBy).ToArray();
+			$api.removeCls($api.dom(".sort-btn.active"), "active");
+			$api.addCls(_obj, "active");
+		}
+		//广播
+		// _sendEvent("query_filter_changed_event", pageParam);
+		initAllShopsSaleDetailUI();
+	}
+
+
+
+	function openRightPane(type) {
+		// console.log("pageParam:"+$api.jsonToStr(pageParam));
+		pageParam.type = type;
+		_sendEvent("open_filter_sale_graph_event", pageParam);
+		api.openDrawerPane({
+			type: 'right'
+		});
+	}
+
+	/**
+	 *shopSeq:门店序号，-1表示公司
+	 */
+	function goInv(_obj, shopSeq) {
+		var rect = {
+			x: 0, //左上角x坐标
+			y: 0, //左上角y坐标
+			w: "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+			h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+			marginLeft: 0, //相对父 window 左外边距的距离
+			marginTop: 0, //相对父 window 上外边距的距离
+			marginBottom: 0, //相对父 window 下外边距的距离
+			marginRight: 0 //相对父 window 右外边距的距离
+		};
+		var animation = {
+			type: "fade", //动画类型（详见动画类型常量）
+			subType: "from_bottom", //动画子类型（详见动画子类型常量）
+			duration: 300
+		};
+		var _pageParam = {
+			flg: api.frameName,
+			shopName: $api.attr(_obj, "data-shopname"),
+			shoesSeq: pageParam.seq,
+			shopSeq: shopSeq,
+			startDate: (pageParam.timeRange == 0 ? pageParam.startDate : _getStartDateByNum(pageParam.timeRange)),
+			endDate: (pageParam.timeRange == 0 ? pageParam.endDate : _getFormatedDate("", "yyyy/MM/dd"))
+		};
+		// console.log("_pageParam:"+$api.jsonToStr(_pageParam));
+		_openFrame('inventory_detail_frm', 'inventory_detail_frm.html', rect, _pageParam, false, true, false, animation);
+
+	}
+	//设置主推0.取消主推, 1.设置主推
+	function setMainpush(value) {
+		var url = window.myServerUrl + "order/app/mainpush/setMainpush";
+		var msg = "主推";
+		var data = {
+			values: {
+				"shoesSeq": pageParam.seq,
+				"isMainpush": value,
+			}
+		}; //存放参数
+		console.log("设置主推-->url:" + url);
+		console.log("设置主推-->data:" + $api.jsonToStr(data));
+		_ajax(url, "setMainpush", function(ret, err) {
+			api.hideProgress();
+			if (ret) {
+				console.log("设置主推-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					pageParam.isMainpush = value;
+					_sendEvent('refreshGoodsListEvent');
+				} else {
+					_toast(msg + "失败", 3000, "bottom", function() {});
+				}
+			} else {
+				console.log("设置主推-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+		}, "post", data);
+	}
+
+	//点击"设置主推"
+	function setRecommendAction(_obj, isHandle) {
+		var isMainpush = 0;
+		if (!$api.hasCls(_obj, "active")) {
+			$api.addCls(_obj, "active");
+			$api.text(_obj, '设置主推');
+			isMainpush = 0;
+			if (isHandle) {
+				showToast('取消主推');
+			}
+		} else {
+			$api.removeCls(_obj, "active");
+			$api.text(_obj, '取消主推');
+			isMainpush = 1;
+			if (isHandle) {
+				showToast('设置成功');
+			}
+		}
+		if (isHandle) {
+			setMainpush(isMainpush);
+		}
+		//增加或修改"是否收藏"
+		api.parseTapmode();
+	}
+
+	function browserImage(obj) {
+		var imageUrls = [];
+		if ($(obj).attr('data-type') == 'down') {
+			imageUrls = imageUrl
+		} else {
+			imageUrls = imgArr
+		}
+		console.log("imageUrl:" + $api.jsonToStr(imageUrls));
+		var imageBrowser = api.require('imageBrowser');
+		imageBrowser.openImages({
+			imageUrls: imageUrls,
+			showList: false,
+			activeIndex: $(obj).attr('data-index'),
+			nvcBg: "",
+			bg: "#32353b",
+			tapClose: false,
+		});
+	}
+	//关闭视频播放器
+	function closePlayer() {
+		if ($api.hasCls($api.dom(".goods-images"), "aui-hide")) {
+			videojs("my-video").dispose(); //关闭播放器dispose
+			$api.addCls($api.dom(".back-btn"), "aui-hide");
+			$api.removeCls($api.dom(".goods-images"), "aui-hide");
+		}
+	}
+
+	function toNextFrm() {
+		api.setFrameGroupIndex({
+			name: 'goods_detail_group',
+			index: 1
+		});
+	}
+
+	var video = document.getElementById("video");
+
+	function showToast(_message) {
+		new auiToast().custom({
+			title: _message,
+			maxnum: 5,
+			html: '<i class="aui-iconfont aui-icon-info"></i>',
+			duration: 1000
+		});
+	}
+
+	//打开视频播放器
+	function openPlayer() {
+		$api.addCls($api.dom(".goods-images"), "aui-hide");
+		var videoHTMl = '';
+		videoHTMl += '<div class="back-btn" onclick="closePlayer()"><img width="30" height="30" src="../../../image/common/icon_back_1.png"></div>';
+		videoHTMl += '<video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" webkit-playsinline playsinline x5-playsinline x-webkit-airplay="allow" width="' + api.winWidth + '" height="' + api.winWidth + '" poster="' +
+			pageParam
+			.imgList[0] + '">';
+		videoHTMl += '<source src="' + videoUrl + '" type="video/mp4">';
+		videoHTMl += '</video>';
+		$api.prepend($api.dom(".content"), videoHTMl);
+
+		//开始播放
+		videojs("my-video").play();
+		//播放结束
+		videojs("my-video").on("ended", function() {
+				closePlayer();
+			})
+			//点击播放器
+		videojs("my-video").on("click", function() {
+			//				alert("点我了~");
+		})
+	}
+
+	function refreshAttrUi(domId, value) {
+		if (_isStringNull(value)) {
+			if (!$api.hasCls($api.closest($api.byId(domId), "div"), "aui-hide")) {
+				$api.addCls($api.closest($api.byId(domId), "div"), "aui-hide");
+			}
+		} else {
+			$api.val($api.byId(domId), value);
+		}
+	}
+	// 销售数量曲线图
+	function initChart() {
+		// 基于准备好的dom，初始化echarts实例
+		myChart = echarts.init(document.getElementById('myChart'));
+		var xAxisDatas = [];
+		for (var i = 0; i < 30; i++) {
+			xAxisDatas.push(i + 1);
+		}
+		// 指定图表的配置项和数据
+		option = {
+			grid: {
+				top: '12%',
+				right: '12%',
+				bottom: '10%',
+				left: '10%'
+			},
+			tooltip: {
+				trigger: 'axis',
+				// formatter: '一月{b0}日<br/>{a0}:{c0}<br/>{a1}:{c1}<br/>{a2}:{c2}'
+			},
+			legend: {
+				// itemGap: 40,
+				show: true,
+				left: '5%',
+			},
+			xAxis: {
+				nameGap: 10,
+				splitLine: {
+					show: false,
+				},
+				axisLine: {
+					lineStyle: {
+						color: '#D3D3D3'
+					}
+				},
+				type: 'category',
+				boundaryGap: false,
+				// data: xAxisDatas,
+				// min: 0,
+				// max: 30,
+				name: '日期',
+				//  maxInterval :5,
+				//  minInterval:5,
+				//interval:6,
+				// splitNumber: 6,
+			},
+			yAxis: {
+				// axisLabel: {
+				// 	inside: true,
+				// },
+				minInterval: 1,
+				splitLine: {
+					show: true,
+				},
+				axisLine: {
+					lineStyle: {
+						color: '#D3D3D3'
+					}
+				},
+			},
+			series: []
+		};
+		// 使用刚指定的配置项和数据显示图表。
+		myChart.setOption(option);
+	};
+
+	/*
+	 *获取销售数量曲线图
+	 */
+	function getSaleNumDiagram(call) {
+		var url = window.myServerUrl + "order/app/goodIdAnalysis/saleNumDiagram";
+		url += "?shoesSeq=" + pageParam.seq;
+		// url += "&shopSeqs=" + pageParam.shopSeqs;
+		url += "&startDate=" + (pageParam.timeRange == 0 ? pageParam.startDate : _getStartDateByNum(pageParam.timeRange));
+		url += "&endDate=" + (pageParam.timeRange == 0 ? pageParam.endDate : _getFormatedDate("", "yyyy/MM/dd"));
+		console.log("获取销售数量曲线图-->url:" + url);
+		//清除以前的Echart数据
+		myChart.clear();
+		//添加Echart数据加载进度提示
+		myChart.showLoading({
+			text: '加载中...',
+			color: ' rgba(255, 81, 0, 1)',
+			textColor: '#000',
+			maskColor: 'rgba(255, 255, 255, 0.8)',
+			zlevel: 0
+		})
+		_ajax(url, "saleNumDiagram", function(ret, err) {
+			//隐藏Echart数据加载进度提示
+			myChart.hideLoading();
+			var datas = [];
+			if (ret) {
+				console.log("获取销售数量曲线图-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					datas = ret.result;
+				} else {
+					_toast("获取销售数量曲线图失败！", 3000, "bottom", function() {});
+				}
+			} else {
+				_toast(window.ajaxErrorMessage);
+				console.log("获取销售数量曲线图-->err:" + $api.jsonToStr(err));
+			}
+			call(datas);
+		});
+	}
+	/*
+	 *获取所有门店销售情况排行
+	 */
+	function getAllShopsSaleDetail(call) {
+		allShopDatas = [];
+		var url = window.myServerUrl + "order/app/goodIdAnalysis/allShopsSaleDetail";
+		url += "?shoesSeq=" + pageParam.seq;
+		url += "&startDate=" + (pageParam.timeRange == 0 ? pageParam.startDate : _getStartDateByNum(pageParam.timeRange));
+		url += "&endDate=" + (pageParam.timeRange == 0 ? pageParam.endDate : _getFormatedDate("", "yyyy/MM/dd"));
+		console.log("获取所有门店销售情况排行-->url:" + url);
+		_ajax(url, "allShopsSaleDetail", function(ret, err) {
+
+			if (ret) {
+				console.log("获取所有门店销售情况排行-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+
+					allShopDatas = ret.result;
+				} else {
+					_toast("获取所有门店销售情况排行失败！", 3000, "bottom", function() {});
+				}
+			} else {
+				_toast(window.ajaxErrorMessage);
+				console.log("获取所有门店销售情况排行-->err:" + $api.jsonToStr(err));
+			}
+			call();
+		});
+	}
+	function getMainPushShop(call) {
+		allShopList=[];
+		var url = window.myServerUrl + "order/app/shoesInfo/selectMainPushShop";
+		url += "?shoesSeq=" + pageParam.seq;
+
+		console.log("获取主推门店列表-->url:" + url);
+		_ajax(url, "selectMainPushShop", function(ret, err) {
+			var datas = [];
+			if (ret) {
+				console.log("获取主推门店列表-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					allShopList = ret.result.result;
+
+				} else {
+					_toast("获取主推门店列表", 3000, "bottom", function() {});
+				}
+			} else {
+				_toast(window.ajaxErrorMessage);
+				console.log("获取主推门店列表-->err:" + $api.jsonToStr(err));
+			}
+			call();
+		});
+	}
+	/*
+	 *获取销量与库存
+	 */
+	function getSaleNumAndStock(call) {
+		var url = window.myServerUrl + "order/app/goodIdAnalysis/saleNumAndStock";
+		url += "?shoesSeq=" + pageParam.seq;
+		url += "&startDate=" + (pageParam.timeRange == 0 ? pageParam.startDate : _getStartDateByNum(pageParam.timeRange));
+		url += "&endDate=" + (pageParam.timeRange == 0 ? pageParam.endDate : _getFormatedDate("", "yyyy/MM/dd"));
+		console.log("获取销量与库存-->url:" + url);
+		_ajax(url, "saleNumAndStock", function(ret, err) {
+			var datas = [];
+			if (ret) {
+				console.log("获取销量与库存-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					datas = ret.result;
+
+				} else {
+					_toast("获取销量与库存失败！", 3000, "bottom", function() {});
+				}
+			} else {
+				_toast(window.ajaxErrorMessage);
+				console.log("获取销量与库存-->err:" + $api.jsonToStr(err));
+			}
+			call(datas);
+		});
+	}
+
+	function getSaleStockHtmlStr(stockDetail, flag) {
+
+		var htmlStr = "";
+		var column = 8;
+		var row = Math.ceil(stockDetail.length / column);
+		for (var i = 0; i < row; i++) {
+			htmlStr += '<li class="flex-wrap aui-border-b">';
+			if (i == 0) {
+				htmlStr += '<div class="text-style2 text-style aui-border-r ">尺码</div>';
+			} else {
+				htmlStr += '<div class="text-style2 text-style aui-border-r">尺码</div>';
+			}
+			htmlStr += '<div class="flex-2 flex-wrap">';
+			for (var j = 0; j < column; j++) {
+				if (i * column + j < stockDetail.length) {
+					htmlStr += '<span class="text-style3 text-style1 ">' + stockDetail[i * column + j].size + '</span>';
+				} else {
+					htmlStr += '<span class="text-style3 text-style1 "></span>';
+				}
+			}
+			htmlStr += '</div>';
+			htmlStr += '</li>';
+			htmlStr += '<li class="flex-wrap aui-border-b">';
+			htmlStr += '<div class="text-style2 text-style aui-border-r ">库存</div>';
+			htmlStr += '<div class="flex-wrap inventory flex-con">';
+			for (var j = 0; j < column; j++) {
+				if (i * column + j < stockDetail.length) {
+					if (flag == 'company') {
+						htmlStr += '<span class="text-style3 text-style1 text-spe3" tapmode onclick="openSizeFrm(\'' + api.pageParam.goodId + '\',\'' + stockDetail[i * column + j].sizeSeq + '\',\'' + stockDetail[i * column + j].size + '\')">' + stockDetail[i * column +
+							j].stock + '</span>';
+					} else if (flag == 'shop') {
+						htmlStr += '<span class="text-style3 text-style1">' + stockDetail[i * column + j].stock + '</span>';
+					}
+
+				} else {
+					htmlStr += '<span class="text-style3 text-style1 "></span>';
+				}
+			}
+			htmlStr += '</div>';
+			htmlStr += '</li>';
+		}
+		console.log("htmlStr:" + htmlStr);
+		return htmlStr;
+	}
+
+	function initSaleNumDiagramUI(datas) {
+		console.log("datas:" + $api.jsonToStr(datas));
+		myChart.clear();
+		if (!_isArrayNull(datas)) {
+			option.series = [];
+			for (var i = 0; i < datas.length - 1; i++) {
+				var series = {
+					symbol: 'circle', //折点设定为实心点
+					symbolSize: 6, //设定实心点的大小
+					type: 'line',
+					smooth: true,
+					seriesLayoutBy: "row",
+					itemStyle: {
+						color: colors[i]
+					}
+				};
+				option.series.push(series);
+			}
+			option.dataset = {
+				source: datas
+			};
+		} else {
+			option.series = [];
+			option.dataset = {
+				source: [
+					[]
+				]
+			};
+
+			// if (!$api.hasCls($api.dom(".charsWrap"), "aui-hide")) {
+			// 	$api.addCls($api.dom(".charsWrap"), "aui-hide");
+			// }
+		}
+		myChart.setOption(option);
+	}
+
+	function initAllShopsSaleDetailUI() {
+		var allNum = 0;
+		userInfo = $api.getStorage("userInfoKey");
+		console.log("allShopDatas:" + $api.jsonToStr(allShopDatas));
+		if (!_isArrayNull(allShopDatas)) {
+			if ($api.hasCls($api.dom(".othershop"), "aui-hide")) {
+				$api.removeCls($api.dom(".othershop"), "aui-hide");
+			}
+			if (userInfo.factoryUserFlag) {
+				//公司帐号
+				var data = allShopDatas[0];
+				var allShopSaleDetailList = data.allShopSaleDetailList;
+				for (var i = 0; i < allShopSaleDetailList.length; i++) {
+					allShopSaleDetailList[i].rankNum = (i + 1)
+					if (allShopSaleDetailList[i].shopName == '总仓') {
+						allNum = i
+					}
+				}
+				var shopAllObj = allShopSaleDetailList.splice(allNum, 1);
+				allShopSaleDetailList.unshift(shopAllObj[0])
+			} else {
+				//门店账号
+				var data = allShopDatas[0];
+				var allShopSaleDetailList = data.allShopSaleDetailList;
+				var num = 0;
+
+				// console.log($api.jsonToStr(shopInfo));
+				for (var i = 0; i < allShopSaleDetailList.length; i++) {
+					allShopSaleDetailList[i].rankNum = (i + 1)
+					if (allShopSaleDetailList[i].shopName == '总仓') {
+						allNum = i
+					}
+				}
+				var shopAllObj = allShopSaleDetailList.splice(allNum, 1);
+				allShopSaleDetailList.unshift(shopAllObj[0]);
+				for (var i = 0; i < allShopSaleDetailList.length; i++) {
+					if (allShopSaleDetailList[i].shopSeq == userInfo.shopSeq) {
+						num = i
+					}
+					// if(allShopSaleDetailList[i].shopName == '总仓'){
+					// 	allNum=i
+					// }
+				}
+				var shopObj = allShopSaleDetailList.splice(num, 1);
+				allShopSaleDetailList.unshift(shopObj[0]);
+				// shopObj[0]
+			}
+
+			// if(){
+			//
+			// }else {
+			//
+			// }
+			var htmlStr = "";
+			if (!_isArrayNull(allShopSaleDetailList)) {
+				htmlStr += '<li class="flex-wrap os-list aui-border-b li-list" data-shopname="公司" tapmode onclick="goInv(this,-1)">';
+				htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width" ></div>';
+				htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width1">汇总</div>';
+				htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width2">' + data.saleNum + '</div>';
+				htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width2">' + data.stock + '</div>';
+				// htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width3">' + data.salesDayAvg.toFixed(2) + '</div>';
+				htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width3">' + data.stockTotalDays + '</div>';
+				htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width4">' + data.avgSalePrice.toFixed(1) + '</div>';
+				htmlStr += '<i class="aui-iconfont aui-icon-right aui-collapse-arrow"></i>';
+				htmlStr += '</li>';
+				for (var i = 0; i < allShopSaleDetailList.length; i++) {
+					if (userInfo.factoryUserFlag) {
+						if (i == 0) {
+							htmlStr += '<li class="flex-wrap os-list aui-border-b hot li-list" data-shopname="' + allShopSaleDetailList[i].shopName + '" tapmode onclick="goInv(this,' + allShopSaleDetailList[i].shopSeq + ')">';
+						} else {
+							htmlStr += '<li class="flex-wrap os-list aui-border-b li-list" data-shopname="' + allShopSaleDetailList[i].shopName + '" tapmode onclick="goInv(this,' + allShopSaleDetailList[i].shopSeq + ')">';
+						}
+
+						//公司帐号
+						htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width">' + allShopSaleDetailList[i].rankNum + '</div>';
+
+					} else {
+						//门店账号
+						if (i < 2) {
+							htmlStr += '<li class="flex-wrap os-list aui-border-b hot li-list" data-shopname="' + allShopSaleDetailList[i].shopName + '" tapmode onclick="goInv(this,' + allShopSaleDetailList[i].shopSeq + ')">';
+						} else {
+							htmlStr += '<li class="flex-wrap os-list aui-border-b li-list" data-shopname="' + allShopSaleDetailList[i].shopName + '" tapmode onclick="goInv(this,' + allShopSaleDetailList[i].shopSeq + ')">';
+						}
+
+						htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width">' + allShopSaleDetailList[i].rankNum + '</div>';
+					}
+
+					htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width1 aui-ellipsis">' + allShopSaleDetailList[i].shopName + '</div>';
+					htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width2">' + allShopSaleDetailList[i].shopSaleNum + '</div>';
+					htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width2">' + allShopSaleDetailList[i].shopStock + '</div>';
+					// htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width3">' + allShopSaleDetailList[i].salesDayAvg.toFixed(2) + '</div>';
+					htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width3">' + allShopSaleDetailList[i].stockDays + '</div>';
+					htmlStr += '<div class="box-wrap box-vertical-center box-horizontal-center othershop-width4">' + allShopSaleDetailList[i].shopAvgSalePrice.toFixed(1) + '</div>';
+					htmlStr += '<i class="aui-iconfont aui-icon-right aui-collapse-arrow "></i>';
+					htmlStr += '</li>';
+				}
+			}
+
+			// console.log("htmlStr:" + htmlStr);
+			$api.html($api.dom(".othershop .list"), htmlStr);
+		} else {
+			if (!$api.hasCls($api.dom(".othershop"), "aui-hide")) {
+				$api.addCls($api.dom(".othershop"), "aui-hide");
+			}
+		}
+		if (pageParam.pageName=='主推款') {
+			var DomList = $('.li-list');
+			if (!_isArrayNull(allShopList)) {
+				for (var i = 0; i < allShopList.length; i++) {
+					for (var j = 0; j < DomList.length; j++) {
+						if (allShopList[i].shopName==$(DomList[j]).attr('data-shopname')) {
+							$(DomList[j]).addClass('hots')
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function initSaleAndStockUI(datas) {
+		console.log("datas:" + $api.jsonToStr(datas));
+		if (!_isArrayNull(datas)) {
+			var data = datas[0];
+			if (userInfo.factoryUserFlag) {
+				//公司帐号
+				if (!$api.hasCls($api.dom(".shop"), "aui-hide")) {
+					$api.addCls($api.dom(".shop"), "aui-hide");
+				}
+			} else {
+				//门店账号
+				if ($api.hasCls($api.dom(".shop"), "aui-hide")) {
+					$api.removeCls($api.dom(".shop"), "aui-hide");
+				}
+			}
+			//公司销售与库存
+			if (pageParam.timeRange == '1') {
+				$api.text($api.dom('.saleCompany'), '公司');
+				$api.text($api.dom('.saleNum1'), '近1天销量');
+				$api.text($api.dom('.dayAvgSaleNum1'), '近1天平均销量');
+				$api.text($api.dom('.saleNumRank1'), '近1天销量排名');
+				$api.text($api.dom('.sellOutRate1'), '近1天售罄率');
+				$api.text($api.dom('.avgSalePrice1'), '近1天平均售价/元');
+			} else if (pageParam.timeRange == '7') {
+				$api.text($api.dom('.saleCompany'), '公司');
+				$api.text($api.dom('.saleNum1'), '近7天销量');
+				$api.text($api.dom('.dayAvgSaleNum1'), '近7天平均销量');
+				$api.text($api.dom('.saleNumRank1'), '近7天销量排名');
+				$api.text($api.dom('.sellOutRate1'), '近7天售罄率');
+				$api.text($api.dom('.avgSalePrice1'), '近7天平均售价/元');
+			} else if (pageParam.timeRange == '15') {
+				$api.text($api.dom('.saleCompany'), '公司');
+				$api.text($api.dom('.saleNum1'), '近15天销量');
+				$api.text($api.dom('.dayAvgSaleNum1'), '近15天平均销量');
+				$api.text($api.dom('.saleNumRank1'), '近15天销量排名');
+				$api.text($api.dom('.sellOutRate1'), '近15天售罄率');
+				$api.text($api.dom('.avgSalePrice1'), '近15天平均售价/元');
+			} else if (pageParam.timeRange == '30') {
+				$api.text($api.dom('.saleCompany'), '公司');
+				$api.text($api.dom('.saleNum1'), '近30天销量');
+				$api.text($api.dom('.dayAvgSaleNum1'), '近30天平均销量');
+				$api.text($api.dom('.saleNumRank1'), '近30天销量排名');
+				$api.text($api.dom('.sellOutRate1'), '近30天售罄率');
+				$api.text($api.dom('.avgSalePrice1'), '近30天平均售价/元');
+			} else if (pageParam.timeRange == '999') {
+				$api.text($api.dom('.saleCompany'), '公司');
+				$api.text($api.dom('.saleNum1'), '累计销量');
+				$api.text($api.dom('.dayAvgSaleNum1'), '累计平均销量');
+				$api.text($api.dom('.saleNumRank1'), '累计销量排名');
+				$api.text($api.dom('.sellOutRate1'), '累计售罄率');
+				$api.text($api.dom('.avgSalePrice1'), '累计平均售价/元');
+			} else if (pageParam.timeRange == '0') {
+				$api.text($api.dom('.saleCompany'), '公司( ' + _getFormatedDate(pageParam.startDate, 'yyyy年MM月dd日') + '至 ' + _getFormatedDate(pageParam.endDate, 'yyyy年MM月dd日') + ')');
+				$api.text($api.dom('.saleNum1'), '销量');
+				$api.text($api.dom('.dayAvgSaleNum1'), '日平均销量');
+				$api.text($api.dom('.saleNumRank1'), '销量排名');
+				$api.text($api.dom('.sellOutRate1'), '售罄率');
+				$api.text($api.dom('.avgSalePrice1'), '平均售价/元');
+			}
+			$api.text($api.dom(".company .saleNum"), data.saleNum);
+			$api.text($api.dom(".company .saleNumRank"), data.saleNumRank);
+			$api.text($api.dom(".company .avgSalePrice"), data.avgSalePrice.toFixed(2));
+			$api.text($api.dom(".company .sellOutRate"), (data.sellOutRate * 100).toFixed(0) + "%");
+			$api.text($api.dom(".company .stock"), data.stock);
+			$api.text($api.dom(".company .stockRank"), data.stockRank);
+			$api.text($api.dom(".company .totalSaleNum"), data.totalSaleNum);
+			$api.text($api.dom(".company .dayAvgSaleNum"), data.dayAvgSaleNum);
+			$api.text($api.dom(".company .totalStock"), data.totalStock);
+			var stockDetail = data.stockDetail;
+			if (!_isArrayNull(stockDetail)) {
+				//公司渲染尺码
+				var htmlStr = getSaleStockHtmlStr(stockDetail, 'company');
+				$api.html($api.dom(".company .size-stock"), htmlStr);
+			}
+			if (!_isArrayNull(data.replenishList)) {
+
+				var htmlStr = '';
+				for (var i = 0; i < data.replenishList.length; i++) {
+					if (_isStringNull(data.replenishList[i].replenishTime)) {
+						htmlStr += '<li class="flex-wrap aui-border-b">';
+						htmlStr += '<div class="text-style2 text-style aui-border-r ">补单状态</div>';
+						htmlStr += '<div class="flex-wrap flex-con aui-padded-l-10 aui-padded-r-10 text-style1 text-style4">补货即将入库' + data.replenishList[i].replenishNum + '双</div>';
+						htmlStr += '</li>'
+					}else {
+						var dateList = data.replenishList[i].replenishTime.split('/')
+						htmlStr += '<li class="flex-wrap aui-border-b">';
+						htmlStr += '<div class="text-style2 text-style aui-border-r ">补单状态</div>';
+						htmlStr += '<div class="flex-wrap flex-con aui-padded-l-10 aui-padded-r-10 text-style1 text-style4">' + dateList[0] + '年' + dateList[1] + '月' + dateList[2] + '日补货即将入库' + data.replenishList[i].replenishNum + '双</div>';
+						htmlStr += '</li>'
+					}
+				}
+				$api.html($api.dom('.add-shops'), htmlStr);
+			} else {
+				var htmlStr = '<li class="flex-wrap  text-styles box-wrap box-vertical-center box-horizontal-center">暂无补单信息</li>';
+				$api.html($api.dom('.add-shops'), htmlStr);
+			}
+			if (userInfo.factoryUserFlag) {
+				//公司帐号
+				return;
+			}
+			//门店销售与库存
+			if (pageParam.timeRange == '1') {
+				$api.text($api.dom('.saleShop'), '本店');
+				$api.text($api.dom('.shopSaleNum1'), '近1天销量');
+				$api.text($api.dom('.dayAvgShopSaleNum1'), '近1天平均销量');
+				$api.text($api.dom('.shopSaleNumRank1'), '近1天销量排名');
+				$api.text($api.dom('.shopSellOutRate1'), '近1天售罄率');
+				$api.text($api.dom('.shopAvgSalePrice1'), '近1天平均售价/元');
+			} else if (pageParam.timeRange == '7') {
+				$api.text($api.dom('.saleShop'), '本店');
+				$api.text($api.dom('.shopSaleNum1'), '近7天销量');
+				$api.text($api.dom('.dayAvgShopSaleNum1'), '近7天平均销量');
+				$api.text($api.dom('.shopSaleNumRank1'), '近7天销量排名');
+				$api.text($api.dom('.shopSellOutRate1'), '近7天售罄率');
+				$api.text($api.dom('.shopAvgSalePrice1'), '近7天平均售价/元');
+			} else if (pageParam.timeRange == '15') {
+				$api.text($api.dom('.saleShop'), '本店');
+				$api.text($api.dom('.shopSaleNum1'), '近15天销量');
+				$api.text($api.dom('.dayAvgShopSaleNum1'), '近15天平均销量');
+				$api.text($api.dom('.shopSaleNumRank1'), '近15天销量排名');
+				$api.text($api.dom('.shopSellOutRate1'), '近15天售罄率');
+				$api.text($api.dom('.shopAvgSalePrice1'), '近15天平均售价/元');
+			} else if (pageParam.timeRange == '30') {
+				$api.text($api.dom('.saleShop'), '本店');
+				$api.text($api.dom('.shopSaleNum1'), '近30天销量');
+				$api.text($api.dom('.dayAvgShopSaleNum1'), '近30天平均销量');
+				$api.text($api.dom('.shopSaleNumRank1'), '近30天销量排名');
+				$api.text($api.dom('.shopSellOutRate1'), '近30天售罄率');
+				$api.text($api.dom('.shopAvgSalePrice1'), '近30天平均售价/元');
+			} else if (pageParam.timeRange == '999') {
+				$api.text($api.dom('.saleShop'), '本店');
+				$api.text($api.dom('.shopSaleNum1'), '累计销量');
+				$api.text($api.dom('.dayAvgShopSaleNum1'), '累计平均销量');
+				$api.text($api.dom('.shopSaleNumRank1'), '累计销量排名');
+				$api.text($api.dom('.shopSellOutRate1'), '累计售罄率');
+				$api.text($api.dom('.shopAvgSalePrice1'), '累计平均售价/元');
+			} else if (pageParam.timeRange == '0') {
+				$api.text($api.dom('.saleShop'), '本店( ' + _getFormatedDate(pageParam.startDate, 'yyyy年MM月dd日') + '至 ' + _getFormatedDate(pageParam.endDate, 'yyyy年MM月dd日') + ')');
+				$api.text($api.dom('.shopSaleNum1'), '销量');
+				$api.text($api.dom('.dayAvgShopSaleNum1'), '日平均销量');
+				$api.text($api.dom('.shopSaleNumRank1'), '销量排名');
+				$api.text($api.dom('.shopSellOutRate1'), '售罄率');
+				$api.text($api.dom('.shopAvgSalePrice1'), '平均售价/元');
+			}
+			$api.text($api.dom(".shop .shopSaleNum"), data.shopSaleNum);
+			$api.text($api.dom(".shop .shopSaleNumRank"), data.shopSaleNumRank);
+			$api.text($api.dom(".shop .shopAvgSalePrice"), _isStringNull(data.shopAvgSalePrice) ? "" : data.shopAvgSalePrice.toFixed(2));
+			$api.text($api.dom(".shop .shopSellOutRate"), _isStringNull(data.shopSellOutRate) ? "" : (data.shopSellOutRate * 100).toFixed(0) + "%");
+			$api.text($api.dom(".shop .shopStock"), data.shopStock);
+			$api.text($api.dom(".shop .shopStockRank"), data.shopStockRank);
+			$api.text($api.dom(".shop .shopTotalSaleNum"), data.shopTotalSaleNum);
+			$api.text($api.dom(".shop .dayAvgShopSaleNum"), data.dayAvgShopSaleNum);
+			$api.text($api.dom(".shop .totalShopStock"), data.totalShopStock);
+			var shopStockDetail = data.shopStockDetail;
+			if (!_isArrayNull(shopStockDetail)) {
+				// 门店渲染尺码
+				var htmlStr = getSaleStockHtmlStr(shopStockDetail, 'shop');
+				$api.html($api.dom(".shop .size-stock"), htmlStr);
+			}
+		} else {
+			if (userInfo.factoryUserFlag) {
+				//公司帐号
+				if (!$api.hasCls($api.dom(".shop"), "aui-hide")) {
+					$api.addCls($api.dom(".shop"), "aui-hide");
+				}
+			} else {
+				//门店账号
+				if ($api.hasCls($api.dom(".shop"), "aui-hide")) {
+					$api.removeCls($api.dom(".shop"), "aui-hide");
+				}
+			}
+		}
+	}
+
+	function initImgTextUI() {
+
+		var htmlStr = "";
+		if (!_isArrayNull(imageUrl)) {
+
+			if ($api.hasCls($api.dom(".aui-content"), "aui-hide")) {
+				$api.removeCls($api.dom(".aui-content"), "aui-hide");
+			}
+			for (var i = 0; i < imageUrl.length; i++) {
+				htmlStr += "<div class='aui-col-xs-12 box-wrap box-vertical-center box-horizontal-center' data-type='down' data-index='" + i + "' tapmode onclick='browserImage(this)'>";
+				htmlStr += "<img class='aui-margin-0' src='../../../image/load_img.png' data-src='" + imageUrl[i] + "'>";
+				htmlStr += "</div>";
+			}
+		} else {
+			if (!$api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+				$api.addCls($api.dom(".footer-more"), "aui-hide");
+			}
+			htmlStr += "<div class='aui-col-xs-12 box-wrap box-vertical-center box-horizontal-center'>";
+			htmlStr += "<img class='aui-margin-0' src='../../../image/load_img.png' data-src='../../../image/common/no_img.png'>";
+			htmlStr += "</div>";
+		}
+		//			console.log("htmlStr:" + htmlStr);
+		$api.html($api.dom(".img-text-desc"), htmlStr);
+		new auiLazyload({
+			errorImage: "../../../image/error_img.png"
+		});
+		api.parseTapmode();
+	}
+
+	//页面数据渲染
+	function renderData() {
+		if (_isStringNull(api.pageParam.avgScore)) {
+			$api.text($api.dom('.avgScore'), api.pageParam.avgScore)
+		} else {
+			$api.text($api.dom('.avgScore'), api.pageParam.avgScore + "分")
+		}
+
+		var data = pageParam;
+		//商品介绍
+		$("#introduce").val(data.introduce);
+		$api.text($api.dom(".price-1 .price-pf"), data.wholesalePrice1 == "" ? "" : "¥" + data.wholesalePrice1);
+		$api.text($api.dom(".price-1 .price-cj"), data.dealPrice1 == "" ? "" : "¥" + data.dealPrice1);
+		$api.text($api.dom(".price-1 .price-dp"), data.tagPrice1 == "" ? "" : "¥" + data.tagPrice1);
+
+		$api.text($api.dom(".price-2 .price-pf"), data.wholesalePrice2 == "" ? "" : "¥" + data.wholesalePrice2);
+		$api.text($api.dom(".price-2 .price-cj"), data.dealPrice2 == "" ? "" : "¥" + data.dealPrice2);
+		$api.text($api.dom(".price-2 .price-dp"), data.tagPrice2 == "" ? "" : "¥" + data.tagPrice2);
+
+		$api.text($api.dom(".price-3 .price-pf"), data.wholesalePrice3 == "" ? "" : "¥" + data.wholesalePrice3);
+		$api.text($api.dom(".price-3 .price-cj"), data.dealPrice3 == "" ? "" : "¥" + data.dealPrice3);
+		$api.text($api.dom(".price-3 .price-dp"), data.tagPrice3 == "" ? "" : "¥" + data.tagPrice3);
+		//我的评分
+		var score = $api.byId("score");
+		for (var i = 1; i <= 5; i++) {
+			if (i <= (data.score / 2)) {
+				if (!$api.hasCls($api.eq(score, i), "active")) {
+					$api.addCls($api.eq(score, i), "active");
+				}
+
+			}
+
+		}
+
+		//货号
+		$("#goodId").val(data.goodId);
+		$('.value').text(data.goodId);
+
+		//商品名称
+		$("#goodName").val(data.goodName);
+		//分类
+		$("#color").val(data.color);
+		//年份
+		$("#year").val(data.year);
+		//尺码
+		$("#season").val(data.season);
+
+		//规格参数
+		$api.text($api.dom(".shop-data .goodId"), data.goodId);
+		$api.text($api.dom(".shop-data .year"), data.year);
+		$api.text($api.dom(".shop-data .color"), data.color);
+		$api.text($api.dom(".shop-data .season"), data.season);
+		$api.text($api.dom(".shop-data .sex"), data.sex);
+		$api.text($api.dom(".shop-data .categoryName"), data.categoryName);
+		if (data.warehouseDate=='无') {
+			$api.text($api.dom(".shop-data .inputHeadshopTime"), data.warehouseDate);
+		}else {
+			$api.text($api.dom(".shop-data .inputHeadshopTime"), _getFormatedDate(data.warehouseDate, "yyyy年MM月dd日"));
+		}
+		if (data.shopDate=='无') {
+				$api.text($api.dom(".shop-data .inputShopTime"), data.shopDate);
+		}else {
+				$api.text($api.dom(".shop-data .inputShopTime"), _getFormatedDate(data.shopDate, "yyyy年MM月dd日"));
+		}
+
+		if (userInfo.factoryUserFlag) {
+			//公司
+			$api.addCls($api.dom('.shop-item'), 'aui-hide');
+
+		} else {
+			//门店
+		}
+
+		//自定义属性
+		//"SX":{"鞋面材质":"真皮","鞋里材质":"布","制造工艺":"方跟","鞋跟高度":"低跟(1-3cm)","流行元素":"扁平底","闭合方式":"系带","鞋底材质":"橡胶","鞋头风格":"圆头"}
+		var attrHtml = '';
+		// if (!_isObjectNull(data.SX)) {
+		// 	for (var sx in data.SX) {
+		// 		attrHtml += '<div class="aui-col-xs-6 flex-wrap aui-margin-t-5">';
+		// 		attrHtml += '<div class="parameter-name">' + sx + '：</div>';
+		// 		attrHtml += '<input class="flex-con parameter-value" readOnly type="text" placeholder="" value="' + data.SX[sx] + '"/>';
+		// 		attrHtml += '</div>';
+		// 	}
+		// }
+		attrHtml += '<div class="aui-col-xs-8 flex-wrap aui-margin-t-5">';
+		attrHtml += '<div class="parameter-name spe-width">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp分&nbsp;&nbsp;类&nbsp;:&nbsp;</div>';
+		attrHtml += '<input id="categoryName" class="flex-con parameter-value aui-ellipsis" readOnly type="text" placeholder="" value=""/>';
+		attrHtml += '</div>';
+		attrHtml += '<div class="aui-col-xs-4 flex-wrap aui-margin-t-5">';
+		attrHtml += '<div class="parameter-name spe-width">性&nbsp;&nbsp;别&nbsp;:&nbsp;</div>';
+		attrHtml += '<input id="sex" class="flex-con parameter-value" readOnly type="text" placeholder="" value=""/>';
+		attrHtml += '</div>';
+		attrHtml += '<div class="aui-col-xs-12 flex-wrap aui-margin-t-5">';
+		attrHtml += '<div class="parameter-name spe-width1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;总部入库时间&nbsp;:&nbsp;</div>';
+		attrHtml += '<input id="inputHeadshopTime" class="flex-con parameter-value" readOnly type="text" placeholder="" value=""/>';
+		attrHtml += '</div>';
+		attrHtml += '<div class="aui-col-xs-12 flex-wrap aui-margin-t-5 shop-item">';
+		attrHtml += '<div class="parameter-name spe-width1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本店上市时间&nbsp;:&nbsp;</div>';
+		attrHtml += '<input id="inputShopTime" class="flex-con parameter-value" readOnly type="text" placeholder="" value=""/>';
+		attrHtml += '</div>';
+
+
+		$api.append($api.dom(".goods-attributes"), attrHtml);
+
+		$api.val($api.byId("categoryName"), data.categoryName);
+		//颜色
+		$api.val($api.byId("sex"), data.sex);
+		//性别
+		// $api.val($api.byId("inputHeadshopTime"), _getFormatedDate(data.warehouseDate, "yyyy年MM月dd日"));
+		//总部入库时间
+		$api.val($api.byId("inputHeadshopTime"), _getFormatedDate(data.warehouseDate, "yyyy年MM月dd日"));
+		//本店入库时间
+		$api.val($api.byId("inputShopTime"), _getFormatedDate(data.shopDate, "yyyy年MM月dd日"));
+		if (userInfo.factoryUserFlag) {
+			//公司
+			$api.addCls($api.dom('.shop-item'), 'aui-hide');
+
+		} else {
+			//门店
+		}
+		if ($api.hasCls($api.dom(".content"), "aui-invisible")) {
+			$api.removeCls($api.dom(".content"), "aui-invisible");
+		}
+
+		//商品展示图片(最多5张)
+		var imgHTML = "";
+		imgArr = data.imgList;
+		if (!_isArrayNull(imgArr)) {
+			for (var i = 0; i < imgArr.length; i++) {
+				imgHTML += '<div class="aui-slide-node box-wrap box-horizontal-center box-vertical-center" data-type="up" data-index="' + i + '" tapmode onclick="browserImage(this)">';
+				imgHTML += '<img src="../../../image/load_img_middle.png" data-src="' + imgArr[i] + '" /></div>';
+			}
+		}
+		$api.append($api.dom(".aui-slide-wrap"), imgHTML);
+		new auiLazyload({
+			errorImage: "../../../image/error_img_middle.png"
+		});
+		//视频播放按钮
+		videoUrl = data.video;
+		if (!_isStringNull(videoUrl)) { //如果该商品有视频(不以"null"结尾),则显示播放按钮
+			if ($api.hasCls($api.byId("video"), "aui-hide")) {
+				$api.removeCls($api.byId("video"), "aui-hide");
+			}
+		}
+		var autoPlay = 0; //默认商品图不自动轮播
+		if (_isStringNull(videoUrl)) { //如果该商品没有视频(以"null"结尾),则商品图自动轮播
+			autoPlay = 0;
+		}
+		slide = new auiSlide({
+			container: $api.dom(".goods-images"),
+			// "width":300,
+			"height": $api.offset($api.dom(".goods-images")).h,
+			"speed": 300,
+			"autoPlay": autoPlay, //控制自动播放
+			"pageShow": true,
+			"loop": true,
+			"pageStyle": 'dot',
+			'dotPosition': 'center'
+		}, function(_index) {
+			if (!_isStringNull(videoUrl)) {
+				if (_index == 0) {
+					if ($api.hasCls($api.dom("#video"), "aui-hide")) {
+						$api.removeCls($api.dom("#video"), "aui-hide");
+					}
+				} else {
+					$api.addCls($api.dom("#video"), "aui-hide");
+				}
+			}
+		});
+		api.parseTapmode();
+	}
+
+	function initUi() {
+		if (pageParam.isMainpush == 1) {
+			//已收藏
+			setRecommendAction($api.dom(".recommend"), false);
+		}
+		renderData();
+		initImgTextUI();
+		initChart();
+		return;
+		if (!_isStringNull(videoUrl)) { //如果该商品有视频(不以"null"结尾),则自动播放
+			openPlayer(); //页面渲染后,自动播放视频
+		}
+	}
+
+	function initData() {
+		userInfo = $api.getStorage("userInfoKey");
+		//			console.log("获取用户信息------>:"+ userInfo);
+		imgs = $api.domAll(".aui-slide-node");
+		$api.css($api.dom(".goods-images"), "height:" + api.frameWidth + "px"); //商品展示图片,比例1:1
+		pageParam = api.pageParam;
+		console.log(pageParam.seq);
+		_sendEvent('getgoodSeqEvent', pageParam.seq);
+		imageUrl = pageParam.listDescription;
+	}
+
+	var userInfo;
+	var imgs;
+	//轮播图片数量
+	var videoUrl;
+	//商品视频地址
+	var slide;
+	var imageUrl = [];
+	var collapse = new auiCollapse({
+		autoHide: false
+	});
+	var option;
+	var myChart;
+	var colors = ["#FF0000", "#EBD068", "#85A8FF"];
+	var pageParam;
+	var allShopDatas = [];
+	var selectBtnsHeight;
+	var imgArr = [];
+	var allShopList=[];
+	apiready = function() {
+		api.parseTapmode();
+		//星级评分(jquery)
+		$("#cygrade").cygrade();
+		initData();
+		initUi();
+		getMainPushShop(function() {
+			getSaleNumAndStock(function(ret1) {
+				initSaleAndStockUI(ret1);
+				getAllShopsSaleDetail(function() {
+					initAllShopsSaleDetailUI();
+					getSaleNumDiagram(function(ret3) {
+						initSaleNumDiagramUI(ret3);
+					});
+				});
+			});
+		})
+
+		_addEventListener("pause", function(ret) {
+			console.log("pause");
+			//				alert("pause");
+		});
+		_addEventListener("filter_sale_graph_changed_event", function(ret) {
+			console.log("filter_sale_graph_changed_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+			if (pageParam.type == "sale") {
+				getMainPushShop(function() {
+					getSaleNumAndStock(function(ret1) {
+						initSaleAndStockUI(ret1);
+						getAllShopsSaleDetail(function() {
+							initAllShopsSaleDetailUI();
+							getSaleNumDiagram(function(ret3) {
+								initSaleNumDiagramUI(ret3);
+							});
+						});
+					});
+				})
+			} else {
+				getMainPushShop(function() {
+					getSaleNumAndStock(function(ret1) {
+						initSaleAndStockUI(ret1);
+						getAllShopsSaleDetail(function() {
+							initAllShopsSaleDetailUI();
+							getSaleNumDiagram(function(ret3) {
+								initSaleNumDiagramUI(ret3);
+							});
+						});
+					});
+				})
+			}
+		});
+		_addEventListener("userInfoUpdateKey", function(ret) {
+			userInfo = $api.getStorage("userInfoKey");
+		}, {});
+		api.addEventListener({
+			name: 'scrolltobottom',
+			extra: {
+				threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+			}
+		}, function(ret, err) {
+			//1.关闭播放器
+			closePlayer();
+			//2.打开下一个tab
+			if (!_isArrayNull(imageUrl)) { //存在商品描述图片
+				if ($api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+					$api.removeCls($api.dom(".footer-more"), "aui-hide");
+				}
+			}
+		});
+		//解决播放快退快进时报错问题
+		window.addEventListener('touchstart', function() {}, {
+			passive: false
+		});
+
+		//			window.onscroll = function(ret){
+		//			   var t = document.documentElement.scrollTop || document.body.scrollTop;
+		//			   var introduceYpos = $api.offset($api.byId("introduce")).t;
+		//			   console.log("商品描述的Y方向位置:" + introduceYpos+"滚动距离:" + t);
+		//			   if((introduceYpos - t) < 50){
+		//			   		closePlayer(); //关闭视频播放器
+		//			   }
+		//			};
+
+		//滑动显示筛选范围
+		selectBtnsHeight = $api.offset($api.dom('.shop')).h;
+		window.onscroll = function() {
+			var sTop = document.documentElement.scrollTop || document.body.scrollTop;
+			var choseHeight = $api.offset($api.dom('.shops')).t;
+
+			//  console.log(sTop);
+			//  console.log(choseHeight);
+			if (sTop >= (choseHeight - api.frameHeight)) {
+				//                  console.log("显示按钮");
+				if ($api.hasCls($api.dom(".chartHidden"), "aui-hide")) {
+					$api.removeCls($api.dom(".chartHidden"), "aui-hide");
+				}
+			} else {
+				//                  console.log("隐藏按钮");
+				if (!$api.hasCls($api.dom(".chartHidden"), "aui-hide")) {
+					$api.addCls($api.dom(".chartHidden"), "aui-hide");
+				}
+			}
+			// if (sTop >= selectBtnsHeight - ($api.offset($api.dom('.listSpe')).h * 3)) {
+			if (userInfo.factoryUserFlag) {
+				//公司
+				if (sTop > (choseHeight + selectBtnsHeight + $api.offset($api.dom('.listSpe')).h * 4)) {
+					if (!$api.hasCls($api.dom('.listSpe'), 'position-hot')) {
+						$api.addCls($api.dom('.listSpe'), 'position-hot');
+					}
+
+				} else {
+					if ($api.hasCls($api.dom('.listSpe'), 'position-hot')) {
+						$api.removeCls($api.dom('.listSpe'), 'position-hot');
+					}
+				}
+			} else {
+				if (sTop > (choseHeight + selectBtnsHeight * 2 + $api.offset($api.dom('.listSpe')).h * 4)) {
+					if (!$api.hasCls($api.dom('.listSpe'), 'position-hot')) {
+						$api.addCls($api.dom('.listSpe'), 'position-hot');
+					}
+
+				} else {
+					if ($api.hasCls($api.dom('.listSpe'), 'position-hot')) {
+						$api.removeCls($api.dom('.listSpe'), 'position-hot');
+					}
+				}
+			}
+
+		}
+
+	};
+	//
+</script>
+
+</html>

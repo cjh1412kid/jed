@@ -1,0 +1,39 @@
+body{
+	background-color: #ffffff;
+}
+.aui-iconfont {
+	font-weight: bold!important;
+}
+
+.content{
+	background-color: #f3f3f3;
+}
+.aui-bar-tab .aui-bar-tab-item {
+	display: table-cell;
+	position: relative;
+    width: 1%;
+    height: 2.5rem;
+    text-align: center;
+    vertical-align: middle;
+	opacity: 0.8;
+}
+footer{
+	height:2.82rem;
+	background:rgba(255,255,255,1);
+}
+.btns{
+	width:7.12rem;
+	height:1.5rem;
+	line-height: 1.5rem;
+	background:linear-gradient(270deg,rgba(255,170,0,1) 0%,rgba(255,113,0,1) 100%);
+	border-radius:0.89rem;
+	font-size:0.7rem;
+	font-family:PingFangSC-Regular;
+	font-weight:400;
+	color:rgba(255,255,255,1);
+}
+.reset{
+	background-color: rgba(255,73,120,1);
+	border-top-left-radius:0.89rem;
+	border-bottom-left-radius:0.89rem;
+}

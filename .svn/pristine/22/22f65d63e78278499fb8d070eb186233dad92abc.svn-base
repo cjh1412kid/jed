@@ -1,0 +1,2110 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>筛选条件</title>
+	<link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/filter_frm.css" />
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<section class="aui-content">
+		<div class="aui-card-list range-type aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">范围</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="range-type-item range-type-item-0 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="range-type" data-value="0" tapmode onclick="singleSelectAction(this)">
+						全部货品
+					</div>
+					<div class="range-type-item range-type-item-1 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="range-type" data-value="1" tapmode onclick="singleSelectAction(this)">
+						本店货品
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list year-list aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">货品年份<span class="tips aui-font-size-12 aui-margin-l-5">(多选)</span></div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<!-- <div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="year-list" data-value="2019" tapmode onclick="selectAction(this)">
+						2016
+					</div>
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="year-list" data-value="2018" tapmode onclick="selectAction(this)">
+						2017
+					</div>
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="year-list" data-value="2017" tapmode onclick="selectAction(this)">
+						2018
+					</div>
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="year-list" data-value="2016" tapmode onclick="selectAction(this)">
+						2019
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list season-list aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">季节<span class="tips aui-font-size-12 aui-margin-l-5">(多选)</span></div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<!-- <div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="season-seq-list" data-value="1" tapmode onclick="selectAction(this)">
+						春季
+					</div>
+					<div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="season-seq-list" data-value="1" tapmode onclick="selectAction(this)">
+						夏季
+					</div>
+					<div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="season-seq-list" data-value="1" tapmode onclick="selectAction(this)">
+						秋季
+					</div>
+					<div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="season-seq-list" data-value="1" tapmode onclick="selectAction(this)">
+						冬季
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list cate-list aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">新老款<span class="tips aui-font-size-12 aui-margin-l-5">(单选)</span></div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="cate-list-item cate-list-item-0 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="cate-list" data-value="0" tapmode onclick="singleSelectAction(this)">
+						新款
+					</div>
+					<div class="cate-list-item cate-list-item-1 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="cate-list" data-value="1" tapmode onclick="singleSelectAction(this)">
+						老款
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list money-list aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">价格区间<span class="tips aui-font-size-12 aui-margin-l-5">(元)</span></div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded flex-wrap">
+					<input type="text" name="" value="" class="startPrice aui-margin-r-10" tapmode oninput="writePrice(this)" data-type="1">
+					<span class="box-wrap box-vertical-center box-horizontal-center">至</span>
+					<input type="text" name="" value="" class="endPrice aui-margin-l-10" tapmode oninput="writePrice(this)" data-type="2">
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list shop-list aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">门店<span class="tips aui-font-size-12 aui-margin-l-5">(单选)</span></div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+
+					<!-- <div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="season-seq-list" data-value="1" tapmode onclick="selectAction(this)">
+						A店
+					</div>
+					<div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="season-seq-list" data-value="1" tapmode onclick="selectAction(this)">
+						B店
+					</div>
+					<div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="season-seq-list" data-value="1" tapmode onclick="selectAction(this)">
+						C店
+					</div>
+					<div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="season-seq-list" data-value="1" tapmode onclick="selectAction(this)">
+						D店
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list shop-list2 aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">货品范围<span class="tips aui-font-size-12 aui-margin-l-5">(单选)</span></div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="aui-col-xs-4 shop-list2-item all shop-list-item2 box-wrap box-vertical-center box-horizontal-center " data-type="shop-list2" data-value="-2" tapmode onclick="singleSelectAction2(this)">总部</div>
+					<div class="aui-col-xs-4 shop-list2-item one shop-list-item2 box-wrap box-vertical-center box-horizontal-center " data-type="shop-list2" data-value="-3" tapmode onclick="singleSelectAction2(this)">门店</div>
+				</div>
+				<div class="aui-row aui-row-padded shop-content2">
+
+				</div>
+			</div>
+		</div>
+
+		<div class="aui-card-list shop-list3 aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">货品范围<span class="tips aui-font-size-12 aui-margin-l-5">(单选)</span></div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded shops">
+					<div class="aui-col-xs-4 shop-list3-item all shop-list-item2 box-wrap box-vertical-center box-horizontal-center " data-type="shop-list3" data-value="-2" tapmode onclick="singleSelectAction3(this)">总部</div>
+					<div class="aui-col-xs-4 shop-list3-item one shop-list-item2 box-wrap box-vertical-center box-horizontal-center " data-type="shop-list3" data-value="-3" tapmode onclick="singleSelectAction3(this)">门店</div>
+				</div>
+				<div class="aui-row aui-row-padded shop-content3">
+
+				</div>
+			</div>
+		</div>
+
+		<div class="aui-card-list size-type aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">尺码</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="size-type-item size-type-item-0 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="size-type" data-value="0" tapmode onclick="singleSelectAction(this)">
+						断码
+					</div>
+					<div class="size-type-item size-type-item-1 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="size-type" data-value="1" tapmode onclick="singleSelectAction(this)">
+						缺码
+					</div>
+					<div class="size-type-item size-type-item-3 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="size-type" data-value="3" tapmode onclick="singleSelectAction(this)">
+						齐码
+					</div>
+					<div class="size-type-item size-type-item-2 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="size-type" data-value="2" tapmode onclick="singleSelectAction(this)">
+						自定义
+					</div>
+					<!-- <div class="size-type-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center blank">
+					</div> -->
+					<div class="size-type-range aui-col-xs-12 box-wrap box-vertical-end box-horizontal-center aui-font-size-12 aui-hide">
+						<div class="aui-margin-l-5 aui-margin-r-5" tapmode onclick="openCustomPickerPop(this)" data-type="min">
+							<span class="min">35</span>码
+						</div>
+						至
+						<div class="aui-margin-l-5 aui-margin-r-5" tapmode onclick="openCustomPickerPop(this)" data-type="max">
+							<span class="max">41</span>码
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list noun-type aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">排名数量</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="noun-type-item noun-type-item-1 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center " data-type="noun-type" data-value="1" tapmode onclick="singleSelectAction2(this)">
+						前50名
+					</div>
+					<div class="noun-type-item noun-type-item-2 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center " data-type="noun-type" data-value="2" tapmode onclick="singleSelectAction2(this)">
+						前80名
+					</div>
+					<div class="noun-type-item noun-type-item-3 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center " data-type="noun-type" data-value="3" tapmode onclick="singleSelectAction2(this)">
+						前100名
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list stock-type aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">库存区间</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded flex-wrap">
+					<div class="flex-con stock-item box-wrap box-vertical-center box-horizontal-center">
+						<input class="min-stock aui-padded-l-10 aui-padded-r-10 aui-text-center aui-font-size-12" type="number" name="min" value="" placeholder="最小库存" oninput="setStock(this)">
+					</div>
+					<div class="box-wrap box-vertical-center box-horizontal-center aui-margin-l-10 aui-margin-r-10">
+						-
+					</div>
+					<div class="flex-con stock-item box-wrap box-vertical-center box-horizontal-center aui-margin-r-10">
+						<input class="max-stock aui-padded-l-10 aui-padded-r-10 aui-text-center aui-font-size-12" type="number" name="max" value="" placeholder="最大库存" oninput="setStock(this)">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list category-list1 aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">类别</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<!-- <div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="categorySeqList" data-value="2" tapmode onclick="selectAction(this)">
+						皮鞋
+					</div>
+					<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="categorySeqList" data-value="2" tapmode onclick="selectAction(this)">
+						运动鞋
+					</div>
+					<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="categorySeqList" data-value="2" tapmode onclick="selectAction(this)">
+						拖鞋
+					</div>
+					<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="categorySeqList" data-value="2" tapmode onclick="selectAction(this)">
+						洞洞鞋
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list category-list aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">类别</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<!-- <div class="top1 aui-row ">
+						<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="categorySeqList" data-value="2" tapmode onclick="selectAction(this)">
+							男鞋
+						</div>
+						<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="categorySeqList" data-value="2" tapmode onclick="">
+							女鞋
+						</div>
+					</div>
+					<div class="top2 aui-padded-l-10 aui-row">
+						<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="categorySeqList" data-value="2" tapmode onclick="">
+							男鞋1
+						</div>
+						<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="categorySeqList" data-value="2" tapmode onclick="">
+							男鞋2
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list color-list aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">颜色</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<!-- <div class="color-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="colorSeqList" data-value="2" tapmode onclick="selectAction(this)">
+						红色
+					</div>
+					<div class="color-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="colorSeqList" data-value="2" tapmode onclick="selectAction(this)">
+						橙色
+					</div>
+					<div class="color-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="colorSeqList" data-value="2" tapmode onclick="selectAction(this)">
+						黄色
+					</div>
+					<div class="color-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="colorSeqList" data-value="2" tapmode onclick="selectAction(this)">
+						灰色
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">跟浅</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected">
+						高跟
+					</div>
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+						低跟
+					</div>
+					<div class="aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center">
+						中跟
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list supplement aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">有无补单</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="supplement-item supplement-item-1 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="supplement" data-value="1" tapmode onclick="singleSelectAction(this)">
+						有
+					</div>
+					<div class="supplement-item supplement-item-0 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="supplement" data-value="0" tapmode onclick="singleSelectAction(this)">
+						无
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list current-shop aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">是否本店</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="current-shop-item current-shop-item-1 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="current-shop" data-value="1" tapmode onclick="singleSelectAction(this)">
+						是
+					</div>
+					<div class="current-shop-item current-shop-item-0 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="current-shop" data-value="0" tapmode onclick="singleSelectAction(this)">
+						否
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-card-list time-range aui-hide">
+			<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+				<div class="aui-font-size-14">时间范围</div>
+				<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+			</div>
+			<div class="aui-card-list-content aui-collapse-content aui-show">
+				<div class="aui-row aui-row-padded">
+					<div class="time-range-item time-range-item-1 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="1" tapmode onclick="singleSelectAction(this)">
+						最近一日
+					</div>
+					<div class="time-range-item time-range-item-7 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="7" tapmode onclick="singleSelectAction(this)">
+						近七天
+					</div>
+					<div class="time-range-item time-range-item-15 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="15" tapmode onclick="singleSelectAction(this)">
+						近15天
+					</div>
+					<div class="time-range-item time-range-item-30 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="30" tapmode onclick="singleSelectAction(this)">
+						近30天
+					</div>
+					<div class="time-range-item time-range-item-999 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center time-spe" data-type="time-range" data-value="999" tapmode onclick="singleSelectAction(this)">
+						累计
+					</div>
+					<div class="time-range-item time-range-item-0 aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="time-range" data-value="0" tapmode onclick="singleSelectAction(this)">
+						自定义
+					</div>
+					<div class="time-range-custom aui-col-xs-12 box-wrap box-vertical-end box-horizontal-center aui-font-size-12 aui-hide" tapmode onclick="openDateRangePick(this)">
+						<div class="aui-margin-l-5 aui-margin-r-5">
+							<span class="start start-time" data-value="2018/12/10">2018年12月10日</span>
+						</div>
+						至
+						<div class="aui-margin-l-5 aui-margin-r-5">
+							<span class="start end-time" data-value="2019/03/10">2019年3月10日</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript" src="../script/common/jquery_min.js"></script>
+<script type="text/javascript">
+	function setStock(_obj) {
+		var value = _isStringNull($api.trimAll($api.val(_obj))) ? "" : parseInt($api.trimAll($api.val(_obj))) + "";
+		console.log("setStock:" + value);
+		var name = $api.attr(_obj, "name");
+		if (name == "min") {
+			pageParam.stockMinNum = $api.val(_obj);
+		} else if (name == "max") {
+			pageParam.stockMaxNum = $api.val(_obj);
+		}
+	}
+
+	function writePrice(_obj) {
+		// $api.removeAttr(_obj, 'readonly');
+		$(_obj).blur(function() {
+			if ($(_obj).attr('data-type') == '1') {
+				if (!_isStringNull($(_obj).val())) {
+					pageParam.startPrice = $(_obj).val()
+				} else {
+					pageParam.startPrice = ''
+				}
+			} else if ($(_obj).attr('data-type') == '2') {
+				if (!_isStringNull($(_obj).val())) {
+					pageParam.endPrice = $(_obj).val()
+				} else {
+					pageParam.endPrice = ''
+				}
+			}
+
+		})
+	}
+
+	function getSize(_size) {
+		if (_size < 33) {
+			_toast('请选取一个正确的尺码段!');
+			return;
+		}
+		if (_size > 55) {
+			_toast('请选取一个正确的尺码段!');
+			return;
+		}
+		allSizeList = $api.getStorage('allSizesKey');
+		var size = 0;
+		for (var i = 0; i < allSizeList.length; i++) {
+			if (allSizeList[i].sizeName == _size) {
+				size = allSizeList[i].seq;
+				return size;
+			}
+		}
+
+	}
+
+	function setItem(_type, _value) {
+		$api.text($api.dom('.' + _type), _value.slice(0, 2));
+		switch (_type) {
+			case 'min':
+
+				pageParam.sizeSeqStart = getSize(_value.slice(0, 2));
+				break;
+			case 'max':
+				pageParam.sizeSeqEnd = getSize(_value.slice(0, 2));
+				break;
+			default:
+
+		}
+	}
+
+	function openCustomPickerPop(obj) {
+		var sizeList = []
+		for (var i = 33; i < 55; i++) {
+			sizeList.push(i + '码')
+		}
+		var data = [{
+			//					tag : '时',
+			scope: sizeList
+		}];
+		var rect = {
+			x: 0, //左上角x坐标
+			y: 0, //左上角y坐标
+			w: "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+			h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+			marginLeft: 0, //相对父 window 左外边距的距离
+			marginTop: 0, //相对父 window 上外边距的距离
+			marginBottom: 0, //相对父 window 下外边距的距离
+			marginRight: 0 //相对父 window 右外边距的距离
+		};
+		var pageParam = {
+			frameName: api.frameName,
+			data: data,
+			eleID: $api.attr(obj, 'data-type'),
+		};
+		var bounces = false;
+		var reload = true;
+		var allowEdit = false;
+		var animation = {
+			type: "movein", //动画类型（详见动画类型常量）
+			subType: "from_bottom", //动画子类型（详见动画子类型常量）
+			duration: 0 //动画过渡时间，默认300毫秒
+		}
+		_openFrame("custom_picker_pop", "custom_picker_pop.html", rect, pageParam, bounces, reload, allowEdit, animation);
+		isTopFilterPopOpened = true;
+	}
+
+	function closeCustomPickerPop() {
+		api.closeFrame({
+			name: "custom_picker_pop"
+		});
+	}
+
+	function openDateRangePick(_obj) {
+		var rect = {
+			x: 0, //左上角x坐标
+			y: 0, //左上角y坐标
+			w: "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+			h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+			marginLeft: 0, //相对父 window 左外边距的距离
+			marginTop: 0, //相对父 window 上外边距的距离
+			marginBottom: 0, //相对父 window 下外边距的距离
+			marginRight: 0 //相对父 window 右外边距的距离
+		};
+		var pageParam = {
+			pageName: api.frameName
+		};
+		var bounces = false;
+		var reload = true;
+		var allowEdit = false;
+		var animation = {
+			type: "fade", //动画类型（详见动画类型常量）
+			subType: "from_right", //动画子类型（详见动画子类型常量）
+			duration: 300 //动画过渡时间，默认300毫秒
+		}
+		_openFrame("date_range_picker", "date_range_picker.html", rect, pageParam, bounces, reload, allowEdit, animation);
+	}
+
+	function setDateRange(_startDate, _endDate) {
+		pageParam.saleTimeStart = _startDate;
+		pageParam.saleTimeEnd = _endDate;
+		var startTime = _startDate.split('/');
+		var endTime = _endDate.split('/')
+		$api.text($api.dom('.start-time'), startTime[0] + "年" + startTime[1] + "月" + startTime[2] + "日");
+		$api.attr($api.dom('.start-time'), 'data-value', _startDate);
+		$api.text($api.dom('.end-time'), endTime[0] + "年" + endTime[1] + "月" + endTime[2] + "日");
+		$api.attr($api.dom('.end-time'), 'data-value', _endDate);
+		// console.log("开始时间：" + _startDate + " 结束时间：" + _endDate);
+		//添加渲染时间逻辑
+	}
+
+	function singleSelectAction3(_obj) {
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+		if ($(_obj).hasClass('selected') && dataValue == '-3') {
+			return;
+		}
+		if (!userInfo.factoryUserFlag) {
+			return;
+		}
+		if (!$api.hasCls(_obj, "selected")) {
+			$api.removeCls($api.dom("." + dataType + "-item.selected"), 'selected');
+			$api.addCls(_obj, 'selected');
+		}
+
+		switch (dataType) {
+			case "shop-list3":
+				changeShopEv3(_obj);
+				break;
+			default:
+		}
+	}
+
+	function singleSelectAction2(_obj) {
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		if ($(_obj).hasClass('shop-list2-item')) {
+			if ($(_obj).text() == '门店') {
+				$('.noun-type-item-1').text('前10名');
+				$('.noun-type-item-2').text('前20名');
+				$('.noun-type-item-3').text('前30名');
+			} else {
+				$('.noun-type-item-1').text('前50名');
+				$('.noun-type-item-2').text('前80名');
+				$('.noun-type-item-3').text('前100名');
+			}
+		}
+		if ($(_obj).hasClass('noun-type-item')) {
+			pageParam.ranking = dataValue
+		}
+		if ($(_obj).hasClass('selected') && dataValue == '-3') {
+			return;
+		}
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+		if (!$api.hasCls(_obj, "selected")) {
+			$api.removeCls($api.dom("." + dataType + "-item.selected"), 'selected');
+			$api.addCls(_obj, 'selected');
+		}
+
+		switch (dataType) {
+			case "shop-list2":
+				changeShopEv2(_obj);
+				break;
+			default:
+		}
+	}
+
+	function singleSelectAction(_obj) {
+
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+
+		if (!$api.hasCls(_obj, "selected")) {
+			//取消已经选中的
+			console.log(1);
+			if ($api.dom("." + dataType + "-item.selected")) {
+				$api.removeCls($api.dom("." + dataType + "-item.selected"), 'selected');
+			}
+			//重新选中所点击的
+			$api.addCls(_obj, 'selected');
+			switch (dataType) {
+				case "year-list":
+					var yearList = pageParam.yearList;
+					var index = -1;
+					for (var i = 0; i < yearList.length; i++) {
+						if (dataValue == yearList[i]) {
+							index = i;
+							break;
+						}
+					}
+					console.log(index);
+					console.log("pageParam.yearList:" + $api.jsonToStr(pageParam.yearList));
+					if (index == -1) {
+						pageParam.yearList.splice(index, 1, dataValue);
+						console.log("pageParam.yearList:" + $api.jsonToStr(pageParam.yearList));
+					}
+					break;
+				case "season-seq-list":
+					var seasonSeqList = pageParam.seasonSeqList;
+					var index = -1;
+					for (var i = 0; i < seasonSeqList.length; i++) {
+						if (dataValue == seasonSeqList[i]) {
+							index = i;
+							break;
+						}
+					}
+					console.log("pageParam.seasonSeqList:" + $api.jsonToStr(pageParam.seasonSeqList));
+					if (index == -1) {
+						pageParam.seasonSeqList.splice(index, 1, dataValue);
+						console.log("pageParam.seasonSeqList:" + $api.jsonToStr(pageParam.seasonSeqList));
+					}
+					break;
+				case "range-type":
+					console.log("pageParam.rangeType:" + pageParam.rangeType);
+					pageParam.rangeType = dataValue;
+					console.log("pageParam.rangeType:" + pageParam.rangeType);
+					break;
+				case "cate-list":
+					console.log("pageParam.oldOrNew:" + pageParam.oldOrNew);
+					pageParam.oldOrNew = dataValue;
+					console.log("pageParam.oldOrNew :" + pageParam.oldOrNew);
+					break;
+				case "size-type":
+					console.log("pageParam.sizeType:" + pageParam.sizeType);
+					pageParam.sizeType = dataValue;
+					console.log("pageParam.sizeType:" + pageParam.sizeType);
+					break;
+				case "stock-type":
+					console.log("pageParam.stockType:" + pageParam.stockType);
+					pageParam.stockType = dataValue;
+					console.log("pageParam.stockType:" + pageParam.stockType);
+					break;
+				case "time-range":
+					var nowTime = new Date();
+					console.log("pageParam.timeRange:" + pageParam.timeRange);
+					pageParam.timeRange = dataValue;
+					pageParam.saleTimeStart = _getStartDateByNum(dataValue);
+					console.log("pageParam.timeRange:" + pageParam.timeRange);
+					break;
+				case "shop-list":
+					console.log("pageParam.shopId:" + pageParam.shopSeqList);
+					pageParam.shopSeqList = [dataValue];
+					console.log("pageParam.shopId:" + pageParam.shopSeqList);
+					break;
+				case "supplement":
+					console.log("pageParam.supplement:" + pageParam.supplement);
+					pageParam.supplement = dataValue;
+					console.log("pageParam.supplement:" + pageParam.supplement);
+					break;
+				case "current-shop":
+					console.log("pageParam.isTransferOut:" + pageParam.isTransferOut);
+					pageParam.isTransferOut = dataValue;
+					console.log("pageParam.isTransferOut:" + pageParam.isTransferOut);
+					break;
+				case "noun-type":
+					console.log("pageParam.ranking:" + pageParam.ranking);
+					pageParam.ranking = dataValue;
+					console.log("pageParam.ranking:" + pageParam.ranking);
+					break;
+				case "shop-list4":
+					console.log("pageParam.shopSeqList:" + pageParam.shopSeqList);
+					pageParam.shopSeqList = [dataValue];
+					console.log("pageParam.shopSeqList:" + pageParam.shopSeqList);
+					break;
+				default:
+			}
+			if (dataType == "size-type") {
+				//如果点击的是尺码
+				if (dataValue == "2") {
+					//如果点击的是自定义
+					if ($api.hasCls($api.dom(".size-type-range"), "aui-hide")) {
+						$api.removeCls($api.dom(".size-type-range"), "aui-hide");
+						pageParam.sizeSeqStart = '3';
+						pageParam.sizeSeqEnd = '9';
+					}
+				} else {
+					if (!$api.hasCls($api.dom(".size-type-range"), "aui-hide")) {
+						$api.addCls($api.dom(".size-type-range"), "aui-hide");
+						pageParam.sizeSeqStart = "";
+						pageParam.sizeSeqEnd = "";
+					}
+				}
+			} else if (dataType == "stock-type") {
+				//如果点击的是库存
+				if (dataValue == "3") {
+					//如果点击的是自定义
+					if ($api.hasCls($api.dom(".stock-type-range"), "aui-hide")) {
+						$api.removeCls($api.dom(".stock-type-range"), "aui-hide");
+						pageParam.stockSeqStart = '3';
+						pageParam.stockSeqEnd = '9';
+					}
+				} else {
+					if (!$api.hasCls($api.dom(".stock-type-range"), "aui-hide")) {
+						$api.addCls($api.dom(".stock-type-range"), "aui-hide");
+						pageParam.stockSeqStart = "";
+						pageParam.stockSeqEnd = "";
+					}
+				}
+			} else if (dataType == "time-range") {
+				//如果点击的是时间范围
+				if (dataValue == "0") {
+					//如果点击的是自定义
+					if ($api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+						$api.removeCls($api.dom(".time-range-custom"), "aui-hide");
+						pageParam.saleTimeStart = $api.attr($api.dom(".start-time"), "data-value");
+						pageParam.saleTimeEnd = $api.attr($api.dom(".end-time"), "data-value");
+					}
+				} else {
+					if (!$api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+						$api.addCls($api.dom(".time-range-custom"), "aui-hide");
+						pageParam.saleTimeStart = "";
+						// pageParam.saleTimeEnd = "";
+					}
+				}
+			}
+		} else {
+			switch (dataType) {
+				case "size-type":
+					//如果点击的是尺码
+					$api.removeCls(_obj, 'selected');
+					pageParam.sizeType = "";
+					if (dataValue == "2") {
+						//如果点击的是自定义
+						if (!$api.hasCls($api.dom(".size-type-range"), "aui-hide")) {
+							$api.addCls($api.dom(".size-type-range"), "aui-hide");
+							pageParam.sizeSeqStart = "";
+							pageParam.sizeSeqEnd = "";
+						}
+					}
+					break;
+				case "stock-type":
+					//如果点击的是库存
+					$api.removeCls(_obj, 'selected');
+					pageParam.stockType = "";
+					if (dataValue == "3") {
+						//如果点击的是自定义
+						if (!$api.hasCls($api.dom(".stock-type-range"), "aui-hide")) {
+							$api.addCls($api.dom(".stock-type-range"), "aui-hide");
+							pageParam.stockSeqStart = "";
+							pageParam.stockSeqEnd = "";
+						}
+					}
+					break;
+				case "time-range":
+					//如果点击的是自定义时间
+					$api.removeCls(_obj, 'selected');
+					pageParam.timeRange = "";
+					if (dataValue == "0") {
+						//如果点击的是自定义
+						if (!$api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+							$api.addCls($api.dom(".time-range-custom"), "aui-hide");
+							pageParam.saleTimeStart = "";
+							// pageParam.saleTimeEnd = "";
+						}
+					}
+					break;
+				case "yearList":
+					// pageParam.yearList.splice(index, 1);
+					break;
+				case "season-seq-list":
+					// pageParam.seasonSeqList.splice(index, 1);
+					break;
+				case "shop-list":
+					$api.removeCls(_obj, 'selected');
+					pageParam.shopSeqList = [];
+					break;
+				case "shop-list2":
+					$api.removeCls(_obj, 'selected');
+					pageParam.shopSeqList = [];
+					break;
+				case "shop-list4":
+					var domList = $('.shop-list4-item');
+					for (var i = 0; i < domList.length; i++) {
+						$(domList[i]).removeClass('selected');
+					}
+					$('.chose-all').removeClass('selected');
+					// $api.removeCls(_obj, 'selected');
+					pageParam.shopSeqList = [];
+					break;
+				case "supplement":
+					$api.removeCls(_obj, 'selected');
+					pageParam.supplement = '';
+					break;
+				case "current-shop":
+					$api.removeCls(_obj, 'selected');
+					pageParam.isTransferOut = 0;
+					isTransferOut
+					break;
+				case 'cate-list':
+					$api.removeCls(_obj, 'selected');
+					pageParam.oldOrNew = '';
+					break;
+				case 'noun-type':
+					$api.removeCls(_obj, 'selected');
+					pageParam.nountype = '';
+					break;
+				default:
+			}
+		}
+	}
+
+	function selectAction(_obj) {
+		if (pageParam.flag == "ordermetting") {
+			singleSelectAction(_obj);
+		} else {
+			var dataType = $api.attr(_obj, "data-type");
+			var dataValue = $api.attr(_obj, "data-value");
+			console.log("dataType:" + dataType + " dataValue:" + dataValue);
+			if ($api.hasCls(_obj, "selected")) {
+				$api.removeCls(_obj, 'selected');
+				switch (dataType) {
+					case "year-list":
+						var yearList = pageParam.yearList;
+						var index = -1;
+						for (var i = 0; i < yearList.length; i++) {
+							if (dataValue == yearList[i]) {
+								index = i;
+								break;
+							}
+						}
+						console.log("pageParam.yearList:" + $api.jsonToStr(pageParam.yearList));
+						if (index != -1) {
+							pageParam.yearList.splice(index, 1);
+							console.log("pageParam.yearList:" + $api.jsonToStr(pageParam.yearList));
+						}
+						break;
+					case "season-seq-list":
+						var seasonSeqList = pageParam.seasonSeqList;
+						var index = -1;
+						for (var i = 0; i < seasonSeqList.length; i++) {
+							if (dataValue == seasonSeqList[i]) {
+								index = i;
+								break;
+							}
+						}
+						console.log("pageParam.seasonSeqList:" + $api.jsonToStr(pageParam.seasonSeqList));
+						if (index != -1) {
+							pageParam.seasonSeqList.splice(index, 1);
+							console.log("pageParam.seasonSeqList:" + $api.jsonToStr(pageParam.seasonSeqList));
+						}
+						break;
+					case "categorySeqList":
+						var categorySeqList = pageParam.categorySeqList;
+						var index = -1;
+						for (var i = 0; i < categorySeqList.length; i++) {
+							if (dataValue == categorySeqList[i]) {
+								index = i;
+								break;
+							}
+						}
+						console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.categorySeqList));
+						if (index != -1) {
+							pageParam.categorySeqList.splice(index, 1);
+							console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.categorySeqList));
+						}
+						break;
+					case "colorSeqList":
+						var colorSeqList = pageParam.colorSeqList;
+						var index = -1;
+						for (var i = 0; i < colorSeqList.length; i++) {
+							if (dataValue == colorSeqList[i]) {
+								index = i;
+								break;
+							}
+						}
+						console.log("pageParam.colorSeqList:" + $api.jsonToStr(pageParam.colorSeqList));
+						if (index != -1) {
+							pageParam.colorSeqList.splice(index, 1);
+							console.log("pageParam.colorSeqList:" + $api.jsonToStr(pageParam.colorSeqList));
+						}
+						break;
+					case "shop-list2":
+						var domList = $('.shop-content2 .shop-list-item');
+						var shopSeqList = []
+						for (var i = 0; i < domList.length; i++) {
+							if ($(domList[i]).hasClass('selected')) {
+								shopSeqList.push($(domList[i]).attr('data-value'))
+							}
+						}
+						pageParam.shopSeqList = shopSeqList;
+						break;
+					default:
+				}
+			} else {
+				$api.addCls(_obj, 'selected');
+				switch (dataType) {
+					case "year-list":
+						var yearList = pageParam.yearList;
+						var index = -1;
+						for (var i = 0; i < yearList.length; i++) {
+							if (dataValue == yearList[i]) {
+								index = i;
+								break;
+							}
+						}
+						console.log("pageParam.yearList:" + $api.jsonToStr(pageParam.yearList));
+						if (index == -1) {
+							pageParam.yearList.push(dataValue);
+							console.log("pageParam.yearList:" + $api.jsonToStr(pageParam.yearList));
+						}
+						break;
+					case "season-seq-list":
+						var seasonSeqList = pageParam.seasonSeqList;
+						var index = -1;
+						for (var i = 0; i < seasonSeqList.length; i++) {
+							if (dataValue == seasonSeqList[i]) {
+								index = i;
+								break;
+							}
+						}
+						console.log("pageParam.seasonSeqList:" + $api.jsonToStr(pageParam.seasonSeqList));
+						if (index == -1) {
+							pageParam.seasonSeqList.push(dataValue);
+							console.log("pageParam.seasonSeqList:" + $api.jsonToStr(pageParam.seasonSeqList));
+						}
+						break;
+					case "categorySeqList":
+						var categorySeqList = pageParam.categorySeqList;
+						var index = -1;
+						for (var i = 0; i < categorySeqList.length; i++) {
+							if (dataValue == categorySeqList[i]) {
+								index = i;
+								break;
+							}
+						}
+						console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.categorySeqList));
+						if (index == -1) {
+							pageParam.categorySeqList.push(dataValue);
+							console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.categorySeqList));
+						}
+						break;
+					case "colorSeqList":
+						var colorSeqList = pageParam.colorSeqList;
+						var index = -1;
+						for (var i = 0; i < colorSeqList.length; i++) {
+							if (dataValue == colorSeqList[i]) {
+								index = i;
+								break;
+							}
+						}
+						console.log("pageParam.colorSeqList:" + $api.jsonToStr(pageParam.colorSeqList));
+						if (index == -1) {
+							pageParam.colorSeqList.push(dataValue);
+							console.log("pageParam.colorSeqList:" + $api.jsonToStr(pageParam.colorSeqList));
+						}
+						break;
+					case "shop-list2":
+						var domList = $('.shop-content2 .shop-list-item');
+						var shopSeqList = []
+						for (var i = 0; i < domList.length; i++) {
+							if ($(domList[i]).hasClass('selected')) {
+								shopSeqList.push($(domList[i]).attr('data-value'))
+							}
+						}
+						pageParam.shopSeqList = shopSeqList;
+						break;
+					default:
+				}
+			}
+		}
+
+	}
+
+	function changeType1(_obj) {
+
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+		if (!$api.hasCls(_obj, "selected")) {
+			$api.removeCls($api.dom("." + dataType + "-item.selected"), 'selected');
+			$api.addCls(_obj, 'selected');
+
+			var cateSeqList = pageParam.cateSeqList;
+			var index = -1;
+			for (var i = 0; i < cateSeqList.length; i++) {
+				if (dataValue == cateSeqList[i]) {
+					index = i;
+					break;
+				}
+			}
+			console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			if (index == -1) {
+				if (dataValue == '-999') {
+					pageParam.cateSeqList = [];
+				} else {
+					pageParam.cateSeqList = [dataValue];
+				}
+				console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			}
+		}
+		var allTop1 = $api.domAll('.selected.top1');
+		var parentSeq = $api.attr(allTop1[0], 'data-value');
+		var allTop2 = $api.domAll('.top2')
+		for (var i = 0; i < allTop2.length; i++) {
+			var parentFriSeq = $api.attr(allTop2[i], 'data-parentSeq');
+			if (parentSeq == parentFriSeq) {
+				$api.removeCls(allTop2[i], 'aui-hide');
+				$api.removeCls($api.dom('.top2.cut-line'), 'aui-hide');
+			} else if (!$api.hasCls(allTop2[i], 'aui-hide')) {
+				$api.addCls(allTop2[i], 'aui-hide');
+			}
+		}
+	}
+
+	function changeType(_obj) {
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+		if ($api.hasCls(_obj, "selected")) {
+			$api.removeCls(_obj, 'selected');
+			var cateSeqList = pageParam.cateSeqList;
+			var index = -1;
+			for (var i = 0; i < cateSeqList.length; i++) {
+				console.log(dataValue + "-----------" + cateSeqList[i] + "-------" + i);
+				if (dataValue == cateSeqList[i]) {
+					index = i;
+					break;
+				}
+			}
+			console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			if (index != -1) {
+				pageParam.cateSeqList.splice(index, 1);
+				console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			}
+		} else {
+			$api.addCls(_obj, 'selected');
+			var cateSeqList = pageParam.cateSeqList;
+			var index = -1;
+			for (var i = 0; i < cateSeqList.length; i++) {
+				if (dataValue == cateSeqList[i]) {
+					index = i;
+					break;
+				}
+			}
+			console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			if (index == -1) {
+				pageParam.cateSeqList.push(dataValue);
+				console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			}
+		}
+		var allTop1 = $api.domAll('.selected.top1')
+
+		if (allTop1.length == 1) {
+			var parentSeq = $api.attr(allTop1[0], 'data-value')
+
+			var allTop2 = $api.domAll('.top2')
+			for (var i = 0; i < allTop2.length; i++) {
+				var parentFriSeq = $api.attr(allTop2[i], 'data-parentSeq')
+
+				if (parentSeq == parentFriSeq) {
+					$api.removeCls(allTop2[i], 'aui-hide');
+					$api.removeCls($api.dom('.top2.cut-line'), 'aui-hide');
+				} else if (!$api.hasCls(allTop2[i], 'aui-hide')) {
+					$api.addCls(allTop2[i], 'aui-hide');
+					$api.addCls($api.dom('.top2.cut-line'), 'aui-hide');
+				}
+			}
+		} else {
+			var allTop2 = $api.domAll('.top2')
+			for (var i = 0; i < allTop2.length; i++) {
+				if (!$api.hasCls(allTop2[i], 'aui-hide')) {
+					$api.addCls(allTop2[i], 'aui-hide');
+				}
+				var value = $api.attr(allTop2[i], "data-value");
+				var cateSeqList = pageParam.cateSeqList;
+				var index = -1;
+				console.log(cateSeqList);
+				for (var j = 0; j < cateSeqList.length; j++) {
+					console.log(dataValue + "-----------" + cateSeqList[j] + "-------" + j);
+					if (value == cateSeqList[j]) {
+						$api.removeCls(allTop2[i], 'selected');
+						index = j;
+						break;
+					}
+				}
+				console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+				if (index != -1) {
+					pageParam.cateSeqList.splice(index, 1);
+					console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+				}
+			}
+			var allTop3 = $api.domAll('.top3')
+			for (var i = 0; i < allTop3.length; i++) {
+				if (!$api.hasCls(allTop3[i], 'aui-hide')) {
+					$api.addCls(allTop3[i], 'aui-hide');
+				}
+				var value = $api.attr(allTop3[i], "data-value");
+				var cateSeqList = pageParam.cateSeqList;
+				var index = -1;
+				for (var j = 0; j < cateSeqList.length; j++) {
+					console.log(dataValue + "-----------" + cateSeqList[j] + "-------" + j);
+					if (value == cateSeqList[j]) {
+						$api.removeCls(allTop3[i], 'selected');
+						index = j;
+						break;
+					}
+				}
+				console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+				if (index != -1) {
+					pageParam.cateSeqList.splice(index, 1);
+					console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+				}
+			}
+		}
+		pageParam.categorySeqList = []
+		for (var i = 0; i < allTop1.length; i++) {
+			var categorySeq = $api.attr(allTop1[i], 'data-value')
+			pageParam.categorySeqList.push(categorySeq)
+		}
+		console.log(pageParam.categorySeqList);
+	}
+
+	function changeSecType1(_obj) {
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+		if (!$api.hasCls(_obj, "selected")) {
+			$api.removeCls($api.dom("." + dataType + "-item.selected"), 'selected');
+			$api.addCls(_obj, 'selected');
+			var cateSeqList = pageParam.cateSeqList;
+			var index = -1;
+			for (var i = 0; i < cateSeqList.length; i++) {
+				if (dataValue == cateSeqList[i]) {
+					index = i;
+					break;
+				}
+			}
+			console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			if (index == -1) {
+				pageParam.cateSeqList = [dataValue];
+				console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			}
+		}
+	}
+
+	function changeSecType(_obj) {
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+		if ($api.hasCls(_obj, "selected")) {
+			$api.removeCls(_obj, 'selected');
+			var cateSeqList = pageParam.cateSeqList;
+			var index = -1;
+			for (var i = 0; i < cateSeqList.length; i++) {
+				if (dataValue == cateSeqList[i]) {
+					index = i;
+					break;
+				}
+			}
+			console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			if (index != -1) {
+				pageParam.cateSeqList.splice(index, 1);
+				console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			}
+		} else {
+			$api.addCls(_obj, 'selected');
+			var cateSeqList = pageParam.cateSeqList;
+			var index = -1;
+			for (var i = 0; i < cateSeqList.length; i++) {
+				if (dataValue == cateSeqList[i]) {
+					index = i;
+					break;
+				}
+			}
+			console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			if (index == -1) {
+				pageParam.cateSeqList.push(dataValue);
+				console.log("pageParam.categorySeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			}
+		}
+		var allTop2 = $api.domAll('.top2.selected')
+		if (allTop2.length == 1) {
+			var parentSeq = $api.attr(allTop2[0], 'data-value')
+			var allTop3 = $api.domAll('.top3')
+			for (var i = 0; i < allTop3.length; i++) {
+				var parentSecSeq = $api.attr(allTop3[i], 'data-parentSecSeq')
+				if (parentSeq == parentSecSeq) {
+					$api.removeCls(allTop3[i], 'aui-hide');
+					$api.removeCls($api.dom('.top3.cut-line'), 'aui-hide');
+				} else if (!$api.hasCls(allTop3[i], 'aui-hide')) {
+					$api.addCls(allTop3[i], 'aui-hide');
+					$api.addCls($api.dom('.top3.cut-line'), 'aui-hide');
+				}
+			}
+		} else {
+			var allTop3 = $api.domAll('.top3')
+			for (var i = 0; i < allTop3.length; i++) {
+				if (!$api.hasCls(allTop3[i], 'aui-hide')) {
+					$api.addCls(allTop3[i], 'aui-hide');
+				}
+				var value = $api.attr(allTop3[i], "data-value");
+				var cateSeqList = pageParam.cateSeqList;
+				var index = -1;
+				for (var j = 0; j < cateSeqList.length; j++) {
+					console.log(dataValue + "-----------" + cateSeqList[j] + "-------" + j);
+					if (value == cateSeqList[j]) {
+						$api.removeCls(allTop3[i], 'selected');
+						index = j;
+						break;
+					}
+				}
+				console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+				if (index != -1) {
+					pageParam.cateSeqList.splice(index, 1);
+					console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+				}
+			}
+		}
+		pageParam.categorySeqList = []
+		if (allTop2.length != 0) {
+			for (var i = 0; i < allTop2.length; i++) {
+				var categorySeq = $api.attr(allTop2[i], 'data-value')
+				pageParam.categorySeqList.push(categorySeq)
+			}
+		} else {
+			var allTop1 = $api.domAll('.selected.top1')
+			for (var i = 0; i < allTop1.length; i++) {
+				var categorySeq = $api.attr(allTop1[i], 'data-value')
+				pageParam.categorySeqList.push(categorySeq)
+			}
+		}
+
+		console.log(pageParam.categorySeqList);
+	}
+
+
+	function changeThrType(_obj) {
+		var dataType = $api.attr(_obj, "data-type");
+		var dataValue = $api.attr(_obj, "data-value");
+		console.log("dataType:" + dataType + " dataValue:" + dataValue);
+		if ($api.hasCls(_obj, "selected")) {
+			$api.removeCls(_obj, 'selected');
+			var cateSeqList = pageParam.cateSeqList;
+			var index = -1;
+			for (var i = 0; i < cateSeqList.length; i++) {
+				if (dataValue == cateSeqList[i]) {
+					index = i;
+					break;
+				}
+			}
+			console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			if (index != -1) {
+				pageParam.categorySeqList.splice(index, 1);
+				console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			}
+		} else {
+			$api.addCls(_obj, 'selected');
+			var cateSeqList = pageParam.cateSeqList;
+			var index = -1;
+			for (var i = 0; i < cateSeqList.length; i++) {
+				if (dataValue == cateSeqList[i]) {
+					index = i;
+					break;
+				}
+			}
+			console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			if (index == -1) {
+				pageParam.cateSeqList.push(dataValue);
+				console.log("pageParam.cateSeqList:" + $api.jsonToStr(pageParam.cateSeqList));
+			}
+		}
+		var allTop3 = $api.domAll('.top3.selected')
+
+		pageParam.categorySeqList = []
+		if (allTop3.length != 0) {
+			for (var i = 0; i < allTop3.length; i++) {
+				var categorySeq = $api.attr(allTop3[i], 'data-value')
+				pageParam.categorySeqList.push(categorySeq)
+			}
+		} else {
+			var allTop2 = $api.domAll('.selected.top2')
+			for (var i = 0; i < allTop2.length; i++) {
+				var categorySeq = $api.attr(allTop2[i], 'data-value')
+				pageParam.categorySeqList.push(categorySeq)
+			}
+		}
+		console.log(pageParam.categorySeqList);
+	}
+
+	function initTimeRangeUI() {
+		if ($api.hasCls($api.dom(".time-range"), "aui-hide")) {
+			$api.removeCls($api.dom(".time-range"), "aui-hide");
+		}
+		//先清除被选中的
+		if ($api.dom(".time-range-item.selected")) {
+			$api.removeCls($api.dom(".time-range-item.selected"), 'selected');
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		if (!_isStringNull(pageParam.timeRange)) {
+			$api.addCls($api.dom(".time-range-item-" + pageParam.timeRange), 'selected');
+			if (pageParam.timeRange == 0) {
+				if ($api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+					$api.removeCls($api.dom(".time-range-custom"), "aui-hide");
+				}
+			} else {
+				if (!$api.hasCls($api.dom(".time-range-custom"), "aui-hide")) {
+					$api.addCls($api.dom(".time-range-custom"), "aui-hide");
+				}
+			}
+		}
+	}
+
+	/**
+	 *本店货品
+	 */
+	function initCurrentShopUI() {
+		if ($api.hasCls($api.dom(".current-shop"), "aui-hide")) {
+			$api.removeCls($api.dom(".current-shop"), "aui-hide");
+		}
+		//先清除被选中的
+		if ($api.dom(".current-shop-item.selected")) {
+			$api.removeCls($api.dom(".current-shop-item.selected"), 'selected');
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		if (!_isStringNull(pageParam.isTransferOut)) {
+			$api.addCls($api.dom(".current-shop-item-" + pageParam.isTransferOut), 'selected');
+		}
+	}
+
+	function initSupplementUI() {
+		if ($api.hasCls($api.dom(".supplement"), "aui-hide")) {
+			$api.removeCls($api.dom(".supplement"), "aui-hide");
+		}
+		//先清除被选中的
+		if ($api.dom(".supplement-item.selected")) {
+			$api.removeCls($api.dom(".supplement-item.selected"), 'selected');
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		if (!_isStringNull(pageParam.supplement)) {
+			$api.addCls($api.dom(".time-range-item-" + pageParam.supplement), 'selected');
+		}
+	}
+
+	function initNounTypeUI() {
+		if ($api.hasCls($api.dom(".noun-type"), "aui-hide")) {
+			$api.removeCls($api.dom(".noun-type"), "aui-hide");
+		}
+		//先清除被选中的
+		if ($api.dom(".noun-type-item.selected")) {
+			$api.removeCls($api.dom(".noun-type-item.selected"), 'selected');
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		if (!_isStringNull(pageParam.ranking)) {
+			$api.addCls($api.dom(".noun-type-item-" + pageParam.ranking), 'selected');
+		}
+	}
+
+	function initColorUI() {
+		if ($api.hasCls($api.dom(".color-list"), "aui-hide")) {
+			$api.removeCls($api.dom(".color-list"), "aui-hide");
+		}
+		var colorList = $api.getStorage("colorListKey");
+		var htmlStr = '';
+		for (var i = 0; i < colorList.length; i++) {
+			var flg = false;
+			for (var j = 0; j < pageParam.colorSeqList.length; j++) {
+				if (pageParam.colorSeqList[j] == colorList[i].seq) {
+					flg = true;
+				}
+			}
+			if (flg) {
+				htmlStr += '<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="colorSeqList" data-value="' + colorList[i].seq + '" tapmode onclick="selectAction(this)">';
+			} else {
+				htmlStr += '<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="colorSeqList" data-value="' + colorList[i].seq + '" tapmode onclick="selectAction(this)">';
+			}
+			htmlStr += colorList[i].name;
+			htmlStr += '</div>';
+		}
+		$api.html($api.dom(".color-list .aui-row"), htmlStr);
+	}
+
+	function initCategoryUI() {
+		// $api.addCls($api.dom('.categorySeqList1'), 'aui-hide');
+		if ($api.hasCls($api.dom(".category-list"), "aui-hide")) {
+			$api.removeCls($api.dom(".category-list"), "aui-hide");
+		}
+		var categoryList = $api.getStorage("shoesCategoryKey");
+		var htmlStr = '';
+		htmlStr += '<div class="aui-row">'
+		for (var i = 0; i < categoryList.length; i++) {
+			var flg = false;
+			for (var j = 0; j < pageParam.cateSeqList.length; j++) {
+				if (pageParam.cateSeqList[j] == categoryList[i].seq) {
+					flg = true;
+				}
+			}
+			if (flg) {
+				htmlStr += '<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected top1" data-type="categorySeqList" data-value="' + categoryList[i].seq + '" tapmode onclick="changeType(this)">';
+			} else {
+				htmlStr += '<div class="category-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center top1" data-type="categorySeqList" data-value="' + categoryList[i].seq + '" tapmode onclick="changeType(this)">';
+			}
+			htmlStr += categoryList[i].name;
+			htmlStr += '</div>';
+		}
+		htmlStr += '</div>'
+		for (var i = 0; i < categoryList.length; i++) {
+			var secCategoryList = categoryList[i].child
+			htmlStr += '<div class="aui-row">'
+			htmlStr += '<div class="cut-line aui-hide top2"></div>'
+			for (var j = 0; j < secCategoryList.length; j++) {
+				var flg = false;
+				for (var k = 0; k < pageParam.cateSeqList.length; k++) {
+					if (pageParam.cateSeqList[k] == secCategoryList[j].seq) {
+						flg = true;
+					}
+				}
+				if (flg) {
+					htmlStr += '<div class="category-list-item aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center selected top2" data-parentSeq=' + categoryList[i].seq + ' data-type="categorySeqList" data-value="' + secCategoryList[j].seq +
+						'" tapmode onclick="changeSecType(this)">';
+				} else {
+					htmlStr += '<div class="category-list-item aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center top2 aui-hide" data-parentSeq=' + categoryList[i].seq + '  data-type="categorySeqList" data-value="' + secCategoryList[j].seq +
+						'" tapmode onclick="changeSecType(this)">';
+				}
+				htmlStr += secCategoryList[j].name;
+				htmlStr += '</div>';
+			}
+			htmlStr += '</div>';
+		}
+
+		for (var i = 0; i < categoryList.length; i++) {
+			var secCategoryList = categoryList[i].child
+			for (var j = 0; j < secCategoryList.length; j++) {
+				var thrCategoryList = secCategoryList[j].child
+				htmlStr += '<div class="aui-row">'
+				htmlStr += '<div class="cut-line aui-hide top3"></div>'
+				for (var k = 0; k < thrCategoryList.length; k++) {
+					var flg = false;
+					for (var m = 0; m < pageParam.cateSeqList.length; m++) {
+						if (pageParam.cateSeqList[m] == thrCategoryList[k].seq) {
+							flg = true;
+						}
+					}
+					if (flg) {
+						htmlStr += '<div class="category-list-item aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center spe selected top3" data-parentSecSeq=' + secCategoryList[j].seq + ' data-type="categorySeqList" data-value="' + thrCategoryList[k].seq +
+							'" tapmode onclick="changeThrType(this)">';
+					} else {
+						htmlStr += '<div class="category-list-item aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center spe top3 aui-hide" data-parentSecSeq=' + secCategoryList[j].seq + '  data-type="categorySeqList" data-value="' + thrCategoryList[k].seq +
+							'" tapmode onclick="changeThrType(this)">';
+					}
+					htmlStr += thrCategoryList[k].name;
+					htmlStr += '</div>';
+				}
+				htmlStr += '</div>';
+			}
+		}
+
+
+		$api.html($api.dom(".category-list .aui-row"), htmlStr);
+	}
+
+	function initCategoryUI1() {
+		// $api.addCls($api.dom('.category-list'), 'aui-hide');
+		if ($api.hasCls($api.dom(".category-list1"), "aui-hide")) {
+			$api.removeCls($api.dom(".category-list1"), "aui-hide");
+		}
+		var categoryList = $api.getStorage("shoesCategoryKey");
+		console.log($api.jsonToStr(categoryList));
+		var htmlStr = '';
+		htmlStr += '<div class="aui-row">'
+		for (var i = 0; i < categoryList.length; i++) {
+			var flg = false;
+			for (var j = 0; j < pageParam.cateSeqList.length; j++) {
+				if (pageParam.cateSeqList[j] == categoryList[i].seq) {
+					flg = true;
+				}
+			}
+			if (flg) {
+				htmlStr += '<div class="category1-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected top1" data-type="category1-list" data-value="' + categoryList[i].seq + '" tapmode onclick="changeType1(this)">';
+			} else {
+				htmlStr += '<div class="category1-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center top1" data-type="category1-list" data-value="' + categoryList[i].seq + '" tapmode onclick="changeType1(this)">';
+			}
+			htmlStr += categoryList[i].name;
+			htmlStr += '</div>';
+			if (i == categoryList.length - 1) {
+       if(_isArrayNull(pageParam.cateSeqList)){
+				 htmlStr += '<div class="category1-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected top1" data-type="category1-list" data-value="-999" tapmode onclick="changeType1(this)">';
+			 }else {
+			 	htmlStr += '<div class="category1-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center  top1" data-type="category1-list" data-value="-999" tapmode onclick="changeType1(this)">';
+			 }
+
+				htmlStr += '全部分类';
+				htmlStr += '</div>';
+
+			}
+
+		}
+		htmlStr += '</div>'
+
+		for (var i = 0; i < categoryList.length; i++) {
+			var secCategoryList = categoryList[i].child
+			htmlStr += '<div class="aui-row">'
+			htmlStr += '<div class="cut-line aui-hide top2"></div>';
+			for (var j = 0; j < secCategoryList.length; j++) {
+				var flg = false;
+				for (var k = 0; k < pageParam.cateSeqList.length; k++) {
+					if (pageParam.cateSeqList[k] == secCategoryList[j].seq) {
+						flg = true;
+					}
+				}
+				if (flg) {
+					htmlStr += '<div class="category-list2-item aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center selected top2" data-parentSeq=' + categoryList[i].seq + ' data-type="category-list2" data-value="' + secCategoryList[j].seq +
+						'" tapmode onclick="changeSecType1(this)">';
+				} else {
+					htmlStr += '<div class="category-list2-item aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center top2 aui-hide" data-parentSeq=' + categoryList[i].seq + '  data-type="category-list2" data-value="' + secCategoryList[j].seq +
+						'" tapmode onclick="changeSecType1(this)">';
+				}
+				htmlStr += secCategoryList[j].name;
+				htmlStr += '</div>';
+			}
+			htmlStr += '</div>';
+		}
+		$api.html($api.dom(".category-list1 .aui-row"), htmlStr);
+	}
+
+
+
+	function initSizeTypeUI() {
+		if ($api.hasCls($api.dom(".size-type"), "aui-hide")) {
+			$api.removeCls($api.dom(".size-type"), "aui-hide");
+		}
+		//先清除被选中的
+		if ($api.dom(".size-type-item.selected")) {
+			$api.removeCls($api.dom(".size-type-item.selected"), 'selected');
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		if (!_isStringNull(pageParam.sizeType)) {
+			$api.addCls($api.dom(".size-type-item-" + pageParam.sizeType), 'selected');
+			if (pageParam.sizeType == 2) {
+				if ($api.hasCls($api.dom(".size-type-range"), "aui-hide")) {
+					$api.removeCls($api.dom(".size-type-range"), "aui-hide");
+				}
+			} else {
+				if (!$api.hasCls($api.dom(".size-type-range"), "aui-hide")) {
+					$api.addCls($api.dom(".size-type-range"), "aui-hide");
+				}
+			}
+		}
+	}
+
+	function initStockTypeUI() {
+		if ($api.hasCls($api.dom(".stock-type"), "aui-hide")) {
+			$api.removeCls($api.dom(".stock-type"), "aui-hide");
+		}
+		//先清除被选中的
+		if ($api.dom(".stock-type-item.selected")) {
+			$api.removeCls($api.dom(".stock-type-item.selected"), 'selected');
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		if (!_isStringNull(pageParam.stockType)) {
+			$api.addCls($api.dom(".stock-type-item-" + pageParam.stockType), 'selected');
+			if (pageParam.stockType == 3) {
+				if ($api.hasCls($api.dom(".stock-type-range"), "aui-hide")) {
+					$api.removeCls($api.dom(".stock-type-range"), "aui-hide");
+				}
+			} else {
+				if (!$api.hasCls($api.dom(".stock-type-range"), "aui-hide")) {
+					$api.addCls($api.dom(".stock-type-range"), "aui-hide");
+				}
+			}
+		}
+	}
+
+	function initSeasonUI() {
+		if ($api.hasCls($api.dom(".season-list"), "aui-hide")) {
+			$api.removeCls($api.dom(".season-list"), "aui-hide");
+		}
+		var seasonList = $api.getStorage("seasonListKey");
+		var htmlStr = '';
+		for (var i = 0; i < seasonList.length; i++) {
+			var flg = false;
+			for (var j = 0; j < pageParam.seasonSeqList.length; j++) {
+				if (pageParam.seasonSeqList[j] == seasonList[i].seq) {
+					flg = true;
+				}
+			}
+			if (flg) {
+				htmlStr += '<div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center selected" data-type="season-seq-list" data-value="' + seasonList[i].seq + '" tapmode onclick="selectAction(this)">';
+			} else {
+				htmlStr += '<div class="season-seq-list-item aui-col-xs-3 box-wrap box-vertical-center box-horizontal-center" data-type="season-seq-list" data-value="' + seasonList[i].seq + '" tapmode onclick="selectAction(this)">';
+			}
+			htmlStr += seasonList[i].seasonName;
+			htmlStr += '</div>';
+		}
+		$api.html($api.dom(".season-list .aui-row"), htmlStr);
+	}
+
+	function initYearUI() {
+		if ($api.hasCls($api.dom(".year-list"), "aui-hide")) {
+			$api.removeCls($api.dom(".year-list"), "aui-hide");
+		}
+		var thisYear = new Date().getFullYear();
+		var yearList = yearListKey;
+		// yearList.push(thisYear - 2);
+		// yearList.push(thisYear - 1);
+		// yearList.push(thisYear);
+		// yearList.push(thisYear + 1);
+		var htmlStr = '';
+		for (var i = 0; i < yearList.length; i++) {
+			if (pageParam.name == '老款') {
+				if (yearList[i] >= thisYear) {
+					continue;
+				}
+			} else if (pageParam.name == '滞销款') {
+				if (yearList[i] != thisYear) {
+					continue;
+				}
+			}
+			var flg = false;
+			for (var j = 0; j < pageParam.yearList.length; j++) {
+				if (pageParam.yearList[j] == yearList[i]) {
+					flg = true;
+				}
+			}
+			if (flg) {
+				htmlStr += '<div class="aui-col-xs-3 year-list-item  box-wrap box-vertical-center box-horizontal-center selected" data-type="year-list" data-value="' + yearList[i] + '" tapmode onclick="selectAction(this)">';
+			} else {
+				htmlStr += '<div class="aui-col-xs-3 year-list-item box-wrap box-vertical-center box-horizontal-center" data-type="year-list" data-value="' + yearList[i] + '" tapmode onclick="selectAction(this)">';
+			}
+			htmlStr += yearList[i];
+			htmlStr += '</div>';
+		}
+		$api.html($api.dom(".year-list .aui-row"), htmlStr);
+	}
+
+	function initShopUI() {
+		if (pageParam.name == '本店货品') {
+			if (!$api.hasCls($api.dom(".shop-list"), "aui-hide")) {
+				$api.addCls($api.dom(".shop-list"), "aui-hide");
+			}
+		} else {
+			if ($api.hasCls($api.dom(".shop-list"), "aui-hide")) {
+				$api.removeCls($api.dom(".shop-list"), "aui-hide");
+			}
+		}
+
+		var shopList = $api.getStorage('allShopsKey');
+		var htmlStr = '';
+		for (var i = 0; i < shopList.length; i++) {
+			var flg = false;
+			for (var j = 0; j < pageParam.shopSeqList.length; j++) {
+				if (pageParam.shopSeqList[j] == shopList[i].seq) {
+					flg = true;
+				}
+			}
+			if (flg) {
+				htmlStr += '<div class="aui-col-xs-4 shop-list-item shop-list-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center selected" data-type="shop-list" data-value="' + shopList[i].seq +
+					'" tapmode onclick="singleSelectAction(this)">';
+			} else {
+				htmlStr += '<div class="aui-col-xs-4 shop-list-item shop-list-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center" data-type="shop-list" data-value="' + shopList[i].seq +
+					'" tapmode onclick="singleSelectAction(this)">';
+			}
+			htmlStr += shopList[i].name;
+			htmlStr += '</div>';
+		}
+		$api.html($api.dom(".shop-list .aui-row"), htmlStr);
+	}
+
+
+	function initShopUI2() {
+		if ($api.hasCls($api.dom(".shop-list2"), "aui-hide")) {
+			$api.removeCls($api.dom(".shop-list2"), "aui-hide");
+		}
+		if ($api.dom(".shop-list2-item.selected")) {
+			$api.removeCls($api.dom(".shop-list2-item.selected"), 'selected');
+		}
+		if (!userInfo.factoryUserFlag) {
+			$('.shop-list2-item.one').addClass('selected');
+			$('.noun-type-item-1').text('前10名');
+			$('.noun-type-item-2').text('前20名');
+			$('.noun-type-item-3').text('前30名');
+			changeShopEv2($('.shop-list2-item.one'));
+		} else {
+			$('.shop-list2-item.all').addClass('selected');
+
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		// $api.addCls($api.dom(".shop-list1-item-" + pageParam.rangeType), 'selected');
+	}
+
+	function initShopUI3() {
+		if (pageParam.name == '存销比') {
+			if (!userInfo.factoryUserFlag) {
+				$('.shop-list3-item.all').addClass('aui-hide');
+			}
+
+		}
+		if ($api.hasCls($api.dom(".shop-list3"), "aui-hide")) {
+			$api.removeCls($api.dom(".shop-list3"), "aui-hide");
+		}
+		if ($api.dom(".shop-list3-item.selected")) {
+			$api.removeCls($api.dom(".shop-list3-item.selected"), 'selected');
+		}
+
+		if (userInfo.factoryUserFlag) {
+			// if (pageParam.shopSeqList[0] != '-2' && pageParam.shopSeqList[0] != undefined) {
+			if (pageParam.shopSeqList[0] != undefined) {
+				$('.shop-list3-item.one').addClass('selected')
+				var shopList = $api.getStorage('allShopsKey');
+				var htmlStr = '<div class="aui-row">';
+				htmlStr += '<div class="aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center chose-all" data-type="shop-list4" tapmode onclick="choseAll(this)">';
+				htmlStr += '全选';
+				htmlStr += '</div>'
+				htmlStr += '</div>'
+				for (var i = 0; i < shopList.length; i++) {
+					if (shopList[i].name == '总仓') {
+						continue;
+					}
+					var flg = false;
+					for (var j = 0; j < pageParam.shopSeqList.length; j++) {
+						if (pageParam.shopSeqList[j] == shopList[i].seq) {
+							flg = true;
+						}
+					}
+					if (flg) {
+						htmlStr += '<div class="aui-col-xs-4 shop-list4-item shop-list4-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center selected" data-type="shop-list4" data-value="' + shopList[i].seq +
+							'" tapmode onclick="singleSelectAction(this)">';
+					} else {
+						htmlStr += '<div class="aui-col-xs-4 shop-list4-item shop-list4-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center" data-type="shop-list4" data-value="' + shopList[i].seq +
+							'" tapmode onclick="singleSelectAction(this)">';
+					}
+					htmlStr += shopList[i].name;
+					htmlStr += '</div>';
+				}
+				$api.html($api.dom(".shop-content3"), htmlStr);
+			}
+		} else {
+			$('.shop-list3 .shops').html('');
+			var str = '';
+			str += '<div class="aui-col-xs-4 shop-list-item shop-list-item-' + userInfo.shopSeq + ' box-wrap box-vertical-center box-horizontal-center selected" data-type="shop-list3" data-value="' + userInfo.shopSeq +
+				'" tapmode onclick="singleSelectAction3(this)">';
+
+			str += userInfo.shopName;
+			str += '</div>';
+			$('.shop-list3 .shops').html(str);
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		// $api.addCls($api.dom(".shop-list1-item-" + pageParam.rangeType), 'selected');
+	}
+
+	function choseAll(obj) {
+		if (pageParam.name == '存销比') {
+			var domList = $('.shop-content3 .shop-list4-item');
+		} else {
+			var domList = $('.shop-content2 .shop-list-item');
+		}
+		var seqList = []
+		if ($(obj).hasClass('selected')) {
+			$(obj).removeClass('selected');
+			for (var i = 0; i < domList.length; i++) {
+				$(domList[i]).removeClass('selected')
+			}
+
+			if (pageParam.name == '主推款') {
+				pageParam.shopSeqList = [];
+			} else {
+				pageParam.shopSeqList = [];
+			}
+		} else {
+			$(obj).addClass('selected');
+			for (var i = 0; i < domList.length; i++) {
+				$(domList[i]).addClass('selected');
+				seqList.push($(domList[i]).attr('data-value'));
+			}
+			if (pageParam.name == '主推款') {
+				pageParam.shopSeqList = [];
+			} else {
+				pageParam.shopSeqList = seqList;
+			}
+
+		}
+	}
+	// 主推款
+	function changeShopEv3(obj) {
+		if (pageParam.name == '存销比') {
+			if ($(obj).text() == '门店') {
+				var shopList = $api.getStorage('allShopsKey');
+				var htmlStr = '<div class="aui-row">';
+				htmlStr += '<div class="aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center chose-all" data-type="shop-list4" tapmode onclick="choseAll(this)">';
+				htmlStr += '全选';
+				htmlStr += '</div>'
+				htmlStr += '</div>'
+				for (var i = 0; i < shopList.length; i++) {
+					if (shopList[i].name == '总仓') {
+						continue;
+					}
+					var flg = false;
+					for (var j = 0; j < pageParam.shopSeqList.length; j++) {
+						if (pageParam.shopSeqList[j] == shopList[i].seq) {
+							flg = true;
+						}
+					}
+					if (flg) {
+						htmlStr += '<div class="aui-col-xs-4 shop-list4-item shop-list4-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center selected" data-type="shop-list4" data-value="' + shopList[i].seq +
+							'" tapmode onclick="singleSelectAction(this)">';
+					} else {
+						htmlStr += '<div class="aui-col-xs-4 shop-list4-item shop-list4-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center" data-type="shop-list4" data-value="' + shopList[i].seq +
+							'" tapmode onclick="singleSelectAction(this)">';
+					}
+					htmlStr += shopList[i].name;
+					htmlStr += '</div>';
+				}
+				$api.html($api.dom(".shop-content3"), htmlStr);
+			} else {
+				pageParam.shopSeqList = [];
+				$api.html($api.dom(".shop-content3"), '');
+			}
+		} else {
+			if ($(obj).text() == '门店') {
+				var shopList = $api.getStorage('allShopsKey');
+				var htmlStr = '';
+				for (var i = 0; i < shopList.length; i++) {
+					var flg = false;
+					for (var j = 0; j < pageParam.shopSeqList.length; j++) {
+						if (pageParam.shopSeqList[j] == shopList[i].seq) {
+							flg = true;
+						}
+					}
+					if (flg) {
+						htmlStr += '<div class="aui-col-xs-4 shop-list4-item shop-list4-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center selected" data-type="shop-list4" data-value="' + shopList[i].seq +
+							'" tapmode onclick="singleSelectAction(this)">';
+					} else {
+						htmlStr += '<div class="aui-col-xs-4 shop-list4-item shop-list4-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center" data-type="shop-list4" data-value="' + shopList[i].seq +
+							'" tapmode onclick="singleSelectAction(this)">';
+					}
+					htmlStr += shopList[i].name;
+					htmlStr += '</div>';
+				}
+				$api.html($api.dom(".shop-content3"), htmlStr);
+			} else {
+				pageParam.shopSeqList = [];
+				$api.html($api.dom(".shop-content3"), '');
+			}
+		}
+
+	}
+
+	function changeShopEv2(obj) {
+		if ($(obj).text() == '门店') {
+			var shopList = $api.getStorage('allShopsKey');
+			var htmlStr = '';
+			for (var i = 0; i < shopList.length; i++) {
+				if (userInfo.factoryUserFlag) {
+					//公司
+					var flg = false;
+					for (var j = 0; j < pageParam.shopSeqList.length; j++) {
+						if (pageParam.shopSeqList[j] == shopList[i].seq) {
+							flg = true;
+						}
+					}
+					if (flg) {
+						htmlStr += '<div class="aui-col-xs-4 shop-list-item shop-list-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center selected" data-type="shop-list2" data-value="' + shopList[i].seq +
+							'" tapmode onclick="selectAction(this)">';
+					} else {
+						htmlStr += '<div class="aui-col-xs-4 shop-list-item shop-list-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center" data-type="shop-list2" data-value="' + shopList[i].seq +
+							'" tapmode onclick="selectAction(this)">';
+					}
+					htmlStr += shopList[i].name;
+					htmlStr += '</div>';
+				} else {
+					if (userInfo.shopSeq == shopList[i].seq) {
+						htmlStr += '<div class="aui-col-xs-4 shop-list-item shop-list-item-' + shopList[i].seq + ' box-wrap box-vertical-center box-horizontal-center selected" data-type="shop-list2" data-value="' + shopList[i].seq +
+							'" tapmode onclick="selectAction(this)">';
+						htmlStr += shopList[i].name;
+						htmlStr += '</div>';
+						if (pageParam.name == '主推款') {
+							pageParam.shopSeqList = [shopList[i].seq];
+						} else {
+							pageParam.shopSeqList = shopList[i].seq;
+						}
+					} else {
+						continue;
+					}
+				}
+			}
+			if (userInfo.factoryUserFlag) {
+				var str = '<div class="aui-row">';
+				str += '<div class="aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center" data-type="shop-list2" tapmode onclick="choseAll(this)">';
+				str += '全选';
+				str += '</div>'
+				str += '</div>'
+				$api.html($api.dom(".shop-content2"), str + htmlStr);
+			} else {
+				$api.html($api.dom(".shop-content2"), htmlStr);
+			}
+		} else {
+			pageParam.shopSeqList = [];
+			$api.html($api.dom(".shop-content2"), '');
+		}
+	}
+
+	function initRangeTypeUI() {
+		if ($api.hasCls($api.dom(".range-type"), "aui-hide")) {
+			$api.removeCls($api.dom(".range-type"), "aui-hide");
+		}
+		//先清除被选中的
+		if ($api.dom(".range-type-item.selected")) {
+			$api.removeCls($api.dom(".range-type-item.selected"), 'selected');
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		$api.addCls($api.dom(".range-type-item-" + pageParam.rangeType), 'selected');
+	}
+
+	function initCateListUI() {
+		if ($api.hasCls($api.dom(".cate-list"), "aui-hide")) {
+			$api.removeCls($api.dom(".cate-list"), "aui-hide");
+		}
+		//先清除被选中的
+		if ($api.dom(".cate-list-item.selected")) {
+			$api.removeCls($api.dom(".cate-list-item.selected"), 'selected');
+		}
+		//然后根据pageParam中rangeType属性值设置被选中项
+		$api.addCls($api.dom(".cate-list-item-" + pageParam.oldOrNew), 'selected');
+	}
+
+	function initMoneyListUI() {
+		if ($api.hasCls($api.dom(".money-list"), "aui-hide")) {
+			$api.removeCls($api.dom(".money-list"), "aui-hide");
+		}
+	}
+
+	function initUI() {
+		switch (pageParam.flag) {
+			case "goodsList":
+				//商品列表
+				// initRangeTypeUI();
+				if (pageParam.name == '畅销款' || pageParam.name == '滞销款') {
+					initShopUI2();
+					initNounTypeUI();
+					initYearUI();
+					initSeasonUI();
+					initCategoryUI();
+					initTimeRangeUI();
+				} else if (pageParam.name == '老款') {
+					initShopUI2();
+					initYearUI();
+					initSeasonUI();
+					initCategoryUI();
+					initTimeRangeUI();
+				} else if (pageParam.name == '断缺码') {
+					initShopUI2();
+					initYearUI();
+					initSeasonUI();
+				} else if (pageParam.name == '主推款') {
+					initShopUI2();
+					initCategoryUI();
+					initTimeRangeUI();
+				} else if (pageParam.name == '调配仓') {
+					initYearUI();
+					initCategoryUI();
+					initSeasonUI();
+					initTimeRangeUI();
+					initCurrentShopUI();
+				} else if (pageParam.name == '补货动态') {
+					initYearUI();
+					initCategoryUI();
+					initSeasonUI();
+				}else if (pageParam.name == '库存结构') {
+					initShopUI3();
+				} else if (pageParam.name == '存销比') {
+					initYearUI();
+					initSeasonUI();
+					initShopUI3();
+					initTimeRangeUI();
+					if (sellType == 1) {
+						if (!$('.category-list1').hasClass('aui-hide')) {
+							$('.category-list1').addClass('aui-hide')
+						}
+					} else {
+						initCategoryUI1();
+					}
+				} else if (pageParam.name == '总仓货品'||pageParam.name=='本店货品') {
+					initSeasonUI();
+					initSizeTypeUI();
+					initStockTypeUI();
+					initSupplementUI();
+					initYearUI();
+					initCategoryUI();
+					initTimeRangeUI()
+				} else {
+					initSeasonUI();
+					initSizeTypeUI();
+					initStockTypeUI();
+					initSupplementUI();
+					initShopUI();
+					initYearUI();
+					initCategoryUI();
+					initTimeRangeUI()
+				}
+				// if(userInfo.factoryUserFlag){
+				// 	initShopUI();
+				// }
+				break;
+			case "ordermetting":
+				//订货会
+				initYearUI();
+				initSeasonUI();
+				break;
+			case "saleAnalysis":
+				//销售分析
+				initYearUI();
+				initSeasonUI();
+				initCategoryUI();
+				initCateListUI();
+				initMoneyListUI();
+				// initColorUI();
+				initTimeRangeUI();
+				// $api.addCls($api.dom('.time-spe'), 'aui-hide');
+				initShopUI();
+				break;
+			case "order":
+				//订单
+				initYearUI();
+				initSeasonUI();
+				break;
+			case 'shop':
+				//添加店长
+				initShopUI();
+				break;
+			case 'shopping-guide':
+				initShopUI();
+				break;
+			default:
+		}
+	}
+
+	var collapse = new auiCollapse({
+		autoHide: false //是否自动隐藏已经展开的容器
+	});
+	var pageParam;
+	var allSizeList;
+	var userInfo = $api.getStorage('userInfoKey');
+	var yearListKey = $api.getStorage('yearListKey');
+	var lastType = false;
+	var sellType = 0;
+	apiready = function() {
+		api.parseTapmode();
+		pageParam = api.pageParam;
+		initUI();
+		console.log("pageParam:" + $api.jsonToStr(api.pageParam));
+		_addEventListener("query_filter_changed_event", function(ret) {
+			console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+		});
+		_addEventListener("query_filter_reseted_event", function(ret) {
+			console.log("query_filter_reseted_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+			initUI();
+		});
+		_addEventListener("query_filter_sure_event", function(ret) {
+			console.log("query_filter_sure_event-->ret:" + $api.jsonToStr(ret));
+			_sendEvent("query_filter_changed_event", pageParam);
+			if (pageParam.flag == "order" || pageParam.flag == "shop") {
+				api.closeWin({
+					name: api.winName
+				});
+			} else {
+				api.closeDrawerPane();
+			}
+
+		});
+		_addEventListener("choseSellTypeEvent", function(ret) {
+			sellType = ret.value
+				// pageParam = ret.value;
+			initUI();
+		});
+		_addEventListener('changeShopSeqEvent', function(ret) {
+			pageParam.shopSeqList = [ret.value.seq];
+			sellType = 1
+			initUI();
+		})
+	};
+</script>
+
+</html>

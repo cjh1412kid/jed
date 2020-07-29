@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.PublicityPicDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.PublicityPicEntity" id="publicityPicMap">
+        <result property="seq" column="Seq"/>
+        <result property="companySeq" column="Company_Seq"/>
+        <result property="imgMain" column="ImgMain"/>
+        <result property="imgNewest" column="ImgNewest"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+	<!-- 定义爆款图片、新品图片返回的resultMap，type为HashMap -->
+	<resultMap id="shoesSeqImgMap" type="java.util.HashMap">
+	    <id column="Seq" property="seq" jdbcType="INTEGER" />
+	    <result column="Img1" property="img" jdbcType="VARCHAR" />
+	    <result column="GoodID" property="goodId" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 定义爆款列表、新品列表的resultMap，type为HashMap -->
+	<resultMap id="shoesSeqListMap" type="java.util.HashMap">
+	    <id column="Seq" property="seq" jdbcType="INTEGER" />
+	    <result column="Img1" property="img" jdbcType="VARCHAR" />
+	    <result column="GoodName" property="goodName" jdbcType="VARCHAR" />
+	    <result column="GoodID" property="goodId" jdbcType="VARCHAR" />
+	    <result column="Introduce" property="introduce" jdbcType="VARCHAR" />
+	    <result column="InputTime" property="inputTime" jdbcType="TIMESTAMP" />
+	    <result column="OemPrice" property="oemPrice" jdbcType="DECIMAL" />
+	    <result column="WholesalerPrice" property="wholesalerPrice" jdbcType="DECIMAL" />
+	    <result column="StorePrice" property="storePrice" jdbcType="DECIMAL" />
+	    <result column="SalePrice" property="salePrice" jdbcType="DECIMAL" />
+	    <result column="Score" property="score" jdbcType="FLOAT" />
+	    <result column="stock" property="stock" jdbcType="INTEGER"/>
+	    <result column="SalesNum" property="salesNum" jdbcType="INTEGER" />
+	</resultMap>
+	
+	
+	
+	<!-- 根据 品牌编号 查询波次编号列表 -->
+	<select id="getPeriodListByBrandSeq" resultType="java.lang.Integer">
+		SELECT Seq FROM JedSmartRetail.dbo.YHSR_Goods_Period WHERE Brand_Seq = #{0} AND Del = 0 ORDER BY Saledate DESC
+	</select>
+	
+	
+	
+	<!-- 获取指定一些波次鞋子的爆款 -->
+	<select id="getHotsaleShoes" resultMap="shoesSeqImgMap">
+	    SELECT
+			TOP 3 A.Seq, A.Img1, A.GoodID
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes A ON B.Shoes_Seq = A.Seq
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Num) AS num, SUM (Stock) AS stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 GROUP BY Shoes_Seq ) AS C ON A.Seq = C.Shoes_Seq
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesCompanyType D ON A.Seq = D.Shoes_Seq
+		
+		WHERE
+			A.Del = 0 AND B.Del = 0 AND D.Del = 0 AND
+			B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) AND
+			A.Period_Seq IN (${periodSeq}) AND D.CompanyType_Seq = #{companyTypeSeq}
+			<!-- 2018.11.02依婷需求：只有设置为爆款的才展示出来 --> AND B.IsHOTSALE = 1 <!-- 2018.11.02 -->
+		ORDER BY
+			B.IsHOTSALE DESC, (C.num - C.stock) DESC, A.Seq DESC
+	</select>
+	
+	
+	
+	<!-- 获取指定一些波次鞋子的新品 -->
+	<select id="getNewestShoes" resultMap="shoesSeqImgMap">
+		SELECT
+			TOP 5 A.Seq, A.Img1, A.GoodID
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes A ON B.Shoes_Seq = A.Seq
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesCompanyType C ON A.Seq = C.Shoes_Seq
+		
+		WHERE
+			A.Del = 0 AND B.Del = 0 AND C.Del = 0 AND 
+			B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) AND
+			A.Period_Seq IN (${periodSeq}) AND C.CompanyType_Seq = #{companyTypeSeq} 
+			AND (DateDiff(dd, A.InputTime, GETDATE()) &lt;= 7 OR B.IsNewest = 1)
+		ORDER BY
+			B.IsNewest DESC, A.InputTime DESC, A.Seq DESC
+	</select>
+	
+	
+	
+	<!-- 获取指定一些波次爆款鞋子列表 -->
+	<select id="getHotsaleShoesList" resultMap="shoesSeqListMap">
+		SELECT
+			TOP ${num} 
+			A.Seq, A.Img1, A.GoodName, A.GoodID, A.Introduce, A.InputTime,
+			B.OemPrice, B.WholesalerPrice, B.StorePrice, B.SalePrice, D.Score, C.stock, (C.num - C.stock) AS SalesNum
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes A ON B.Shoes_Seq = A.Seq
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Num) AS num, SUM (Stock) AS stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 GROUP BY Shoes_Seq ) AS C ON A.Seq = C.Shoes_Seq
+	  	LEFT JOIN (SELECT Shoes_Seq, CONVERT(DECIMAL(5,1), AVG(Score)) AS Score FROM JedOrderPlatform.dbo.YHSR_OP_ShoesValuate WHERE Del = 0 AND Score != 0 GROUP BY Shoes_Seq) AS D ON A.Seq = D.Shoes_Seq
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesCompanyType E ON A.Seq = E.Shoes_Seq
+
+		WHERE
+			A.Seq NOT IN (
+				SELECT
+					TOP ${start} A.Seq
+				FROM
+					JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B
+				LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes A ON B.Shoes_Seq = A.Seq
+				LEFT JOIN (SELECT Shoes_Seq, SUM (Num) AS num, SUM (Stock) AS stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 GROUP BY Shoes_Seq ) AS C ON A.Seq = C.Shoes_Seq
+				LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesCompanyType E ON A.Seq = E.Shoes_Seq
+			
+				WHERE
+					A.Del = 0 AND B.Del = 0 AND E.Del = 0 AND 
+					B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) AND
+					A.Period_Seq IN (${periodSeq}) AND E.CompanyType_Seq = #{companyTypeSeq}
+					<!-- 2018.11.02依婷需求：只有设置为爆款的才展示出来 --> AND B.IsHOTSALE = 1 <!-- 2018.11.02 -->
+				ORDER BY
+					B.IsHOTSALE DESC, (C.num - C.stock) DESC, A.Seq DESC
+				) AND 
+			A.Del = 0 AND B.Del = 0 AND E.Del = 0 AND 
+			B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) AND
+			A.Period_Seq IN (${periodSeq}) AND E.CompanyType_Seq = #{companyTypeSeq}
+			<!-- 2018.11.02依婷需求：只有设置为爆款的才展示出来 --> AND B.IsHOTSALE = 1 <!-- 2018.11.02 -->
+		ORDER BY
+			B.IsHOTSALE DESC, (C.num - C.stock) DESC, A.Seq DESC
+	</select>
+	
+	
+	
+	<!-- 获取指定一些波次鞋子的新品列表 -->
+	<select id="getNewestShoesList" resultMap="shoesSeqListMap">
+		SELECT
+			TOP ${num} 
+			A.Seq, A.Img1, A.GoodName, A.GoodID, A.Introduce, A.InputTime,
+			B.OemPrice, B.WholesalerPrice, B.StorePrice, B.SalePrice, D.Score, C.stock, (C.num - C.stock) AS SalesNum
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes A ON B.Shoes_Seq = A.Seq
+		LEFT JOIN (SELECT Shoes_Seq, SUM (Num) AS num, SUM (Stock) AS stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 GROUP BY Shoes_Seq ) AS C ON A.Seq = C.Shoes_Seq
+	  	LEFT JOIN (SELECT Shoes_Seq, CONVERT(DECIMAL(5,1), AVG(Score)) AS Score FROM JedOrderPlatform.dbo.YHSR_OP_ShoesValuate WHERE Del = 0 AND Score != 0 GROUP BY Shoes_Seq) AS D ON A.Seq = D.Shoes_Seq
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesCompanyType E ON A.Seq = E.Shoes_Seq
+		
+		WHERE
+			A.Seq NOT IN (
+				SELECT
+					TOP ${start} A.Seq
+				FROM
+					JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B
+				LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes A ON B.Shoes_Seq = A.Seq
+				LEFT JOIN (SELECT Shoes_Seq, SUM (Num) AS num, SUM (Stock) AS stock FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData WHERE Del = 0 GROUP BY Shoes_Seq ) AS C ON A.Seq = C.Shoes_Seq
+				LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesCompanyType E ON A.Seq = E.Shoes_Seq
+				
+				WHERE
+					A.Del = 0 AND B.Del = 0 AND E.Del = 0 AND 
+					B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) AND
+					A.Period_Seq IN (${periodSeq}) AND E.CompanyType_Seq = #{companyTypeSeq} 
+					AND (DateDiff(dd, A.InputTime, GETDATE()) &lt;= 7 OR B.IsNewest = 1)
+				ORDER BY
+					B.IsNewest DESC, A.InputTime DESC, A.Seq DESC
+				) AND
+			A.Del = 0 AND B.Del = 0 AND E.Del = 0 AND 
+			B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) AND
+			A.Period_Seq IN (${periodSeq}) AND E.CompanyType_Seq = #{companyTypeSeq} 
+			AND (DateDiff(dd, A.InputTime, GETDATE()) &lt;= 7 OR B.IsNewest = 1)
+		ORDER BY
+			B.IsNewest DESC, A.InputTime DESC, A.Seq DESC
+	</select>
+	
+	
+
+</mapper>

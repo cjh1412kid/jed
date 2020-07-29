@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>指标管理</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/my/target/sale_frm.css" />
+	<style>
+
+	</style>
+</head>
+
+<body >
+	<div class="own-goal-area flex-wrap flex-vertical aui-padded-10">
+		<div class="flex-1 flex-wrap">
+			<div class="month-text flex-con flex-style month-target"></div>
+			<div class="month-width month-text1 flex-style">基准指标</div>
+			<div class="month-width month-text1 flex-style">中级指标</div>
+			<div class="month-width month-text1 flex-style">高级指标</div>
+		</div>
+		<div class="flex-1 flex-wrap">
+			<div class="flex-con"></div>
+			<div class="month-width flex-style">
+				<span class="month-text2 goal-num"></span>
+				<span class="month-text3">万</span>
+			</div>
+			<div class="month-width flex-style">
+				<span class="month-text2 goal-num1"></span>
+				<span class="month-text3">万</span>
+			</div>
+			<div class="month-width flex-style">
+				<span class="month-text2 goal-num2"></span>
+				<span class="month-text3">万</span>
+			</div>
+		</div>
+	</div>
+	<div class="flex-con content flex-wrap flex-vertical">
+     <div class="tittle flex-wrap aui-border-b">
+     	<div class="tittle-text flex-1 flex-style1 tittle-change">门店指标分配</div>
+     	<div class="tittle-text flex-1 flex-style">基准指标/万</div>
+     	<div class="tittle-text flex-1 flex-style">中级指标/万</div>
+     	<div class="tittle-text flex-1 flex-style">高级指标/万</div>
+     </div>
+		  <ul class="shop-list flex-con">
+      <!-- <li class="list-item aui-border-b flex-wrap">
+         <div class="flex-1 flex-style1 list-text">吉尔达门店B</div>
+         <div class="flex-1 flex-style">
+         	<input type="text" name='' value="999" dir="rtl" readonly="readonly">
+					<span class="item-text">万</span>
+         </div>
+         <div class="flex-1 flex-style">
+					 <input type="text" name='' value="999" dir="rtl" readonly="readonly">
+ 					<span class="item-text">万</span>
+         </div>
+         <div class="flex-1 flex-style">
+					 <input type="text" name='' value="999" dir="rtl" readonly="readonly">
+ 					<span class="item-text">万</span>
+         </div>
+      </li> -->
+		 </ul>
+	</div>
+	<!-- <section class="aui-grid">
+		<div class="aui-row uneditable">
+		<div class='item aui-col-xs-6 flex-wrap flex-vertical' tapmode onclick='selectValue(this)'>
+				<div class='child-name aui-text-white aui-ellipsis-1 aui-padded-l-10'>
+					上海大区销售指标
+				</div>
+				<div class='value-icon flex-wrap'>
+					<div class='flex-con'>
+						<span class='value'>1000</span><span>万</span>
+					</div>
+					<div class='icon box-wrap box-horizontal-center box-vertical-center'>
+						<img src='../../../image/icon_edit.png'>
+					</div>
+				</div>
+			</div>
+			<div class="item aui-col-xs-6 flex-wrap flex-vertical" tapmode onclick="selectValue(this)">
+				<div class="child-name aui-text-white aui-ellipsis-1 aui-padded-l-10">
+					上海大区销售指标
+				</div>
+				<div class="value-icon flex-wrap">
+					<div class="flex-con">
+						<span class="value">1000</span><span>万</span>
+					</div>
+					<div class="icon box-wrap box-horizontal-center box-vertical-center">
+						<img src="../../../image/icon_edit.png">
+					</div>
+				</div>
+			</div>
+			<div class="item aui-col-xs-6 flex-wrap flex-vertical" tapmode onclick="selectValue(this)">
+				<div class="child-name aui-text-white aui-ellipsis-1 aui-padded-l-10">
+					上海大区销售指标
+				</div>
+				<div class="value-icon flex-wrap">
+					<div class="flex-con">
+						<span class="value">1000</span><span>万</span>
+					</div>
+					<div class="icon box-wrap box-horizontal-center box-vertical-center">
+						<img src="../../../image/icon_edit.png">
+					</div>
+				</div>
+			</div>
+			<div class="item aui-col-xs-6 flex-wrap flex-vertical" tapmode onclick="selectValue(this)">
+				<div class="child-name aui-text-white aui-ellipsis-1 aui-padded-l-10">
+					上海大区销售指标
+				</div>
+				<div class="value-icon flex-wrap">
+					<div class="flex-con">
+						<span class="value">1000</span><span>万</span>
+					</div>
+					<div class="icon box-wrap box-horizontal-center box-vertical-center">
+						<img src="../../../image/icon_edit.png">
+					</div>
+				</div>
+			</div>
+			<div class="item aui-col-xs-6 flex-wrap flex-vertical" tapmode onclick="selectValue(this)">
+				<div class="child-name aui-text-white aui-ellipsis-1 aui-padded-l-10">
+					上海大区销售指标
+				</div>
+				<div class="value-icon flex-wrap">
+					<div class="flex-con">
+						<span class="value">500</span><span>万</span>
+					</div>
+					<div class="icon box-wrap box-horizontal-center box-vertical-center">
+						<img src="../../../image/icon_edit.png">
+					</div>
+				</div>
+			</div>
+			<div class="item aui-col-xs-6 flex-wrap flex-vertical" tapmode onclick="selectValue(this)">
+				<div class="child-name aui-text-white aui-ellipsis-1 aui-padded-l-10">
+					上海大区销售指标
+				</div>
+				<div class="value-icon flex-wrap">
+					<div class="flex-con">
+						<span class="value">500</span><span>万</span>
+					</div>
+					<div class="icon box-wrap box-horizontal-center box-vertical-center">
+						<img src="../../../image/icon_edit.png">
+					</div>
+				</div>
+			</div>
+		</div>
+	</section> -->
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery_min.js"></script>
+<script type="text/javascript">
+	// var isTopFilterPopOpened = false;
+	//
+	// function openCustomPickerPop() {
+	// 	var data = [{
+	// 		//					tag : '时',
+	// 		scope: '0-9'
+	// 	}, {
+	// 		//					tag : '分',
+	// 		scope: '0-9'
+	// 	}, {
+	// 		//					tag : '分',
+	// 		scope: '0-9'
+	// 	}, {
+	// 		//					tag : '万',
+	// 		scope: '0-9'
+	// 	}, {
+	// 		//					tag : '万',
+	// 		scope: ['万']
+	// 	}];
+	// 	var rect = {
+	// 		x: 0, //左上角x坐标
+	// 		y: 0, //左上角y坐标
+	// 		w: "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+	// 		h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+	// 		marginLeft: 0, //相对父 window 左外边距的距离
+	// 		marginTop: 0, //相对父 window 上外边距的距离
+	// 		marginBottom: 0, //相对父 window 下外边距的距离
+	// 		marginRight: 0 //相对父 window 右外边距的距离
+	// 	};
+	// 	var pageParam = {
+	// 		frameName: api.frameName,
+	// 		data: data,
+	// 		eleID: "goal"
+	// 	};
+	// 	var bounces = false;
+	// 	var reload = true;
+	// 	var allowEdit = false;
+	// 	var animation = {
+	// 		type: "movein", //动画类型（详见动画类型常量）
+	// 		subType: "from_bottom", //动画子类型（详见动画子类型常量）
+	// 		duration: 0 //动画过渡时间，默认300毫秒
+	// 	}
+	// 	_openFrame("custom_picker_pop", "../../custom_picker_pop.html", rect, pageParam, bounces, reload, allowEdit, animation);
+	// 	isTopFilterPopOpened = true;
+	// }
+
+	function closeCustomPickerPop() {
+		api.closeFrame({
+			name: "custom_picker_pop"
+		});
+	}
+
+	function selectValue(obj) {
+		if ($api.hasCls($api.closest(obj, ".aui-row"), "uneditable")) {
+			return;
+		}
+		currentItem = obj;
+		var dialogBox = api.require('dialogBox');
+	dialogBox.input({
+		keyboardType: 'number',
+		texts: {
+			title: '指标分配金额',
+			placeholder: '输入金额',
+			leftBtnTitle: '取消',
+			rightBtnTitle: '确定'
+		},
+		styles: {
+			bg: '#fff',
+			corner: 2,
+			w: 300,
+			h: 200,
+			title: {
+				h: 60,
+				alignment: 'center',
+				size: 14,
+				color: '#000',
+				marginT: 30,
+			},
+			input: {
+				h: 60,
+				y: 30,
+				marginT: 15,
+				marginLeft: 10,
+				marginRight: 10,
+				textSize: 14,
+				textColor: '#000'
+			},
+			dividingLine: {
+				width: 0.5,
+				color: '#696969'
+			},
+			left: {
+				bg: '#FF6861',
+				color: '#FFF',
+				size: 12
+			},
+			right: {
+				bg: '#F5A623',
+				color: '#FFF',
+				size: 12
+			}
+		}
+	}, function(ret) {
+		// api.alert({
+		// 	msg: JSON.stringify(ret)
+		// });
+		if (ret.eventType == 'left') {
+			var dialogBox = api.require('dialogBox');
+			dialogBox.close({
+				dialogName: 'input'
+			});
+		}
+		if (ret.eventType == 'right') {
+			setItem('goal',parseFloat($api.trim(ret.text)))
+			var dialogBox = api.require('dialogBox');
+			dialogBox.close({
+				dialogName: 'input'
+			});
+		}
+	});
+		// openCustomPickerPop();
+	}
+
+	function setItem(eleID, _data) {
+		if (!_isStringNull(_data)) {
+			console.log("data:" + _data);
+			var selectedValue = _data;
+			console.log("selectedValue:" + selectedValue);
+			//验证是否超过总目标
+			var otherValue = 0;
+			for (var i = 0; i < items.length; i++) {
+				var value = parseInt($api.text($api.dom(items[i], ".value")));
+				if (items[i] != currentItem) {
+					otherValue += value;
+				} else {
+					console.log("currentValue:" + value);
+				}
+			}
+			console.log("otherValue:" + otherValue);
+			var totalValue = $api.text($api.dom(".own-goal-area .number"));
+			console.log("totalValue:" + totalValue);
+			var tempValue = otherValue + selectedValue;
+			console.log("tempValue:" + tempValue);
+			if (tempValue > totalValue) {
+				if (userInfo.roleSeq != 1) {
+					_toast("每个区域目标之和不能超过总目标!");
+					return;
+				} else {
+					//TODO 全国
+				}
+			}
+			$api.text($api.dom(currentItem, ".value"), selectedValue + "");
+			items = $api.domAll(".list-item");
+		}
+	}
+
+	/**
+	 *批量下发销售指标（全国用户可直接下发，其他用户下发后指标总额必须与上级下发的相等）
+	 */
+	function distributeSaleQuotas() {
+		var url = window.myServerUrl + "/order/app/targetShop/insertOrUpdateTarget";
+		var shopData = [];
+		var shopSeq = [];
+		var quotas = [];
+		console.log(items.length);
+		for (var i = 0; i < items.length; i++) {
+			// if ($api.text($api.dom(items[i], ".value")) == '0') {
+			// 	continue;
+			// }
+			var shopTarget = {};
+			if (userInfo.factoryUserFlag) {
+					shopTarget.shopSeq = $(items[i]).find('span').last().html();
+					shopTarget.targetYear = api.pageParam.year;
+					shopTarget.targetMonth = api.pageParam.month;
+					shopTarget.standardMoney = $(items[i]).find('input').eq(0).val();
+					shopTarget.standardSeq =$(items[i]).find('input').eq(0).attr('data-seq');
+					shopTarget.middleMoney  = $(items[i]).find('input').eq(1).val();
+					shopTarget.middleSeq  =$(items[i]).find('input').eq(1).attr('data-seq');
+					shopTarget.advanceMoney  = $(items[i]).find('input').eq(2).val();
+					shopTarget.advanceSeq  =$(items[i]).find('input').eq(2).attr('data-seq');
+					shopData.push(shopTarget)
+				// quotas.push(shopTarget);
+				// shopSeq.push(parseInt($api.text($api.dom(items[i], ".seq"))));
+				// quotas.push(parseInt($api.text($api.dom(items[i], ".value"))));
+			} else {
+          shopTarget.standardTargetShopSeq = $(items[i]).find('input').eq(0).attr('data-seq');
+					shopTarget.middleTargetShopSeq = $(items[i]).find('input').eq(1).attr('data-seq');
+					shopTarget.advanceTargetShopSeq = $(items[i]).find('input').eq(2).attr('data-seq');
+					console.log(shopTarget.standardTargetShopSeq=='undefined');
+					if(shopTarget.standardTargetShopSeq!='undefined'){
+								shopTarget.standardMoney = $(items[i]).find('input').eq(0).val();
+					}else {
+							shopTarget.standardTargetShopSeq='';
+									shopTarget.standardMoney=0;
+					}
+					if(shopTarget.middleTargetShopSeq!='undefined'){
+						shopTarget.middleMoney  = $(items[i]).find('input').eq(1).val();
+					}else {
+						shopTarget.middleTargetShopSeq='';
+							shopTarget.middleMoney=0;
+					}
+					if(shopTarget.advanceTargetShopSeq!='undefined'){
+						shopTarget.advanceMoney  = $(items[i]).find('input').eq(2).val();
+					}else {
+						shopTarget.advanceTargetShopSeq='';
+								shopTarget.advanceMoney=0;
+					}
+					shopTarget.salesSeq = $(items[i]).find('span').last().html();
+					shopTarget.targetYear = api.pageParam.year;
+					shopTarget.targetMonth = api.pageParam.month;
+					shopData.push(shopTarget)
+          console.log($api.jsonToStr(shopTarget));
+			}
+
+
+		}
+		console.log($api.jsonToStr(shopData));
+		var _data = {
+			values: {
+				list: shopData
+			}
+			// targetYear: api.pageParam.year,
+			// targetMonth: api.pageParam.month,
+			// targetMonth:quotas
+			// shopSeq: shopSeq,
+			// quotas: quotas.toString(),
+
+		};
+		// var headers={
+		// 	'Content-Type': 'application/json;charset=utf-8'
+		// }
+		// var timeout;
+		// var dataType;
+		// var charset;
+		// var encode;
+		// var cache;
+		console.log("批量下发销售指标-->url:" + url);
+		console.log("批量下发销售指标-->_data:" + $api.jsonToStr(_data));
+		_ajax(url, "distributeSaleQuotas", function(ret, err) {
+			// var totalPrices = 0;
+			// for (var i = 0; i < items.length; i++) {
+			// 	   totalPrices+=$api.text($api.dom(items[i], ".value"))
+			// 	}
+      //   console.log(totalPrices);
+				// if(totalPrices >$api.text($api.dom('.goal-num'))){
+				// 	        _toast('操作失败')
+				// 					return;
+				// }
+			if (ret) {
+				console.log("批量下发销售指标-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					_toast(ret.msg);
+					api.refreshHeaderLoading();
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("批量下发销售指标-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+		}, "post", _data);
+	}
+
+	function changePageStatus(editable) {
+		if (editable) {
+			$api.removeCls($api.dom(".aui-row"), "uneditable");
+			var domList = $api.domAll('input');
+			// console.log($api.jsonToStr(domList));
+			for(var i=0;i<domList.length;i++){
+				$api.removeAttr(domList[i], 'readonly');
+			}
+		} else {
+			$api.addCls($api.dom(".aui-row"), "uneditable");
+			distributeSaleQuotas();
+		}
+	}
+
+	function initUi() {
+		$api.text($api.dom('.month-target'), api.pageParam.month + "月指标");
+		var htmlStr = "";
+		if(userInfo.factoryUserFlag){
+			if (!_isStringNull(distributedQuotas.StandardTargetShopEntity)) {
+				$api.text($api.dom('.goal-num'), distributedQuotas.StandardTargetShopEntity.monthMoney)
+			} else {
+				$api.text($api.dom('.goal-num'), '0')
+			}
+			if (!_isStringNull(distributedQuotas.MiddleTargetShopEntity)) {
+				$api.text($api.dom('.goal-num1'), distributedQuotas.MiddleTargetShopEntity.monthMoney)
+			} else {
+				$api.text($api.dom('.goal-num1'), '0')
+			}
+			if (!_isStringNull(distributedQuotas.AdvancedTargetShopEntity)) {
+				$api.text($api.dom('.goal-num2'), distributedQuotas.AdvancedTargetShopEntity.monthMoney)
+			} else {
+				$api.text($api.dom('.goal-num2'), '0')
+			}
+		}else {
+			$api.text($api.dom('.tittle-change'), "导购指标分配");
+
+			if (!_isStringNull(distributedQuotas.StandardTargetSalesEntity)) {
+				$api.text($api.dom('.goal-num'), distributedQuotas.StandardTargetSalesEntity.monthMoney)
+			} else {
+				$api.text($api.dom('.goal-num'), '0')
+			}
+			if (!_isStringNull(distributedQuotas.MiddleTargetSalesEntity)) {
+				$api.text($api.dom('.goal-num1'), distributedQuotas.MiddleTargetSalesEntity.monthMoney)
+			} else {
+				$api.text($api.dom('.goal-num1'), '0')
+			}
+			if (!_isStringNull(distributedQuotas.AdvancedTargetSalesEntity)) {
+				$api.text($api.dom('.goal-num2'), distributedQuotas.AdvancedTargetSalesEntity.monthMoney)
+			} else {
+				$api.text($api.dom('.goal-num2'), '0')
+			}
+		}
+
+		if (userInfo.factoryUserFlag) {
+			for (var j = 0; j < allShops.length; j++) {
+				if (allShops[j].isActive==0) {
+					continue;
+				}
+				htmlStr += "<li class='list-item aui-border-b flex-wrap'>";
+				htmlStr += "<div class='flex-1 flex-style1 list-text'>"+allShops[j].name+"</div>";
+				if (!_isArrayNull(areaList)) {
+					var data = null;
+					for (var i = 0; i < areaList.length; i++) {
+						if (allShops[j].seq == areaList[i].shopSeq) {
+							data = areaList[i];
+							break;
+						}
+					}
+					if (!_isObjectNull(data)) {
+						htmlStr += "<div class='flex-1 flex-style'>";
+						if(data.standardSeq==undefined){
+							htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+						}else {
+							htmlStr += "<input type='text' name='' data-seq='"+data.standardSeq+"' value='"+data.standardMoney+"'  readonly='readonly'>";
+						}
+
+						htmlStr +="</div>";
+						htmlStr += "<div class='flex-1 flex-style'>";
+						if(data.middleSeq==undefined){
+							htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+						}else {
+							htmlStr += "<input type='text' name='' data-seq='"+data.middleSeq+"' value='"+data.middleMoney+"'  readonly='readonly'>";
+						}
+
+						htmlStr +="</div>";
+						htmlStr += "<div class='flex-1 flex-style'>";
+						if(data.advanceSeq==undefined){
+							htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+						}else {
+							htmlStr += "<input type='text' name='' data-seq='"+data.advanceSeq+"' value='"+data.advanceMoney+"'  readonly='readonly'>";
+						}
+
+						htmlStr +="<span class='seq aui-hide'>" + data.shopSeq + "</span>";
+						htmlStr +="</div>";
+					} else {
+						htmlStr += "<div class='flex-1 flex-style'>";
+						htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+						htmlStr +="</div>";
+						htmlStr += "<div class='flex-1 flex-style'>";
+						htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+						htmlStr +="</div>";
+						htmlStr += "<div class='flex-1 flex-style'>";
+						htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+						htmlStr +="<span class='seq aui-hide'>" + allShops[j].seq + "</span>";
+						htmlStr +="</div>";
+					}
+				} else {
+					htmlStr += "<div class='flex-1 flex-style'>";
+					htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+					htmlStr +="</div>";
+					htmlStr += "<div class='flex-1 flex-style'>";
+					htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+					htmlStr +="</div>";
+					htmlStr += "<div class='flex-1 flex-style'>";
+					htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+					htmlStr +="<span class='seq aui-hide'>" + allShops[j].seq + "</span>";
+					htmlStr +="</div>";
+				}
+				htmlStr += "</li>";
+			}
+		} else {
+			for (var j = 0; j < peopleInfo.length; j++) {
+				htmlStr += "<li class='list-item aui-border-b flex-wrap'>";
+				htmlStr += "<div class='flex-1 flex-style1 list-text'>"+peopleInfo[j].name+"</div>";
+				if (!_isArrayNull(areaList)) {
+					var data = null;
+					for (var i = 0; i < areaList.length; i++) {
+						if (peopleInfo[j].seq == areaList[i].salesSeq) {
+							data = areaList[i];
+							break;
+						}
+					}
+					if (!_isObjectNull(data)) {
+						console.log($api.jsonToStr(data));
+						htmlStr += "<div class='flex-1 flex-style'>";
+						if(data.standardSeq==undefined){
+							htmlStr += "<input type='text' name='' data-seq='"+data.standardShopSeq+"' value='0'  readonly='readonly'>";
+						}else {
+							htmlStr += "<input type='text' name='' data-seq='"+data.standardShopSeq+"' value='"+data.standardMoney+"'  readonly='readonly'>";
+						}
+
+						htmlStr +="</div>";
+						htmlStr += "<div class='flex-1 flex-style'>";
+						if(data.middleSeq==undefined){
+							htmlStr += "<input type='text' name='' data-seq='"+data.middleShopSeq+"' value='0'  readonly='readonly'>";
+						}else {
+							htmlStr += "<input type='text' name='' data-seq='"+data.middleShopSeq+"' value='"+data.middleMoney+"'  readonly='readonly'>";
+						}
+
+						htmlStr +="</div>";
+						htmlStr += "<div class='flex-1 flex-style'>";
+						if(data.advanceSeq==undefined){
+							htmlStr += "<input type='text' name='' data-seq='"+data.advanceShopSeq+"' value='0'  readonly='readonly'>";
+						}else {
+							htmlStr += "<input type='text' name='' data-seq='"+data.advanceShopSeq+"' value='"+data.advanceMoney+"'  readonly='readonly'>";
+						}
+
+						htmlStr +="<span class='seq aui-hide'>" +data.salesSeq + "</span>";
+						htmlStr +="</div>";
+					} else {
+						htmlStr += "<div class='flex-1 flex-style'>";
+						htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+						htmlStr +="</div>";
+						htmlStr += "<div class='flex-1 flex-style'>";
+						htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+						htmlStr +="</div>";
+						htmlStr += "<div class='flex-1 flex-style'>";
+						htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+						htmlStr +="<span class='seq aui-hide'>" + peopleInfo[j].seq + "</span>";
+						htmlStr +="</div>";
+					}
+				} else {
+					htmlStr += "<div class='flex-1 flex-style'>";
+					htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+					htmlStr +="</div>";
+					htmlStr += "<div class='flex-1 flex-style'>";
+					htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+					htmlStr +="</div>";
+					htmlStr += "<div class='flex-1 flex-style'>";
+					htmlStr += "<input type='text' name='' data-seq='' value='0'  readonly='readonly'>";
+
+					htmlStr +="<span class='seq aui-hide'>" + peopleInfo[j].seq + "</span>";
+					htmlStr +="</div>";
+				}
+				htmlStr += "</li>";
+			}
+
+		}
+		// console.log("htmlStr:" + htmlStr);
+		$api.html($api.dom(".shop-list"), htmlStr);
+		api.parseTapmode();
+		items = $api.domAll(".list-item");
+		console.log(items.length);
+	}
+
+	/**
+	 *查询我给下级分配的销售指标
+	 */
+	function getDistributedSaleQuota(call) {
+		distributedQuotas = [];
+		var url = window.myServerUrl + "/order/app/targetShop/selectMonthTarget";
+		// var url = "http://192.168.2.127:8080/interface//order/app/targetShop/selectMonthTarget"
+		url += "?targetYear=" + api.pageParam.year + "&targetMonth=" + api.pageParam.month;
+		console.log("获取单个月指标-->url:" + url);
+		_ajax(url, "getDistributedSaleQuota", function(ret, err) {
+			api.refreshHeaderLoadDone();
+			if (ret) {
+				console.log("查询我给下级分配的销售指标-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					distributedQuotas = ret.result;
+					if(userInfo.factoryUserFlag){
+						areaList = ret.result.targetShopEntity.monthShopMoneyList
+					}else {
+						areaList = ret.result.targetSalesEntity.monthShopMoneyList
+					}
+
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("获取单个月指标-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			call();
+
+		}, "get");
+	}
+
+	// /**
+	//  *查询上级给我分配的销售指标
+	//  */
+	// function getMySaleQuota() {
+	// 	var url = window.serverUrl + "saleQuotaDistribute/getMySaleQuota";
+	// 	url += "?year=" + api.pageParam.year + "&month=" + api.pageParam.month;
+	// 	console.log("查询上级给我分配的销售指标-->url:" + url);
+	// 	_ajax(url, "getMySaleQuota", function(ret, err) {
+	// 		if (ret) {
+	// 			console.log("查询上级给我分配的销售指标-->ret:" + $api.jsonToStr(ret));
+	// 			if (ret.code == 1) {
+	// 				var result = ret.result;
+	// 				if (!_isArrayNull(result)) {
+	// 					var total = result[0].quota / 10000;
+	// 					$api.html($api.dom(".own-goal-area .value"), "<span class='number'>" + total + "</span><span>万</span>");
+	// 				} else {
+	// 					$api.html($api.dom(".own-goal-area .value"), "<span class='number'>0</span><span>万</span>");
+	// 				}
+	// 			} else {
+	// 				_toast(ret.msg);
+	// 			}
+	// 		} else {
+	// 			console.log("查询上级给我分配的销售指标-->err:" + $api.jsonToStr(err));
+	// 			_toast(window.ajaxErrorMessage);
+	// 		}
+	// 	}, "get");
+	// }
+	function getAllPeople(call) {
+		var url = window.myServerUrl + "/order/app/sales/list";
+		console.log("获取所有导购-->url:" + url);
+		_ajax(url, "list", function(ret, err) {
+			api.refreshHeaderLoadDone();
+			if (ret) {
+				console.log("获取所有导购-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					if(_isArrayNull(ret.result)){
+						   _toast('请先创建导购员!');
+							 return;
+					}else {
+						peopleInfo = ret.result[0].sales
+					}
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("获取所有导购-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			call();
+		}, "get");
+	}
+	var collapse = new auiCollapse({
+		autoHide: false, //是否自动隐藏已经展开的容器
+	});
+	var items;
+	var currentItem;
+	var userInfo;
+	var areaList = [];
+	var distributedQuotas = [];
+	var allShops = [];
+	var peopleInfo = [];
+	apiready = function() {
+		console.log($api.jsonToStr(api.pageParam));
+		userInfo = $api.getStorage("userInfoKey");
+		// console.log($api.jsonToStr(userInfo));
+		allShops = $api.getStorage("allShopsKey");
+		// switch(userInfo.roleSeq) {
+		// 	case 1 :
+		// 		areaList = $api.getStorage("firstAreas_key");
+		// 		break;
+		// 	case 2 :
+		// 		areaList = $api.getStorage("secondAreas_key");
+		// 		break;
+		// 	case 3 :
+		// 		areaList = $api.getStorage("shops_key");
+		// 		break;
+		// 	case 4 :
+		// 		areaList = [];
+		// 		break;
+		// }
+
+
+		setTimeout(function() {
+			getDistributedSaleQuota(function() {
+				if (userInfo.factoryUserFlag) {
+					//公司
+					initUi();
+				} else {
+					//门店
+					getAllPeople(function() {
+						initUi();
+					});
+				}
+			});
+		}, 300);
+		//下拉刷新
+		api.setRefreshHeaderInfo({
+			loadingImg: 'widget://image/loading_more.gif',
+			bgColor: 'rgba(255,255,255,0)',
+			textColor: '#505050',
+			textDown: '下拉刷新...',
+			textUp: '松开刷新...'
+		}, function(ret, err) {
+			//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+			setTimeout(function() {
+				getDistributedSaleQuota(function() {
+					if (userInfo.factoryUserFlag) {
+						//公司
+						initUi();
+					} else {
+						//门店
+						getAllPeople(function() {
+							initUi();
+						});
+					}
+				});
+			}, 300);
+		});
+	};
+</script>
+
+</html>

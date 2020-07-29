@@ -1,0 +1,629 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>审核</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/cargo_win.css" />
+    <style type="text/css">
+        .card {
+            background-image: url("../image/bg_cargo1.jpg");
+            position: relative;
+        }
+
+        .listWrap {
+            margin-top: .5rem;
+            height: auto;
+            border-radius: .25rem;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .card,.priceList,.extra {
+            border-radius: 0;
+        }
+
+        .aui-bar-tab {
+            position: relative;
+        }
+
+        .agree {
+            background: #3785F7;
+            color: #fff;
+        }
+
+
+
+        .state-dom {
+            position: absolute;
+            right: .5rem;
+            top: .5rem;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: rgba(255, 186, 0, 1);
+        }
+        .color{
+          color: #FFBA00;
+        }
+        .color1{
+          color: #418EFF;
+        }
+        .color2{
+          color: #666666;
+        }
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16">调货明细</div>
+    </header>
+    <div class="good-intersection flex-wrap">
+      <img class="good-image" src="../image/load_nine_five" alt="">
+      <div class="intersection flex-con">
+        <div class="intersection-title">
+          <div class="good-name"></div>
+          <div class="flex-wrap">
+            <div class="aui-margin-r-15 intersection-total"></div>
+            <div class="intersection-num"></div>
+          </div>
+        </div>
+        <div class="intersection-size flex-wrap">
+          <div class="titles">尺码</div>
+          <div class="flex-con sizeandnum size">
+
+          </div>
+        </div>
+        <div class="intersection-size flex-wrap">
+          <div class="titles">数量</div>
+          <div class="flex-con sizeandnum num">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="contents flex-con">
+        <!-- <div class="listWrap">
+          <div class="card flex-wrap flex-vertical">
+              <div class="icon-img flex-con flex-wrap aui-margin-t-10">
+                  <div class="from aui-margin-l-10 aui-margin-r-10 ">
+                      <div class="icon"></div>
+                  </div>
+                  <div class="goods-image flex-con box-wrap box-vertical-center box-horizontal-center">
+                      <img src="" alt="">
+                  </div>
+                  <div class="to aui-margin-l-10 aui-margin-r-10 ">
+                      <div class="icon"></div>
+                  </div>
+              </div>
+              <div class="dirction flex-wrap">
+                  <div class="from aui-margin-l-10 aui-margin-r-10">
+                      <div class="name from-shop"></div>
+                  </div>
+                  <div class="arrow-detail flex-con flex-vertical">
+                      <div class="goods-id"></div>
+                      <div class="arrow-icon flex-wrap">
+                          <div class="line-horizontal flex-con"></div>
+                          <div class="line-oblique"></div>
+                      </div>
+                      <div class="goods-num"></div>
+                  </div>
+                  <div class="to aui-margin-l-10 aui-margin-r-10">
+                      <div class="name to-shop"></div>
+                  </div>
+              </div>
+          </div>
+          <ul class="priceList">
+
+          </ul>
+          <div class="extra flex-wrap flex-vertical">
+              <div class="extra-item flex-wrap">
+                  <div class="name">ERP单号</div>
+                  <div class="flex-con aui-border-b">
+                      <input class="erp-order-num" type="text" name="" value="" readonly="" placeholder="请输入ERP单号">
+                  </div>
+                  <div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">
+                  </div>
+              </div>
+              <div class="extra-item extra-item-express-company flex-wrap">
+                  <div class="name">物流公司</div>
+                  <div class="flex-con aui-border-b">
+                      <input class="express-company" data-seq="" type="text" name="" value="" placeholder="请选择物流公司" readonly="" onclick="selectCompany(this)">
+                  </div>
+                  <div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">
+                  </div>
+              </div>
+              <div class="extra-item flex-wrap">
+                  <div class="name">物流单号</div>
+                  <div class="flex-con aui-border-b">
+                      <input class="express-num" type="text" name="" value="" readonly="" placeholder="请输入物流单号">
+                  </div>
+                  <div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">
+                  </div>
+              </div>
+              <div class="extra-item flex-wrap">
+                  <div class="name">执行数量</div>
+                  <div class="aui-border-b">
+                      <input class="express-carrynum" type="number" name="" value="" readonly="" placeholder="请输入执行数量" oninput="changeCarrynum(this)">
+                  </div>
+                  <div class="flex-con reasons aui-border-b" tapmode onclick="choseReason(this)">
+                    <div class="reason">
+                      <div class="reason-title" data-type="0">请选择原因</div>
+                      <div class="aui-iconfont aui-icon-down aui-margin-l-10"></div>
+                    </div>
+                    <div class="reason-content aui-hide">
+                      <div class="aui-border-b" data-type="1" tapmode onclick="choseReasonType(this)">无库存</div>
+                      <div class="aui-border-b" data-type="2" tapmode onclick="choseReasonType(this)">已销售</div>
+                      <div data-type="3" tapmode onclick="choseReasonType(this)">串码</div>
+                    </div>
+                  </div>
+                  <div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">
+                  </div>
+              </div>
+          </div>
+          <div class="aui-bar aui-bar-tab btns">
+            <div class="aui-bar-tab-item agree aui-font-size-16 aui-hide1" data-type="1" tapmode style="width: auto;" onclick="btnClick(this)">同意</div>
+            <div class="aui-bar-tab-item refuse aui-font-size-16 aui-hide1" data-type="2" tapmode style="width: auto;" onclick="btnClick(this)">拒绝</div>
+            <div class="aui-bar-tab-item edit aui-font-size-16 aui-hide2" data-type="1" tapmode style="width: auto;" onclick="btnClick(this)">保存修改</div>
+          </div> -->
+      </div>
+
+    </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/common/my_common.js"></script>
+<script type="text/javascript" src="../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript">
+    function changeCarrynum(obj) {
+      var fatherDom = $(obj).closest('.listWrap');
+        if (parseInt($(obj).val()) == $(obj).attr('data-totalnum')) {
+          $($(fatherDom).find('.reasons')).addClass('aui-hide');
+
+        } else if (parseInt($(obj).val()) > parseInt($($(fatherDom).find('.goods-num')).attr('data-num'))) {
+            $(obj).val($(obj).attr('data-totalnum'));
+            $($(fatherDom).find('.reasons')).addClass('aui-hide');
+        } else {
+            $($(fatherDom).find('.reasons')).removeClass('aui-hide');
+        }
+    }
+
+    function choseReasonType(obj) {
+      var fatherDom = $(obj).closest('.listWrap');
+      $($(fatherDom).find('.reason-title')).text($(obj).text());
+
+        $($(fatherDom).find('.reason-title')).attr('data-type', $(obj).attr('data-type'));
+        $($(fatherDom).find('.reason-content')).animate({
+            opticy: '0'
+        }, "slow");
+        $($(fatherDom).find('.reason-content')).addClass('aui-hide');
+    }
+
+    function choseReason(obj) {
+      var fatherDom = $(obj).closest('.listWrap');
+        if (applicationType == 1) {
+            return;
+        }
+        if (!$(obj).hasClass('hot')) {
+            $(obj).addClass('hot');
+            $($(obj).find('.aui-iconfont')).css({
+                'transform': 'rotate(180deg)'
+            });
+            $($(fatherDom).find('.reason-content')).animate({
+                opticy: '1'
+            }, "slow");
+            $($(fatherDom).find('.reason-content')).removeClass('aui-hide');
+        } else {
+            $(obj).removeClass('hot');
+            $($(obj).find('.aui-iconfont')).css({
+                'transform': 'rotate(0)'
+            });
+            $($(fatherDom).find('.reason-content')).animate({
+                opticy: '0'
+            }, "slow");
+            $($(fatherDom).find('.reason-content')).addClass('aui-hide');
+        }
+    }
+
+    function selectCompany(_obj) {
+        if ($api.hasCls($api.dom(".extra-item-express-company .aui-iconfont"), "aui-invisible")) {
+            return;
+        }
+        _openWin("logistics_win", "logistics_win.html", {
+            type: "cargo_win"
+        });
+    }
+
+    function handleTransferApplication(obj) {
+        var url = window.myServerUrl + "order/app/allocateTransfer/handleTransferApplication";
+        var erpOrderNum = obj.erpOrderNum
+        var expressCompanySeq = obj.expressCompanySeq
+        var expressNum = obj.expressNum
+        var carryNum = obj.carryNum
+        var reasonType =obj.reasonType
+        var allnum = obj.allnum
+        var seq = obj.seq
+        var state = obj.state
+        var remark = '';
+        if (_isStringNull(carryNum)) {
+            _toast('执行数量为必填');
+            return;
+        } else {
+            if (carryNum == allnum) {
+                remark = carryNum
+            } else if (carryNum < allnum) {
+                if (reasonType == '0') {
+                    _toast('执行数量与原因为必填');
+                    return;
+                }
+                remark = carryNum + ',' + reasonType
+            }
+        }
+        // if (_state == "1") {
+        //     if (erpOrderNum == datas.erpOrderNum && expressCompanySeq == datas.expressCompanySeq && expressNum == datas.expressNum && remark == datas.remark) {
+        //         if (!_isStringNull(erpOrderNum) || !_isStringNull(expressCompanySeq) || !_isStringNull(expressNum) || !_isStringNull(remark)) {
+        //             _toast("未做任何修改");
+        //             return;
+        //         }
+        //     }
+        // }
+        var _data = {
+            values: {
+                applicationSeq: seq,
+                state: state,
+                erpOrderNum: erpOrderNum,
+                expressCompanySeq: expressCompanySeq,
+                expressNum: expressNum,
+                remark: remark
+            }
+        };
+        console.log("处理调货申请（同意、拒绝）:" + url);
+        console.log("处理调货申请（同意、拒绝）._data:" + $api.jsonToStr(_data));
+          // return;
+        _ajax(url, "handleTransferApplication", function(ret, err) {
+            if (ret.code == 0) {
+                console.log("处理调货申请（同意、拒绝）.ret:" + $api.jsonToStr(ret));
+                _myAlert1("操作成功", "确定", function(ret, err) {
+                    _sendEvent('refreshMessageListEvent');
+                    api.closeWin();
+
+                });
+
+            } else {
+                _toast(window.ajaxErrorMessage);
+            }
+        }, "post", _data);
+    }
+
+    function btnClick(obj) {
+        var state = $(obj).attr('data-type');
+        var fatherDom=$(obj).closest('.listWrap');
+
+        var objs = {
+          state:state,
+          erpOrderNum:$.trim($($(fatherDom).find('.erp-order-num')).val()),
+          expressCompanySeq:$($(fatherDom).find('.express-company')).attr('data-seq'),
+          expressNum:$.trim($($(fatherDom).find('.express-num')).val()),
+          carryNum:$.trim($($(fatherDom).find('.express-carrynum')).val()),
+          reasonType:$($(fatherDom).find('.reason-title')).attr('data-type'),
+          allnum:parseInt($($(fatherDom).find('.goods-num')).text()),
+          seq:$(fatherDom).attr('data-seq')
+        }
+        if (state == "2") {
+            //拒绝
+            _confirm("提示", "作废后无法修改，您确认要作废吗？", ["取消", "确定"], function(ret, err) {
+                if (ret.buttonIndex == 2) {
+                    handleTransferApplication(objs);
+                }
+            });
+        } else {
+            handleTransferApplication(objs);
+        }
+    }
+
+    function getLogistics(_seq) {
+        for (var i = 0; i < logisticsList.length; i++) {
+            if (logisticsList[i].seq == _seq) {
+                return logisticsList[i].name;
+            }
+        }
+        return "";
+    }
+
+    function initUI() {
+        $('.good-name').text(pageParam.goodId);
+        $('.good-image').attr("data-src",pageParam.img);
+        new auiLazyload({
+            errorImage: "../image/error_nine_five.png"
+        });
+        if (applicationType=='2') {
+          // 调出
+          $('.intersection-total').text('调出总数');
+
+        }else {
+          // 调入
+            $('.intersection-total').text('调入总数');
+        }
+        $('.intersection-num').text(pageParam.allTotalNum);
+        var sizeTotalNumMap = pageParam.sizeTotalNumMap;
+        var sizestr='';
+        var numstr='';
+        for (var i in sizeTotalNumMap) {
+          sizestr+='<div>'+i+'</div>'
+          numstr +='<div>'+sizeTotalNumMap[i]+'</div>'
+        }
+        $('.size').html(sizestr);
+        $('.num').html(numstr);
+        var list = pageParam.transferInOutDetail;
+        var goodId = pageParam.goodId;
+        var img = pageParam.img;
+        var str = '';
+        if (!_isArrayNull(list)) {
+            for (var i = 0; i < list.length; i++) {
+                str += '<div class="listWrap" data-seq="'+list[i].seq+'">';
+                str += '<div class="card flex-wrap flex-vertical">';
+                if (list[i].state == 0) {
+                    str += '<div class="state-dom color">待处理</div>';
+                } else if (list[i].state == 1) {
+                    str += '<div class="state-dom color1">已完成</div>';
+                } else {
+                    str += '<div class="state-dom color2">已作废</div>';
+                }
+                str += '<div class="icon-img flex-con flex-wrap aui-margin-t-10">';
+                str += '<div class="from aui-margin-l-10 aui-margin-r-10 ">';
+                str += '  <div class="icon"></div>';
+                str += '</div>';
+                str += '<div class="goods-image flex-con box-wrap box-vertical-center box-horizontal-center">';
+                str += '<img src="' + img + '" alt="">';
+                str += '</div>';
+                str += '<div class="to aui-margin-l-10 aui-margin-r-10 ">';
+                str += '<div class="icon"></div>';
+                str += '</div></div>';
+                str += '<div class="dirction flex-wrap">';
+                str += '<div class="from aui-margin-l-10 aui-margin-r-10">';
+                str += '<div class="name from-shop">' + list[i].outShopName + '</div>';
+                str += '</div>';
+                str += '<div class="arrow-detail flex-con flex-vertical">';
+                str += '<div class="goods-id">' + goodId + '</div>';
+                str += '<div class="arrow-icon flex-wrap">';
+                str += '<div class="line-horizontal flex-con"></div>';
+                str += '<div class="line-oblique"></div>';
+                str += '</div>';
+                var sizeNumMap = list[i].sizeNumMap;
+                var allNum = 0;
+                for (var k in sizeNumMap) {
+                    allNum += parseInt(sizeNumMap[k]);
+                }
+                str += '<div class="goods-num" data-num="'+allNum+'">' + allNum + '双</div>';
+                str += '</div>';
+                str += '<div class="to aui-margin-l-10 aui-margin-r-10">';
+                str += '<div class="name to-shop">' + list[i].inShopName + '</div>';
+                str += '</div></div></div>';
+
+                str += '<ul class="priceList">';
+                str += '<li class="item">';
+                str += '<div class="content">';
+                str += '<div class="size-item">';
+
+                var fornum = 0;
+                for (var j in sizeNumMap) {
+                    if (fornum % 4 == 0) {
+                        str += '<div class="items">';
+                        str += '<div class="font2 spe">尺码</div>';
+                        str += '<div class="font2 spe">调出数量</div>';
+                        str += '</div>';
+                    }
+                    str += '<div class="items">';
+                    if (sizeNumMap.hasOwnProperty(j)) {
+                        str += '<div class="font3">' + j + '</div>';
+                        str += '<div class="font1">' + sizeNumMap[j] + '</div>';
+                    }
+                    str += '</div>';
+                    fornum++;
+                }
+                str += '</div>';
+                str += '<div class="time">';
+                var time = _getFormatedDate(list[i].inputTime, 'yyyy年MM月dd日  HH时mm分');
+                str += '<div>' + time + '</div>';
+                str += '</div>';
+                str += '</div>';
+                str += '</li>';
+                str += '</ul>';
+                str += '<div class="extra flex-wrap flex-vertical">';
+                str += '<div class="extra-item flex-wrap">';
+                str += '<div class="name">ERP单号</div>';
+                str += '<div class="flex-con aui-border-b">';
+                if (applicationType == 1) {
+                  str += '<input class="erp-order-num" type="text" name="" value="' + list[i].erpOrderNum + '" readonly="" placeholder="请输入ERP单号">';
+                }else {
+                  str += '<input class="erp-order-num" type="text" name="" value="' + list[i].erpOrderNum + '"  placeholder="请输入ERP单号">';
+                }
+                str += '</div>';
+                str += '<div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">';
+                str += '</div></div>';
+                str += '<div class="extra-item extra-item-express-company flex-wrap">';
+                str += '<div class="name">物流公司</div>';
+                str += '<div class="flex-con aui-border-b">';
+                if (applicationType ==1) {
+                  str += '<input class="express-company" data-seq="" type="text" name="" value="' + getLogistics(list[i].expressCompanySeq) + '" placeholder="请选择物流公司" readonly="">';
+                }else {
+                  str += '<input class="express-company" data-seq="" type="text" name="" value="' + getLogistics(list[i].expressCompanySeq) + '" placeholder="请选择物流公司" onclick="selectCompany(this)">';
+                }
+
+                str += '</div>';
+                if (applicationType ==1) {
+                    str += '<div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">';
+                }else {
+                    str += '<div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center">';
+                }
+
+                str += '</div></div>';
+                str += '<div class="extra-item flex-wrap">';
+                str += '<div class="name">物流单号</div>';
+                str += '<div class="flex-con aui-border-b">';
+                if (applicationType==1) {
+                  str += '<input class="express-num" type="text" name="" value="' + list[i].expressNum + '" readonly="" placeholder="请输入物流单号">';
+                }else {
+                  str += '<input class="express-num" type="text" name="" value="' + list[i].expressNum + '" placeholder="请输入物流单号">';
+                }
+
+                str += '</div>';
+                str += '<div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">';
+                str += '</div></div>';
+                str += '<div class="extra-item flex-wrap">';
+                str += '<div class="name">执行数量</div>';
+                str += '<div class="aui-border-b">';
+
+                var remarkList = [];
+                var reasonnum;
+                if (applicationType==1) {
+                  if (list[i].remark.length == 1) {
+                      str += '<input class="express-carrynum" type="number" name="" value="' + list[i].remark + '" readonly="" placeholder="请输入执行数量" data-totalnum="'+allNum+'" oninput="changeCarrynum(this)">';
+                  } else if (list[i].remark.length > 1) {
+                      remarkList = list[i].remark.split(',');
+                      str += '<input class="express-carrynum" type="number" name="" value="' + remarkList[0] + '" readonly="" placeholder="请输入执行数量" data-totalnum="'+allNum+'" oninput="changeCarrynum(this)">';
+                      if (remarkList[1] == '1') {
+                          reasonnum = 1;
+                      } else if (remarkList[1] == '2') {
+                          reasonnum = 2;
+                      } else if (remarkList[1] == '3') {
+                          reasonnum = 3;
+                      }
+                  } else {
+                      str += '<input class="express-carrynum" type="number" name="" value="" readonly="" placeholder="请输入执行数量" data-totalnum="'+allNum+'" oninput="changeCarrynum(this)">';
+                  }
+                }else {
+                  if (list[i].remark.length == 1) {
+                      str += '<input class="express-carrynum" type="number" name="" value="' + list[i].remark + '"  placeholder="请输入执行数量" data-totalnum="'+allNum+'" oninput="changeCarrynum(this)">';
+                  } else if (list[i].remark.length > 1) {
+                      remarkList = list[i].remark.split(',');
+                      str += '<input class="express-carrynum" type="number" name="" value="' + remarkList[0] + '"  placeholder="请输入执行数量" data-totalnum="'+allNum+'" oninput="changeCarrynum(this)">';
+                      if (remarkList[1] == '1') {
+                          reasonnum = 1;
+                      } else if (remarkList[1] == '2') {
+                          reasonnum = 2;
+                      } else if (remarkList[1] == '3') {
+                          reasonnum = 3;
+                      }
+                  } else {
+                      str += '<input class="express-carrynum" type="number" name="" value="" placeholder="请输入执行数量" data-totalnum="'+allNum+'" oninput="changeCarrynum(this)">';
+                  }
+                }
+
+                str += '</div>';
+                if (list[i].state == '2') {
+                  str += '<div class="flex-con reasons aui-border-b aui-hide" tapmode onclick="choseReason(this)">';
+                }else {
+                  str += '<div class="flex-con reasons aui-border-b" tapmode onclick="choseReason(this)">';
+                }
+
+                str += '<div class="reason">';
+
+                if (reasonnum == 1) {
+                    str += '<div class="reason-title" data-type="1">无库存</div>';
+                } else if (reasonnum == 2) {
+                    str += '<div class="reason-title" data-type="2">已销售</div>';
+                } else if (reasonnum == 3) {
+                    str += '<div class="reason-title" data-type="3">串码</div>';
+                } else {
+                    str += '<div class="reason-title" data-type="0">请选择原因</div>';
+                }
+
+                str += '<div class="aui-iconfont aui-icon-down aui-margin-l-10"></div>';
+                str += '</div>';
+                str += '<div class="reason-content aui-hide">';
+                str += '<div class="aui-border-b" data-type="1" tapmode onclick="choseReasonType(this)">无库存</div>';
+                str += '<div class="aui-border-b" data-type="2" tapmode onclick="choseReasonType(this)">已销售</div>';
+                str += '<div data-type="3" tapmode onclick="choseReasonType(this)">串码</div>';
+                str += '</div></div>';
+                str += '  <div class="aui-iconfont aui-text-default aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-invisible">';
+                str += '</div></div></div>';
+
+
+                if (applicationType == '2') {
+                    //调出
+
+                    if (list[i].state == '0') {
+                        str += '<div class="aui-bar aui-bar-tab btns">';
+                        str += '<div class="aui-bar-tab-item agree aui-font-size-16" data-type="1" tapmode style="width: auto;" onclick="btnClick(this)">确定</div>';
+                        str += '<div class="aui-bar-tab-item refuse aui-font-size-16" data-type="2" tapmode style="width: auto;" onclick="btnClick(this)">作废</div>';
+                        str += '<div class="aui-bar-tab-item edit aui-font-size-16 aui-hide" data-type="1" tapmode style="width: auto;" onclick="btnClick(this)">保存修改</div>';
+                        str += '</div></div>';
+                    } else if (list[i].state == '1') {
+                        // 已完成
+                        str += '<div class="aui-bar aui-bar-tab btns">';
+                        str += '<div class="aui-bar-tab-item agree aui-font-size-16 aui-hide" data-type="1" tapmode style="width: auto;" onclick="btnClick(this)">确定</div>';
+                        str += '<div class="aui-bar-tab-item refuse aui-font-size-16 aui-hide" data-type="2" tapmode style="width: auto;" onclick="btnClick(this)">作废</div>';
+                        str += '<div class="aui-bar-tab-item edit aui-font-size-16 " data-type="1" tapmode style="width: auto;" onclick="btnClick(this)">保存修改</div>';
+                        str += '</div></div>';
+                    } else if (list[i].state == '2') {
+                        // 已作废
+                    }
+
+                } else {
+                    // 调入
+                    str += '</div>';
+                }
+
+
+
+
+            }
+
+        }
+        $('.contents').html(str);
+
+
+
+       var hiddenDom = $('.express-carrynum');
+        for (var i = 0; i < hiddenDom.length; i++) {
+          if (_isStringNull($(hiddenDom[i]).val())) {
+            var fatherDom = $(hiddenDom[i]).closest('.listWrap')
+            $($(fatherDom).find('.reasons')).addClass('aui-hide');
+          }
+        }
+
+    }
+
+
+    function initData() {
+        pageParam = api.pageParam.list;
+        console.log("pageParam:" + $api.jsonToStr(pageParam));
+        applicationType = api.pageParam.type;
+            // applicationSeq = pageParam.state;
+        applicationState = pageParam.state;
+        logisticsList = $api.getStorage("logisticsListKey");
+    }
+
+
+    var applicationType; //1调入、2调出
+    var datas = [];
+    var applicationSeq;
+    var applicationState;
+    var logisticsList = [];
+    var pageParam;
+    var apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        initData();
+
+        initUI();
+        //选择物流
+        _addEventListener("choseLogisticsEvent", function(ret) {
+            $api.val($api.dom(".express-company"), ret.value.name);
+            $api.attr($api.dom(".express-company"), 'data-seq', ret.value.seq);
+        })
+    }
+</script>
+
+</html>

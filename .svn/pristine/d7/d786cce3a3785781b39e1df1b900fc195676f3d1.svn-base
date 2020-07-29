@@ -1,0 +1,520 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>通知</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/messages/cating_message_frm.css" />
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body class="aui-hide">
+	<div class="aui-content aui-margin-b-15">
+		<ul class="aui-list aui-media-list aui-list-noborder">
+			<!-- <li class="aui-list-item aui-list-item-middle aui-padded-l-10" data-seq="1" tapmode onclick="itemClick(this)">
+				<div class="aui-media-list-item-inner">
+					<div class="aui-list-item-media" style="width: auto;">
+						<div class='aui-list-item-input aui-margin-r-10 box-wrap box-horizontal-center box-vertical-center'>
+
+							<label class='aui-font-size-12 aui-margin-l-0'>
+						<input class='aui-radio' type='checkbox' name='radio' onclick='return false;'>
+						</label>
+						</div>
+						<img src="../../image/icon_notification_other.png" class="aui-list-img-sm">
+					</div>
+					<div class="aui-list-item-inner aui-list-item-arrow">
+						<div class="aui-list-item-text">
+							<div class="aui-list-item-title aui-font-size-14">AUI</div>
+							<div class="aui-list-item-right aui-font-size-10">08:00</div>
+						</div>
+						<div class="aui-list-item-text flex-wrap">
+							<div class="aui-ellipsis-1 flex-con aui-font-size-12"> www.auicss.comwww.auicss.comwww.auicss.comwww.auicss.com</div>
+							<div class="aui-label aui-label-warning">未读</div>
+						</div>
+					</div>
+				</div>
+			</li> -->
+		</ul>
+	</div>
+	<!-- 悬浮按钮 -->
+	<div class="top aui-hide">
+		<img id="topArrow" src="../../image/back_top.png" />
+	</div>
+
+	<div class='footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		到底了<i class='aui-iconfont aui-icon-activity aui-font-size-12'></i>
+	</div>
+	<div class='footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		暂无数据
+	</div>
+	<div class='footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		加载更多<i class='aui-iconfont aui-icon-more aui-font-size-12'></i>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../script/common/dialog_box.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_toast.js"></script>
+<script type="text/javascript">
+	/**
+	 *批量删除通知
+	 */
+	function deletePushRecord(seqList, _obj) {
+		_showProgress("删除中...");
+		var url = window.myServerUrl + "order/app/message/deleteMessage";
+		url +='?type=3';
+		var _data = {
+			values: {
+				seqList: isSelectedAll && editable ? "" : seqList.join(","),
+			}
+		};
+		console.log("批量删除通知-->url:" + url);
+		console.log("批量删除通知-->_data:" + $api.jsonToStr(_data));
+		_ajax(url, "deletePushRecord", function(ret, err) {
+			api.hideProgress();
+			if (ret) {
+				console.log("批量删除通知-->ret:" + $api.jsonToStr(ret));
+				new auiToast().custom({
+					title: ret.msg,
+					maxnum: 5,
+					html: '<i class="aui-iconfont aui-icon-info"></i>',
+					duration: 1500
+				});
+				if (ret.code == 0) {
+					if (!_isObjectNull(_obj)) {
+						$api.remove(_obj);
+					} else {
+						setTimeout(function() {
+							_sendEvent('deleteSucceedEvent')
+							api.refreshHeaderLoading();
+						}, 1500);
+					}
+
+				}
+			} else {
+				console.log("批量删除通知-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+		}, "post", _data);
+	}
+
+	function deleteAction() {
+		var seqList = [];
+		var items = $api.domAll(".aui-list-item");
+		var count = 0;
+		if (items) {
+			for (var i = 0; i < items.length; i++) {
+				if ($api.dom(items[i], ".aui-radio").checked) {
+					count++;
+					seqList.push(parseInt($api.attr(items[i], "data-seq")));
+				}
+			}
+		}
+		if (count == 0) {
+			new auiToast().custom({
+				title: "您还没有系统消息哦~",
+				maxnum: 5,
+				html: '<i class="aui-iconfont aui-icon-info"></i>',
+				duration: 1500
+			});
+			return;
+		}
+		deletePushRecord(seqList);
+	}
+
+	function setPageEditable(_editable) {
+		editable = _editable;
+		var doms = $api.domAll(".aui-list-item-input");
+		if (_editable) {
+			for (var i = 0; i < doms.length; i++) {
+				if ($api.hasCls(doms[i], "aui-hide")) {
+					$api.removeCls(doms[i], "aui-hide");
+				}
+			}
+		} else {
+			for (var i = 0; i < doms.length; i++) {
+				if (!$api.hasCls(doms[i], "aui-hide")) {
+					$api.addCls(doms[i], "aui-hide");
+				}
+			}
+		}
+	}
+
+	function selectAll(_type) {
+		var doms = $api.domAll(".aui-radio");
+		isSelectedAll = _type;
+		if (_type) {
+			//全选
+			for (var i = 0; i < doms.length; i++) {
+				if (!(doms[i].checked)) {
+					doms[i].checked = true;
+				}
+			}
+		} else {
+			//取消全选
+			for (var i = 0; i < doms.length; i++) {
+				if ((doms[i].checked)) {
+					doms[i].checked = false;
+				}
+			}
+		}
+	}
+	/**
+	 *标记消息为已读
+	 */
+	function readPushRecord(_seq, call) {
+		var url = window.myServerUrl + "order/app/message/updateIsRead";
+		var _data = {
+			values: {
+				seq: _seq,
+			}
+		};
+		console.log("标记消息为已读-->url:" + url);
+		console.log("标记消息为已读-->_data:" + $api.jsonToStr(_data));
+		_ajax(url, "readPushRecord", function(ret, err) {
+			api.hideProgress();
+			if (ret) {
+				console.log("标记消息为已读-->ret:" + $api.jsonToStr(ret));
+				call(ret);
+			} else {
+				console.log("标记消息为已读-->err:" + $api.jsonToStr(err));
+				// _toast(window.ajaxErrorMessage);
+			}
+		}, "post", _data);
+	}
+
+	function itemClick(_obj) {
+		if (editable) {
+			//编辑状态，点击进行勾选与取消勾选
+			var checkbox = $api.dom(_obj, ".aui-radio");
+			if ((checkbox.checked)) {
+				checkbox.checked = false;
+			} else {
+				checkbox.checked = true;
+			}
+		} else {
+			if (!_isStringNull($(_obj).attr('data-detailedPage'))) {
+				dialogBox.alert({
+					title: '系统消息',
+					content: $($(_obj).find('.aui-ellipsis-1.flex-con')).text(),
+					leftBtnTitle: "删除"
+				}, function(ret) {
+					if (ret.eventType == "left") {
+							deletePushRecord([$api.attr(_obj, "data-seq")], _obj);
+					}else {
+	          var pageParam = {
+	    					title: $(_obj).attr('data-name'),
+	    					content: $(_obj).attr('data-detailedPage'),
+	              time: $(_obj).attr('data-inputTime')
+	    			};
+	    			_openWin('notice_win', '../notice_win.html', pageParam)
+					}
+				});
+			}
+
+
+		}
+	}
+
+	function getType(_type) {
+		var type = {};
+		switch (_type) {
+			case 4:
+				type.name = "解锁通知";
+				type.icon = "icon_notification_unlock.png";
+				break;
+			case 1:
+				type.name = "订单通知";
+				type.icon = "icon_notification_order.png";
+				break;
+			default:
+				type.name = "其它通知";
+				type.icon = "icon_notification_other.png";
+		}
+		return type;
+	}
+
+	function getGoodsHTML(data) {
+		var htmlStr = "";
+		for (var i = 0; i < data.length; i++) {
+			totalIndex++;
+			if (data[i].title=='催单消息') {
+				continue;
+			}
+      if (_isStringNull(data[i].detailedPage)) {
+        htmlStr += '<li class="aui-list-item aui-list-item-middle aui-padded-l-10" data-seq="' + data[i].seq + '" data-detailedPage="" tapmode onclick="itemClick(this)">';
+      }else {
+        htmlStr += '<li class="aui-list-item aui-list-item-middle aui-padded-l-10" data-seq="' + data[i].seq + '" data-detailedPage="' + data[i].detailedPage + '" data-inputTime="' + data[i].inputTime + '" data-name="' + data[i].name + '" tapmode onclick="itemClick(this)">';
+      }
+
+			htmlStr += '<div class="aui-media-list-item-inner">';
+			htmlStr += '<div class="aui-list-item-media" style="width: auto;">';
+
+			if (editable) {
+				htmlStr += "<div class='aui-list-item-input aui-margin-r-10 box-wrap box-horizontal-center box-vertical-center'>";
+			} else {
+				htmlStr += "<div class='aui-list-item-input aui-margin-r-10 aui-hide box-wrap box-horizontal-center box-vertical-center'>";
+			}
+			htmlStr += "<label class='aui-font-size-12 aui-margin-l-0'>";
+			htmlStr += "<input class='aui-radio' data-seq=' "+ data[i].seq+"' type='checkbox' name='radio' onclick='return false;'>";
+			htmlStr += "</label>";
+			htmlStr += "</div>";
+
+			htmlStr += '<img src="../../image/icon_notification_unlock.png" class="aui-list-img-sm">';
+			htmlStr += '</div>';
+			htmlStr += '<div class="aui-list-item-inner aui-list-item-arrow">';
+			htmlStr += '<div class="aui-list-item-text">';
+      if (!_isStringNull(data[i].detailedPage)) {
+        htmlStr += '<div class="aui-list-item-title aui-font-size-14">系统公告</div>';
+  			htmlStr += '<div class="aui-list-item-right aui-font-size-10">' + _getShortTimeByTimeStr(data[i].inputTime) + '</div>';
+  			htmlStr += '</div>';
+  			htmlStr += '<div class="aui-list-item-text aui-ellipsis-1">';
+  			htmlStr += '<div class="aui-ellipsis-1 flex-con aui-font-size-12">';
+  			htmlStr += data[i].name;
+  			htmlStr += '</div>';
+      }else {
+        htmlStr += '<div class="aui-list-item-title aui-font-size-14">系统消息</div>';
+  			htmlStr += '<div class="aui-list-item-right aui-font-size-10">' + _getShortTimeByTimeStr(data[i].inputTime) + '</div>';
+  			htmlStr += '</div>';
+  			htmlStr += '<div class="aui-list-item-text aui-ellipsis-1">';
+  			htmlStr += '<div class="aui-ellipsis-1 flex-con aui-font-size-12">';
+  			htmlStr += data[i].content;
+  			htmlStr += '</div>';
+      }
+
+			// if (data[i].applicationState == 0) {
+			// 	htmlStr += '<div class="aui-label aui-label-warning">';
+			// 	htmlStr += "待处理";
+			// 	htmlStr += '</div>';
+			// }else if (data[i].applicationState == 1) {
+			// 	htmlStr += '<div class="aui-label aui-label-warning hot1">';
+			// 	htmlStr += "已同意";
+			// 	htmlStr += '</div>';
+			// }else if (data[i].applicationState == 2) {
+			// 	htmlStr += '<div class="aui-label aui-label-warning hot2">';
+			// 	htmlStr += "已拒绝";
+			// 	htmlStr += '</div>';
+			// }
+			htmlStr += '</div>';
+			htmlStr += '</div>';
+			htmlStr += '</div>';
+			htmlStr += '</li>';
+		}
+		console.log("htmlStr:" + htmlStr);
+		return htmlStr;
+	}
+
+	function initUI(data, type) {
+		switch (type) {
+			case "down":
+				if (_isArrayNull(data)) {
+					//第一页没数据，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+					isAjaxing = true;
+					$api.html($api.dom("ul"), "");
+					showEmptyMsg(); //显示"暂无数据"
+				} else {
+					$api.html($api.dom("ul"), getGoodsHTML(data));
+					if (data.length < num) {
+						//第一页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						showOverMsg(); //显示"到底了"
+					} else {
+						//第一页数据等于每页总数，false，用户向上滑动就再次请求服务器获取后面页数的数据
+						isAjaxing = false;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+			case "up":
+				if (_isArrayNull(data)) {
+					//当前页没数据了，则将isAjaxing置为true，防止继续上滑频繁请求服务器
+					isAjaxing = true;
+					showOverMsg(); //显示"到底了"
+				} else {
+					$api.append($api.dom("ul"), getGoodsHTML(data));
+					if (data.length < num) {
+						//新获取页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						showOverMsg(); //显示"到底了"
+					} else {
+						isAjaxing = false;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+		}
+		api.parseTapmode();
+		setTimeout(function() {
+			if ($api.hasCls($api.dom("body"), "aui-hide")) {
+				$api.removeCls($api.dom("body"), "aui-hide");
+			}
+			closeUILoading();
+			api.refreshHeaderLoadDone();
+		}, window.refreshLoadDoneTimeOut);
+	}
+
+	/*
+	 *获取所有推送消息列表
+	 */
+	function getData(call) {
+		var url = window.myServerUrl + "order/app/message/selectMessage";
+    url += "?type=3";
+		url += "&start=" + start;
+		url += "&num=" + num;
+		console.log("获取系统推送消息列表-->url:" + url);
+		isAjaxing = true;
+		_ajax(url, "notices", function(ret, err) {
+			var tempdata = [];
+			if (ret) {
+				console.log("获取系统推送消息列表-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					tempdata = ret.result.result;
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("获取系统推送消息列表-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			call(tempdata);
+		});
+	}
+
+	function closeUILoading() {
+		UILoading.closeKeyFrame();
+	}
+
+	function openUILoading() {
+		UILoading.keyFrame({
+			rect: {
+				w: 102,
+				h: 102
+			},
+			styles: {
+				bg: 'rgba(0,0,0,0)',
+				corner: 5,
+				interval: 50,
+				frame: {
+					w: 102,
+					h: 102
+				}
+			},
+			//				content : [{
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}, {
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}],
+			mask: "rgba(255,0,0,0)"
+		}, function(ret) {
+			//								alert(JSON.stringify(ret));
+			console.log(12345);
+		});
+	}
+
+	function initData() {
+		totalIndex = 0;
+		start = 1;
+		num = 20;
+		UILoading = api.require('UILoading');
+		data = [];
+	}
+
+	var editable = false;
+	var isSelectedAll = false;
+	var start;
+	var num;
+	var data;
+	var isAjaxing = false;
+	var UILoading;
+	var totalIndex = 0;
+	apiready = function() {
+		api.parseTapmode();
+		initData();
+		//下拉刷新
+		api.setRefreshHeaderInfo({
+			loadingImg: 'widget://image/loading_more.gif',
+			bgColor: 'rgba(255,255,255,0)',
+			textColor: '#212121',
+			textDown: '下拉刷新...',
+			textUp: '松开刷新...'
+		}, function(ret, err) {
+			//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+			start = 1;
+			totalIndex = 0;
+			data = [];
+			getData(function(ret) {
+				data = ret;
+				initUI(ret, "down");
+			});
+		});
+
+		//设置下拉刷新延迟时间
+		setTimeout(function() {
+			openUILoading();
+			getData(function(ret) {
+				data = ret;
+				initUI(ret, "down");
+			});
+		}, 150);
+
+		//上拉加载
+		api.addEventListener({
+			name: 'scrolltobottom',
+			extra: {
+				threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+			}
+		}, function(ret, err) {
+			console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+			if (!isAjaxing) {
+				start += num;
+				getData(function(ret) {
+					data = data.concat(ret);
+					setTimeout(function() {
+						initUI(ret, "up");
+					}, 100);
+				});
+			}
+		});
+		//悬浮按钮-点击回到顶部
+		var topArrow = document.getElementById('topArrow');
+		topArrow.onclick = function() {
+				document.scrollTop = document.body.scrollTop = 0;
+			}
+			//监听滑动事件
+		window.onscroll = function() {
+			var sTop = document.documentElement.scrollTop || document.body.scrollTop;
+			if (sTop >= api.frameHeight * 3) {
+				//                  console.log("显示按钮");
+				if ($api.hasCls($api.dom(".top"), "aui-hide")) {
+					$api.removeCls($api.dom(".top"), "aui-hide");
+				}
+			} else {
+				//                  console.log("隐藏按钮");
+				if (!$api.hasCls($api.dom(".top"), "aui-hide")) {
+					$api.addCls($api.dom(".top"), "aui-hide");
+				}
+			}
+		}
+		_addEventListener("notificationUpdateEndEvent", function(ret) {
+			selectAll(ret.value.type);
+		});
+		_addEventListener("applicationState",function (ret) {
+			openUILoading();
+			getData(function(ret) {
+				data = ret;
+				initUI(ret, "down");
+			});
+		})
+
+	}
+</script>
+
+</html>

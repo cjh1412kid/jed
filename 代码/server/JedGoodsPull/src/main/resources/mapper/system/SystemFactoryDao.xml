@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.system.dao.SystemFactoryDao">
+
+  <sql id="factorySql">
+    with userList as (select
+    ybu.Seq as seq,ybu.AccountName as accountName,ybu.UserName as userName,ybu.InputTime as inputTime,
+    ybc.Seq as companySeq,ybc.Name as companyName,
+    ybb.Seq as brandSeq,ybb.Name as brandName,
+    ybr.Seq as roleSeq,ybr.Name as roleName
+    from [JedSmartRetail].[dbo].[YHSR_Base_User] ybu
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Company] ybc on ybu.Company_Seq=ybc.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Brand] ybb on ybu.Brand_Seq=ybb.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_User_Role] ybur on ybu.Seq=ybur.User_Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Role] ybr on ybur.Role_Seq=ybr.Seq
+    where ybu.Del=0 and ybc.Del=0 and ybb.Del=0
+    <if test="keywords!=null">
+      and (ybu.UserName like '%'+#{keywords}+'%'
+      or ybc.Name like '%'+#{keywords}+'%'
+      or ybb.Name like '%'+#{keywords}+'%')
+    </if>
+    )
+  </sql>
+  <select id="queryFactoryPage" resultType="io.nuite.modules.system.entity.SysFactoryEntity">
+    <include refid="factorySql"/>
+    select top ${limit} * from (select row_number() over(order by a.inputTime desc) rownumber,* from userList a) a1 where
+    rownumber>(${page}-1)*${limit}
+  </select>
+
+  <select id="queryFactoryTotal" resultType="java.lang.Integer">
+    <include refid="factorySql"/>
+    select count(*) from userList;
+  </select>
+
+  <select id="queryFactoryOne" resultType="io.nuite.modules.system.entity.SysFactoryEntity">
+    select
+    ybu.Seq as seq,ybu.AccountName as accountName,ybu.UserName as userName,ybu.InputTime as inputTime,
+    ybc.Seq as companySeq,ybc.Name as companyName,
+    ybb.Seq as brandSeq,ybb.Name as brandName,
+    ybr.Seq as roleSeq,ybr.Name as roleName
+    from [JedSmartRetail].[dbo].[YHSR_Base_User] ybu
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Company] ybc on ybu.Company_Seq=ybc.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Brand] ybb on ybu.Brand_Seq=ybb.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_User_Role] ybur on ybu.Seq=ybur.User_Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Role] ybr on ybur.Role_Seq=ybr.Seq
+    where ybu.Del=0 and ybc.Del=0 and ybb.Del=0 and ybu.Seq=#{seq}
+  </select>
+
+</mapper>

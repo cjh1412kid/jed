@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>大区分公司管理</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <style type="text/css">
+    div#rMenu {
+      position: absolute;
+      visibility: hidden;
+      top: 0;
+      background-color: #555;
+      text-align: left;
+      padding: 2px;
+    }
+
+    div#rMenu ul li {
+      margin: 1px 0;
+      padding: 0 5px;
+      cursor: pointer;
+      list-style: none outside none;
+      background-color: #DFDFDF;
+    }
+
+    #rMenu a {
+      cursor: pointer;
+    }
+     div#rMenu1 {
+      position: absolute;
+      visibility: hidden;
+      top: 0;
+      background-color: #555;
+      text-align: left;
+      padding: 2px;
+    }
+
+    div#rMenu1 ul li {
+      margin: 1px 0;
+      padding: 0 5px;
+      cursor: pointer;
+      list-style: none outside none;
+      background-color: #DFDFDF;
+    }
+
+    #rMenu1 a {
+      cursor: pointer;
+    }
+
+    #menuLayer .form-group {
+      padding-top: 30px;
+    }
+    .container{
+     display: flex;
+
+    }
+    #rrapp{
+    width: 55%
+    }
+    #rrapp1{
+    width: 55%
+    }
+  </style>
+  <script src="../../libs/jquery.min.js"></script>
+  <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script src="../../libs/vue.min.js"></script>
+  <script src="../../plugins/layer/layer.js"></script>
+  <script src="../../js/common.js"></script>
+</head>
+<body>
+<div class="container">
+<div id="rrapp" v-cloak>
+<div>大区管理</div>
+  <ul id="categoryTree" class="ztree"></ul>
+
+  <div id="rMenu">
+    <a id="m_add" class="list-group-item" onclick="addTreeNode();" v-show="add">{{addMenu}}</a>
+    <a id="m_reset" class="list-group-item" onclick="beforeEditName();" v-show="update">{{updateMenu}}</a>
+    <a id="m_del" class="list-group-item" onclick="removeTreeNode();" v-show="del">{{deleteMenu}}</a>
+  </div>
+
+  <!-- 选择菜单 -->
+  <div id="menuLayer" style="display: none; padding: 10px;">
+    <div class="form-group" style="line-height: 2em">
+      <div class="col-sm-2 control-label">名称</div>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" v-model="area.name" placeholder="名称"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-2 control-label">大区</div>
+      <div class="col-sm-10">
+        <select class="form-control" v-model="area.parentSeq" :disabled="isAble">
+          <option value="0">选择大区</option>
+          <option v-for="item in topAreaList" :value="item.seq">{{item.name}}</option>
+        </select>
+        <code style="margin-top:4px;display: block;">不选择默认为大区，选择大区默认为分公司</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="rrapp1" v-cloak>
+	<div>区域管理</div>
+  <ul id="categoryTree1" class="ztree"></ul>
+
+  <div id="rMenu1">
+    <a id="m_add" class="list-group-item" onclick="addTreeNode1();" v-show="add">{{addMenu}}</a>
+    <a id="m_reset" class="list-group-item" onclick="beforeEditName1();" v-show="update">{{updateMenu}}</a>
+    <a id="m_del" class="list-group-item" onclick="removeTreeNode1();" v-show="del">{{deleteMenu}}</a>
+  </div>
+
+  <!-- 选择菜单 -->
+  <div id="menuLayer1" style="display: none; padding: 10px;">
+    <div class="form-group" style="line-height: 2em">
+      <div class="col-sm-2 control-label">名称</div>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" v-model="area.name" placeholder="名称"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <!-- <div class="col-sm-2 control-label">区域</div>
+      <div class="col-sm-10">
+        <select class="form-control" v-model="area.parentSeq" :disabled="isAble">
+          <option value="0">选择区域</option>
+          <option v-for="item in topAreaList" :value="item.seq">{{item.name}}</option>
+        </select>
+        <code style="margin-top:4px;display: block;">不选择默认为大区，选择大区默认为分公司</code> -->
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="../../js/modules/system/area.js"></script>
+</body>
+</html>

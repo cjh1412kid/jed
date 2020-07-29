@@ -1,0 +1,10 @@
+{
+	"name": "root",
+    "url": "widget://html/index.html",
+	"bgColor": "#fff",
+    "title": "",
+    "hideNavigationBar": true,
+	"navigationBar": {
+
+    }
+}

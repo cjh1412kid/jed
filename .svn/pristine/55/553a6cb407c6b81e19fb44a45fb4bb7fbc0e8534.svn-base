@@ -1,0 +1,438 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<link rel="stylesheet" type="text/css" href="../../../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../css/my/add_account_win.css" />
+		<style type="text/css">
+
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="closeWin()"><span class="aui-iconfont aui-icon-left aui-text-default"></span></a>
+			<a id="btn" class="aui-btn aui-pull-right" tapmode ><span class="aui-font-size-14"  style="color: #212121">确认</span></a>
+			<div class="aui-title aui-text-default">
+				添加帐号
+			</div>
+		</header>
+		<div id="frm" class="aui-content">
+
+			<ul class="aui-list aui-form-list aui-list-in aui-list-noborder aui-margin-b-5">
+				<li class="aui-list-item attach-type" tapmode onclick="_openFilterWin(this)">
+					<div class="aui-list-item-inner aui-list-item-arrow">
+						<div class="aui-list-item-label">
+							所属门店：
+						</div>
+						<div class="aui-list-item-input">
+							<input type="text" placeholder="—请选择—" readonly="" name="attachType" data-rule="*" data-nullmsg="请选择所属类型" data-shopseq="" class="shop-name">
+						</div>
+					</div>
+				</li>
+
+			</ul>
+
+			<ul class="aui-list aui-form-list aui-list-in aui-list-noborder aui-margin-b-5">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-label">
+							昵称：
+						</div>
+						<div class="aui-list-item-input">
+							<input type="text" placeholder="请输入" name="userName" data-rule="*" data-nullmsg="请输入昵称" data-errmsg="昵称格式不正确">
+						</div>
+					</div>
+				</li>
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-label">
+							账号：
+						</div>
+						<div class="aui-list-item-input">
+							<input type="text" placeholder="请输入" name="accountName" data-rule="*" data-nullmsg="请输入帐号" data-errmsg="帐号格式不正确">
+						</div>
+					</div>
+				</li>
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-label">
+							密码：
+						</div>
+						<div class="aui-list-item-input">
+							<input type="password" placeholder="请输入" name="newPassword" data-rule="*" data-nullmsg="请输入密码" data-errmsg="密码格式不正确">
+						</div>
+					</div>
+				</li>
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-label">
+							确认密码：
+						</div>
+						<div class="aui-list-item-input">
+							<input type="password" placeholder="请输入" name="surePassword" data-rule="*" data-nullmsg="请再次输入密码" data-errmsg="密码格式不正确">
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../../../script/aui2x1/aui_toast.js"></script>
+	<!--表单验证-->
+	<script type="text/javascript" src="../../../../script/common/availdate_v1x0x2.js"></script>
+	<script type="text/javascript">
+	function getAllShops(){
+		   var allShopList = $api.getStorage('allShopsKey');
+			 console.log($api.jsonToStr(allShopList));
+			 var shopName=null;
+		   for(var i=0;i<allShopList.length;i++){
+				 if(allShopList[i].seq==pageParam.shopSeqList[0]){
+					 shopName = allShopList[i].name
+					 console.log(shopName);
+					 $api.val($api.dom('.shop-name'), shopName);
+					break;
+				 }
+			 }
+
+	}
+	function _openFilterWin() {
+		_openWin("filter_win", "../../../filter_win.html", pageParam);
+	}
+		function closeWin() {
+			api.closeWin({
+			});
+		}
+
+
+
+
+
+
+		function saveToFs() {
+			console.log("shopList:" + $api.jsonToStr(shopList));
+			filePath = 'fs://res/shopList/' + userInfo.companySeq + '/shopList.txt';
+			var existRet = fs.existSync({
+				path : filePath
+			});
+			console.log("existRet:" + $api.jsonToStr(existRet));
+			if (existRet.exist) {
+				var removeRet = fs.removeSync({
+					path : filePath
+				});
+				console.log("removeRet:" + $api.jsonToStr(removeRet));
+				if (!removeRet.status) {
+					return;
+				}
+			}
+			console.log("shopList:" + $api.jsonToStr(shopList));
+			var createRet = fs.createFileSync({
+				path : filePath
+			});
+			console.log("createRet:" + $api.jsonToStr(createRet));
+			if (!createRet.status) {
+				_toast("操作失败！");
+				return;
+			}
+			console.log("shopList:" + $api.jsonToStr(shopList));
+			var openRet = fs.openSync({
+				path : filePath,
+				flags : 'read_write'
+			});
+			console.log("openRet:" + $api.jsonToStr(openRet));
+			if (!openRet.status) {
+				_toast("操作失败！");
+				return;
+			}
+			console.log("shopList:" + $api.jsonToStr(shopList));
+			var firstDatas = [], secondDatas = [];//第一级(工厂), 第二级(大区) , 第三级(分公司)
+			var firstData = {"seq": 1, "name": userInfo.companyName}
+			firstDatas.push(firstData); //工厂(加入)
+			for (var i = 0; i < shopList.length; i++) {//大区(加入)
+				var secondData = {};
+				secondData.id = shopList[i].seq;
+				secondData.name = shopList[i].name;
+				var thirdDatas = [];
+				var officeList = shopList[i].officeList;
+				for (var j = 0; j < officeList.length; j++) {//分公司(加入)
+					var thirdData = {};
+					thirdData.id = officeList[j].seq;
+					thirdData.name = officeList[j].name;
+					var tempShopList = officeList[j].shopList;
+					for (var k = 0; k < tempShopList.length; k++) {//门店(不加入)
+						storeList.push(tempShopList[k]);
+					}
+					thirdDatas.push(thirdData);
+					if (j == officeList.length - 1) {
+						secondData.sub = thirdDatas;
+					}
+				}
+				secondDatas.push(secondData);
+				if (i == shopList.length - 1) {
+					firstData.sub = secondDatas;
+				}
+			}
+			console.log("firstDatas:" + $api.jsonToStr(firstDatas));
+			var writeRet = fs.writeSync({
+				fd : openRet.fd,
+				data : $api.jsonToStr(firstDatas),
+				offset : 0,
+				overwrite : true,
+				codingType : "utf8"
+			});
+			console.log("writeRet:" + $api.jsonToStr(writeRet));
+			if (!writeRet.status) {
+				_toast("操作失败！");
+				return;
+			}
+		}
+
+
+
+
+
+
+		/**
+		 * 请求服务器：新增品牌方账号
+		 */
+		function createUser(bodyParam) {
+			var url = window.myServerUrl + "/order/app/userManage/insertUser";
+			var currentAjaxTag = "createUser";
+			var method = 'post';
+			console.log("ajax.url:" + url);
+			console.log("ajax._data:" + $api.jsonToStr(bodyParam));
+			console.log("ajax.tag:" + currentAjaxTag);
+			_showProgress("创建中...", "", true);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				api.hideProgress();
+				//					api.refreshHeaderLoadDone();
+				if (ret) {
+					console.log("ajax." + currentAjaxTag + ".ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						new auiToast().custom({
+							title : ret.msg,
+							maxnum : 5,
+							html : '<i class="aui-iconfont aui-icon-info"></i>',
+							duration : 1000
+						});
+						setTimeout(function() {
+							_execScript("authority_win", "authority_frm","initpage()");
+							api.closeWin({
+							});
+						}, 100);
+					} else {
+						new auiToast().custom({
+							title : ret.msg,
+							maxnum : 5,
+							html : '<i class="aui-iconfont aui-icon-info"></i>',
+							duration : 3000
+						});
+					}
+				} else {
+					new auiToast().custom({
+						title : window.ajaxErrorMessage,
+						maxnum : 5,
+						html : '<i class="aui-iconfont aui-icon-info"></i>',
+						duration : 3000
+					});
+					console.log("ajax." + currentAjaxTag + ".err:" + $api.jsonToStr(err));
+				}
+			}, method, bodyParam);
+		}
+
+		//选择'分公司'
+		function selectCompany(_obj) {
+			if (!_isArrayNull(shopList)) {
+				openAddressView();
+			}else{
+				_toast("暂无分公司！");
+			}
+		}
+
+
+
+		//选择'门店'
+		function selectShop(_obj) {
+			if (!_isArrayNull(shopList)) {
+				if(currentAttachType == 1){//工厂
+					storeList = [];
+					for (var i = 0; i < shopList.length; i++) {//大区
+						var officeList = shopList[i].officeList;
+						for (var j = 0; j < officeList.length; j++) {//分公司
+							var tempShopList = officeList[j].shopList;
+							for (var k = 0; k < tempShopList.length; k++) {//门店
+								storeList.push(tempShopList[k]);
+							}
+						}
+					}
+				}
+				if (!_isArrayNull(storeList)) {
+					openListDialogBox(storeList, "门店");
+				}
+			}else{
+				_toast("暂无门店！");
+			}
+		}
+
+		// 获取工厂所有代理商
+		// function getAgentList (call) {
+		// 	agentList = [];
+		// 	var url = window.myServerUrl + "order/app/userJurisdiction/agentList?token=" + token;
+		// 	console.log("获取工厂所有代理商:" + url);
+		// 	isAjaxing = true;
+		// 	_ajax(url, "agentList", function(ret, err) {
+		// 		if (ret) {
+		// 			console.log("_ajax.agentList.ret:" + $api.jsonToStr(ret));
+		// 			if (ret.code == 0) {
+		// 				agentList = ret.result;
+		// 			} else {
+		// 				_toast(ret.msg);
+		// 			}
+		// 		} else {
+		// 			_toast(window.ajaxErrorMessage);
+		// 		}
+		// 		call();
+		// 	});
+		// }
+
+		// 获取工厂所有门店
+		// function getShopList(call) {
+		// 	shopList = [];
+		// 	var url = window.myServerUrl + "order/app/userJurisdiction/shopList?token=" + token;
+		// 	console.log("获取工厂所有门店:" + url);
+		// 	isAjaxing = true;
+		// 	_ajax(url, "shopList", function(ret, err) {
+		// 		if (ret) {
+		// 			console.log("_ajax.shopList.ret:" + $api.jsonToStr(ret));
+		// 			if (ret.code == 0) {
+		// 				shopList = ret.result;
+		// 			} else {
+		// 				_toast(ret.msg);
+		// 			}
+		// 		} else {
+		// 			_toast(window.ajaxErrorMessage);
+		// 		}
+		// 		call();
+		// 	});
+		// }
+
+  function initData(){
+			pageParam= {
+					flag: "shop",
+					rangeType: "",
+					dataType: "",
+					name: "",
+					// yearList: yearList,
+					yearList: [],
+					// seasonSeqList: seasonSeqList,
+					seasonSeqList:[],
+					shopSeqList:[],
+					// categorySeqList: categorySeqList,
+					categorySeqList: [],
+					colorSeqList: [],
+					sXMap: "",
+					fuzzySearchParam: "",
+					sizeType: "",
+					sizeSeqStart: "",
+					sizeSeqEnd: "",
+					orderBy: 1,
+					orderDir: 0,
+					timeRange: "30",
+					saleTimeStart: "2017/01/02",
+					saleTimeEnd: _getFormatedDate("", "yyyy/MM/dd"),
+					// saleTimeStart: "",
+					// saleTimeEnd: "",
+			};
+		}
+
+
+		var userInfo;
+		var token;
+		var fs;
+		var addressView;
+		var isAddressViewOpened = false;
+		var shopList = [], agentList = [], storeList = [];//分公司, 代理商, 门店
+		var attachTypes = [], saleTypes = [];//所属类型, 销售类型
+		var currentAttachType = 0, currentSaleType = 0;
+		var currentAttachSeq = 0, currentShopSeq = 0;
+		var filePath;
+		var pageParam;
+		apiready = function() {
+			api.parseTapmode();
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			$api.fixTabBar($api.dom("body"));
+			var headerPos = $api.offset(header);
+			$api.attr($api.dom(".aui-content"), "style", "margin-top:" + headerPos.h + "px;");
+
+			initData();
+
+
+
+			// fs = api.require('fs');
+			// addressView = api.require('addressView');
+			// $api.text($api.dom(".avalibable-num"), (api.pageParam.intOfCreateUsers - api.pageParam.alreadyCreateUsers) + "个");
+
+			_addEventListener("query_filter_changed_event", function(ret) {
+				console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+				pageParam = ret.value;
+        getAllShops();
+			});
+			// getShopList(function() {
+			// 	if (!_isArrayNull(shopList)) {
+			// 		console.log("shopList:" + $api.jsonToStr(shopList));
+			// 		saveToFs();
+			// 	}
+			// });
+
+
+			ac.form({
+				area : "#frm",
+				btn : "#btn",
+				startCheck : function() {
+				},
+				singleError : function(e, msg) {
+					_toast(msg);
+				},
+				endSuccess : function(data) {
+					console.log("endSuccess.data:" + $api.jsonToStr(data));
+					if (data.newPassword == data.surePassword) {
+						var bodyParam = {
+							values : {
+								user:{
+									shopSeq: pageParam.shopSeqList[0],
+									accountName : data.accountName,//账号
+									password : data.newPassword,
+									userName: data.userName // 昵称
+								}
+
+							},  //以表单方式提交参数（JSON对象）, 如 {"field1": "value1", "field1": "value2"} (直接传JSON对像.)
+						}
+						// if (currentAttachType == 1 || currentAttachType == 2) {工厂, 分公司
+						// 	if (currentShopSeq != 0) {
+						// 		bodyParam.values.shopSeq = currentShopSeq;
+						// 	}
+						// }
+						// if(currentAttachType == 2 || currentAttachType == 3){分公司, 代理商
+						// 	if (currentAttachSeq != 0) {
+						// 		bodyParam.values.attachSeq = currentAttachSeq;
+						// 	}
+						// }
+						createUser(bodyParam);
+					} else {
+						//								_toast("两次输入密码不一致！", 3000, "bottom");
+						new auiToast().custom({
+							title : "两次输入密码不一致！",
+							maxnum : 5,
+							html : '<i class="aui-iconfont aui-icon-info"></i>',
+							duration : 3000
+						});
+						return;
+					}
+				}
+			});
+		};
+	</script>
+</html>

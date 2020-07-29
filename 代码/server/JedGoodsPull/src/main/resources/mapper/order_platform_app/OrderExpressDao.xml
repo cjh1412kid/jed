@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.OrderExpressDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.OrderExpressEntity" id="orderExpressMap">
+        <result property="seq" column="Seq"/>
+        <result property="orderSeq" column="Order_Seq"/>
+        <result property="expressCompanySeq" column="ExpressCompany_Seq"/>
+        <result property="expressNo" column="ExpressNo"/>
+        <result property="expressImg" column="ExpressImg"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+</mapper>

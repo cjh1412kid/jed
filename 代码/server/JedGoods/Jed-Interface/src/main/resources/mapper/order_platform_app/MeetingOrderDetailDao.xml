@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.MeetingOrderDetailDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.MeetingOrderDetailEntity" id="meetingOrderDetailMap">
+        <result property="seq" column="Seq"/>
+        <result property="meetingOrderSeq" column="MeetingOrder_Seq"/>
+        <result property="orderShoesSeq" column="OrderShoes_Seq"/>
+        <result property="goodID" column="GoodID"/>
+        <result property="sizeSeq" column="Size_Seq"/>
+        <result property="buyCount" column="BuyCount"/>
+        <result property="deliverNum" column="DeliverNum"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+</mapper>

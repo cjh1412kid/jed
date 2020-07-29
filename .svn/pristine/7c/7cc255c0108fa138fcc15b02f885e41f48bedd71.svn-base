@@ -1,0 +1,399 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>账号列表</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/aui1x2x1/aui_iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/my/authority.css" />
+	<style type="text/css">
+		.aui-list-item .aui-list-item-label {
+			width: 4.0rem !important;
+		}
+
+		.aui-list-item-title {
+			color: #cfa972 !important;
+		}
+	</style>
+</head>
+
+<body class="aui-hide">
+	<div class="aui-content">
+		<ul class="aui-list aui-media-list aui-list-noborder">
+
+			<!--<li class='aui-list-header aui-tips aui-hide'>
+					<i class='aui-iconfont aui-icon-info'></i>
+					<div class="aui-tips-title">
+						剩余帐号数：<span></span>
+					</div>
+					<i class='aui-iconfont aui-icon-right' style='visibility:hidden'></i>
+				</li>
+				<li class='aui-list-item aui-margin-b-5 aui-hide'>
+					<div class='aui-media-list-item-inner'>
+						<div class='aui-list-item-media'><img src='../../../image/noavatar.gif'></div>
+						<div class='aui-list-item-inner aui-padded-b-0'>
+							<div class='aui-list-item-text aui-border-b aui-padded-b-5'>
+								<div class='aui-list-item-title aui-font-size-14'>浙江天宏鞋业有限公司</div>
+								<div class='aui-list-item-right aui-hide' style='right:20%'>
+									<i class='aui-iconfont aui-icon-edit aui-margin-r-10'></i>
+									<i class='aui-iconfont aui-icon-delete'></i>
+								</div>
+							</div>
+							<div class='aui-list-item-text aui-border-b'>
+								<div class='aui-list-item-label'>&nbsp;&nbsp;帐&nbsp;&nbsp;&nbsp;&nbsp;号&nbsp;&nbsp;</div>
+								<div style="color: #212121;">：</div>
+								<div class='aui-list-item-input'>
+									<input type='text' placeholder='' value='hnqr' readonly=''>
+								</div>
+								<div class='aui-list-item-right'><i class='aui-iconfont '></i></div>
+							</div>
+							<div class='aui-list-item-text aui-border-b aui-hide'>
+								<div class='aui-list-item-label'>&nbsp;&nbsp;密&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;&nbsp;</div>
+								<div style='color: #212121;'>：</div>
+								<div class='aui-list-item-input'>
+									<input type='password' placeholder='' value='123' readonly=''>
+								</div>
+								<div class='aui-list-item-right'><i class='aui-iconfont aui-icon-hide'></i></div>
+							</div>
+							<div class='aui-list-item-text'>
+								<div class='aui-list-item-label'>有效日期</div>
+								<div style='color: #212121;'>：</div>
+								<div class='aui-list-item-input'>
+									<input type='datetime' placeholder='' value='2021/12/12 12:00:00' readonly=''>
+								</div>
+								<div class='aui-list-item-right'><i class='aui-iconfont '></i></div>
+							</div>
+						</div>
+					</div>
+				</li>-->
+
+		</ul>
+	</div>
+
+	<div class="footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+		到底了<i class="aui-iconfont aui-icon-activity aui-font-size-12"></i>
+	</div>
+	<div class="footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+		暂无数据
+	</div>
+	<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+		加载更多<i class="aui-iconfont aui-icon-more aui-font-size-12"></i>
+	</div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript">
+	function editAction(_obj) {}
+
+	function deleteAction(_obj) {}
+
+	function getHtmlStr(res2) {
+
+		console.log("res2:" + $api.jsonToStr(res2));
+		var htmlStr = "";
+		if (!_isArrayNull(res2)) {
+			for (var i = 0; i < res2.length; i++) {
+				if (res2[i].accountName == "visitor") {
+					continue;
+				}
+				htmlStr += "<li class='aui-list-item aui-margin-b-5'>";
+				htmlStr += "<div class='aui-media-list-item-inner'>";
+				if(res2[i].headImg.slice(-4)=='null'){
+					htmlStr += "<div class='aui-list-item-media'><img src='../../../image/load_small_img.png' data-src='../../../image/noavatar.gif' ></div>";
+				}else {
+					htmlStr += "<div class='aui-list-item-media'><img src='../../../image/load_small_img.png' data-src='" +res2[i].headImg + "' ></div>";
+				}
+
+				htmlStr += "<div class='aui-list-item-inner aui-padded-b-0'>";
+				htmlStr += "<div class='aui-list-item-text aui-border-b aui-padded-b-5 '>";
+				htmlStr += "<div class='aui-list-item-title aui-font-size-14 '>";
+				htmlStr += res2[i].userName;
+				htmlStr += "</div>";
+											htmlStr += "<div class='aui-list-item-right ico-list' style='right:0'>";
+											htmlStr +="<div class='aui-margin-r-15 aui-hide'>";
+											htmlStr += "<i class='aui-iconfont aui-icon-edit  '></i>";
+											htmlStr +="</div>";
+												htmlStr +="<div class=' aui-margin-l-15' tapmode onclick='delData("+res2[i].seq+")'>"
+											htmlStr += "<i class='aui-iconfont aui-icon-delete '></i>";
+												htmlStr +="</div>"
+											htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "<div class='aui-list-item-text aui-border-b'>";
+				htmlStr += "<div class='aui-list-item-label'>&nbsp;&nbsp;帐&nbsp;&nbsp;&nbsp;&nbsp;号&nbsp;&nbsp;</div>";
+				htmlStr += "<div style='color: #212121;'>：</div>";
+				htmlStr += "<div class='aui-list-item-input'>";
+				htmlStr += "<input type='text' placeholder='' value='" + res2[i].accountName + "' readonly=''>";
+				htmlStr += "</div>";
+				htmlStr += "<div class='aui-list-item-right'>";
+				htmlStr += "<i class='aui-iconfont '></i>";
+				htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "<div class='aui-list-item-text aui-border-b '>";
+				htmlStr += "<div class='aui-list-item-label'>&nbsp;&nbsp;密&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;&nbsp;</div>";
+				htmlStr += "<div style='color: #212121;'>：</div>";
+				htmlStr += "<div class='aui-list-item-input'>";
+				htmlStr += "<input type='password' placeholder='' value='" + res2[i].accountName + "' readonly=''>";
+				htmlStr += "</div>";
+				htmlStr += "<div class='aui-list-item-right'>";
+				htmlStr += "<i class='aui-iconfont '></i>";
+				htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "<div class='aui-list-item-text aui-hide'>";
+				htmlStr += "<div class='aui-list-item-label'>电话号码</div>";
+				htmlStr += "<div style='color: #212121;'>：</div>";
+				htmlStr += "<div class='aui-list-item-input'>";
+				htmlStr += "<input type='datetime' placeholder='' value='" + res2[i].effectiveDate + "' readonly=''>";
+				htmlStr += "</div>";
+				htmlStr += "<div class='aui-list-item-right'>";
+				htmlStr += "<i class='aui-iconfont '></i>";
+				htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "</div>";
+				htmlStr += "</li>";
+			}
+
+
+		}
+		return htmlStr;
+	}
+
+	function initUI(data, type) {
+		console.log($api.jsonToStr(data));
+		switch (type) {
+			case "down":
+				if (_isArrayNull(data)) {
+					//第一页没数据，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+					isAjaxing = true;
+					$api.html($api.dom("ul"), "");
+					showEmptyMsg(); //显示"暂无数据"
+				} else {
+					console.log($api.jsonToStr(data));
+					var htmlStr = getHtmlStr(data);
+											console.log(htmlStr);
+					$api.html($api.dom("ul"), htmlStr);
+					//						console.log(htmlArr[1]);
+
+
+					if (data.length < num) {
+						//第一页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						showOverMsg(); //显示"到底了"
+					} else {
+						//第一页数据等于每页总数，false，用户向上滑动就再次请求服务器获取后面页数的数据
+						isAjaxing = false;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+			case "up":
+				if (_isArrayNull(data)) {
+					//当前页没数据了，则将isAjaxing置为true，防止继续上滑频繁请求服务器
+					isAjaxing = true;
+					showOverMsg(); //显示"到底了"
+				} else {
+					var htmlStr = getHtmlStr(data);
+					//						console.log(htmlArr[0]);
+					$api.append($api.dom("ul"), htmlStr);
+					//						console.log(htmlArr[1]);
+
+
+					if (data.length < num) {
+						//新获取页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						showOverMsg(); //显示"到底了"
+					} else {
+						isAjaxing = false;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+		}
+
+		new auiLazyload({
+			errorImage: "../../image/error_img_middle.png"
+		});
+		api.parseTapmode();
+		setTimeout(function() {
+			if ($api.hasCls($api.dom("body"), "aui-hide")) {
+				$api.removeCls($api.dom("body"), "aui-hide");
+			}
+			closeUILoading();
+			api.refreshHeaderLoadDone();
+		}, window.refreshLoadDoneTimeOut);
+}
+
+  //删除门店账号
+   function delData(_seq){
+		 _myAlert("确认删除该账号?", "取消", "删除", function() {
+			 var url = window.myServerUrl + "/order/app/userManage/deleteUser";
+  		 console.log('刪除门店账号url:'+url);
+  		 var method = 'post';
+  		 var bodyParam={
+  			 values:{
+  				 token:token,
+  				 seq:_seq
+  			 }
+  		 };
+  		 _ajax(url, "delData", function(ret, err) {
+  			 if (ret) {
+  				 console.log("_ajax.getDatas.ret:" + $api.jsonToStr(ret));
+  				 if (ret.code == 0) {
+  					  _toast('删除成功');
+  					api.refreshHeaderLoading();
+  					 // console.log($api.jsonToStr(res));
+  				 } else {
+  					 _toast(ret.msg);
+  				 }
+  			 } else {
+  				 _toast(window.ajaxErrorMessage);
+  			 }
+
+  		 },method,bodyParam);
+		 });
+
+	 }
+
+		/**
+		 *请求服务器：已添加的品牌方账号列表
+		 */
+		function getDatas(call) {
+			var url = window.myServerUrl + "order/app/userManage/selectBrandUser?pageIndex=" + start + "&pageSize=" + num;
+			console.log("获取品牌方账号列表:" + url);
+			isAjaxing = true;
+			_ajax(url, "getDatas", function(ret, err) {
+				var res = [];
+				if (ret) {
+					console.log("_ajax.getDatas.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						res = ret.result.result;
+						// console.log($api.jsonToStr(res));
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+				call(res);
+			});
+		}
+
+
+		function closeUILoading() {
+			UILoading.closeKeyFrame();
+		}
+
+		function openUILoading() {
+			UILoading.keyFrame({
+				rect: {
+					w: 102,
+					h: 102
+				},
+				styles: {
+					bg: 'rgba(0,0,0,0)',
+					corner: 5,
+					interval: 50,
+					frame: {
+						w: 102,
+						h: 102
+					}
+				},
+				//				content : [{
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}, {
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}],
+				mask: "rgba(255,0,0,0)"
+			}, function(ret) {
+				//								alert(JSON.stringify(ret));
+				console.log(12345);
+			});
+		}
+
+		function initpage() {
+			setTimeout(function() {
+				api.refreshHeaderLoading();
+			}, 450);
+		}
+
+		function initData() {
+			token = $api.getStorage("tokenKey");
+			UILoading = api.require('UILoading');
+		}
+
+		var token;
+		var UILoading;
+		var start = 1;
+		var num = 10;
+		var datas = [];
+    var userInfo = $api.getStorage('userInfoKey');
+
+		apiready = function() {
+			initData();
+			//上拉加载
+			api.addEventListener({
+				name: 'scrolltobottom',
+				extra: {
+					threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+				}
+			}, function(ret, err) {
+				console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+				if (!isAjaxing) {
+					start += num;
+					getDatas(function(ret) {
+						 console.log($api.jsonToStr(ret));
+						datas = datas.concat(ret);
+						setTimeout(function() {
+							initUI(ret, "up");
+						}, 100);
+					});
+				}
+			});
+			api.setRefreshHeaderInfo({
+				loadingImg: 'widget://image/loading_more.gif',
+				bgColor: 'rgba(255,255,255,0)',
+				textColor: '#212121',
+				textDown: '下拉刷新...',
+				textUp: '松开刷新...'
+			}, function(ret, err) {
+				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+
+				getDatas(function(res2) {
+					initUI(res2,"down");
+					setTimeout(function() {
+						api.refreshHeaderLoadDone();
+					}, window.ajaxTimeout);
+				});
+
+			});
+
+			//设置下拉刷新延迟时间
+			setTimeout(function() {
+				openUILoading();
+
+				getDatas(function(res2) {
+					initUI(res2,"down");
+					setTimeout(function() {
+						api.refreshHeaderLoadDone();
+					}, window.ajaxTimeout);
+				});
+
+			}, 150);
+
+
+			_addEventListener("viewappear", function(ret) {
+				setTimeout(function() {
+					//						alert("viewappear");
+				}, 200);
+			});
+
+ }
+</script>
+
+</html>

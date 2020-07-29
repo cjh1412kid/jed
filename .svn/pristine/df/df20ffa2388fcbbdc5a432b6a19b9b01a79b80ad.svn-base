@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>窗口系统</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/tab_content_2.css" />
+    <style>
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left aui-invisible" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-btn aui-pull-right edit-btn aui-hide aui-text-default aui-font-size-12" tapmode onclick="edit(this);">编辑</a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16">
+            <div class="aui-tab" id="tab">
+                <!-- <div class="aui-tab-item aui-active aui-hide" data-type="1">
+                    客服
+                </div> -->
+                <div class="aui-tab-item aui-active">
+                    调价
+                </div>
+                <div class="aui-tab-item">
+                    调货
+                </div>
+                <div class="aui-tab-item">
+                    系统
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="bottom-btns flex-wrap">
+        <div class="count-price flex-con aui-font-size-12 box-wrap ">
+            <label class="aui-font-size-12 aui-margin-l-10" tapmode onclick="selectAll(this)">
+  				<input class="aui-radio aui-disabled aui-checked all-btn" type="checkbox" name="radio" style="margin-right: 2px!important;">
+  				全选</label>
+        </div>
+        <div class="bottom-btn bottom-btn-fk" tapmode onclick="deleteAction()">
+            删除
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../script/common/my_common.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript">
+function selectAll(obj) {
+  console.log("当前是否选中:-------------->" + $api.hasCls($api.dom(".aui-radio"), "active"));
+  if ($api.hasCls($api.dom(".aui-radio"), "active")) {
+    $api.addCls($api.dom(".aui-radio"), "aui-disabled");
+    $api.removeCls($api.dom(".aui-radio"), "active");
+    //不选中购物车列表中的所有checkbox
+    console.log(1);
+    _sendEvent("notificationUpdateEndEvent", {
+      type: false
+    });
+  } else {
+    $api.removeCls($api.dom(".aui-radio"), "aui-disabled");
+    $api.addCls($api.dom(".aui-radio"), "active");
+    console.log(2);
+    _sendEvent("notificationUpdateEndEvent", {
+      type: true
+    });
+  }
+}
+function deleteAction() {
+  _execScript("", "system_message_frm", "deleteAction();");
+}
+    function edit(obj) {
+        if ($api.text(obj) == "编辑") {
+            $api.text(obj, "完成");
+            $api.removeCls($api.dom(".bottom-btns"), "aui-hide");
+            api.setFrameGroupAttr({
+                name: 'messages_group',
+                rect: rect = {
+                    x: 0, //左上角x坐标
+                    y: 0, //左上角y坐标
+                    w: 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+                    h: 'auto', //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+                    marginLeft: 0, //相对父 window 左外边距的距离
+                    marginTop: headerPos.h, //相对父 window 上外边距的距离
+                    marginBottom: footerPos.h + 50+api.safeArea.bottom, //相对父 window 下外边距的距离
+                    marginRight: 0 //相对父 window 右外边距的距离
+                },
+            });
+            _execScript("", "system_message_frm", "setPageEditable(true);");
+        } else {
+            $api.text(obj, "编辑");
+            $api.addCls($api.dom(".bottom-btns"), "aui-hide");
+            api.setFrameGroupAttr({
+                name: 'messages_group',
+                rect: rect = {
+                    x: 0, //左上角x坐标
+                    y: 0, //左上角y坐标
+                    w: 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+                    h: 'auto', //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+                    marginLeft: 0, //相对父 window 左外边距的距离
+                    marginTop: headerPos.h, //相对父 window 上外边距的距离
+                    marginBottom: 50+api.safeArea.bottom, //相对父 window 下外边距的距离
+                    marginRight: 0 //相对父 window 右外边距的距离
+                },
+            });
+            _execScript("", "system_message_frm", "setPageEditable(false);");
+        }
+    }
+
+
+    var tab = new auiTab({
+        element: document.getElementById("tab"),
+    }, function(ret) {
+        console.log("ret.index:" + ret.index);
+        if (ret.index == 3) {
+            if ($api.hasCls($api.dom(".edit-btn"), "aui-hide")) {
+                $api.removeCls($api.dom(".edit-btn"), "aui-hide");
+            }
+            if (!$api.hasCls($api.dom(".add-btn"), "aui-hide")) {
+                $api.addCls($api.dom(".add-btn"), "aui-hide");
+            }
+        } else {
+            if (!$api.hasCls($api.dom(".edit-btn"), "aui-hide")) {
+                $api.addCls($api.dom(".edit-btn"), "aui-hide");
+            }
+
+        }
+        api.setFrameGroupIndex({
+            name: 'messages_group',
+            index: ret.index - 1
+        });
+        $('.bottom-btns').addClass('aui-hide')
+    });
+
+    function _reOpenFrmGroup() {
+
+        // var userInfo = $api.getStorage("userInfoKey");
+
+        var rect = {
+            x: 0, //左上角x坐标
+            y: 0, //左上角y坐标
+            w: 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+            h: 'auto', //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+            marginLeft: 0, //相对父 window 左外边距的距离
+            marginTop: headerPos.h, //相对父 window 上外边距的距离
+            marginBottom:50+api.safeArea.bottom, //相对父 window 下外边距的距离
+            marginRight: 0 //相对父 window 右外边距的距离
+        };
+        var pageParam = {};
+        var frames = [{
+            name: 'adjust_message_frm',
+            url: 'messages/adjust_message_frm.html',
+            bounces: false,
+            pageParam: pageParam
+        }, {
+            name: 'cating_message_frm',
+            url: 'messages/cating_message_frm.html',
+            bounces: false,
+            pageParam: pageParam
+        }, {
+            name: 'system_message_frm',
+            url: 'messages/system_message_frm.html',
+            bounces: false,
+            pageParam: pageParam
+        }];
+        _openFrameGroup("messages_group", frames, function(ret, err) {
+            console.log("_openFrameGroup.ret:" + $api.jsonToStr(ret));
+            currentFrmName = ret.name;
+            if (ret.index == 1) {
+                setTimeout(function() {
+                    // _execScript("", "goods_suggest_frm", "clickSuggestTab()")
+                }, 50);
+            }
+            tab.setActive(ret.index + 1);
+        }, "", false, rect, 0, 0);
+    }
+
+    function closeFrmGroup() {
+        api.closeFrameGroup({
+            name: 'messages_group'
+        });
+
+    }
+    var footer;
+    var headerPos;
+    var footerPos;
+    var currentFrmName;
+    apiready = function() {
+        console.log(1);
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        footer = $api.dom(".bottom-btns");
+        $api.fixTabBar($api.dom("body"));
+        footerPos = $api.offset(footer);
+        $api.addCls(footer, "aui-hide");
+        headerPos = $api.offset(header);
+        _addEventListener("deleteSucceedEvent",function(){
+          $api.addCls($api.dom(".aui-radio"), "aui-disabled");
+          $api.removeCls($api.dom(".aui-radio"), "active");
+        })
+    }
+</script>
+
+</html>

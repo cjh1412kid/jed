@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>填写订单</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/order/fill_order_frm.css" />
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<div class="aui-card-list aui-border-t aui-margin-b-5" tapmode onclick="changeAddress(this)">
+			<div class="aui-card-list-content-padded aui-list-item-arrow flex-wrap">
+				<div class="flex-5">
+					<div class="name-phone aui-margin-b-5 aui-margin-l-15">
+						<span class="aui-margin-r-15 user-name aui-font-size-14"></span><span class="phone aui-font-size-16"></span>
+					</div>
+					<div class="address aui-font-size-12">
+						<i class="aui-iconfont aui-icon-location aui-margin-r-5"></i><span class="address-value"></span>
+					</div>
+				</div>
+				<div class="address-sel flex-con aui-font-size-12 box-wrap box-horizontal-center box-vertical-end" style="color:#999; padding-right:0.5rem;">选择地址</div>
+			</div>
+		</div>
+		<div class="aui-card-list aui-margin-b-5">
+			<div class="aui-card-list-content-padded flex-wrap ">
+				<div class="goods-images box-wrap box-horizontal-center flex-con">
+				<!--<img src='../../image/load_small_img.png' data-src='../../image/noavatar.gif'/>
+					<img src="../../image/load_small_img.png" data-src="../../image/noavatar.gif"/>-->
+				</div>
+				<div class="goods-count box-wrap box-horizontal-center box-vertical-end aui-padded-r-10 aui-font-size-12">
+					共<span class="goods-num aui-font-size-14">0</span>双
+				</div>
+			</div>
+		</div>
+		<div class="aui-content aui-margin-b-5 aui-hide">
+			<ul class="aui-list aui-select-list aui-list-noborder">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-row aui-row-padded aui-font-size-14">
+							<div class="aui-col-xs-4">
+								<label class="aui-padded-10" tapmode onclick="selectType(this)">
+									<input class="aui-radio community-type aui-checked active" type="radio" name="radio2" value="1">
+									顺丰快递</label>
+							</div>
+							<div class="aui-col-xs-4">
+								<label class="aui-padded-10" tapmode onclick="selectType(this)">
+									<input class="aui-radio community-type aui-checked aui-disabled" type="radio" name="radio2" value="2">
+									圆通快递</label>
+							</div>
+							<div class="aui-col-xs-4">
+								<label class="aui-padded-10" tapmode onclick="selectType(this)">
+									<input class="aui-radio community-type aui-checked aui-disabled" type="radio" name="radio2" value="3">
+									邮政快递</label>
+							</div>
+							<div class="aui-col-xs-4">
+								<label class="aui-padded-10" tapmode onclick="selectType(this)">
+									<input class="aui-radio community-type aui-checked aui-disabled" type="radio" name="radio2" value="4">
+									德邦物流</label>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="aui-content aui-margin-b-5 aui-hide">
+			<ul class="aui-list aui-form-list aui-list-noborder">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-label require-date-name aui-font-size-14">
+							到货时间：
+						</div>
+						<div class="aui-list-item-input require-date-value box-wrap box-horizontal-center" tapmode onclick="selectDate(this)">
+							—请选择—
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="aui-content aui-margin-b-5">
+			<ul class="aui-list aui-form-list aui-list-noborder">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-label mark-name aui-font-size-14">
+							留&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;言：
+						</div>
+						<div class="aui-list-item-input">
+							<input class="aui-font-size-14 mark-value" type="text" placeholder="给厂家留言（40字以内）">
+						</div>
+						<div class="aui-list-item-label-icon aui-hide">
+							<i class="aui-iconfont aui-icon-close"></i>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js" ></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_toast.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js" ></script>
+	<script type="text/javascript">
+	
+		function changeAddress(obj){
+			_openWin("address_win", "../my/address/address_win.html", {
+				type : "fill_order_win"
+			});
+		}
+		
+		function selectDate(_obj) {
+			var now = new Date();
+			var nowStr = now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate();
+			api.openPicker({
+				type : 'date',
+				date : nowStr,
+				title : "请选择到货日期"
+			}, function(ret, err) {
+				var year = ret.year;
+				var month = ret.month < 10? "0" + ret.month : ret.month;
+				var day = ret.day < 10? "0" + ret.day : ret.day;;
+				var requireDateStr = year + "年" + month + "月" + day + "日";//前台展示"要求到货日期":yyyy年MM月dd日				
+				requireDate = year + "/" + month + "/" + day + " 00:00:00"; //参数"要求到货日期":yyyy/MM/dd 00:00:00				
+//				console.log("requireDateStr:" + requireDateStr);			
+//				console.log("requireDate:" + requireDate);
+				if (new Date(requireDate) > now) {
+					$api.text(_obj, requireDateStr);
+					if (!$api.hasCls(_obj, "active")) {
+						$api.addCls(_obj, "active");
+					}
+				} else {
+					_toast("所选日期必须大于当前日期，请重新选择。", 3000, "bottom");
+					$api.text(_obj, "请选择");
+					if ($api.hasCls(_obj, "active")) {
+						$api.removeCls(_obj, "active");
+					}
+				}
+			});
+		}
+
+		//选择物流公司
+		function selectType(obj) {
+			if (!$api.hasCls($api.dom(obj, ".community-type"), "active")) {
+				$api.addCls($api.dom(".community-type.active"), "aui-disabled");
+				$api.removeCls($api.dom(".community-type.active"), "active");
+				$api.removeCls($api.dom(obj, ".community-type"), "aui-disabled");
+				$api.addCls($api.dom(obj, ".community-type"), "active");
+			}
+		}
+
+		/**
+		 *请求服务器：提交订单
+		 */
+		var isSubmit = true;
+		function submitOrder() {			
+			var suggestion = $api.trim($api.val($api.dom(".mark-value")));//留言			
+			console.log("收货人序号seq:"+receiverInfoSeq);
+			if (_isStringNull(receiverInfoSeq)) {
+				_toast("请选择收货地址！");
+				return;
+			}
+			if (!_isStringNull(suggestion)) {
+				if (suggestion.length >= 40) {
+					_toast("备注内容太长！请重新输入");
+					return;
+				}
+			} else {
+				suggestion = ""
+			}
+			if(isSubmit){
+				isSubmit = false;
+				var url = window.myServerUrl + "order/app/order/submitOrder";
+				console.log("提交订单url:" + url);
+				var _data = {
+					values : {
+						token : token,
+						receiverInfoSeq : receiverInfoSeq,
+						shoesDataBuyCountList : $api.jsonToStr(extraData),
+						suggestion : suggestion
+					}
+				};
+				//获取订单总金额
+				if (api.pageParam.type == "cart") {
+					_data.values.submitType = 1;
+					//购物车结算
+					var checkedTotalPrice = 0;
+					for (var i = 0; i < extraData.length; i++) {
+						checkedTotalPrice += extraData[i].purchasePrice * extraData[i].buyCount;
+					}
+					_data.values.orderPrice = checkedTotalPrice;
+				} else if (api.pageParam.type == "goods_detail") {
+					_data.values.submitType = 2;
+					//直接购买(商品详情页) 
+					var checkedTotalPrice = 0;
+					for (var i = 0; i < extraData.length; i++) {				
+						checkedTotalPrice += extraData[i].totalPrice;					
+					}
+					_data.values.orderPrice = checkedTotalPrice;
+				}else if(api.pageParam.type == "order_detail") {
+					_data.values.submitType = 2;
+					//再次购买(订单详情页)
+					_data.values.orderPrice = extraData[0].totalPrice;				
+				}
+				
+				if ($api.hasCls($api.dom(".require-date-value"), "active")) {
+					//选择了到货时间
+					_data.values.requireTime = requireDate;
+				}
+				console.log("提交订单(参数):" + $api.jsonToStr(_data));
+				isAjaxing = true;
+				_ajax(url, "submitOrder", function(ret, err) {
+					if (ret) {
+						console.log("_ajax.ret:" + $api.jsonToStr(ret));
+						if (ret.code == 0) {
+							new auiToast().custom({
+								title : ret.msg,
+								html : '<i class="aui-iconfont aui-icon-info"></i>',
+								duration : 2000
+							});
+							if (api.pageParam.type == "cart") {
+								_sendEvent("updateCartListEvent");
+							}
+							setTimeout(function() {							
+								if (api.pageParam.type == "cart" || api.pageParam.type == "goods_detail") {
+									//购物车列表形式提交订单   或   //商品详情方式直接提交订单
+									api.closeToWin({
+										name : 'main'
+									});
+								}else if (api.pageParam.type == "order_detail"){
+									//订单详情
+									api.closeToWin({
+										name : 'order_win'
+									});							
+								}
+								return;
+								_openWin("cashier_win", "../cashier/cashier_win.html");
+							}, 2000);
+						} else {
+							_toast(ret.msg);
+						}
+					} else {
+						_toast(window.ajaxErrorMessage);
+					}
+				}, "post", _data);
+			}
+		}
+		
+		//渲染收货人名称、收货地址和手机号
+		function renderReceiverInfo(_receiverInfo, _type){
+			console.log("收货人信息:"+$api.jsonToStr(_receiverInfo))					
+			receiverInfoSeq = _receiverInfo.seq;			
+//			if (_type != "order_detail") {//非再次预定(订单详情)
+				if(!_isObjectNull(_receiverInfo)){
+					if(!$api.hasCls($api.dom(".address-sel"), "aui-hide")){
+						$api.addCls($api.dom(".address-sel"), "aui-hide");
+					}
+					$api.text($api.dom(".user-name"), _receiverInfo.receiverName);//收货人
+					$api.text($api.dom(".phone"), _receiverInfo.telephone);//手机号
+					var addressValue = _receiverInfo.province+_receiverInfo.city+_receiverInfo.district+_receiverInfo.detailAddress;
+					$api.text($api.dom(".address-value"), addressValue);//收货地址
+				}else{
+					if($api.hasCls($api.dom(".address-sel"), "aui-hide")){
+						$api.removeCls($api.dom(".address-sel"), "aui-hide");
+					}
+				}
+//			}else{
+//				alert($api.jsonToStr(_receiverInfo));
+//			}
+		}
+
+		function initUI() {
+			//1.渲染收货人名称、收货地址和手机号			
+			renderReceiverInfo(receiverInfo, api.pageParam.type);
+			//2.渲染商品图片
+			var imgArr = new Array();//商品图片(不重复)		
+//			console.log($api.jsonToStr(extraData));	
+			for (var i = 0; i < extraData.length; i++) {
+				imgArr.push(extraData[i].img);
+			}			
+			imgArr = _unique(imgArr);
+			var htmlStr = "";
+			for (var j = 0; j < imgArr.length; j++) {
+				htmlStr += "<img src='../../image/load_small_img.png' data-src='" + imgArr[j] + "'/>";
+			}			
+			$api.html($api.dom(".goods-images"), htmlStr);
+			new auiLazyload({
+				errorImage : "../../image/error_small_img.png"
+			});
+			//3.渲染商品数量
+			$api.text($api.dom(".goods-num"), checkedTotalNum);
+		}
+
+		function initData() {
+			receiverInfo = $api.getStorage("receiverInfoKey");	
+			token = $api.getStorage("tokenKey");
+			console.log("传参:" + $api.jsonToStr(api.pageParam));
+			//获取订单总数量
+			extraData = api.pageParam.extraData;
+			if (api.pageParam.type == "cart") {
+//				console.log("cart.extraData:"+$api.jsonToStr(extraData));
+				for (var i = 0; i < extraData.length; i++) {
+					checkedTotalNum += extraData[i].buyCount;
+				}
+			} else if (api.pageParam.type == "goods_detail" || api.pageParam.type == "order_detail") {
+//				console.log("goods_detail, order_detail.extraData:"+$api.jsonToStr(extraData));
+				for (var i = 0; i < extraData.length; i++) {						
+					checkedTotalNum += extraData[i].buyCount;
+				}								
+			}
+		}
+		
+		//要求到货日期
+		var requireDate;
+		//默认收货人信息
+		var receiverInfo;
+		//令牌
+		var token;
+		//传参数据
+		var extraData = [];
+		//选中商品总金额
+		var checkedTotalPrice = 0;
+		//选中商品总数量
+		var checkedTotalNum = 0;
+		//收货人序号
+		var receiverInfoSeq; 
+		apiready = function() {
+			api.parseTapmode();
+			initData();
+			initUI();
+			
+//			_addEventListener("userInfoUpdateKey", function(ret){
+//				$api.text($api.dom(".address-value"), ret.value.newAddress);
+//			})
+			
+			//选择收货地址 事件监听
+			_addEventListener("chooseAddress", function(ret){
+				//渲染收货人名称、收货地址和手机号
+				console.log("默认收货地址改变事件监听:"+ $api.jsonToStr(ret.value));
+				renderReceiverInfo(ret.value, "");
+			})
+		}
+	</script>
+</html>

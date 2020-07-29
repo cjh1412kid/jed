@@ -1,0 +1,66 @@
+
+/*自定义radio,checkbox大小*/
+.aui-radio,
+.aui-checkbox {  
+    width: 0.9rem;
+    height: 0.9rem;
+}
+/* 自定义选中状态下radio,checkbox背景色 */
+.aui-radio:checked,
+.aui-radio.aui-checked,
+.aui-checkbox:checked,
+.aui-checkbox.aui-checked {
+    background-color: #bc9761;
+    border: solid 1px #bc9761;
+    text-align: center;
+    background-clip: padding-box;
+}
+/* 自定义禁用状态下radio,checkbox背景色 */
+.aui-radio:disabled,
+.aui-radio.aui-disabled,
+.aui-checkbox:disabled,
+.aui-checkbox.aui-disabled {
+    background-color: #FFFFFF;
+    border: solid 1px #dddddd;
+}
+
+/* 收件人姓名, 手机号 */
+.name-telephone{
+	font-weight: bold !important;
+}
+/* 收货地址 */
+.aui-text-address{
+	color: #6C6C6C !important;
+	font-size: 0.6rem  !important;
+}
+/* 收货地址操作按钮(包括:设为默认, 编辑, 删除) */
+.address-btn{
+	padding: 0.25rem 0.5rem !important;
+}
+
+/* 编辑按钮, 删除按钮 */
+.edit-btn,.remove-btn{
+	height: 1.5rem;
+	line-height: 1.5rem;
+	padding-left: 0.8rem;
+	padding-right: 0.8rem;
+	border: 1px solid #959595;
+	border-radius: 0.2rem;
+	margin-left: 0.4rem;
+	margin-top: 0.2rem;
+	margin-bottom: 0.2rem;
+}
+.edit-btn:active, .remove-btn:active{
+	background-color: #E6E4E3;
+}
+
+/* 底部提示 */
+.aui-card-list-footer{
+	min-height: 1.6rem;
+	color: #bc9761;
+ 	padding: 0!important;
+}
+.aui-card-list-footer i{
+	font-weight: bold;
+	color: #bc9761;
+}

@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/history/history_win.css" />
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="closeWin()"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+			<a class="aui-btn aui-pull-right aui-font-size-12" tapmode onclick="edit(this)" style="color: #212121;">编辑</a>
+			<div class="aui-title aui-text-default">
+				浏览记录
+			</div>
+		</header>
+		<div class="bottom-btns flex-wrap">
+			<div class="count-price flex-con aui-font-size-12 box-wrap ">
+				<label class="aui-font-size-12 aui-margin-l-10" tapmode onclick="selectAll(this)">
+					<input class="aui-radio aui-disabled aui-checked" type="checkbox" name="radio" style="margin-right: 2px!important;">
+					全选</label>
+			</div>
+			<div class="bottom-btn bottom-btn-fk" tapmode onclick="deleteAction()">
+				删除
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript">
+		function deleteAction() {
+			_execScript("", "history_frm", "deleteAction();");
+		}
+
+		function edit(obj) {
+			if ($api.text(obj) == "编辑") {
+				$api.text(obj, "完成");
+				$api.removeCls($api.dom(".bottom-btns"), "aui-hide");
+				api.setFrameAttr({
+					name : 'history_frm',
+					rect : rect = {
+						x : 0, //左上角x坐标
+						y : 0, //左上角y坐标
+						w : 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+						h : 'auto', //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+						marginLeft : 0, //相对父 window 左外边距的距离
+						marginTop : headerPos.h, //相对父 window 上外边距的距离
+						marginBottom : footerPos.h + 1, //相对父 window 下外边距的距离
+						marginRight : 0 //相对父 window 右外边距的距离
+					},
+				});
+				_execScript("", "history_frm", "setPageEditable(true);");
+			} else {
+				$api.text(obj, "编辑");
+				$api.addCls($api.dom(".bottom-btns"), "aui-hide");
+				api.setFrameAttr({
+					name : 'history_frm',
+					rect : rect = {
+						x : 0, //左上角x坐标
+						y : 0, //左上角y坐标
+						w : 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+						h : 'auto', //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+						marginLeft : 0, //相对父 window 左外边距的距离
+						marginTop : headerPos.h, //相对父 window 上外边距的距离
+						marginBottom : 0, //相对父 window 下外边距的距离
+						marginRight : 0 //相对父 window 右外边距的距离
+					},
+				});
+				_execScript("", "history_frm", "setPageEditable(false);");
+			}
+		}
+
+		function selectAll(obj) {
+			console.log("当前是否选中:-------------->" + $api.hasCls($api.dom(".aui-radio"), "active"));
+			if ($api.hasCls($api.dom(".aui-radio"), "active")) {
+				$api.addCls($api.dom(".aui-radio"), "aui-disabled");
+				$api.removeCls($api.dom(".aui-radio"), "active");
+				//不选中购物车列表中的所有checkbox
+				console.log(1);
+				_sendEvent("historyUpdateEndEvent", {
+					type : false
+				});
+			} else {
+				$api.removeCls($api.dom(".aui-radio"), "aui-disabled");
+				$api.addCls($api.dom(".aui-radio"), "active");
+				console.log(2);
+				_sendEvent("historyUpdateEndEvent", {
+					type : true
+				});
+			}
+		}
+
+		var headerPos;
+		var footerPos;
+		apiready = function() {
+			api.parseTapmode();
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			$api.fixTabBar($api.dom("body"));
+			headerPos = $api.offset(header);
+			var footer = $api.dom(".bottom-btns");
+			footerPos = $api.offset(footer);
+			$api.addCls(footer, "aui-hide");
+			var rect = {
+				x : 0, //左上角x坐标
+				y : 0, //左上角y坐标
+				w : 'auto', //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+				h : 'auto', //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+				marginLeft : 0, //相对父 window 左外边距的距离
+				marginTop : headerPos.h, //相对父 window 上外边距的距离
+				marginBottom : 0, //相对父 window 下外边距的距离
+				marginRight : 0 //相对父 window 右外边距的距离
+			};
+			var pageParam = {}, bounces = true, reload = true, allowEdit = false;
+			var animation = {
+				type : "fade", //动画类型（详见动画类型常量）
+				subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 0 //动画过渡时间，默认300毫秒
+			};
+			_openFrame("history_frm", "history_frm.html", rect, pageParam, bounces, reload, allowEdit, animation);
+		};
+		function closeWin() {
+			api.closeWin({
+			});
+		}
+	</script>
+</html>

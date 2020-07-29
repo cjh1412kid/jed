@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.GoodsShoesDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+  <resultMap type="io.nuite.modules.sr_base.entity.GoodsShoesEntity" id="goodsShoesMap">
+    <result property="seq" column="Seq"/>
+    <result property="companySeq" column="Company_Seq"/>
+    <result property="year" column="Year"/>
+    <result property="seasonSeq" column="Season_Seq"/>
+    <result property="periodSeq" column="Period_Seq"/>
+    <result property="categorySeq" column="Category_Seq"/>
+    <result property="goodName" column="GoodName"/>
+    <result property="goodID" column="GoodID"/>
+    <result property="color" column="Color"/>
+    <result property="surfaceMaterial" column="SurfaceMaterial"/>
+    <result property="innerMaterial" column="InnerMaterial"/>
+    <result property="popularElement" column="PopularElement"/>
+    <result property="soleMaterial" column="SoleMaterial"/>
+    <result property="closeForm" column="CloseForm"/>
+    <result property="heelShape" column="HeelShape"/>
+    <result property="toeStyle" column="ToeStyle"/>
+    <result property="heelHeight" column="HeelHeight"/>
+    <result property="introduce" column="Introduce"/>
+    <result property="description" column="Description"/>
+    <result property="video" column="Video"/>
+    <result property="img1" column="Img1"/>
+    <result property="img2" column="Img2"/>
+    <result property="img3" column="Img3"/>
+    <result property="img4" column="Img4"/>
+    <result property="img5" column="Img5"/>
+    <result property="inputTime" column="InputTime"/>
+    <result property="del" column="Del"/>
+    <result property="SX1" column="SX1"/>
+    <result property="SX2" column="SX2"/>
+    <result property="SX3" column="SX3"/>
+    <result property="SX4" column="SX4"/>
+    <result property="SX5" column="SX5"/>
+    <result property="SX6" column="SX6"/>
+    <result property="SX7" column="SX7"/>
+    <result property="SX8" column="SX8"/>
+    <result property="SX9" column="SX9"/>
+    <result property="SX10" column="SX10"/>
+    <result property="SX11" column="SX11"/>
+    <result property="SX12" column="SX12"/>
+    <result property="SX13" column="SX13"/>
+    <result property="SX14" column="SX14"/>
+    <result property="SX15" column="SX15"/>
+    <result property="SX16" column="SX16"/>
+    <result property="SX17" column="SX17"/>
+    <result property="SX18" column="SX18"/>
+    <result property="SX19" column="SX19"/>
+    <result property="SX20" column="SX20"/>
+    <result property="goodsType" column="goods_type"/>
+  </resultMap>
+
+  <select id="selectGoodsIDsByCompanySeq" resultType="java.lang.String">
+    SELECT GoodID
+    FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes]
+    WHERE Company_Seq = #{companySeq} AND Del=0
+  </select>
+
+  <select id="selectGoodsSeqByGoodsID" resultType="java.lang.Integer">
+    SELECT Seq
+    FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes]
+    WHERE GoodID = #{goodsId} and Company_Seq =#{companySeq} AND Del=0
+  </select>
+
+  <!--查找属性选项是否与商品有关联-->
+  <select id="getCountBySXAndOption" resultType="java.lang.Integer">
+    select COUNT(*)
+    from  [JedSmartRetail].[dbo].[YHSR_Goods_Shoes]
+    where Company_Seq = #{companySeq} and ${sxid}=#{optCode} and Del=0
+  </select>
+
+  <select id="selectGoodsByCompanySeq" resultMap="goodsShoesMap">
+    SELECT *
+    FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes]
+    WHERE Company_Seq = #{companySeq} AND Del=0
+  </select>
+
+  <!-- 根据属性条件获取货号 -->
+  <select id="getShoesSeqListOnSXParam" resultType="java.lang.Integer">
+    SELECT
+    	DISTINCT A.Seq
+    FROM
+    	[JedSmartRetail].[dbo].[YHSR_Goods_Shoes] A
+    	
+    LEFT JOIN [JedOrderPlatForm].[dbo].[YHSR_OP_ShoesData] B ON A.Seq = B.Shoes_Seq AND B.Del = 0
+    LEFT JOIN [JedOrderPlatForm].[dbo].[YHSR_OP_SaleShoesDetail] C ON C.ShoeSeq = A.Seq AND C.Del = 0
+    
+    WHERE A.Company_Seq = #{companySeq} AND A.Del = 0
+    
+    <if test="years!=null and years!=''">
+      AND A.Year IN (${years})
+    </if>
+    <if test="years==null or years==''">
+     	<if test="oldOrNew!=null and oldOrNew!=''">
+     	 AND A.Year &lt; YEAR(GETDATE())
+     	</if>
+    </if>
+    <if test="saleTimeStart != null and saleTimeEnd != null">
+        AND C.SaleDate >= #{saleTimeStart} AND C.SaleDate <![CDATA[ <= ]]> #{saleTimeEnd}
+    </if>
+     <if test="depositTime != null">
+        AND datediff(day, #{depositTime}, (select TOP 1 D.Input_ERP_Time from  JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail D	where D.Shoes_Seq =A.Seq AND Type=0 order by Input_ERP_Time asc))>0
+    </if>
+    <if test="seasonSeqs!=null and seasonSeqs!=''">
+      AND A.Season_Seq IN (${seasonSeqs})
+    </if>
+    <if test="categorySeqs!=null and categorySeqs!=''">
+      AND A.Category_Seq IN (${categorySeqs})
+    </if>
+    <if test="colorSeqs!=null and colorSeqs!=''">
+      AND B.Color_Seq IN (${colorSeqs})
+    </if>
+    <if test="sXsql!=null and sXsql!=''">
+      ${sXsql}
+    </if>
+    <if test="shopSeqList != null">
+      AND B.Shop_Seq IN
+      <foreach collection="shopSeqList" index="index" item="item" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+  </select>
+
+
+  <!-- 根据模糊查询条件获取货号 //TODO 20个自定义属性模糊查询 -->
+  <select id="getShoesSeqListOnFuzzySearchParam" resultType="java.lang.Integer">
+    SELECT
+    	DISTINCT A.Seq
+    FROM
+    	[JedSmartRetail].[dbo].[YHSR_Goods_View] A
+    	
+    LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Season] B ON A.Season_Seq = B.Seq
+    LEFT JOIN [JedOrderPlatForm].[dbo].[YHSR_OP_ShoesData] D ON A.Seq = D.Shoes_Seq
+    LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Color] E ON D.Color_Seq = E.Seq
+
+    WHERE A.Company_Seq = #{companySeq} AND A.Del = 0 AND B.Del = 0
+
+    <foreach item="param" collection="paramList" open="" separator="" close="">
+      	AND ( A.Year LIKE '%${param}%' OR B.SeasonName LIKE '%${param}%' OR E.Name LIKE '%${param}%' OR A.GoodID LIKE '%${param}%')
+    </foreach>
+    <if test="categorySeqs!=null and categorySeqs!=''">
+      	AND A.Category_Seq IN (${categorySeqs})
+    </if>
+  </select>
+
+  <select id="selectExistYearList" resultType="java.lang.Integer">
+    SELECT
+    distinct Year
+    FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] where Company_Seq=#{companySeq} and Del=0 order by Year desc
+  </select>
+
+  <select id="selectExistSeasonList" resultType="java.util.Map">
+    SELECT [Seq] as seq
+          ,[SeasonName] as seasonName
+      FROM [JedSmartRetail].[dbo].[YHSR_Goods_Season]
+      where Seq in (
+        SELECT
+        distinct [Season_Seq]
+        FROM [JedSmartRetail].[dbo].[YHSR_Goods_Shoes] where Company_Seq=#{companySeq} and Del=0
+      )
+  </select>
+	<select id="goodsList" resultMap="goodsShoesMap">
+	select * from [JedSmartRetail].[dbo].[YHSR_Goods_Shoes]  where GoodID Like '%'+ #{goodId}+'%'
+	</select>
+
+
+  <select id="getAllShoesSeq" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT s.Shoes_Seq FROM (SELECT
+    Shoes_Seq AS Shoes_Seq
+    FROM
+    [JedOrderPlatform].[dbo].[YHSR_OP_ShoesData]
+    WHERE Company_Seq = #{companySeq}
+    GROUP BY Shoes_Seq
+    UNION ALL
+    SELECT
+    ShoeSeq AS Shoes_Seq
+    FROM
+    [JedOrderPlatform].[dbo].[YHSR_OP_SaleShoesDetail]
+    WHERE Company_Seq = #{companySeq}
+    GROUP BY ShoeSeq)s
+    GROUP BY s.Shoes_Seq
+  </select>
+  
+  <update id="deleteInvalidShoes" parameterType="java.util.Map">
+    UPDATE
+    [JedSmartRetail].[dbo].[YHSR_Goods_Shoes]
+    SET Del = 1
+    WHERE Seq NOT IN ${seqs}
+  </update>
+
+  <update id="updateGoodDel">
+      UPDATE
+      [JedSmartRetail].[dbo].[YHSR_Goods_Shoes]
+      SET
+      Del = 0
+      WHERE Company_Seq = #{companySeq} and goods_type=#{goodsType}
+  </update>
+  <select id="getSizeMap" resultType="java.util.Map">
+  SELECT
+	A.sizeSeq,
+	A.stock,
+	B.SizeName AS sizeName 
+FROM
+	(
+SELECT
+	Size_Seq AS sizeSeq,
+	SUM ( Stock ) AS stock 
+FROM
+	[JedOrderPlatform].[dbo].[YHSR_OP_ShoesData] 
+WHERE
+	Shoes_Seq = #{shoesSeq}
+	AND Del = 0 
+GROUP BY
+	Size_Seq) A
+	LEFT JOIN [JedSmartRetail].[dbo].[YHSR_Goods_Size] B ON A.sizeSeq= B.Seq ORDER BY A.sizeSeq
+  </select>
+</mapper>

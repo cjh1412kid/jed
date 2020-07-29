@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>首页展示设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/my/home_set_win.css" />
+</head>
+<style type="text/css">
+
+</style>
+
+<body>
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-left aui-text-default"></span>
+        </a>
+        <div class="aui-title aui-text-default aui-font-size-16">首页展示设置</div>
+    </header>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-select-list">
+            <li class="aui-list-item" tapmode onclick="itemClick(this)">
+                <div class="aui-list-item-inner">
+                    <label class="aui-font-size-14"><input class="aui-margin-l-15 aui-checkbox aui-margin-r-10 aui-disabled company-recommend" type="checkbox" name="company_recommend" checked>公司主推</label>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmode onclick="itemClick(this)">
+                <div class="aui-list-item-inner">
+                    <label class="aui-font-size-14"><input class="aui-checkbox aui-margin-r-10 aui-disabled new-recommend"  checked="" type="checkbox" name="new_recommend"> 新品推荐</label>
+                </div>
+            </li>
+            <li class="aui-list-item aui-hide" tapmode onclick="itemClick(this)">
+                <div class="aui-list-item-inner">
+                    <label class="aui-font-size-14"><input class="aui-checkbox aui-margin-r-10 aui-disabled all-recommend" checked="" type="checkbox" name="all_recommend"> 全部货品</label>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript">
+    function closeWin() {
+        _sendEvent("home_set_end_event");
+        api.closeWin({
+            name: api.winName
+        });
+    }
+
+    function itemClick(_obj) {
+        var checkbox = $api.dom(_obj, "input");
+        var name = $api.attr(checkbox, "name");
+        console.log("name:" + name);
+        if ($api.hasCls(checkbox, "aui-checked")) {
+            $api.removeCls(checkbox, 'aui-checked');
+            $api.setStorage(name + '_key', 0);
+        } else {
+            $api.addCls(checkbox, 'aui-checked');
+            $api.setStorage(name + '_key', 1);
+        }
+    }
+
+    function initUI() {
+        var is_company_recommend_checked = $api.getStorage('company_recommend_key');
+        var is_new_recommend_checked = $api.getStorage('new_recommend_key');
+        var is_all_recommend_checked = $api.getStorage('all_recommend_key');
+        if (is_company_recommend_checked == 1) {
+            if (!$api.hasCls($api.dom(".company-recommend"), "aui-checked")) {
+                $api.addCls($api.dom(".company-recommend"), "aui-checked");
+            }
+        } else {
+            if ($api.hasCls($api.dom(".company-recommend"), "aui-checked")) {
+                $api.removeCls($api.dom(".company-recommend"), "aui-checked");
+            }
+        }
+        if (is_new_recommend_checked == 1) {
+            if (!$api.hasCls($api.dom(".new-recommend"), "aui-checked")) {
+                $api.addCls($api.dom(".new-recommend"), "aui-checked");
+            }
+        } else {
+            if ($api.hasCls($api.dom(".new-recommend"), "aui-checked")) {
+                $api.removeCls($api.dom(".new-recommend"), "aui-checked");
+            }
+        }
+        if (is_all_recommend_checked == 1) {
+            if (!$api.hasCls($api.dom(".all-recommend"), "aui-checked")) {
+                $api.addCls($api.dom(".all-recommend"), "aui-checked");
+            }
+        } else {
+            if ($api.hasCls($api.dom(".all-recommend"), "aui-checked")) {
+                $api.removeCls($api.dom(".all-recommend"), "aui-checked");
+            }
+        }
+    }
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        initUI();
+    }
+</script>
+
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/goods/goods_detail_callin_frm.css" />
+    <style>
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <div class="hidden flex-con" tapmode onclick="closeFrm()"></div>
+    <div class="content flex-wrap flex-vertical">
+        <div class="inner">
+            <div class="inner-title flex-wrap aui-border-b">
+                <div class="flex-1 flex-style">选择</div>
+                <div class="flex-1 flex-style">尺码</div>
+                <div class="flex-2 spe">
+                  <div>本店库存/调出量</div>
+                  <div class="font4">(所有门店)</div>
+                </div>
+                <div class="flex-1 flex-style">选择</div>
+                <div class="flex-1 flex-style">尺码</div>
+                <div class="flex-2 spe">
+                  <div>本店库存/调出量</div>
+                  <div class="font4">(所有门店)</div>
+                </div>
+            </div>
+            <div class="size-content">
+                <!-- <div class="item flex-wrap aui-border-b">
+                  <div class="flex-1 flex-style">
+                    <input class="aui-checkbox" type="checkbox" name="" checked="">
+                  </div>
+                  <div class="flex-1 flex-style size">36</div>
+                  <div class="flex-2 flex-style stock">6</div>
+                </div> -->
+
+            </div>
+        </div>
+        <div class="footer flex-style" tapmode onclick="sure()">下一步</div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript">
+    function sure() {
+      var allInputList = $('input');
+      var sendInputList = [];
+      for (var i = 0; i < allInputList.length; i++) {
+        // alert($(allInputList[i]).prop("checked"));
+        if ($(allInputList[i]).prop("checked")==true) {
+           sendInputList.push($($($(allInputList[i]).closest('.item')).find('.size')).text())
+        }
+      }
+      if (_isArrayNull(sendInputList)) {
+        _toast('请至少选择一个尺码');
+        return;
+      }else {
+    			var pageParam = {
+    					sizeList:sendInputList,
+              shoesSeq:goodSeq
+    			};
+
+          var bounces = false;
+          var  reload = true;
+          //跳转"全部鞋款"页面
+          _openWin("goods_detail_fold_win", "goods_detail_fold_win.html", pageParam, bounces, reload);
+      }
+    }
+
+    function closeFrm() {
+        api.closeFrame({
+            name: 'goods_detail_callin_frm'
+        });
+
+    }
+
+    function getDatas() {
+      goodSeq = api.pageParam.goodSeq
+      // alert($api.jsonToStr(pageParam))
+      var url = window.myServerUrl + "order/app/allocateTransfer/getShoesStockAndTransferOutNum";
+      url += "?shoesSeq=" + goodSeq;
+      console.log("获取鞋子各个尺码的 当前库存 + 调出数量-->url:" + url);
+      _ajax(url, "getShoesStockAndTransferOutNum", function(ret, err) {
+       datas = [];
+        if (ret) {
+          console.log("获取鞋子各个尺码的 当前库存 + 调出数量-->ret:" + $api.jsonToStr(ret));
+          if (ret.code == 0) {
+            datas = ret.result;
+           initUI();
+          } else {
+            _toast("获取鞋子各个尺码的 当前库存 + 调出数量失败！", 3000, "bottom", function() {});
+          }
+        } else {
+          _toast(window.ajaxErrorMessage);
+          console.log("获取鞋子各个尺码的 当前库存 + 调出数量-->err:" + $api.jsonToStr(err));
+        }
+        // call(datas);
+      });
+    }
+
+    function initUI() {
+        var str = '';
+        for (var i = 0; i < datas.length; i++) {
+            str += '<div class="item flex-wrap aui-border-b">';
+            str += '<div class="flex-1 flex-style">';
+            str += '<input class="aui-checkbox" type="checkbox" name="">';
+            str += '</div>';
+            str += '<div class="flex-1 flex-style size">'+datas[i].size+'</div>';
+            if (i/2==0 && i!=0) {
+              str += '<div class="flex-2 flex-style stock">'+datas[i].stock+'</div>';
+            }else {
+              str += '<div class="flex-2 flex-style stock aui-border-r">'+datas[i].stock+'/'+datas[i].transferOutNum+'</div>';
+            }
+
+            str += '</div>';
+        }
+        $('.size-content').html(str)
+
+    }
+    var goodSeq;
+    var datas=[];
+    apiready = function() {
+        getDatas();
+    };
+</script>
+
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.system.dao.SystemLogDao">
+
+
+  <select id="getLogListByStartAndNum"
+          resultType="io.nuite.modules.system.entity.order_platform.SystemLogEntity">
+
+    SELECT TOP (#{num})
+       [Seq]
+      ,[Content]
+      ,[InputTime]
+      ,[UpdateTime]
+      ,[Del]
+    FROM [JedSmartRetail].[dbo].[YHSR_System_Log]
+    WHERE Seq not in (select TOP (#{start}) Seq from [JedSmartRetail].[dbo].[YHSR_System_Log] order by InputTime desc ) and Del =0
+    order by InputTime desc
+  </select>
+</mapper>

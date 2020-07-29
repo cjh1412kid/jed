@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<!--作者信息-->
+		<meta name="author" content="喻文强 , 1098654043@qq.com"/>
+		<title>jQ带日期区间的日期选择插件 - 不羁的狂鱼</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common/common.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common/date_range_picker.css" media="screen"  />
+	</head>
+	<body class="flex-wrap flex-vertical">
+		<div class="header box-wrap box-horizontal-end" id="header">
+			<div class="flex-wrap" style="width: 100%;">
+				<div class="arrow-1 aui-iconfont aui-icon-close aui-text-center box-wrap box-horizontal-center box-vertical-center aui-text-white" tapmode onclick="api.closeFrame();"></div>
+				<div class="flex-3 header-title aui-text-white">
+					选择起止时间
+				</div>
+				<div class="aui-text-center box-wrap box-vertical-start box-horizontal-center flex-1">
+					<div class="back-btn aui-hide" tapmode onclick="backBarChart(this)">
+						返回上一级
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--<div class='drp-popup flex-con flex-wrap flex-vertical'>
+			<div class='drp-timeline'>
+				<ul class='drp-timeline-presets flex-wrap'></ul>
+				<div class='drp-timeline-bar'></div>
+			</div>
+			<div class='drp-calendars flex-con flex-wrap'>
+				<div class='drp-calendar drp-calendar-start flex-con'>
+					<div class='drp-month-picker'>
+						<div class='drp-arrow'>
+							&lt;
+						</div>
+						<div class='drp-month-title'></div>
+						<div class='drp-arrow drp-arrow-right'>
+							&gt;
+						</div>
+					</div>
+					<ul class='drp-day-headers'></ul>
+					<ul class='drp-days'></ul>
+					<div class='drp-calendar-date aui-hide'></div>
+				</div>
+				<div class='drp-calendar-separator'></div>
+				<div class='drp-calendar drp-calendar-end flex-con'>
+					<div class='drp-month-picker'>
+						<div class='drp-arrow'>
+							&lt;
+						</div>
+						<div class='drp-month-title'></div>
+						<div class='drp-arrow drp-arrow-right'>
+							&gt;
+						</div>
+					</div>
+					<ul class='drp-day-headers'></ul>
+					<ul class='drp-days'></ul>
+					<div class='drp-calendar-date aui-hide'></div>
+				</div>
+			</div>
+			<div class='drp-tip aui-hide'></div>
+		</div>-->
+		<select class='custom-date aui-hide' name='select'>
+			<option value='90' selected='selected'>季度</option>
+			<option value='180'>半年</option>
+			<option value='365'>一年</option>
+			<option value='custom'>自定义</option>
+		</select>
+		<div class="sure-area box-wrap box-vertical box-horizontal-center box-vertical-center" tapmode onclick="sure()">
+			<!--<div class="sure-btn box-wrap box-horizontal-center box-vertical-center" onclick="sure()">-->
+			确定 <!--</div>-->
+		</div>
+	</body>
+	<script src='../script/api.js'></script>
+	<script src='../script/common/common.js'></script>
+	<script src='../script/common/jquery_min.js'></script>
+	<script src="../script/date_range_picker.js"></script>
+	<script type="text/javascript">
+		function sure() {
+			var dates = $api.domAll(".drp-calendar-date");
+			var startDate = $api.trim($api.text(dates[0]));
+			var endDate = $api.trim($api.text(dates[1]));
+			console.log(startDate);
+			console.log(endDate);
+			_execScript("", api.pageParam.pageName, "setDateRange('" + startDate + "','" + endDate + "')");
+			setTimeout(function() {
+				api.closeFrame({
+				});
+			}, 100);
+		}
+
+		apiready = function() {
+			if (api.systemType == "ios") {
+				$api.css($api.dom(".header"), "top:30px;");
+			} else {
+				$api.css($api.dom(".header"), "top:25px;");
+			}
+			$api.fixStatusBar($api.dom("body"));
+			$api.fixTabBar($api.dom("body"));
+		}
+	</script>
+</html>

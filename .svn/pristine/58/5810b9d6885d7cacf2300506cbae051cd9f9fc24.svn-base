@@ -1,0 +1,428 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../css/tab_content_3.css" />
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body>
+	<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+		<a class="aui-btn aui-pull-left aui-invisible" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+		<a class="aui-pull-right aui-btn" tapmode onclick="_openFilterWin();"><img src="../image/icon_filter.png" /></a>
+		<div class="aui-title text-header-title aui-text-default aui-font-size-16">
+			<div class="aui-tab" id="tab">
+				<div class="aui-tab-item aui-active">
+					未完成
+				</div>
+				<div class="aui-tab-item">
+					已完成
+				</div>
+			</div>
+		</div>
+	</header>
+	<!-- <div class="content aui-hide"> -->
+	<div class="content">
+		<!-- 未完成 -->
+		<section class="aui-content aui-margin-t-10 incomplete">
+			<!-- <div class="aui-card-list">
+				<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+					<div class="flex-con shop-name">门店B</div>
+					<div class="order-time aui-margin-r-10">下单时间：<span>2019/4/12</span></div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-show">
+					<div class="title flex-wrap">
+						<div class="goods-id aui-padded-10">
+							货号
+						</div>
+						<div class="flex-con aui-padded-10">
+							定量
+						</div>
+						<div class="flex-con aui-padded-10">
+							已发
+						</div>
+						<div class="flex-con aui-padded-10">
+							未发
+						</div>
+						<i class="aui-iconfont aui-icon-right aui-invisible box-wrap box-horizontal-center box-vertical-center aui-margin-r-5"></i>
+					</div>
+					<div class="flex-wrap" tapmode onclick="toNextWin()">
+						<div class="goods-id aui-padded-10">
+							SD54564
+						</div>
+						<div class="flex-con total-num aui-padded-10">
+							99
+						</div>
+						<div class="flex-con send-num aui-padded-10">
+							44
+						</div>
+						<div class="flex-con unsend-num aui-padded-10">
+							55
+						</div>
+						<i class="aui-iconfont aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-margin-r-5"></i>
+					</div>
+					<div class="flex-wrap" tapmode onclick="toNextWin()">
+						<div class="flex-con goods-id aui-padded-10">
+							SD54565
+						</div>
+						<div class="flex-con total-num aui-padded-10">
+							89
+						</div>
+						<div class="flex-con send-num aui-padded-10">
+							44
+						</div>
+						<div class="flex-con unsend-num aui-padded-10">
+							45
+						</div>
+						<i class="aui-iconfont aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-margin-r-5"></i>
+					</div>
+					<div class="flex-wrap footer box-wrap box-vertical-end box-horizontal-end aui-padded-10 aui-padded-t-10">
+						<div class="btn" tapmode onclick="comeOn()">催单</div>
+					</div>
+				</div>
+			</div> -->
+		</section>
+		<!-- 已完成 -->
+		<section class="aui-content aui-margin-t-10 completed aui-hide">
+			<!-- <div class="aui-card-list">
+				<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>
+					<div class="flex-con shop-name">门店A</div>
+					<div class="order-time aui-margin-r-10">下单时间：<span>2019/10/12</span></div>
+					<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+				</div>
+				<div class="aui-card-list-content aui-collapse-content aui-show">
+					<div class="flex-wrap title">
+						<div class="goods-id flex-con aui-padded-10">
+							货号
+						</div>
+						<div class="flex-con aui-padded-10">
+							定量
+						</div>
+						<div class="flex-con aui-padded-10">
+							已发
+						</div>
+						<i class="aui-iconfont aui-icon-right aui-invisible box-wrap box-horizontal-center box-vertical-center aui-margin-r-5"></i>
+					</div>
+					<div class="flex-wrap" tapmode onclick="toNextWin()">
+						<div class="flex-con goods-id aui-padded-10">
+							SD54564
+						</div>
+						<div class="flex-con total-num aui-padded-10">
+							99
+						</div>
+						<div class="flex-con send-num aui-padded-10">
+							44
+						</div>
+						<i class="aui-iconfont aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-margin-r-5"></i>
+					</div>
+				</div>
+			</div> -->
+		</section>
+		<div class='footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+			到底了<i class='aui-iconfont aui-icon-activity aui-font-size-12'></i>
+		</div>
+		<div class='footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide spe'>
+			<img src="../image/order-group.png" alt="">
+		</div>
+		<div class='footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+			加载更多<i class='aui-iconfont aui-icon-more aui-font-size-12'></i>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/common/my_common.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+	function toNextWin(_obj) {
+		var pageParam = {
+			shopName: $api.attr(_obj, "data-shop-name"),
+			goodsId: $api.text($api.dom(_obj, ".goods-id")),
+		};
+		_openWin("order_detail_win", "order/order_detail_win.html", pageParam);
+	}
+
+	/**
+	 *催单
+	 */
+	function comeOn(index,_obj) {
+		console.log("index:" + index);
+		console.log("dataList:" + $api.jsonToStr(dataList));
+		var orderList = dataList[index].orderList;
+		console.log("orderList:" + $api.jsonToStr(orderList));
+		var goodId = [];
+		if (_isArrayNull(orderList)) {
+			return;
+		}
+		for (var i = 0; i < orderList.length; i++) {
+			goodId.push(orderList[i].goodId);
+		}
+		var url = window.myServerUrl + "order/app/meetingOrder/reminderOrder";
+		url += "?shopName=" + $api.attr(_obj, "data-shop-name"); //季节 数据类型：Array[integer]
+		url += "&goodId=" + goodId[0]; //分类 数据类型：Array[integer]
+		console.log("催单-->url:" + url);
+		isAjaxing = true;
+		_ajax(url, "reminderOrder", function(ret, err) {
+			if (ret) {
+				console.log("催单-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					_toast(ret.msg);
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("催单-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+		});
+	}
+
+	function _openFilterWin() {
+		_openWin("filter_win", "filter_win.html", pageParam);
+	}
+
+	function initUI() {
+		var htmlStr = "";
+		if (!_isArrayNull(dataList)) {
+			for (var i = 0; i < dataList.length; i++) {
+				htmlStr += '<div class="aui-card-list">';
+				htmlStr += '<div class="aui-card-list-header aui-collapse-header aui-active" tapmode>';
+				htmlStr += '<div class="flex-con shop-name">' + dataList[i].shopName + '</div>';
+				htmlStr += '<div class="order-time aui-margin-r-10">下单时间：<span>2019/4/12</span></div>';
+				htmlStr += '<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>';
+				htmlStr += '</div>';
+				htmlStr += '\n';
+				htmlStr += '<div class="aui-card-list-content aui-collapse-content aui-show">';
+				htmlStr += '<div class="flex-wrap title">';
+				htmlStr += '<div class="goods-id aui-padded-10">';
+				htmlStr += '货号';
+				htmlStr += '</div>';
+				htmlStr += '<div class="flex-con aui-padded-10">';
+				htmlStr += '定量';
+				htmlStr += '</div>';
+				htmlStr += '<div class="flex-con aui-padded-10">';
+				htmlStr += '已发';
+				htmlStr += '</div>';
+				htmlStr += '<div class="flex-con aui-padded-10">';
+				htmlStr += '未发';
+				htmlStr += '</div>';
+				htmlStr += '<i class="aui-iconfont aui-icon-right aui-invisible box-wrap box-horizontal-center box-vertical-center aui-margin-r-5"></i>';
+				htmlStr += '</div>';
+				var orderList = dataList[i].orderList;
+				if (!_isArrayNull(orderList)) {
+					for (var j = 0; j < orderList.length; j++) {
+						htmlStr += '<div class="flex-wrap" data-shop-name="' + dataList[i].shopName + '" tapmode onclick="toNextWin(this)">';
+						htmlStr += '<div class="goods-id aui-padded-10">';
+						htmlStr += orderList[j].goodId;
+						htmlStr += '</div>';
+						htmlStr += '<div class="flex-con total-num aui-padded-10">';
+						htmlStr += orderList[j].allotCount;
+						htmlStr += '</div>';
+						htmlStr += '<div class="flex-con send-num aui-padded-10">';
+						htmlStr += orderList[j].distributeNum;
+						htmlStr += '</div>';
+						htmlStr += '<div class="flex-con unsend-num aui-padded-10">';
+						htmlStr += orderList[j].totalAllotCount;
+						htmlStr += '</div>';
+						htmlStr += '<i class="aui-iconfont aui-icon-right box-wrap box-horizontal-center box-vertical-center aui-margin-r-5"></i>';
+						htmlStr += '</div>';
+					}
+				}
+				if (orderState == 0) {
+					if (!userInfo.factoryUserFlag) {
+						//门店帐号
+						htmlStr += '<div class="flex-wrap footer box-wrap box-vertical-end box-horizontal-end aui-padded-10 aui-padded-t-10">';
+						htmlStr += '<div class="btn" tapmode data-shop-name="' + dataList[i].shopName + '" onclick="comeOn(' + i + ',this)">催单</div>';
+						htmlStr += '</div>';
+					}
+				}
+				htmlStr += '</div>';
+				htmlStr += '</div>';
+			}
+			showOverMsg(); //显示"到底了"
+		} else {
+			showEmptyMsg(); //显示"暂无数据"
+		}
+		if (orderState == 0) {
+			//未完成
+			$api.html($api.dom(".incomplete"), htmlStr);
+		} else {
+			//完成
+			$api.html($api.dom(".completed"), htmlStr);
+		}
+
+		api.parseTapmode();
+		collapse = new auiCollapse({
+			autoHide: false //是否自动隐藏已经展开的容器
+		});
+		setTimeout(function() {
+			if ($api.hasCls($api.dom(".content"), "aui-hide")) {
+				$api.removeCls($api.dom(".content"), "aui-hide");
+			}
+			closeUILoading();
+			api.refreshHeaderLoadDone();
+		}, window.refreshLoadDoneTimeOut);
+	}
+
+	/*
+	 *获取订单列表数据
+	 */
+	function getDatas(call) {
+		var url = window.myServerUrl + "order/app/meetingOrder/meetingOrderList";
+		url += "?year=" + pageParam.yearList; //年份 数据类型：Array[integer]
+		url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+		url += "&orderState=" + orderState; //分类 数据类型：Array[integer]
+		console.log("获取订单列表数据-->url:" + url);
+		isAjaxing = true;
+		_ajax(url, "meetingOrderList", function(ret, err) {
+			dataList = [];
+			if (ret) {
+				console.log("获取订单列表数据-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					dataList = ret.result;
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("获取订单列表数据-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			call();
+		});
+	}
+
+	function closeUILoading() {
+		UILoading.closeKeyFrame();
+	}
+
+	function openUILoading() {
+		UILoading.keyFrame({
+			rect: {
+				w: 102,
+				h: 102
+			},
+			styles: {
+				bg: 'rgba(0,0,0,0)',
+				corner: 5,
+				interval: 50,
+				frame: {
+					w: 102,
+					h: 102
+				}
+			},
+			//				content : [{
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}, {
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}],
+			mask: "rgba(255,0,0,0)"
+		}, function(ret) {
+			//								alert(JSON.stringify(ret));
+			console.log(12345);
+		});
+	}
+
+	function initData() {
+		userInfo = $api.getStorage("userInfoKey");
+		UILoading = api.require('UILoading');
+		pageParam = api.pageParam;
+		console.log("pageParam:" + $api.jsonToStr(pageParam));
+		collapse = new auiCollapse({
+			autoHide: false //是否自动隐藏已经展开的容器
+		});
+		tab = new auiTab({
+			element: document.getElementById("tab"),
+		}, function(ret) {
+			// api.setFrameGroupIndex({
+			// 	name: 'sale_analysis_group',
+			// 	index: ret.index - 1
+			// });
+			if (ret.index == 1) {
+				//未完成
+				orderState = 0;
+				if ($api.hasCls($api.dom(".incomplete"), "aui-hide")) {
+					$api.removeCls($api.dom(".incomplete"), "aui-hide");
+				}
+				if (!$api.hasCls($api.dom(".completed"), "aui-hide")) {
+					$api.addCls($api.dom(".completed"), "aui-hide");
+				}
+			} else {
+				//已完成
+				orderState = 1;
+				if (!$api.hasCls($api.dom(".incomplete"), "aui-hide")) {
+					$api.addCls($api.dom(".incomplete"), "aui-hide");
+				}
+				if ($api.hasCls($api.dom(".completed"), "aui-hide")) {
+					$api.removeCls($api.dom(".completed"), "aui-hide");
+				}
+			}
+			getDatas(function() {
+				openUILoading();
+				initUI();
+			});
+		});
+	}
+
+	var tab;
+	var collapse;
+	var orderState = 0; //0:未完成，1:完成
+	var pageParam;
+	var UILoading;
+	var userInfo;
+	var dataList = [];
+	apiready = function() {
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		$api.fixTabBar($api.dom("body"));
+		initData();
+		//下拉刷新
+		// api.setRefreshHeaderInfo({
+		// 	loadingImg: 'widget://image/loading_more.gif',
+		// 	bgColor: 'rgba(255,255,255,0)',
+		// 	textColor: '#212121',
+		// 	textDown: '下拉刷新...',
+		// 	textUp: '松开刷新...'
+		// }, function(ret, err) {
+		// 	//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+		// 	getDatas(function() {
+		// 		initUI();
+		// 	});
+		// });
+		//设置下拉刷新延迟时间
+		setTimeout(function() {
+			getDatas(function() {
+				openUILoading();
+				initUI();
+			});
+		}, 150);
+		//用户信息更改事件
+		_addEventListener("userInfoUpdateKey", function(ret) {
+			userInfo = $api.getStorage("userInfoKey");
+			getDatas(function() {
+				openUILoading();
+				initUI();
+			});
+			// api.refreshHeaderLoading();
+		}, {});
+		_addEventListener("query_filter_changed_event", function(ret) {
+			console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+			getDatas(function() {
+				openUILoading();
+				initUI();
+			});
+		});
+	}
+</script>
+
+</html>

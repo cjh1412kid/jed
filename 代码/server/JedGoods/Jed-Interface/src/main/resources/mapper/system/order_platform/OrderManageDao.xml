@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.system.dao.order_platform.OrderManageDao">
+
+  <!--订单总条数-->
+  <select id="getTotalCount" resultType="java.lang.Integer">
+    select count(*)
+    FROM
+    [JedOrderPlatform].[dbo].YHSR_OP_Order op
+    LEFT JOIN
+    [JedSmartRetail].[dbo].YHSR_Base_User bu on op.User_Seq = bu.Seq
+    LEFT JOIN
+    [JedSmartRetail].[dbo].YHSR_Base_Company bc on bu.Company_Seq = bc.Seq
+    WHERE
+    op.Company_Seq = #{companySeq} and op.Del = 0 AND op.IsSplit = 0
+    <if test="orderStatus != null">
+      and op.OrderStatus = #{orderStatus}
+    </if>
+    <if test="keywords != null and keywords != '' ">
+      and ISNULL(op.OrderNum, '')+ISNULL(op.Remark, '')+ISNULL(op.ExpressNo, '')+ISNULL(bu.UserName, '') LIKE
+      '%'+#{keywords}+'%'
+    </if>
+    <if test="userSeqList != null and userSeqList.size() > 0">
+      and op.User_Seq in
+      <foreach collection="userSeqList" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="startTime != null and startTime != '' ">
+      and op.InputTime &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != '' ">
+      and op.InputTime &lt;= #{endTime}
+    </if>
+  </select>
+
+
+  <!--订单列表-->
+  <select id="orderList" resultType="io.nuite.modules.order_platform_app.entity.OrderEntity">
+    with orderList as (
+    SELECT op.*,bu.userName as orderingparty
+    FROM
+    [JedOrderPlatform].[dbo].YHSR_OP_Order op
+    LEFT JOIN
+    [JedSmartRetail].[dbo].YHSR_Base_User bu on op.User_Seq = bu.Seq
+    LEFT JOIN
+    [JedSmartRetail].[dbo].YHSR_Base_Company bc on bu.Company_Seq = bc.Seq
+    WHERE
+    op.Company_Seq = #{companySeq} and op.Del = 0 AND op.IsSplit = 0
+    <if test="orderStatus != null">
+      and op.OrderStatus = #{orderStatus}
+    </if>
+    <if test="keywords != null and keywords != '' ">
+      and ISNULL(op.OrderNum, '')+ISNULL(op.Remark, '')+ISNULL(op.ExpressNo, '')+ISNULL(bu.UserName, '') LIKE
+      '%'+#{keywords}+'%'
+    </if>
+    <if test="userSeqList != null and userSeqList.size() > 0">
+      and op.User_Seq in
+      <foreach collection="userSeqList" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="startTime != null and startTime != '' ">
+      and op.InputTime &gt; #{startTime}
+    </if>
+    <if test="endTime != null and endTime != '' ">
+      and op.InputTime &lt;= #{endTime}
+    </if>
+    )
+
+    SELECT top ${page*limit}
+    *
+    FROM orderList ol
+    where seq not in (SELECT top ${(page-1)*limit} oll.seq from orderList oll ORDER BY oll.InputTime DESC)
+    ORDER BY ol.InputTime DESC
+  </select>
+
+
+  <!-- 订单所有购买商品货号的resultMap，type为HashMap -->
+  <resultMap id="orderGoodIdsMap" type="java.util.HashMap">
+    <result column="ProductPrice" property="productPrice" jdbcType="DECIMAL"/>
+    <result column="GoodID" property="goodId" jdbcType="VARCHAR"/>
+    <result column="TotalBuyCount" property="totalBuyCount" jdbcType="INTEGER"/>
+    <result column="TotalDeliverNum" property="totalDeliverNum" jdbcType="INTEGER"/>
+  </resultMap>
+
+  <!-- 定义订单购买商品的resultMap，type为HashMap -->
+  <resultMap id="orderProductsMap" type="java.util.HashMap">
+    <id column="Seq" property="seq" jdbcType="INTEGER"/>
+    <result column="ProductPrice" property="productPrice" jdbcType="DECIMAL"/>
+    <result column="BuyCount" property="buyCount" jdbcType="INTEGER"/>
+    <result column="DeliverNum" property="deliverNum" jdbcType="INTEGER"/>
+    <result column="ShoesDataSeq" property="shoesDataSeq" jdbcType="INTEGER"/>
+    <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+    <result column="ColorCode" property="colorCode" jdbcType="VARCHAR"/>
+    <result column="ColorName" property="color" jdbcType="VARCHAR"/>
+    <result column="SizeCode" property="sizeCode" jdbcType="VARCHAR"/>
+    <result column="SizeName" property="shoesSize" jdbcType="VARCHAR"/>
+    <result column="ShoesSeq" property="shoesSeq" jdbcType="INTEGER"/>
+    <result column="Category_Seq" property="categorySeq" jdbcType="INTEGER"/>
+    <result column="GoodID" property="goodId" jdbcType="VARCHAR"/>
+    <result column="Img1" property="img1" jdbcType="VARCHAR"/>
+    <result column="Introduce" property="introduce" jdbcType="VARCHAR"/>
+  </resultMap>
+
+
+  <!-- 订单所有购买商品货号 -->
+  <select id="getOrderGoodIds" resultMap="orderGoodIdsMap">
+		SELECT
+			Max(A.ProductPrice) AS ProductPrice, C.GoodID, SUM(A.BuyCount) AS TotalBuyCount, SUM(A.DeliverNum) AS TotalDeliverNum
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_OrderProducts A
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesData B ON A.ShoesData_Seq = B.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes C ON B.Shoes_Seq = C.Seq
+		WHERE
+			A.Del = 0 AND A.Order_Seq = #{orderSeq}
+		GROUP BY
+			C.GoodID
+	</select>
+
+  <!-- 订单购买商品列表详细 -->
+  <select id="getOrderProductsList" resultMap="orderProductsMap">
+		SELECT
+			A.Seq, A.ProductPrice, A.BuyCount, A.DeliverNum, B.Seq AS ShoesDataSeq, B.Remark, E.Code AS ColorCode, E.Name AS ColorName, F.SizeCode, F.SizeName, C.Seq AS ShoesSeq, C.Category_Seq, C.GoodID, C.Img1, C.Introduce
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_OrderProducts A
+		LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesData B ON A.ShoesData_Seq = B.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Color E ON B.Color_Seq = E.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Size F ON B.Size_Seq = F.Seq
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes C ON B.Shoes_Seq = C.Seq
+		WHERE
+			A.Del = 0
+		AND A.Order_Seq = #{orderSeq} 
+	</select>
+
+
+  <resultMap id="ErpOrderProductMap" type="java.util.HashMap">
+    <id column="Seq" property="seq" jdbcType="INTEGER"/>
+    <result column="BuyCount" property="count" jdbcType="INTEGER"/>
+    <result column="GoodID" property="goodsCode" jdbcType="VARCHAR"/>
+    <result column="ColorCode" property="colorCode" jdbcType="VARCHAR"/>
+    <result column="SizeCode" property="sizeCode" jdbcType="VARCHAR"/>
+    <result column="ProductPrice" property="price" jdbcType="DECIMAL"/>
+  </resultMap>
+
+  <select id="getErpOrderProduct" resultMap="ErpOrderProductMap">
+    select yos.Seq,yos.BuyCount,yos.ProductPrice,shoes.GoodID,color.Code as ColorCode,siz.SizeCode from JedOrderPlatform.dbo.YHSR_OP_OrderProducts yos
+    left join JedOrderPlatform.dbo.YHSR_OP_ShoesData sdata on yos.ShoesData_Seq=sdata.Seq
+    left join JedSmartRetail.dbo.YHSR_Goods_Shoes shoes on sdata.Shoes_Seq=shoes.Seq
+    left join JedSmartRetail.dbo.YHSR_Goods_Color color on sdata.Color_Seq=color.Seq
+    left join JedSmartRetail.dbo.YHSR_GOods_Size siz on sdata.Size_Seq=siz.Seq
+    where yos.Order_Seq=#{orderSeq}
+  </select>
+  
+  
+  
+  
+  <!-- 订单统计分析列表的resultMap，type为HashMap -->
+  <resultMap id="orderStatisticsMap" type="java.util.HashMap">
+    <id column="OrderSeq" property="orderSeq" jdbcType="INTEGER"/>
+    <result column="User_Seq" property="userSeq" jdbcType="INTEGER"/>
+    <result column="OrderNum" property="orderNum" jdbcType="VARCHAR"/>
+    <result column="OrderStatus" property="orderStatus" jdbcType="INTEGER"/>
+    <result column="ReceiverName" property="receiverName" jdbcType="VARCHAR"/>
+    <result column="Telephone" property="telephone" jdbcType="VARCHAR"/>
+    <result column="FullAddress" property="fullAddress" jdbcType="VARCHAR"/>
+    <result column="InputTime" property="inputTime" jdbcType="TIMESTAMP"/>
+    <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+    <result column="Suggestion" property="suggestion" jdbcType="VARCHAR"/>
+    <result column="UserName" property="userName" jdbcType="VARCHAR"/>
+    <result column="ShoesData_Seq" property="shoesDataSeq" jdbcType="INTEGER"/>
+    <result column="BuyCount" property="buyCount" jdbcType="INTEGER"/>
+    <result column="DeliverNum" property="deliverNum" jdbcType="INTEGER"/>
+    <result column="ProductPrice" property="productPrice" jdbcType="DECIMAL"/>
+    <result column="ProductTotalPrice" property="productTotalPrice" jdbcType="DECIMAL"/>
+    <result column="Shoes_Seq" property="shoesSeq" jdbcType="INTEGER"/>
+    <result column="Color_Seq" property="colorSeq" jdbcType="INTEGER"/>
+    <result column="Size_Seq" property="sizeSeq" jdbcType="INTEGER"/>
+    <result column="Period_Seq" property="periodSeq" jdbcType="INTEGER"/>
+    <result column="Category_Seq" property="categorySeq" jdbcType="INTEGER"/>
+    <result column="GoodID" property="goodID" jdbcType="VARCHAR"/>
+    <result column="SX1Value" property="SX1" jdbcType="VARCHAR"/>
+    <result column="SX2Value" property="SX2" jdbcType="VARCHAR"/>
+    <result column="SX3Value" property="SX3" jdbcType="VARCHAR"/>
+    <result column="SX4Value" property="SX4" jdbcType="VARCHAR"/>
+    <result column="SX5Value" property="SX5" jdbcType="VARCHAR"/>
+    <result column="SX6Value" property="SX6" jdbcType="VARCHAR"/>
+    <result column="SX7Value" property="SX7" jdbcType="VARCHAR"/>
+    <result column="SX8Value" property="SX8" jdbcType="VARCHAR"/>
+    <result column="SX9Value" property="SX9" jdbcType="VARCHAR"/>
+    <result column="SX10Value" property="SX10" jdbcType="VARCHAR"/>
+    <result column="SX11Value" property="SX11" jdbcType="VARCHAR"/>
+    <result column="SX12Value" property="SX12" jdbcType="VARCHAR"/>
+    <result column="SX13Value" property="SX13" jdbcType="VARCHAR"/>
+    <result column="SX14Value" property="SX14" jdbcType="VARCHAR"/>
+    <result column="SX15Value" property="SX15" jdbcType="VARCHAR"/>
+    <result column="SX16Value" property="SX16" jdbcType="VARCHAR"/>
+    <result column="SX17Value" property="SX17" jdbcType="VARCHAR"/>
+    <result column="SX18Value" property="SX18" jdbcType="VARCHAR"/>
+    <result column="SX19Value" property="SX19" jdbcType="VARCHAR"/>
+    <result column="SX20Value" property="SX20" jdbcType="VARCHAR"/>
+    <result column="ColorName" property="colorName" jdbcType="VARCHAR"/>
+    <result column="SizeName" property="sizeName" jdbcType="VARCHAR"/>
+    <result column="PeriodName" property="periodName" jdbcType="VARCHAR"/>
+    <result column="CategoryName" property="categoryName" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <!-- 订单统计分析列表 -->
+
+  <select id="orderStatisticsList" resultMap="orderStatisticsMap">
+		SELECT
+			A.Seq AS OrderSeq, A.User_Seq, A.OrderNum, A.OrderStatus, A.ReceiverName, A.Telephone, A.FullAddress, A.InputTime, A.Remark, A.Suggestion,
+			U.UserName,
+			B.ShoesData_Seq, B.BuyCount, B.DeliverNum, B.ProductPrice, B.BuyCount*B.ProductPrice AS ProductTotalPrice,
+			C.Shoes_Seq, C.Color_Seq, C.Size_Seq,
+			D.Period_Seq, D.Category_Seq, D.GoodID, 
+			D.SX1Value, D.SX2Value, D.SX3Value, D.SX4Value, D.SX5Value, D.SX6Value, D.SX7Value, D.SX8Value, D.SX9Value, D.SX10Value,
+			D.SX11Value, D.SX12Value, D.SX13Value, D.SX14Value, D.SX15Value, D.SX16Value, D.SX17Value, D.SX18Value, D.SX19Value, D.SX20Value,
+			E.Name AS ColorName, 
+			F.SizeName,
+			G.Name AS PeriodName,
+			H.Name AS CategoryName
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_Order A
+			LEFT JOIN JedSmartRetail.dbo.YHSR_Base_User U ON A.User_Seq = U.Seq
+			LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_OrderProducts B ON A.Seq = B.Order_Seq
+			LEFT JOIN JedOrderPlatform.dbo.YHSR_OP_ShoesData C ON B.ShoesData_Seq = C.Seq
+			LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_View D ON C.Shoes_Seq = D.Seq
+			LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Color E ON C.Color_Seq = E.Seq
+			LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Size F ON C.Size_Seq = F.Seq
+			LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Period G ON D.Period_Seq = G.Seq
+			LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Category H ON D.Category_Seq = H.Seq
+		WHERE
+			A.Company_Seq = #{companySeq}
+			<if test="userSeqs != null and userSeqs != '' ">
+			    AND A.User_Seq IN (${userSeqs})
+			</if>
+			<if test="startTime != null">
+		      	AND A.InputTime &gt;= #{startTime}
+		    </if>
+		    <if test="endTime != null">
+		      	AND A.InputTime &lt;= #{endTime}
+		    </if>
+			<if test="orderStatus != null and orderStatus >= 0 ">
+				AND A.OrderStatus = #{orderStatus}
+			</if>
+			<if test="keywords != null and keywords != '' ">
+			    AND A.OrderNum + ISNULL(A.Remark, '') + ISNULL(A.Suggestion, '') + ISNULL(U.UserName, '') LIKE '%' + #{keywords} + '%'
+			</if>
+			AND A.Del = 0 AND A.IsSplit = 0 AND U.Del = 0
+			
+		ORDER BY A.Seq DESC
+	</select>
+	
+	
+</mapper>

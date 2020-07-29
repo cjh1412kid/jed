@@ -1,0 +1,92 @@
+/* email:abner_yc@foxmail.com   date : 2015-09-28 11:23:07 */
+(function($) {
+	$.fn.cygrade = function(options) {
+		var defaults = {
+			id : "score",
+			title : "",
+			num : 0,
+			maxnum : 5,
+			complete : $.noop
+		};
+		$this = $(this);
+		var options = $.extend(defaults, options);
+		var num = options.num || parseInt(options.num);
+		var maxnum = options.maxnum || parseInt(options.maxnum);
+		if (num > maxnum) {
+			options.num = maxnum
+		}
+		if (num < 1) {
+			options.num = 0
+		}
+		var $cygrade = $this.find("#" + options.id);
+		if (options.num < 1 || parseInt(options.num) < 1) {
+			addEvent($cygrade.find("a"), options)
+		} else {
+			$cygrade.find("a").each(function() {
+				var curgrade = options.num || parseInt(options.num);
+				var n = $(this).attr("number");
+				n = parseInt(n);
+				if (n <= curgrade) {
+					$(this).removeAttr("select");
+					$(this).addClass("active")
+				}
+			})
+		}
+	};
+
+	//"我的评分"添加点击事件
+	function addEvent(obj, opts) {
+		obj.click(function() {
+			if (userInfo.accountName == "visitor") {
+				visitorAlert("../../");
+			} else {
+				$this = $(this);
+				var curgrade = $this.attr("number");
+				curgrade = parseInt(curgrade);
+
+
+				//预期星级
+				if($(this).hasClass("active")){
+					$this.parent().find("a").each(function() {
+						var n = parseInt($(this).attr("number"));
+					 // alert(1)
+					 if (n < curgrade) {
+						 $(this).addClass("active")
+					 } else {
+						 $(this).removeClass("active")
+					 }
+				 })
+					if($(this).attr("number")==2){
+						curgrade = 0
+					}else {
+						curgrade = $(this).prev().attr("number")
+					}
+			 }else {
+				$this.parent().find("a").each(function() {
+					var n = parseInt($(this).attr("number"));
+
+
+					 // alert(2)
+					 //当前星级(默认)
+					 if (n <= curgrade) {
+						 $(this).addClass("active")
+					 } else {
+						 $(this).removeClass("active")
+					 }
+
+
+
+
+				})
+				}
+       //	console.log("点击后,评分星级为:===>:" + curgrade);
+
+				//指定window执行脚本
+				_execScript('goods_detail_win', '', 'updateShoesValuate(' + curgrade + ', "score")');
+				//增加或修改"建议内容"
+			}
+		});
+
+	}
+
+})(jQuery);

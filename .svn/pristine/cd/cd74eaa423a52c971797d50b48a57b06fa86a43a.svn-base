@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.OnlineMessageDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+  <resultMap type="io.nuite.modules.order_platform_app.entity.OnlineMessageEntity" id="onlineMessageMap">
+    <result property="seq" column="Seq"/>
+    <result property="senderUserSeq" column="SenderUser_Seq"/>
+    <result property="receiveObjectSeq" column="ReceiveObject_Seq"/>
+    <result property="receiveObjectType" column="ReceiveObjectType"/>
+    <result property="content" column="Content"/>
+    <result property="imgPath" column="ImgPath"/>
+    <result property="inputTime" column="InputTime"/>
+    <result property="del" column="Del"/>
+  </resultMap>
+
+
+  <select id="selectTop21List" resultType="io.nuite.modules.order_platform_app.entity.OnlineMessageEntity">
+    select top 21 * from [JedOrderPlatform].[dbo].YHSR_OP_OnlineMessage yoo
+    where yoo.ReceiveObjectType=1
+    and yoo.Del=0
+    and yoo.SenderUser_Seq in
+    <foreach collection="users" separator="," open="(" close=")" item="user">#{user}</foreach>
+    and yoo.ReceiveObject_Seq in
+    <foreach collection="users" separator="," open="(" close=")" item="user">#{user}</foreach>
+    and DATEDIFF(second,yoo.InputTime, #{time}) <![CDATA[ >= ]]> 0
+    order by yoo.inputTime desc
+  </select>
+</mapper>

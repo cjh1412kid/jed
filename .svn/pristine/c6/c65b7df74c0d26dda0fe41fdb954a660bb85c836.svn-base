@@ -1,0 +1,127 @@
+body{
+	background-color: #ffffff!important;
+}
+.logo {
+	height: 9.0rem;
+	width: 100%;
+	background:rgba(255,52,0,1);
+	opacity:0.9;
+	background-image: url(../../image/login/img_login_top1.jpg);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	font-size:1.18rem;
+	font-family:Arial-Black;
+	font-weight:900;
+	color:rgba(255,255,255,1);
+}
+.aui-list {
+	margin-top:1.83rem;
+	width:-webkit-calc(100% - 3.0rem);
+	margin-left:1.5rem;
+    position: relative;
+    background-color: rgba(0,0,0,0);
+}
+.aui-list .aui-list-item {
+    list-style: none;
+    margin: 0;
+	margin-bottom: 1.2rem;
+    padding: 0;
+    padding-left: 0.47rem;
+    color: #444444;
+    position: relative;
+    min-height: 1.8rem;
+	background:rgba(242,242,242,1)!important;
+	border-radius:0.2rem;
+    -webkit-box-sizing: border-box;
+    		box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    		justify-content: space-between;
+
+}
+.aui-list .aui-list-item:last-of-type {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 0.75rem;
+    color: #444444;
+    position: relative;
+    min-height: 0.0rem;
+    -webkit-box-sizing: border-box;
+    		box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    		justify-content: space-between;
+}
+.aui-list.aui-form-list .aui-list-item:active {
+	/*background-color: rgba(0,0,0,0);*/
+}
+
+.aui-list .aui-list-item-input {
+    width: 100%;
+    padding: 0;
+    padding-right: 0.75rem;
+    -webkit-box-flex: 1;
+            box-flex: 1;
+    -webkit-flex-shrink: 1;
+            flex-shrink: 1;
+}
+.aui-list input{
+	color: #212121!important;
+	height: 1.8rem;
+	font-size:0.7rem;
+	font-family:PingFangSC-Regular;
+	font-weight:400;
+	color:rgba(151,151,151,1);
+	/*margin-top: 0.7rem;*/
+}
+input::-webkit-input-placeholder{
+	color: #999999;
+	font-size: 0.7rem;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 1.5) {
+	.aui-list {
+		border: none;
+		background-size: 100% 0;
+		background-image: none;
+	}
+	.aui-list .aui-list-item {
+		border: none;
+		background-size: 100% 0;
+		background-image: none;
+	}
+	.aui-list.aui-list-noborder, .aui-list.aui-list-noborder .aui-list-item:last-child {
+		border: none;
+		background-size: 100% 0;
+		background-image: none;
+	}
+}
+
+.login-btn{
+	width:-webkit-calc(100% - 3.0rem);
+	margin-left:1.5rem;
+	line-height:1.8rem;
+	text-align:center;
+	color: #ffffff;
+	height:1.8rem;
+	background:rgba(253,87,37,1);
+	box-shadow:0rem 0.5rem 0.5rem -0.5rem rgba(253,87,37,1);
+	border-radius:0.2rem;
+}
+
+.login-btn:active{
+	opacity: 0.9;
+}
+
+/* 底部阅读条款 */
+.aui-text-gray{
+	color: #666666 !important;
+}

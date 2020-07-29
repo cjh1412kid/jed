@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.GoodsSXDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+  <resultMap type="io.nuite.modules.sr_base.entity.GoodsSXEntity" id="goodsSXMap">
+    <result property="seq" column="Seq"/>
+    <result property="companySeq" column="Company_Seq"/>
+    <result property="SXId" column="SXID"/>
+    <result property="SXName" column="SXName"/>
+    <result property="inputTime" column="InputTime"/>
+    <result property="visible" column="Visible"/>
+    <result property="del" column="Del"/>
+    <collection property="optionsList" ofType="io.nuite.modules.sr_base.entity.GoodsSXOptionEntity"
+                select="getGoodsSXOptions"
+                column="Seq">
+    </collection>
+  </resultMap>
+
+
+  <select id="selectListContainOption" resultMap="goodsSXMap">
+    select sx.Seq,sx.Company_Seq,sx.SXID,sx.SXName,sx.InputTime,sx.Visible 
+    from JedSmartRetail.dbo.YHSR_Goods_SX sx 
+    where sx.Company_Seq=#{companySeq} and sx.Del=0 and Visible = 0
+    order by CAST(SUBSTRING(SXID,3,2) AS INT)
+  </select>
+
+  <select id="getGoodsSXOptions" resultType="io.nuite.modules.sr_base.entity.GoodsSXOptionEntity">
+    select sxo.Seq,sxo.SX_Seq as SXSeq,sxo.Code,sxo.Value,sxo.InputTime 
+    from JedSmartRetail.dbo.YHSR_Goods_SX_Option sxo 
+    where sxo.SX_Seq=#{SXSeq} and sxo.Del=0 
+    order by sxo.InputTime
+  </select>
+</mapper>

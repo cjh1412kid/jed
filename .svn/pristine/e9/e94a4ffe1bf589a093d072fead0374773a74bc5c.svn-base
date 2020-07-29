@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common/date_range_picker.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/drop_filter.css" />
+    <style>
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical aui-invisible1">
+    <div class="content">
+        <section class="aui-content-allottype aui-hide">
+            <div class="aui-card-list">
+                <div class="aui-card-list-content">
+                    <div class="aui-row aui-row-padded">
+                        <div class="allot-metting-item allot-metting-item-3 aui-col-xs-6 box-wrap box-vertical-center box-horizontal-center aui-ellipsis selected" data-type="allot-metting" data-year="2019" data-seq="3" tapmode onclick="itemClickAction(this)">夏季订货会</div>
+                        <div class="allot-metting-item allot-metting-item-2 aui-col-xs-6 box-wrap box-vertical-center box-horizontal-center aui-ellipsis" data-type="allot-metting" data-year="2019" data-seq="2" tapmode onclick="itemClickAction(this)">春季订货会</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="aui-content-allotstatus aui-hide">
+            <div class="aui-card-list">
+                <div class="aui-card-list-content">
+                    <div class="aui-row aui-row-padded">
+                        <div class="allot-metting-item allot-metting-item-3 aui-col-xs-6 box-wrap box-vertical-center box-horizontal-center aui-ellipsis selected" data-type="allot-metting" data-year="2019" data-seq="3" tapmode onclick="itemClickAction(this)">主夏季订货会</div>
+                        <div class="allot-metting-item allot-metting-item-2 aui-col-xs-6 box-wrap box-vertical-center box-horizontal-center aui-ellipsis" data-type="allot-metting" data-year="2019" data-seq="2" tapmode onclick="itemClickAction(this)">订货会</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="aui-content-date aui-hide">
+            <select class='custom-date aui-hide' name='select'>
+              <option value='7' selected='selected'>周</option>
+              <option value='30'>月</option>
+              <option value='90'>季度</option>
+              <option value='180'>半年</option>
+              <option value='365'>一年</option>
+              <option value='custom'>自定义</option>
+            </select>
+        </section>
+    </div>
+    <footer class="flex-wrap">
+        <div class="reset flex-1 box-wrap box-vertical-center box-horizontal-center" tapmode onclick="reset()">重置</div>
+        <div class="sure flex-3 box-wrap box-vertical-center box-horizontal-center" tapmode onclick="sure()">确定</div>
+    </footer>
+    <div class="blank flex-con" tapmode onclick="_execScript('','tab_content_allot','closeDropPop();');"></div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common/common.js"></script>
+<script type="text/javascript" src="../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../script/date_range_picker.js"></script>
+<script type="text/javascript" src="../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+    function reset() {
+        if (pageParam.pageName == "tab_content_allot") {
+            pageParam = $api.strToJson($api.jsonToStr(tempPageParam));
+        }
+        initUI();
+    }
+
+    function getDaysBetween(dateString1, dateString2) {
+        var startDate = Date.parse(dateString1);
+        var endDate = Date.parse(dateString2);
+        var days = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+        // alert(days);
+        return days;
+    }
+
+    function sure() {
+        var dates = $api.domAll(".drp-calendar-date");
+        var startDate = $api.trim($api.text(dates[0]));
+        var endDate = $api.trim($api.text(dates[1]));
+        console.log(startDate);
+        console.log(endDate);
+        if (pageParam.conditionName == 'allot-date') {
+            if (getDaysBetween(_getFormatedDate(new Date(), 'yyyy/MM/dd'), endDate) > 0) {
+                _toast("截止日期不能大于当前日期");
+                return;
+            }
+            if (getDaysBetween(startDate, endDate) > 30) {
+                _toast("不支持日期大于30天数据查询。");
+                return;
+            }
+            pageParam.conditionValue.value = startDate + ";" + endDate;
+            pageParam.conditionValue.name = _getFormatedDate(startDate, 'MM月dd日') + "至" + _getFormatedDate(endDate, 'MM月dd日');
+        }
+        _sendEvent("filter_sure_event", pageParam);
+        if (pageParam.pageName == "tab_content_allot") {
+            _execScript("", "tab_content_allot", "closeDropPop()");
+        }
+    }
+
+    function itemClickAction(_obj) {
+        var dataValue = $api.attr(_obj, "data-value");
+        var dataName = $api.text(_obj);
+        var dataType = $api.attr(_obj, "data-type");
+        var dataTypeName = $api.attr(_obj, "data-type-name");
+        if (!$api.hasCls(_obj, "selected")) {
+            //取消已经选中的
+            if ($api.dom("." + dataTypeName + "-item.selected")) {
+                $api.removeCls($api.dom("." + dataTypeName + "-item.selected"), 'selected');
+            }
+            //选中所点击的
+            $api.addCls(_obj, 'selected');
+            pageParam.conditionValue.value = dataValue;
+            pageParam.conditionValue.name = dataName;
+        }
+    }
+
+    function initDateUI() {
+        $api.removeCls($api.dom(".aui-content-date"), 'aui-hide');
+    }
+
+    function initAllotStatusUI() {
+        var array = [{
+            seq: 0,
+            name: "全部",
+            value: "-1"
+        }, {
+            seq: 1,
+            name: "待处理",
+            value: "0"
+        }, {
+            seq: 2,
+            name: "已完成",
+            value: "1"
+        }, {
+            seq: 3,
+            name: "已作废",
+            value: "2"
+        }];
+        $api.removeCls($api.dom(".aui-content-allotstatus"), 'aui-hide');
+        var htmlStr = '';
+        for (var i = 0; i < array.length; i++) {
+            if (!_isStringNull(pageParam.conditionValue.value) && array[i].value == pageParam.conditionValue.value) {
+                htmlStr += '<div class="allot-status-item allot-status-item-' + array[i].value +
+                    ' aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center aui-ellipsis selected" data-type-name="allot-status" data-type="ordeStatus" data-value="' + array[i].value +
+                    '" tapmode onclick="itemClickAction(this)">';
+            } else {
+                htmlStr += '<div class="allot-status-item allot-status-item-' + array[i].value + ' aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center aui-ellipsis" data-type-name="allot-status" data-type="allotStatus" data-value="' +
+                    array[i].value +
+                    '" tapmode onclick="itemClickAction(this)">';
+            }
+            htmlStr += array[i].name;
+            htmlStr += '</div>';
+        }
+        $api.html($api.dom(".aui-content-allotstatus .aui-row"), htmlStr);
+        collapse = new auiCollapse({
+            autoHide: false //是否自动隐藏已经展开的容器
+        });
+    }
+
+    function initAllotTypeUI() {
+        var array = [{
+            seq: 0,
+            name: "调入",
+            value: "1"
+        }, {
+            seq: 1,
+            name: "调出",
+            value: "2"
+        }];
+        $api.removeCls($api.dom(".aui-content-allottype"), 'aui-hide');
+        var htmlStr = '';
+        for (var i = 0; i < array.length; i++) {
+            if (array[i].value == pageParam.conditionValue.value) {
+                htmlStr += '<div class="allot-type-item aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center aui-ellipsis selected" data-type-name="allot-type" data-type="allotType" data-value="' + array[i].value +
+                    '" tapmode onclick="itemClickAction(this)">';
+            } else {
+                htmlStr += '<div class="allot-type-item aui-col-xs-4 box-wrap box-vertical-center box-horizontal-center aui-ellipsis" data-type-name="allot-type" data-type="allotType" data-value="' + array[i].value +
+                    '" tapmode onclick="itemClickAction(this)">';
+            }
+            htmlStr += array[i].name;
+            htmlStr += '</div>';
+        }
+        $api.html($api.dom(".aui-content-allottype .aui-row"), htmlStr);
+        collapse = new auiCollapse({
+            autoHide: false //是否自动隐藏已经展开的容器
+        });
+    }
+
+    function initUI() {
+        if (pageParam.pageName == "tab_content_allot") {
+            switch (pageParam.conditionName) {
+                case "allot-type":
+                    //订单类型
+                    initAllotTypeUI();
+                    break;
+                case "allot-status":
+                    //订单状态
+                    initAllotStatusUI();
+                    break;
+                case "allot-date":
+                    //订货会
+                    initDateUI();
+                    break;
+                default:
+            }
+        }
+        if ($api.hasCls($api.dom("body"), "aui-invisible")) {
+            $api.removeCls($api.dom("body"), "aui-invisible");
+        }
+    }
+
+    var collapse;
+    var pageParam;
+    var tempPageParam;
+    apiready = function() {
+        api.parseTapmode();
+        pageParam = api.pageParam;
+        tempPageParam = $api.strToJson($api.jsonToStr(pageParam));
+        console.log("fliter_win-->pageParam:" + $api.jsonToStr(pageParam));
+        initUI();
+        _addEventListener("getSizeAllotTemplateListEndEvent", function(ret) {
+            console.log("getSizeAllotTemplateListEndEvent-->ret:" + $api.jsonToStr(ret));
+            console.log("pageParam:" + $api.jsonToStr(pageParam));
+            initUI();
+        });
+    };
+</script>
+
+</html>

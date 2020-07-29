@@ -1,0 +1,36 @@
+.aui-list-header{
+	font-weight:700;
+	font-size: 0.65rem; 
+}
+.aui-collapse-header.aui-active {
+    background: #FFFFFF!important;
+}
+.aui-list-item-title{
+	font-size: 0.7rem!important;
+}
+.aui-collapse-content .aui-col-xs-4,#history-container .aui-list-item-inner{
+	padding:0.2rem; 
+	text-align: center;
+	font-size: 0.65rem;
+}
+.aui-collapse-content .aui-col-xs-4:active{
+	background-color: #ECECEC;
+	border-radius: 0.15rem;
+}
+.aui-content{
+	overflow-y:scroll; 
+}
+.clear-history-btn{
+	color:#999999;
+//	background-color: #bc9761;
+	padding:0.25rem 3.0rem;
+	border: 1px solid #dddddd;
+	border-radius: 0.15rem;
+}
+.clear-history-btn:active{	
+	background-color: rgba(128,128,128, 0.2);
+}
+
+.empty-history{
+	color: #bc9761;
+}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.CommunityCOMMENTDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.CommunityCOMMENTEntity" id="communityCOMMENTMap">
+        <result property="seq" column="Seq"/>
+        <result property="userSeq" column="User_Seq"/>
+        <result property="contentSeq" column="Content_Seq"/>
+        <result property="parentSeq" column="Parent_Seq"/>
+        <result property="content" column="Content"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="state" column="State"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+	<!-- 根据社区内容Seq，查询一级评论列表 -->
+	<select id="getFirstCommentList" resultType="io.nuite.modules.order_platform_app.entity.CommunityCOMMENTEntity">
+		SELECT
+			A.*, B.UserName AS userName
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_CommunityCOMMENT A
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Base_User B ON A.User_Seq = B.Seq
+		WHERE
+			A.Content_Seq = #{0}
+		AND A.State = 1
+		AND A.Del = 0
+		ORDER BY A.InputTime DESC
+	</select>
+	
+	
+	<!-- 根据一级评论Seq，查询二级评论列表 -->
+	<select id="getSecondCommentList" resultType="io.nuite.modules.order_platform_app.entity.CommunityCOMMENTEntity">
+		SELECT
+			A.*, B.UserName AS userName
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_CommunityCOMMENT A
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Base_User B ON A.User_Seq = B.Seq
+		WHERE
+			A.Parent_Seq = #{0}
+		AND A.State = 1
+		AND A.Del = 0
+		ORDER BY A.InputTime DESC
+	</select>
+	
+	
+	<!-- 获取浏览、点赞数量 -->
+	<select id="getContentRecordNum" resultType="java.lang.Integer">
+		SELECT
+			COUNT(Seq)
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_CommunityRECORD
+		WHERE
+			Content_Seq = #{arg0} AND TypeName = #{arg1} AND Del = 0
+	</select>
+
+</mapper>

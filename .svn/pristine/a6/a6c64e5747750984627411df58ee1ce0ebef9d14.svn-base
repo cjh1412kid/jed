@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>购物车</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_accordion.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_list_swipe.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/cart/cart_frm.css" />
+	</head>
+	<body>
+		<div class="no-data box-wrap box-vertical box-vertical-center box-horizontal-center aui-hide">
+			<img src="../../image/img_no_cart.png"/>
+			<div class="no-data-btn box-wrap box-vertical-center box-horizontal-center" tapmode onclick="toGoodsListWin('全部鞋款', 0)">
+				去逛逛
+			</div>
+		</div>
+		<div class="aui-content aui-hide">
+	        <ul class="cart-list aui-list-view">
+	        
+				<!--<li class='aui-list-view-cell aui-fold'>
+					<div class='aui-arrow-right aui-collapse-header' tapmode>
+						<div class='flex-wrap'>
+							<span class='flex-2'>货号：Y4565 </span><span class='flex-1 cartNum'>数量：<span id="num-Y4565">50</span></span>
+						</div>
+					</div>
+					<div class='aui-fold-content aui-collapse-content'>
+						<ul class='aui-list-view'>
+							<li class='aui-list-view-cell aui-img aui-counter-list Y4565' data-seq='1' data-price='1.0'>
+								<div class='aui-swipe-handle'>
+									<label tapmode onclick='selectItem(this)'>
+										<input class='aui-pull-left aui-radio aui-checked item-checkbox' type='checkbox' name='radio1' disabled='disabled'>
+									</label>
+									<img class='aui-img-object aui-pull-left' src='../../image/load_small_img.png'>
+									<div class='aui-img-body'>
+										<span class='goods-name'>B7571911A01</span>
+										<div class='box-wrap goods-attribute'>
+											<span class='color'>颜色：红色</span><span class='size aui-padded-0-15'>尺码：<span class='aui-font-size-16'>43</span>&nbsp;(尺码偏大)</span>
+										</div>
+										<div class='aui-counter-box'>
+											<div class='unitPrice aui-pull-left aui-text-danger'>
+												¥ 80元
+											</div>
+											<div class='aui-counter aui-pull-right'>
+												<div class='aui-counter-minus aui-disabled' tapmode onclick='minus(this)'></div>
+												<input class='aui-counter-input count' readonly='' type='text' value='1'>
+												<div class='aui-counter-plus' tapmode onclick='plus(this)'></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class='aui-swipe-right-btn aui-bg-danger' tapmode onclick='deleteShoppingCart(this.parentNode, "Y4565")'>
+									删除
+								</div>
+							</li>
+						</ul>
+					</div>
+				</li>-->
+			     
+	        </ul>	
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<!--<script type="text/javascript" src="../../script/aui1x2x1/aui_accordion.js"></script>-->
+	<!--<script type="text/javascript" src="../../script/aui1x2x1/aui_tap.js" ></script>-->
+	<script type="text/javascript" src="../../script/aui1x2x1/aui_list_swipe.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js"></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js" ></script>
+	<script type="text/javascript">	
+		//点击"去逛逛"
+		function toGoodsListWin(_name, _seq) {
+			var pageParam = {
+				name : _name,//"全部鞋款"
+				seq : _seq //0
+			}, bounces = false, reload = true;
+			//跳转"全部鞋款"页面
+			_openWin("all_goods_list_win", "../goods/list/all/all_goods_list_win.html", pageParam, bounces, reload);			 
+		}
+
+		//删除购物车
+		function deleteShoppingCart(obj, goodid) {
+			var shoppingCartSeq = parseInt($api.attr(obj, "data-seq"));
+			var url = window.myServerUrl + "order/app/shoppingCart/deleteShoppingCart?token=" + token + "&shoppingCartSeq=" + shoppingCartSeq;
+			console.log("url:" + url);
+			isAjaxing = true;
+			_ajax(url, "deleteShoppingCart", function(ret, err) {
+				if (ret) {
+					console.log("_ajax.deleteShoppingCart.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+//						cartList = $api.getStorage("cartListKey");
+						for (var i = 0; i < cartList.length; i++) {
+							if (shoppingCartSeq == cartList[i].seq) {
+								cartList.splice(i, 1);
+								$api.setStorage("cartListKey", cartList);
+								setTimeout(function() {
+									$api.remove(obj);
+//									alert("该货号还有"+$api.domAll(".li-"+goodid).length+"款");
+									if($api.domAll(".li-"+goodid).length == 0){
+										$api.remove($api.closest($api.byId("num-"+goodid), "li"));
+										if($api.domAll("li.aui-fold").length == 0){
+											hideAndTip();
+										}
+									}
+								}, 300);
+								_sendEvent("updateCartListEvent");
+								break;
+							}
+						}	
+					} else {
+						_toast("删除购物车失败！");
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			});
+		}
+	
+		//修改购物车 （数量、是否选中）
+		function changeShoppingCart(call, shoppingCartSeq, buyCount, totalPrice, isChecked) {
+			var url = window.myServerUrl + "order/app/shoppingCart/changeShoppingCart?token=" + token + "&shoppingCartSeq=" + shoppingCartSeq + "&buyCount=" + buyCount + "&totalPrice=" + totalPrice + "&isChecked=" + isChecked;
+			if(_isStringNull(buyCount)){
+				if(isChecked == 0){
+					console.log("取消选中购物车商品:" + url);
+				}else if(isChecked == 1){
+					console.log("选中购物车商品:" + url);
+				}
+			}else{
+				console.log("修改购物车商品数量:" + url);
+			}
+			isAjaxing = true;
+			_ajax(url, "changeShoppingCart", function(ret, err) {
+				if (ret) {
+					console.log("_ajax.changeShoppingCart.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						call();
+					} else {
+						_toast("修改购物车失败！");
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			});
+		}
+
+		//减
+		function minus(obj) {
+			var li = $api.closest(obj, "li");
+			var checkbox = $api.dom(li, "input.aui-radio");
+			if (!$api.hasCls(checkbox, "aui-checked")) {
+				selectItem($api.dom(li, "label"));
+			}
+			var count = parseInt($api.val($api.dom(li, ".count")));
+			if (count > 1) {
+				var price = parseFloat($api.attr(li, "data-price"));
+				var shoppingCartSeq = parseInt($api.attr(li, "data-seq"));
+				var buyCount = count - 1;
+				var totalPrice = buyCount * price;
+				var isChecked = 1;
+//				cartList = $api.getStorage("cartListKey");
+				changeShoppingCart(function() {
+					if (count == 2) {
+						if (!$api.hasCls(obj, "aui-disabled")) {
+							$api.addCls(obj, "aui-disabled");
+						}
+					}					
+					for (var i = 0; i < cartList.length; i++) {
+						if (shoppingCartSeq == cartList[i].seq) {
+							//							console.log("点击 '-'前, cartList:" + $api.jsonToStr(cartList));
+							cartList[i].buyCount = buyCount;
+							cartList[i].isChecked = isChecked;
+							//							console.log("点击 '-'后, cartList:" + $api.jsonToStr(cartList));
+							$api.setStorage("cartListKey", cartList);
+							_sendEvent("cartListUpdateEndEvent");
+							break;
+						}
+					}
+					$api.val($api.dom(li, ".count"), buyCount);
+				}, shoppingCartSeq, buyCount, totalPrice, isChecked);
+			}
+		}
+
+		//加
+		function plus(obj) {
+			var li = $api.closest(obj, "li");
+			var checkbox = $api.dom(li, "input.aui-radio");
+			if (!$api.hasCls(checkbox, "aui-checked")) {
+				selectItem($api.dom(li, "label"));
+			}
+			var count = parseInt($api.val($api.dom(li, ".count")));
+			var price = parseFloat($api.attr(li, "data-price"));
+			var shoppingCartSeq = parseInt($api.attr(li, "data-seq"));
+			var buyCount = count + 1;
+			var totalPrice = buyCount * price;
+			var isChecked = 1;
+//			cartList = $api.getStorage("cartListKey");
+			changeShoppingCart(function() {
+				var minus = $api.dom(li, "div.aui-counter-minus");
+				if ($api.hasCls(minus, "aui-disabled")) {
+					$api.removeCls(minus, "aui-disabled");
+				}				
+				for (var i = 0; i < cartList.length; i++) {
+					if (shoppingCartSeq == cartList[i].seq) {
+						//						console.log("点击 '+'前, cartList:" + $api.jsonToStr(cartList));
+						cartList[i].buyCount = buyCount;
+						cartList[i].isChecked = isChecked;
+						//						console.log("点击 '+'后, cartList:" + $api.jsonToStr(cartList));
+						$api.setStorage("cartListKey", cartList);
+						_sendEvent("cartListUpdateEndEvent");
+						break;
+					}
+				}
+				$api.val($api.dom(li, ".count"), buyCount);
+			}, shoppingCartSeq, buyCount, totalPrice, isChecked);
+		}
+
+		//选中,取消选中
+		function selectItem(obj) {
+			var li = $api.closest(obj, "li");
+			var shoppingCartSeq = parseInt($api.attr(li, "data-seq"));
+			var buyCount = "";
+			var totalPrice = "";
+			var isChecked = 1;
+			if ($api.hasCls($api.dom(obj, "input"), "aui-checked")) {
+				//取消选中
+				isChecked = 0;
+			} else {
+				//选中
+				isChecked = 1;
+			}
+//			cartList = $api.getStorage("cartListKey");
+			changeShoppingCart(function() {
+				for (var i = 0; i < cartList.length; i++) {
+					if (shoppingCartSeq == cartList[i].seq) {
+						if ($api.hasCls($api.dom(obj, "input"), "aui-checked")) {
+							//取消选中
+							$api.removeCls($api.dom(obj, "input"), "aui-checked");
+						} else {
+							//选中
+							$api.addCls($api.dom(obj, "input"), "aui-checked");
+						}
+						//						console.log("cartList:" + $api.jsonToStr(cartList));
+						cartList[i].isChecked = isChecked;
+						//						console.log("cartList:" + $api.jsonToStr(cartList));
+						$api.setStorage("cartListKey", cartList);
+						_sendEvent("cartListUpdateEndEvent");
+						isAllChecked();
+						break;
+					}
+				}						
+			}, shoppingCartSeq, buyCount, totalPrice, isChecked);
+		}
+
+		//判断所有li下面的checkbox是否都选中
+		function isAllChecked() {
+			var allInputs = $api.domAll(".item-checkbox");
+			//页面中所有input(type为checkbox)
+			//			console.log("页面中所有input(type为checkbox), 长度为----------->" + allInputs.length);
+			var checkedLength = 0;
+			//页面中所有拥有class="aui-checked"的input的个数
+			for (var i = 0; i < allInputs.length; i++) {
+				if ($api.hasCls(allInputs[i], "aui-checked")) {
+					checkedLength++;
+				}
+			}
+			//			console.log("共" + allInputs.length + "个 , 已选----------------------->" + checkedLength + "个");
+			if (checkedLength == allInputs.length) {//选中win中的checkbox
+				//指定window执行脚本
+				_execScript("", "", "isSelect(1);");
+			} else {
+				_execScript("", "", "isSelect(2);");
+			}
+		}
+
+		//是否选中所有li下面的checkbox
+		function isSelectAll(flag) {
+			var allInputs = $api.domAll("input[type='checkbox']");
+			//页面中所有input(type为checkbox)
+			if (flag == 2) {//选中所有li下面的checkbox
+				console.log("全选");
+				//全选
+				for (var i = 0; i < allInputs.length; i++) {
+					if (!$api.hasCls(allInputs[i], "aui-checked")) {
+						$api.addCls(allInputs[i], "aui-checked");
+					}
+				}
+			} else if (flag == 1) {
+				//取消全选
+				console.log("取消全选");
+				for (var i = 0; i < allInputs.length; i++) {
+					if ($api.hasCls(allInputs[i], "aui-checked")) {
+						$api.removeCls(allInputs[i], "aui-checked");
+					}
+				}
+			}
+		}
+
+		//提示消息
+		function showMsg(el) {
+			if (!el.classList.contains("aui-swipe-selected")) {
+				api.alert({
+					title : '提示消息',
+					msg : '正常点击操作'
+				});
+			}
+		}
+
+		function initUi() {
+			if (!_isArrayNull(cartList)) {			
+				var goodIdArr = [];//该订单商品的货号集合(元素不重复)
+				for(var j = 0; j < cartList.length; j++){
+					goodIdArr.push(cartList[j].goodId);
+				}
+				goodIdArr = _unique(goodIdArr);
+				
+				var newCartList = new Array();
+				console.log("goodIdArr----->"+$api.jsonToStr(goodIdArr));
+				for(var k = 0; k < goodIdArr.length; k++){
+					var _obj  = new Object();
+					var cartArr  = new Array();
+					var buyCountTotal = 0;
+					for(var m = 0; m < cartList.length; m++){
+						if(goodIdArr[k] == cartList[m].goodId){
+//							if(_isStringNull(_obj.img)){
+//								_obj.img = cartList[m].img;
+//							}
+							if(cartList[m].isChecked == 1){
+								buyCountTotal += parseInt(cartList[m].buyCount);							
+							}
+							cartArr.push(cartList[m]);
+							_obj.cartArr = cartArr;
+						}
+					}
+					_obj.buyCountTotal = buyCountTotal;
+					_obj.goodId = goodIdArr[k];
+					newCartList.push(_obj);
+				}					
+				console.log("购物车数据,封装后:"+$api.jsonToStr(newCartList));
+				
+				var htmlStr = "";
+				for (var i = 0; i < newCartList.length; i++) {	
+					
+					htmlStr += "<li class='aui-list-view-cell aui-fold'>";
+            		htmlStr += "<div class='aui-arrow-right aui-collapse-header' tapmode>";
+            		htmlStr += 		"<div class='flex-wrap'>";
+            		htmlStr += 			"<span class='flex-2'>货号："+newCartList[i].goodId+"</span><span class='flex-1'>数量：<span id='num-"+newCartList[i].goodId+"'>"+newCartList[i].buyCountTotal+"</span></span>";
+            		htmlStr += 		"</div>";
+            		htmlStr += "</div>";
+					htmlStr += "\n";
+					htmlStr += "<div class='aui-fold-content  aui-collapse-content'>";
+					htmlStr += "<ul class='aui-list-view'>";
+					
+					for(var j = 0; j < newCartList[i].cartArr.length; j++){							
+						htmlStr += "<li class='aui-list-view-cell aui-img aui-counter-list li-"+newCartList[i].goodId+"' data-seq='" + newCartList[i].cartArr[j].seq + "' data-price='" + newCartList[i].cartArr[j].purchasePrice + "'>";
+						htmlStr += "<div class='aui-swipe-handle'>";
+						htmlStr += "<label tapmode onclick='selectItem(this)'>";
+						if (newCartList[i].cartArr[j].isChecked == 1) {
+							htmlStr += "<input class='aui-pull-left aui-radio aui-checked item-checkbox' type='checkbox' name='radio1' disabled='disabled'>";
+						} else {
+							htmlStr += "<input class='aui-pull-left aui-radio item-checkbox' type='checkbox' name='radio1' disabled='disabled'>";
+						}
+						htmlStr += "</label>";
+						htmlStr += "<img class='aui-img-object aui-pull-left' src='../../image/load_small_img.png' data-src='" + newCartList[i].cartArr[j].img + "'>";
+						htmlStr += "<div class='aui-img-body'>";
+						htmlStr += "<span class='goods-name'>" + newCartList[i].cartArr[j].goodName + "</span>";
+						htmlStr += "<div class='box-wrap goods-attribute'>";
+						if(!_isStringNull(newCartList[i].cartArr[j].remark)){
+							htmlStr += "<span class='color'>颜色：" + newCartList[i].cartArr[j].colorName + "</span><span class='size aui-padded-0-15'>尺码：<span class='aui-font-size-16'>" + newCartList[i].cartArr[j].size + "</span>&nbsp;(" + newCartList[i].cartArr[j].remark + ")</span>";
+						}else{
+							htmlStr += "<span class='color'>颜色：" + newCartList[i].cartArr[j].colorName + "</span><span class='size aui-padded-0-15'>尺码：<span class='aui-font-size-16'>" + newCartList[i].cartArr[j].size + "</span></span>";
+						}
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-counter-box'>";
+						htmlStr += "<div class='unitPrice aui-pull-left aui-text-danger'>";
+						htmlStr += "¥" + newCartList[i].cartArr[j].purchasePrice + "元";
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-counter aui-pull-right'>";
+						if (newCartList[i].cartArr[j].buyCount == 1) {
+							htmlStr += "<div class='aui-counter-minus aui-disabled' tapmode onclick='minus(this)'></div>";
+						} else {
+							htmlStr += "<div class='aui-counter-minus' tapmode onclick='minus(this)'></div>";
+						}
+						htmlStr += "<input class='aui-counter-input count' readonly='' type='number' value='" + newCartList[i].cartArr[j].buyCount + "'>";
+						htmlStr += "<div class='aui-counter-plus' tapmode onclick='plus(this)'></div>";
+						htmlStr += "</div>";
+						htmlStr += "</div>";
+						htmlStr += "</div>";
+						htmlStr += "</div>";
+						htmlStr += "<div class='aui-swipe-right-btn aui-bg-danger' tapmode onclick='deleteShoppingCart(this.parentNode, \""+newCartList[i].goodId+"\")'>删除</div>";
+						htmlStr += "</li>";
+					}
+					htmlStr += "</ul>";
+					htmlStr += "</div>";
+	        		htmlStr += "</li>";				
+				}
+//				console.log("htmlStr:" + htmlStr);
+				$api.html($api.dom(".cart-list"), htmlStr);	
+									
+				collapse = new auiCollapse({
+			        autoHide : true //是否自动隐藏已经展开的容器
+			    });		
+				api.parseTapmode();
+				
+				new auiLazyload({
+					errorImage : "../../image/error_small_img.png"
+				});
+				
+				setTimeout(function() {
+					api.refreshHeaderLoadDone();
+					if ($api.hasCls($api.dom(".aui-content"), "aui-hide")) {
+						$api.removeCls($api.dom(".aui-content"), "aui-hide");
+					}
+				}, window.refreshLoadDoneTimeOut);
+			} else {
+				hideAndTip();
+			}
+		}
+		
+		//隐藏内容, 并显示"购物车为空"的提示
+		function hideAndTip(){
+			if (!$api.hasCls($api.dom(".aui-content"), "aui-hide")) {
+				$api.addCls($api.dom(".aui-content"), "aui-hide");
+			}
+			if ($api.hasCls($api.dom(".no-data"), "aui-hide")) {
+				$api.removeCls($api.dom(".no-data"), "aui-hide");
+			}
+		}
+		
+		function initData() {
+			token = $api.getStorage("tokenKey");
+			swipe = new ListSwipe();
+			cartList = $api.getStorage("cartListKey");
+		}
+
+		var token;
+		var swipe;
+		var cartList;
+		var collapse;
+		apiready = function() {
+			api.parseTapmode();
+//			_sendEvent("updateCartListEvent");//发送广播, 执行请求:获取购物车列表,并放入缓存
+			initData();
+			initUi();			
+											
+//			api.setRefreshHeaderInfo({
+//				loadingImg : 'widget://image/loading_more.gif',
+//				bgColor : 'rgba(255,255,255,0)',
+//				textColor : '#212121',
+//				textDown : '下拉刷新...',
+//				textUp : '松开刷新...'
+//			}, function(ret, err) {
+//				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+//				_sendEvent("updateCartListEvent");//发送广播, 执行请求:获取购物车列表,并放入缓存
+//				initData();
+//				initUi();
+//			});
+			
+			//"更新购物车数量"事件监听
+			_addEventListener("cartListUpdateEndEvent", function(ret) {
+				cartList = $api.getStorage("cartListKey");
+				console.log("cartListKey:"+$api.jsonToStr(cartList));
+				var cartNumList = getCartNumList(cartList);
+//				console.log("获取购物车数量(list集合),封装后:"+$api.jsonToStr(cartNumList));
+				for(var i = 0; i < cartNumList.length; i++){
+					$api.text($api.byId(cartNumList[i].numClassName), cartNumList[i].buyCountTotal);
+				}
+			});
+		}
+		
+		//获取购物车数量(list集合)		
+		function getCartNumList(cartList){
+			var cartNumList = new Array();				
+			var goodIdArr = [];//该订单商品的货号集合(元素不重复)			
+			for(var j = 0; j < cartList.length; j++){
+				goodIdArr.push(cartList[j].goodId);
+			}
+			goodIdArr = _unique(goodIdArr);
+//			console.log("goodIdArr----->"+$api.jsonToStr(goodIdArr));
+			
+			for(var k = 0; k < goodIdArr.length; k++){
+				var _obj  = new Object();
+				var buyCountTotal = 0;
+				for(var m = 0; m < cartList.length; m++){
+					if(goodIdArr[k] == cartList[m].goodId){
+						if(cartList[m].isChecked == 1){
+							buyCountTotal += parseInt(cartList[m].buyCount);							
+						}
+					}
+				}
+				_obj.numClassName = "num-"+goodIdArr[k];
+				_obj.buyCountTotal = buyCountTotal;
+				cartNumList.push(_obj);
+			}								
+			return cartNumList;
+		}
+	</script>
+</html>

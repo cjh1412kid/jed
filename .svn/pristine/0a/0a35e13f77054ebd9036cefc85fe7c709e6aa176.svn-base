@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>订货数量分配</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/ordermetting/order_allot_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-pull-right aui-btn"></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16" tapmode onclick="openSearchWin();">货品分配</div>
+    </header>
+    <div class="allotSpe allot_flex">
+        <div>门店</div>
+        <div>数量/双</div>
+    </div>
+    <ul class="allotContent flex-con">
+    </ul>
+    <!-- </div> -->
+    <div class="bottom box-wrap box-horizontal-center box-vertical-center">
+        <div class="btn-confirm" tapmode onclick="distributeSievePlate()">分配</div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<!-- 引入 echarts.js -->
+<script type="text/javascript" src="../../script/common/echarts_min.js"></script>
+<script type="text/javascript">
+    /**
+     *货品分配
+     */
+    function distributeSievePlate() {
+        var url = window.myServerUrl + "order/app/sievePlate/distributeSievePlate"
+        console.log("货品分配-->url:" + url);
+        var method = 'post';
+        var shoplist = [];
+        var doms = $api.domAll('.allotNor');
+        if (doms) {
+            for (var i = 0; i < doms.length; i++) {
+                if (_isStringNull($api.val($api.dom(doms[i], 'input')))) {
+                    continue;
+                }
+                var obj = {
+                    shopSeq: $api.attr(doms[i], 'data-seq'),
+                    num: $api.val($api.dom(doms[i], 'input'))
+                }
+                shoplist.push(obj)
+            }
+        }
+        if (_isArrayNull(shoplist)) {
+            _toast("请先填写分配数量！");
+            return;
+        }
+        var data = {
+            values: {
+                goodId: api.pageParam.goodsId,
+                shopDistributeNum: shoplist,
+            }
+        }
+        console.log("货品分配-->data:" + $api.jsonToStr(data));
+        _ajax(url, 'distributeSievePlate', function(ret, err) {
+            if (ret) {
+                console.log("货品分配-->ret:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    _execScript('category_detail_win', '', 'getDatas();');
+                    _toast(ret.msg, 1000, "bottom", function() {
+                        api.closeWin();
+                    });
+                } else if (ret.code == 500) {
+                    _toast(ret.msg);
+                };
+            } else {
+                console.log("货品分配-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+
+            }
+        }, method, data)
+    }
+
+    function initUI() {
+        var htmlStr = "";
+        for (var i = 0; i < allShops.length; i++) {
+            htmlStr += "  <li class='allotNor aui-border-b allot_flex' data-seq=" + allShops[i].seq + ">";
+            htmlStr += "<span class='aui-border-r'>" + allShops[i].name + "</span>";
+            var data = null;
+            for (var j = 0; j < datas.length; j++) {
+                if (allShops[i].seq == datas[j].shopSeq) {
+                    data = datas[j];
+                    break;
+                }
+            }
+            if (!_isObjectNull(data)) {
+                htmlStr += "<input type='number' class='number' value=" + data.distributeNum + ">";
+            } else {
+                htmlStr += "<input type='number' class='number'>";
+            }
+            htmlStr += "</li>";
+        }
+        $api.html($api.dom('.allotContent'), htmlStr);
+    }
+
+    function getDatas(call) {
+        datas = [];
+        var url = window.myServerUrl + "/order/app/sievePlate/sievePlateDistributedDetail"
+        url += '?goodId=' + api.pageParam.goodsId;
+        console.log("获取订货会订货数量分配列表数据-->url:" + url);
+        _ajax(url, "sievePlateList", function(ret, err) {
+            var order_list = [];
+            if (ret) {
+                console.log("获取订货会订货数量分配列表数据-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    datas = ret.result;
+                    //list数组
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("获取订货会订货数量分配列表数据-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            call();
+        })
+    }
+
+    var allShops = [];
+    var datas = [];
+    var apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        allShops = $api.getStorage("allShopsKey");
+        //console.log(api.pageParam.goodsId)
+        getDatas(function() {
+            initUI();
+        })
+    }
+</script>
+
+</html>

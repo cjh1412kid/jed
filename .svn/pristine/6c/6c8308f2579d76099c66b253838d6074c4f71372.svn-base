@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+                    
+<mapper namespace="io.nuite.modules.system.dao.SystemUserTokenDao">
+
+	<select id="queryByToken" resultType="io.nuite.modules.system.entity.SystemUserTokenEntity">
+		select * from [JedOther].[dbo].YHSR_Other_UserToken where token = #{token}
+	</select>
+	           
+	<select id="selectBySeq" resultType="io.nuite.modules.system.entity.SystemUserTokenEntity">
+        select * from [JedOther].[dbo].YHSR_Other_UserToken where userSeq = #{userSeq}
+    </select>
+    
+    <update id="updateBySeq" parameterType="io.nuite.modules.system.entity.SystemUserTokenEntity">
+          update [JedOther].[dbo].YHSR_Other_UserToken set
+                token = #{tokenEntity.token},
+                expireTime = #{tokenEntity.expireTime},
+                updateTime = #{tokenEntity.updateTime}
+          where userSeq = #{tokenEntity.userSeq}
+    </update>
+</mapper>

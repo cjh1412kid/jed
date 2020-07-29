@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.ShoesDataDailyDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.ShoesDataDailyEntity" id="shoesDataDailyMap">
+        <result property="seq" column="Seq"/>
+        <result property="shopSeq" column="Shop_Seq"/>
+        <result property="shoesSeq" column="Shoes_Seq"/>
+        <result property="shoesId" column="ShoesId"/>
+        <result property="color" column="Color"/>
+        <result property="size" column="Size"/>
+        <result property="count" column="Count"/>
+        <result property="updateTime" column="UpdateTime"/>
+    </resultMap>
+
+
+</mapper>

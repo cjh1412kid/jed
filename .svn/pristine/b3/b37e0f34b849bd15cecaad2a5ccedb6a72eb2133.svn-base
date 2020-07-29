@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>登录页</title>
+	<!--AUI样式框架-->
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<!--通用样式-->
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<!--当前页面样式-->
+	<link rel="stylesheet" type="text/css" href="../../css/login/login_win.css" />
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+	<section class="content flex-con">
+		<div class="logo box-wrap box-vertical-center box-horizontal-center">  </div>
+		<ul class="aui-list aui-form-list aui-list-noborder">
+			<li class="aui-list-item">
+				<div class="aui-list-item-input">
+					<input id="accountName" type="text" placeholder="账号" onblur="_onblur(this)" onfocus="_onfocus(this)">
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-input">
+					<input id="password" type="password" placeholder="密码" onblur="_onblur(this)" onfocus="_onfocus(this)">
+				</div>
+				<div class="aui-list-item-label-icon aui-hide">
+					<i class="aui-iconfont aui-icon-display"></i>
+				</div>
+
+			</li>
+			<li class="aui-list-item "></li>
+		</ul>
+		<div class="login-btn aui-font-size-14" onclick="loginAction()">
+			登录
+		</div>
+	</section>
+	<!-- 阅读条款 -->
+	<div class="aui-font-size-12 aui-text-gray box-wrap box-vertical box-vertical-center box-horizontal-center aui-padded-15">
+		<div class="">
+			<img style="display: inline;" width="10" height="10" src="../../image/login/icon_selected.png" /> 我已阅读服务条款和隐私协议
+		</div>
+		<div class="copyright-container aui-padded-t-5 aui-hide">
+			云力科技温州有限公司 版权所有
+		</div>
+	</div>
+</body>
+<!--APICloud自带前端脚本-->
+<script type="text/javascript" src="../../script/api.js"></script>
+<!--通用脚本库-->
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript">
+	/*
+	 *获得焦点，更新输入框样式
+	 */
+	function _onfocus(_obj) {
+		if (!$api.hasCls($api.closest(_obj, "div.aui-list-item-inner"), "aui-border-selected")) {
+			$api.addCls($api.closest(_obj, "div.aui-list-item-inner"), "aui-border-selected");
+			$api.addCls($api.dom($api.closest(_obj, ".aui-list-item-inner"), ".aui-list-item-label-icon"), "aui-text-selected");
+
+		}
+	}
+
+	/*
+	 *失去焦点，更新输入框样式
+	 */
+	function _onblur(_obj) {
+		if ($api.hasCls($api.closest(_obj, "div.aui-list-item-inner"), "aui-border-selected")) {
+			$api.removeCls($api.closest(_obj, "div.aui-list-item-inner"), "aui-border-selected");
+			$api.removeCls($api.dom($api.closest(_obj, ".aui-list-item-inner"), ".aui-list-item-label-icon"), "aui-text-selected");
+		}
+	}
+
+	/*
+	 *弹出提示信息
+	 */
+	function __toast(code, message) {
+		if (code == 0) {
+			_toast("登陆成功", 3000, "bottom", function() {});
+		} else {
+			_toast(message, 3000, "bottom", function() {});
+		}
+	}
+
+	/*
+	 *显示进度提示
+	 */
+	function __showProgress() {
+		_showProgress("登录中...", "", true);
+	}
+
+	/*
+	 *隐藏进度提示
+	 */
+	function _hideProgress() {
+		api.hideProgress();
+	}
+
+	/*
+	 *登录动作
+	 */
+	function loginAction() {
+		var accountName = $api.trim($api.val($api.byId("accountName")));
+		var password = $api.trim($api.val($api.byId("password")));
+		if (_isStringNull(accountName)) {
+			_toast("帐号不能为空！", 3000, "bottom");
+			return;
+		}
+		if (_isStringNull(password)) {
+			_toast("密码不能为空！", 3000, "bottom");
+			return;
+		}
+		$api.setStorage("accountNameKey", accountName);
+		$api.setStorage("passwordKey", password);
+		_execScript("root", "", "loginAction('longin_win','" + api.pageParam.type + "');");
+	}
+
+	apiready = function() {
+		// 双击退出应用
+		_twoClickCloseApp();
+	};
+</script>
+
+</html>

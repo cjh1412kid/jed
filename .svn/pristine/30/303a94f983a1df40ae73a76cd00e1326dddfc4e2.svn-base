@@ -1,0 +1,63 @@
+.name-phone{
+	font-weight:601; 
+}
+.address{
+}
+.goods-images{
+	height:4.0rem; 	
+	overflow-x: scroll;
+}
+.goods-images img{
+	width:4.0rem; 		
+	height:4.0rem; 	
+	margin-right: 0.25rem;
+}
+.goods-count{
+	width: 4.0rem;
+	color: #999999;
+}
+.mark-name,.require-date-name{
+	width: 5.0rem!important;
+}
+.require-date-value{
+	margin-right:0.5rem;
+	min-width: 6.0rem;
+	font-size:0.7rem;
+	color: #ccc;
+}
+.require-date-value.active{
+	min-width: 4.0rem;
+}
+.mark-value{
+}
+.mark-value::-webkit-input-placeholder {
+	color: #ccc;
+}
+
+
+/*自定义radio,checkbox大小,位置*/
+.aui-radio,
+.aui-checkbox {  
+    width: 0.9rem;
+    height: 0.9rem;
+    position: relative;
+    margin-top: 0.15rem;
+}
+/* 自定义选中状态下radio,checkbox背景色 */
+.aui-radio:checked,
+.aui-radio.aui-checked,
+.aui-checkbox:checked,
+.aui-checkbox.aui-checked {
+    background-color: #bc9761;
+    border: solid 0px #bc9761;
+    text-align: center;
+    background-clip: padding-box;
+}
+/* 自定义禁用状态下radio,checkbox背景色 */
+.aui-radio:disabled,
+.aui-radio.aui-disabled,
+.aui-checkbox:disabled,
+.aui-checkbox.aui-disabled {
+    background-color: #FFFFFF;
+    border: solid 1px #dddddd;
+}

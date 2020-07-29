@@ -1,0 +1,72 @@
+function visitorAlert(path) {
+	var dialogBox = api.require('dialogBox');
+	dialogBox.alert({
+		texts : {
+			title : '友情提示',
+			content : "游客身份无法使用该功能，请联系相关人员获取帐号后再试。",
+			leftBtnTitle : '继续体验',
+			rightBtnTitle : '帐号登录'
+		},
+		styles : {
+			bg : '#fff',
+			corner : 5,
+			w : 300,
+			title : {
+				marginT : 10,
+				//									icon : 'widget://res/gou.png',
+				iconSize : 40,
+				titleSize : 16,
+				titleColor : '#212121'
+			},
+			content : {
+				marginT : 10,
+				marginB : 10,
+				color : '#212121',
+				size : 14
+			},
+			left : {
+				marginB : 0,
+				marginL : 0,
+				w : 150,
+				h : 45,
+				corner : 2,
+				bg : '#fff',
+				size : 16,
+				color : '#212121'
+			},
+			right : {
+				marginB : 0,
+				marginL : 0,
+				w : 150,
+				h : 45,
+				corner : 2,
+				bg : '#fff',
+				size : 16,
+				color : '#212121'
+			},
+			horizontalLine : {
+				color : 'rgba(221,221,221,1)', //（可选项）字符串类型；左右按钮上边横线的颜色，支持rgb、rgba、#；默认：'rgba(245,245,245,0)'
+				height : 1 //（可选项）数字类型；左右边按钮横线的高度；默认：0
+			},
+			verticalLine : {
+				color : 'rgba(221,221,221,1)', //（可选项）字符串类型；左右按钮中间竖线的颜色，支持rgb、rgba、#；默认：'rgba(245,245,245,0)'
+				width : 1 //（可选项）数字类型；左右边按钮竖线的高度；默认：0
+			}
+		},
+		tapClose : false
+	}, function(ret) {
+		dialogBox.close({
+			dialogName : 'alert'
+		});
+		if (ret.eventType == 'right') {
+			//帐号登录
+			_openWin("login_win", path + "login/login_win.html", {
+				type : "my_win"
+			});
+		} else {
+			//继续体验
+		}
+
+	});
+}
+

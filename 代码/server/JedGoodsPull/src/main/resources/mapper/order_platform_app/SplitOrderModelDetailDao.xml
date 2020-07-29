@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.SplitOrderModelDetailDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.SplitOrderModelDetailEntity" id="splitOrderModelDetailMap">
+        <result property="seq" column="Seq"/>
+        <result property="modelSeq" column="Model_Seq"/>
+        <result property="shoesBrand" column="ShoesBrand"/>
+        <result property="categorySeq" column="Category_Seq"/>
+        <result property="periodSeq" column="Period_Seq"/>
+        <result property="SX1" column="SX1"/>
+	    <result property="SX2" column="SX2"/>
+	    <result property="SX3" column="SX3"/>
+	    <result property="SX4" column="SX4"/>
+	    <result property="SX5" column="SX5"/>
+	    <result property="SX6" column="SX6"/>
+	    <result property="SX7" column="SX7"/>
+	    <result property="SX8" column="SX8"/>
+	    <result property="SX9" column="SX9"/>
+	    <result property="SX10" column="SX10"/>
+	    <result property="SX11" column="SX11"/>
+	    <result property="SX12" column="SX12"/>
+	    <result property="SX13" column="SX13"/>
+	    <result property="SX14" column="SX14"/>
+	    <result property="SX15" column="SX15"/>
+	    <result property="SX16" column="SX16"/>
+	    <result property="SX17" column="SX17"/>
+	    <result property="SX18" column="SX18"/>
+	    <result property="SX19" column="SX19"/>
+	    <result property="SX20" column="SX20"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+</mapper>

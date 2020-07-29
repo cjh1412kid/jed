@@ -1,0 +1,33 @@
+.grade_wrap {
+	padding: 0;
+	margin: 0;
+	height: 0.8rem;
+	font-family: arial;
+}
+.grade_wrap .title {
+	display: inline-block;
+	height: 0.8rem;
+	line-height: 0.8rem;
+//	vertical-align: 6px;
+//	padding: 0 10px 0 10px;
+	font-family: "微软雅黑";
+	font-size: 0.6rem;
+}
+/*星级评分图标*/
+.grade_wrap a{
+	display:inline-block;
+	width:0.8rem;
+	height:0.8rem;
+	cursor:pointer;
+	background:url("../../image/goods/detail/icon_star_n.png") no-repeat;
+	background-size:0.8rem 0.8rem;
+	background-position:0 0
+}
+.grade_wrap a.active {
+	display:inline-block;
+	width:0.8rem;
+	height:0.8rem;
+	background:url("../../image/goods/detail/icon_star_s.png") no-repeat;
+	background-size:0.8rem 0.8rem;
+	background-position:0 0
+}

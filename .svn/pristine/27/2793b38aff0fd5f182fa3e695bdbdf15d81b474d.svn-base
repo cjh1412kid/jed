@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>门店导购管理</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui_slide.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/shopping/shopping_guide_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-pull-right aui-btn " tapmode onclick="openRightPane();"><img src="../../image/icon_filter.png" /></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16" tapmode onclick="openSearchWin();">人员管理</div>
+    </header>
+    <div class="tittle _flex">
+        <span class="_flex1">导购姓名</span>
+        <span class="_flex1">职务</span>
+        <span class="_flex1">手机</span>
+    </div>
+    <ul class="content flex-con">
+            <!-- <li class="shopContent">
+              <div class="shopname _flex1">门店A</div>
+              <div class="list aui-border-t">
+                <div class="left _flex1">
+                    <span class="name">张三</span>
+                    <span class="mark _flex1">店长</span>
+                </div>
+                <div class="mid  _flex1">24</div>
+                <div class="right _flex1">18121580000</div>
+              </div>
+          </li> -->
+
+    </ul>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+    function openRightPane() {
+        api.openDrawerPane({
+            type: 'right'
+        });
+    }
+
+    function openDetailwin(_index, _i) {
+        var pageParam = shoppingData[_index].sales[_i]
+            // console.log($api.jsonToStr(pageParam));
+        _openWin('guider_detail_win', 'guider_detail_win.html', pageParam)
+    }
+
+    function getList(_obj, _index) {
+        var shoppingStr = "";
+        for (var j in _obj) {
+            console.log($api.jsonToStr(_obj[j]));
+            shoppingStr += "<div class='list aui-border-t' tapmode onclick='openDetailwin(" + _index + ',' + j + ")'>";
+            shoppingStr += "  <div class='left  _flex1'>";
+            shoppingStr += "  <span class='name'>" + _obj[j].name + "</span>";
+            shoppingStr += "  </div>";
+            shoppingStr += "  <div class='mid _flex1'>" + _obj[j].duty + "</div>";
+            shoppingStr += "  <div class='right _flex1'>" + _obj[j].tel + "</div>";
+            shoppingStr += "</div>";
+        }
+        return shoppingStr;
+    }
+
+    function getDatas() {
+        shoppingData = [];
+        shoppingStr = "";
+        var url = window.myServerUrl + "/order/app/sales/list";
+        url += "?shopSeq=" + pageParam.shopSeqList;
+        console.log("获取门店导购接口数据-->url:" + url);
+        _ajax(url, "shopping_guide_win", function(ret, err) {
+            if (ret) {
+                console.log("获取门店导购接口数据-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    shoppingData = ret.result;
+                    for (var i in shoppingData) {
+                        shoppingStr += "<li class='shopContent'>";
+                        shoppingStr += "  <div class='shopname _flex1'>" + shoppingData[i].shopName + "</div>";
+                        if (_isArrayNull(shoppingData[i].sales)) {
+                            shoppingStr += "  <div class='_flex1 aui-border-t text-spe'>";
+                            shoppingStr += "  <img src='../../image/shopping-group.png' alt=''/>";
+                            shoppingStr += "  </div>";
+                        } else {
+                            shoppingStr += getList(shoppingData[i].sales, i);
+                        }
+                        shoppingStr += "</li>";
+                    }
+                    $api.html($api.dom('.content'), shoppingStr);
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("获取门店导购接口数据-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+        });
+    }
+
+
+    //  collapse = new auiCollapse({
+    //     autoHide: false, //是否自动隐藏已经展开的容器
+    // });
+    function initData() {
+        pageParam = api.pageParam
+    }
+    var shoppingStr = "";
+    var shoppingData;
+    var pageParam;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        initData();
+        getDatas();
+        _addEventListener("query_filter_changed_event", function(ret) {
+            console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+            pageParam = ret.value;
+            getDatas();
+        });
+    }
+</script>
+
+</html>

@@ -1,0 +1,6 @@
+.aui-pull-right{
+	color: #999999!important;
+}
+.aui-pull-right.active{
+	color: #666666!important;
+}

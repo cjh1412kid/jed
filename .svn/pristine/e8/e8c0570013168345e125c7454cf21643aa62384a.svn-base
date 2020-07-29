@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>推荐门店</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/common.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/goods/shop_recommend.css" />
+	<style>
+	</style>
+</head>
+
+<body>
+	<div class="shWrap">
+	 <ul class="shContent">
+	   <li class="shRec sh_flex1">推荐门店</li>
+	   <li class="shSize">
+	     <div class="shSizetittle sh_flex">
+	       <span>电话</span>
+	       <span>及</span>
+	       <span>尺码库存</span>
+	     </div>
+	     <div class="shSizes">
+	       <span>36</span>
+	       <span>37</span>
+	       <span>38</span>
+	       <span>39</span>
+	       <span>40</span>
+	       <span>41</span>
+	       <span>42</span>
+	       <span>43</span>
+	     </div>
+	   </li>
+	   <li class="shops">
+	     <div class="shRectittle sh_flex">
+	       <div></div>
+         <img src="" alt="">
+         <span>A店</span>
+	     </div>
+	     <div class="shInv sh_flex">
+         <span>10</span>
+        <span>22</span>
+        <span>33</span>
+        <span>23</span>
+        <span>12</span>
+        <span>23</span>
+        <span>23</span>
+        <span>34</span>
+	     </div>
+	   </li>
+     <li class="shops">
+       <div class="shRectittle sh_flex">
+         <div></div>
+         <img src="" alt="">
+         <span>A店</span>
+       </div>
+       <div class="shInv sh_flex">
+         <span>10</span>
+        <span>22</span>
+        <span>33</span>
+        <span>23</span>
+        <span>12</span>
+        <span>23</span>
+        <span>23</span>
+        <span>34</span>
+       </div>
+     </li>
+     <li class="shops">
+	     <div class="shRectittle sh_flex">
+	       <div></div>
+         <img src="" alt="">
+         <span>A店</span>
+	     </div>
+	     <div class="shInv sh_flex">
+         <span>10</span>
+        <span>22</span>
+        <span>33</span>
+        <span>23</span>
+        <span>12</span>
+        <span>23</span>
+        <span>23</span>
+        <span>34</span>
+	     </div>
+	   </li>
+     <li class="shops">
+	     <div class="shRectittle sh_flex">
+	       <div></div>
+         <img src="" alt="">
+         <span>A店</span>
+	     </div>
+	     <div class="shInv sh_flex">
+         <span>10</span>
+        <span>22</span>
+        <span>33</span>
+        <span>23</span>
+        <span>12</span>
+        <span>23</span>
+        <span>23</span>
+        <span>34</span>
+	     </div>
+	   </li>
+	   <li class="sh_flex1">确定</li>
+	 </ul>
+	</div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+
+</script>
+
+</html>

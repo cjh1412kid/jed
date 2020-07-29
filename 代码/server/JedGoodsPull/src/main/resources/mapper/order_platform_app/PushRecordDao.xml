@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.PushRecordDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.PushRecordEntity" id="pushRecordMap">
+        <result property="seq" column="Seq"/>
+        <result property="pushUserSeq" column="PushUserSeq"/>
+        <result property="receiveUserSeq" column="ReceiveUserSeq"/>
+        <result property="accountName" column="AccountName"/>
+        <result property="type" column="Type"/>
+        <result property="orderSeq" column="OrderSeq"/>
+        <result property="content" column="Content"/>
+        <result property="isRead" column="IsRead"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+	
+
+</mapper>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>系统更新日志</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet" href="../../css/main.css">
+
+  <script src="../../libs/jquery.min.js"></script>
+  <script src="../../libs/bootstrap.min.js"></script>
+  <script src="../../libs/vue.min.js"></script>
+  <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../plugins/daterangepicker/moment.js"></script>
+  <script src="../../plugins/daterangepicker/daterangepicker.js"></script>
+  <script src="../../js/common.js"></script>
+
+</head>
+<body>
+<div id="rrapp" v-cloak>
+  <div v-show="showList">
+    <div class="grid-btn">
+      <a class="btn btn-primary" style="margin-left: 10px;" @click="add">
+        <i class="fa fa-plus"></i>&nbsp;新增
+      </a>
+      <a class="btn btn-danger" @click="delRows">
+        <i class="fa fa-trash-o"></i>&nbsp;删除选中
+      </a>
+    </div>
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+  </div>
+
+  <div v-show="!showList" class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{panelTitle}}</h3>
+    </div>
+    <div class="panel-body">
+      <div class="form-horizontal container-fluid" style="min-width: 888px">
+        <div class="form-group">
+          <label for="logInputTime" class="col-md-2 control-label">时间 </label>
+          <div class="col-md-10 date_picker_icon">
+            <input type="text" class="form-control" id="logInputTime" placeholder="请选择时间" v-model.trim="logInputTime"
+                   readonly>
+            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-2 control-label">描述 </label>
+          <div class="col-md-10">
+            <textarea class="form-control" id="content" rows="15" style="resize:none" placeholder="请输入日志描述"
+                      v-model.trim="logContent"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-2 control-label"></label>
+          <div class="col-md-10">
+            <span>字数统计(不超过600字)：{{wordCount}}</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-2 col-sm-offset-2">
+            <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+          </div>
+          <div class="col-sm-2 col-sm-offset-2">
+            <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+</body>
+
+<script src="../../js/modules/system/system_log.js"></script>
+</html>

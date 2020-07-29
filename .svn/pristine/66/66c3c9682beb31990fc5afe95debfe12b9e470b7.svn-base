@@ -1,0 +1,87 @@
+.flex-wrap.flex-vertical {
+    position: relative;
+}
+
+.aui-iconfont {
+    font-weight: bold!important;
+}
+
+.allot_flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.aui-iconfont {
+    font-weight: bold!important;
+}
+
+.allotContent {
+    width: 100%;
+    height: 22.25rem;
+    overflow-y: scroll;
+    background-color: white;
+}
+
+.allotSpe {
+    width: 100%;
+    height: 1.58rem;
+    background: rgba(255, 247, 242, 1);
+    font-size: 0.6rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(155, 155, 155, 1);
+}
+
+.allotSpe div {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.allotNor {
+    width: 100%;
+    height: 1.58rem;
+    float: left;
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(74, 74, 74, 1);
+}
+
+.allotNor span {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.allotNor input {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    padding-left: 22%;
+}
+
+.bottom {
+  height: 1.8rem;
+  margin: 1.0rem;
+}
+
+.btn-confirm {
+    width: 9.8rem;
+    height: 1.77rem;
+    background: linear-gradient(270deg, rgba(255, 167, 0, 1) 0%, rgba(255, 114, 0, 1) 100%);
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

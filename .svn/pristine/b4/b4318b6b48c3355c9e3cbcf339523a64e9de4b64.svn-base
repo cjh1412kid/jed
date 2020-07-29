@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>Hello APP</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/aui1x2x1/aui_iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui_slide.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/goods/detail/goods_detail_3_frm.css" />
+		<style>
+		</style>
+	</head>
+	<body class="aui-hide">
+		<section class="aui-content">
+			<ul class="aui-list aui-media-list aui-list-noborder">
+				<!--<li class="aui-list-item">
+				<div class="aui-media-list-item-inner">
+				<div class="aui-list-item-media">
+				<img src="../../../image/message/demo2.png"/>
+				</div>
+				<div class="aui-list-item-inner">
+				<div class="aui-list-item-text">
+				<div class="aui-list-item-title" style="color:#4c5276">
+				AUI
+				</div>
+				</div>
+				<div class="aui-list-item-text" style="color:#333;">
+				中国拥有世界顶级航天芯片产品：俄罗斯造不出来了只能求中国分享
+				</div>
+				<div class="aui-info aui-font-size-12 aui-padded-t-0 aui-padded-b-0">
+				<div class="aui-info-item">
+				1小时前
+				</div>
+				<div class="aui-info-item  aui-hide">
+				<i class="aui-iconfont aui-icon-comment"  style="color:#4c5276"></i>
+				</div>
+				</div>
+				</div>
+				</div>
+				</li>-->
+			</ul>
+		</section>
+		<div class="footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			到底了<i class="aui-iconfont aui-icon-activity aui-font-size-12"></i>
+		</div>
+		<div class="footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			暂无数据
+		</div>
+		<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			加载更多<i class="aui-iconfont aui-icon-more aui-font-size-12"></i>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../../script/aui2x1/aui_lazyload.js" ></script>
+	<script type="text/javascript">
+		function getHtmlStr(_datas) {
+			var htmlStr = "";
+			for (var i = 0; i < _datas.length; i++) {
+				htmlStr += '<li class="aui-list-item"><div class="aui-media-list-item-inner">';
+				htmlStr += '<div class="aui-list-item-media"><img src="../../../image/noavatar.gif" data-src="' + _datas[i].headImg + '"/></div>';
+				htmlStr += '<div class="aui-list-item-inner">';
+				htmlStr += '<div class="aui-list-item-text"><div class="aui-list-item-title" style="color:#4c5276">' + _datas[i].userName + '</div></div>';
+				htmlStr += '<div class="aui-list-item-text" style="color:#333;">' + _datas[i].suggest + '</div>';
+				htmlStr += '<div class="aui-info aui-font-size-12" style="padding-top:0; padding-bottom:0">';
+				htmlStr += '<div class="aui-info-item">' + _getShortTimeByTimeStr(_datas[i].suggestTime) + '</div>';
+				htmlStr += '<div class="aui-info-item aui-hide"><i class="aui-iconfont aui-icon-comment"  style="color:#4c5276"></i>';
+				htmlStr += '</div></div></div></div></li>';
+			}
+			return htmlStr;
+		}
+
+		function initUi(_datas, type) {
+			switch(type) {
+				case "down":
+					var htmlStr = "";
+					if (_isArrayNull(_datas)) {
+						//第一页没数据，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						if (!$api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+							$api.addCls($api.dom(".footer-more"), "aui-hide");
+						}
+						if ($api.hasCls($api.dom(".footer-over"), "aui-hide")) {
+							$api.removeCls($api.dom(".footer-over"), "aui-hide");
+						}
+					} else {
+						htmlStr += getHtmlStr(_datas);
+					}
+//					console.log("htmlStr:" + htmlStr);
+					$api.html($api.dom("ul"), htmlStr);
+					if (_datas.length < num) {
+						//第一页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						if (!$api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+							$api.addCls($api.dom(".footer-more"), "aui-hide");
+						}
+						if ($api.hasCls($api.dom(".footer-over"), "aui-hide")) {
+							$api.removeCls($api.dom(".footer-over"), "aui-hide");
+						}
+					}
+					break;
+				case "up":
+					if (_isArrayNull(_datas)) {
+						//当前页没数据了，则将isAjaxing置为true，防止继续上滑频繁请求服务器
+						isAjaxing = true;
+						if (!$api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+							$api.addCls($api.dom(".footer-more"), "aui-hide");
+						}
+						if ($api.hasCls($api.dom(".footer-over"), "aui-hide")) {
+							$api.removeCls($api.dom(".footer-over"), "aui-hide");
+						}
+					} else {
+						var htmlStr = getHtmlStr(_datas);
+						console.log("htmlStr:" + htmlStr);
+						$api.append($api.dom("ul"), htmlStr);
+						if (_datas.length < num) {
+							//新获取页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+							isAjaxing = true;
+							if (!$api.hasCls($api.dom(".footer-more"), "aui-hide")) {
+								$api.addCls($api.dom(".footer-more"), "aui-hide");
+							}
+							if ($api.hasCls($api.dom(".footer-over"), "aui-hide")) {
+								$api.removeCls($api.dom(".footer-over"), "aui-hide");
+							}
+						}
+					}
+					break;
+			}
+			new auiLazyload({
+				errorImage : "../../../image/noavatar.gif"
+			});
+			setTimeout(function() {
+				isAjaxing = false;
+				api.refreshHeaderLoadDone();
+				if ($api.hasCls($api.dom("body"), "aui-hide")) {
+					$api.removeCls($api.dom("body"), "aui-hide");
+				}
+				closeUILoading();
+				api.parseTapmode();
+			}, window.refreshLoadDoneTimeOut);
+		}
+
+		/**
+		 *请求服务器：商品数据展示中对该鞋子的评价页(分页显示)
+		 */
+		function getDatas(call) {
+			var url = window.myServerUrl + "order/app/goodsData/showEvaluateView?seq=" + seq + "&start=" + start + "&num=" + num + "&token=" + token;
+			console.log("展示该鞋子的评价:" + url);			
+			isAjaxing = true;
+			_ajax(url, "showEvaluateView", function(ret, err) {
+				var tempSuggestList = [];
+				if (ret) {
+					console.log("_ajax.showEvaluateView.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						tempSuggestList = ret.result;
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+				call(tempSuggestList);
+			});
+		}
+
+		function closeUILoading() {
+			UILoading.closeKeyFrame();
+		}
+
+		function openUILoading() {
+			UILoading.keyFrame({
+				rect : {
+					w : 102,
+					h : 102
+				},
+				styles : {
+					bg : 'rgba(0,0,0,0)',
+					corner : 5,
+					interval : 50,
+					frame : {
+						w : 102,
+						h : 102
+					}
+				},
+				//				content : [{
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}, {
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}],
+				mask : "rgba(255,0,0,0)"
+			}, function(ret) {
+				//								alert(JSON.stringify(ret));
+				console.log(12345);
+			});
+		}
+
+		//初始化数据
+		function initData() {
+			//商品序号
+			seq = api.pageParam.seq;
+			userInfo = $api.getStorage("userInfoKey");
+			token = $api.getStorage("tokenKey");
+			suggestList = [];
+			start = 1;
+			num = 15;
+			UILoading = api.require('UILoading');
+		}
+		function clickSuggestTab(){
+			if(isFirstAccess){
+				setTimeout(function(){
+					openUILoading();
+					getDatas(function(ret) {
+						suggestList = ret;
+						initUi(ret, "down");
+						isFirstAccess = false;
+					});
+				},150);			
+			}
+		}
+		var seq;
+		//商品序号
+		var userInfo;
+		var suggestList
+		var start;
+		var num;
+		var isAjaxing = false;
+		var UILoading;
+		var isFirstAccess = true;
+		apiready = function() {
+			api.parseTapmode();
+			initData();
+			api.setRefreshHeaderInfo({
+				loadingImg : 'widget://image/loading_more.gif',
+				bgColor : 'rgba(255,255,255,0)',
+				textColor : '#212121',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...'
+			}, function(ret, err) {
+				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+				start = 1;
+				suggestList = [];
+				getDatas(function(ret) {
+					suggestList = ret;
+					initUi(ret, "down");
+				});
+			});
+//			setTimeout(function(){
+//				openUILoading();
+//				getDatas(function(ret) {
+//					suggestList = ret;
+//					initUi(ret, "down");
+//				});
+//			},150);
+			
+			api.addEventListener({
+				name : 'scrolltobottom',
+				extra : {
+					threshold : 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+				}
+			}, function(ret, err) {
+				console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+				if (!isAjaxing) {
+					start += (num + 1);
+					getDatas(function(ret) {
+						suggestList = suggestList.concat(ret);
+						initUi(ret, "up");
+					});
+				}
+			});
+			_addEventListener("suggestListUpdateEndEvent", function(ret) {
+				console.log("suggestListUpdateEndEvent");
+				start = 1;
+				suggestList = [];
+				getDatas(function(ret) {
+					suggestList = ret;
+					initUi(ret, "down");
+				});
+				//				alert("pause");
+			});
+			_addEventListener("pause", function(ret) {
+				console.log("pause");
+				//				alert("pause");
+			});
+			_addEventListener("viewdisappear", function(ret) {
+			});
+		};
+	</script>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>扫码订</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/ordermetting/order_metting_frm.css" />
+	<style type="text/css">
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+	<div class="card flex-con flex-wrap flex-vertical aui-margin-10">
+		<div class="title aui-text-center aui-margin-10 aui-margin-t-15 aui-margin-b-15"></div>
+		<div class="content demo-box flex-con"></div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+
+<!-- 引入 echarts.js -->
+<script type="text/javascript" src="../../script/common/echarts_min.js"></script>
+<script type="text/javascript">
+	function getSeasonName(seq) {
+		for (var i = 0; i < selectedSeasonList.length; i++) {
+			if (selectedSeasonList[i].seq == seq) {
+				return selectedSeasonList[i].seasonName;
+			}
+		}
+	}
+
+	function initUI() {
+		$api.text($api.dom(".title"), pageParam.yearList + "年" + getSeasonName(pageParam.seasonSeqList) + "筛板排行");
+		var categorySeq = [];
+		if (!_isArrayNull(datalist)) {
+			var yDatas = [];
+			var xDatas = [];
+			var nameMaxLength = 0;
+			for (i in datalist) {
+				if (nameMaxLength < datalist[i].categoryName.length) {
+					nameMaxLength = datalist[i].categoryName.length;
+				}
+				yDatas.push(datalist[i].categoryName)
+				xDatas.push(datalist[i].num)
+				categorySeq.push(datalist[i].categorySeq)
+			}
+			console.log("categorySeq:" + $api.jsonToStr(categorySeq));
+			//动态设置高度H
+			$api.html($api.dom(".content"), "<div class='bar' style='height:" + ((yDatas.length * 20)+((yDatas.length-1) * 20)) + "px !important;'></div>");
+			// 基于准备好的dom，初始化echarts实例
+			myChart = echarts.init($api.dom(".bar"));
+			// 指定图表的配置项和数据
+			option = {
+				grid: {
+					show: false,
+					left: (12 * nameMaxLength) + 10,
+					right: 40,
+					bottom: 10,
+					top: 10,
+					containLabel: false,
+					backgroundColor: "#ffff00",
+				},
+				xAxis: {
+					type: 'value',
+					show: false,
+					position: "top",
+					boundaryGap: [0, 0.01],
+					splitLine: {
+						show: false
+					}
+				},
+				yAxis: {
+					type: 'category',
+					// name:"品类",
+					inverse: false,
+					boundaryGap: false,
+					splitNumber: 2,
+					minInterval: 10,
+					interval: 10,
+					silent: true,
+					axisLine: {
+						show: false,
+					},
+					axisTick: {
+						show: false,
+					},
+					splitLine: {
+						show: false,
+					},
+					splitArea: {
+						show: false,
+					},
+					data: yDatas
+				},
+				series: [{
+					name: '品类',
+					type: 'bar',
+					data: xDatas,
+					barWidth: 20,
+					label: {
+						normal: {
+							show: true,
+							position: 'right',
+							color: "#505050",
+							formatter: function(data) {
+								//                      console.log($api.jsonToStr(data));
+								return _getShortNum(data.value.toFixed(0)) + "个货号";
+							}
+						}
+					},
+					itemStyle: {
+						color: "#FF7B47",
+						barBorderRadius: [0, 5, 5, 0],
+					},
+					barCategoryGap: '10%',
+				}]
+			};
+			//柱状图点击事件
+			myChart.on('click', function(params) {
+				//console.log(params.seriesIndex);
+				// console.log(categorySeq[2])
+				var _pageParam = {
+					year: pageParam.yearList,
+					seasonSeq: pageParam.seasonSeqList,
+					categorySeq: categorySeq[params.dataIndex]
+				};
+				console.log("_pageParam:" + $api.jsonToStr(_pageParam));
+				// pageParam.seq = detail[params.dataIndex].areaSeq;
+				// //              type = detail[params.dataIndex].type;
+				// //              pageParam.type = type;
+				// pageParam.title = detail[params.dataIndex].areaName + "销售指标分析";
+				var bgColor = "rgba(0,0,0,0)";
+				var animation = {
+					type: "movein", //动画类型（详见动画类型常量）
+					subType: "from_right", //动画子类型（详见动画子类型常量）
+					duration: 0
+				};
+				_openWin("category_detail_win", "category_detail_win.html", _pageParam, bgColor, false, false, animation);
+			});
+			setTimeout(function() {
+				// 使用刚指定的配置项和数据显示图表。
+				myChart.setOption(option);
+			}, 300);
+		} else {
+			if (myChart) {
+				myChart.clear();
+			}
+		}
+	}
+
+	function getDatas(call) {
+		var url = window.myServerUrl + "/order/app/sievePlate/sievePlateList"
+		url += '?year=' + pageParam.yearList[0];
+		url += '&seasonSeq=' + pageParam.seasonSeqList[0];
+		console.log("获取订货会列表数据-->url:" + url);
+		_ajax(url, "sievePlateList", function(ret, err) {
+			datalist = [];
+			if (ret) {
+				console.log("获取订货会列表数据-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					datalist = ret.result;
+					//list数组
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("获取订货会列表数据-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			call();
+		})
+	}
+
+	function initData() {
+		pageParam = api.pageParam;
+		var thisYear = new Date().getFullYear();
+		yearList.push(thisYear - 1);
+		yearList.push(thisYear);
+		yearList.push(thisYear + 1);
+		selectedSeasonList = $api.getStorage('seasonListKey');
+		for (var i = 0; i < selectedSeasonList.length; i++) {
+			seasonSeqList.push(selectedSeasonList[i].seq);
+		}
+	}
+	var pageParam;
+	var datalist = [];
+	var yearList = [];
+	var seasonSeqList = [];
+	var selectedSeasonList = [];
+	var myChart;
+	// 指定图表的配置项和数据
+	var option;
+	var apiready = function() {
+		initData();
+		if (_isArrayNull(seasonSeqList)) {
+			_toast("未获取到季节数据！");
+			return;
+		}
+		getDatas(function() {
+			if (_isArrayNull(datalist)) {
+				pageParam.yearList = [yearList[yearList.length - 1]];
+				pageParam.seasonSeqList = [seasonSeqList[1]];
+				getDatas(function() {
+					if (_isArrayNull(datalist)) {
+						pageParam.yearList = [yearList[yearList.length - 1]];
+						pageParam.seasonSeqList = [seasonSeqList[2]];
+						getDatas(function() {
+							if (_isArrayNull(datalist)) {
+								pageParam.yearList = [yearList[yearList.length - 1]];
+								pageParam.seasonSeqList = [seasonSeqList[3]];
+								getDatas(function() {
+									if (_isArrayNull(datalist)) {
+										pageParam.yearList = [yearList[yearList.length - 2]];
+										pageParam.seasonSeqList = [seasonSeqList[0]];
+										getDatas(function() {
+											if (_isArrayNull(datalist)) {
+												pageParam.yearList = [yearList[yearList.length - 2]];
+												pageParam.seasonSeqList = [seasonSeqList[1]];
+												getDatas(function() {
+													if (_isArrayNull(datalist)) {
+														pageParam.yearList = [yearList[yearList.length - 2]];
+														pageParam.seasonSeqList = [seasonSeqList[2]];
+														getDatas(function() {
+															if (_isArrayNull(datalist)) {
+																pageParam.yearList = [yearList[yearList.length - 2]];
+																pageParam.seasonSeqList = [seasonSeqList[3]];
+																getDatas(function() {
+																	if (_isArrayNull(datalist)) {
+																		_sendEvent("query_filter_reseted_event", pageParam);
+																		initUI();
+																	} else {
+																		_sendEvent("query_filter_reseted_event", pageParam);
+																		initUI();
+																	}
+																});
+															} else {
+																_sendEvent("query_filter_reseted_event", pageParam);
+																initUI();
+															}
+														});
+													} else {
+														_sendEvent("query_filter_reseted_event", pageParam);
+														initUI();
+													}
+												});
+											} else {
+												_sendEvent("query_filter_reseted_event", pageParam);
+												initUI();
+											}
+										});
+									} else {
+										_sendEvent("query_filter_reseted_event", pageParam);
+										initUI();
+									}
+								});
+							} else {
+								_sendEvent("query_filter_reseted_event", pageParam);
+								initUI();
+							}
+						});
+					} else {
+						_sendEvent("query_filter_reseted_event", pageParam);
+						initUI();
+					}
+				});
+			} else {
+				_sendEvent("query_filter_reseted_event", pageParam);
+				initUI();
+			}
+		});
+		_addEventListener("query_filter_changed_event", function(ret) {
+			console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+			getDatas(function() {
+				initUI();
+			});
+		});
+	}
+</script>
+
+</html>

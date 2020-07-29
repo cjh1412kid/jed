@@ -1,0 +1,1243 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>订单详情</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/aui1x2x1/aui_iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+		<!--<link rel="stylesheet" type="text/css" href="http://www.kdniao.com/OutDemo/KDNWidget/KDNWidget.css" />-->
+		<link rel="stylesheet" type="text/css" href="../../../css/order/order_detail/order_detail_frm.css" />
+		<style type="text/css">
+		</style>
+	</head>
+<!-- aui-invisible -->
+	<body class="flex-vertical flex-wrap aui-invisible">
+		<!-- 订单信息 -->
+		<section class="order-info">
+			<ul class="aui-list aui-list-in aui-list-noborder aui-margin-t-5" style="margin-bottom: 0.05rem;">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner aui-font-size-14">
+						<div><span>订单编号：</span><span id="orderNum"></span></div>
+					</div>
+				</li>
+			</ul>
+			<!-- 订单商品列表(方案1)  -->
+			<ul id="goodsInfo" class="aui-list aui-collapse aui-border-b">
+				<!--<div class="aui-collapse-item">
+					<li class="goods-info-list aui-list-item aui-collapse-header" tapmode>
+						<div class="aui-list-item-inner flex-wrap">
+							<span class="flex-1"><img data-src="" src="../../../image/load_small_img.png" /></span>
+							<span class="flex-2">货号：YVC4564156 </span><span class="flex-1">数量：50 </span>
+							<div class="aui-list-item-right">
+								<i class="aui-iconfont aui-icon-unfold aui-collapse-arrow"></i>
+							</div>
+						</div>
+					</li>
+					<div class="aui-collapse-content aui-padded-0 aui-border-b">
+						<ul class="aui-list aui-media-list aui-list-noborder">
+							<li class="aui-list-item aui-list-item-middle aui-padded-0" tapmode onclick="toGoodsDetailWin(1)">
+								<div class="aui-media-list-item-inner">
+									<div class="aui-list-item-media wechat-avatar"><img data-src="" src="../../../image/load_small_img.png" /></div>
+									<div class="aui-list-item-inner aui-border-b">
+										<div class="aui-list-item-text"><div class="aui-list-item-title goods-title aui-text-left">2018秋季女鞋深空灰单鞋大码休闲棉质</div></div>
+										<div class="aui-list-item-text"><div class="aui-list-item-title goods-name">货号：YVC4564156</div></div>
+										<div class="aui-font-size-12 aui-padded-t-0 flex-wrap">
+											<div class="flex-6"><span class="attr-name">颜色：</span><span class="attr-value aui-font-size-12">红色</span></div>
+											<div class="flex-6"><span class="attr-name">尺码：</span><span class="attr-value">38</span><span class="attr-value aui-font-size-12">&nbsp;尺码偏大</span></div>
+										</div>
+										<div class="aui-font-size-12 aui-padded-t-0 flex-wrap">
+											<div class="flex-6"><span class="attr-name">数量：</span><span class="attr-value">100</span></div>
+											<div class="flex-6"><span class="attr-name">已发货量：</span><span data-order-products-seq="123" class="attr-value productsNum">50</span></div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>-->
+			</ul>
+	        <!-- 订单商品信息  -->
+			<div class="aui-card-list aui-padded-10 aui-margin-b-5" style="margin-top: 0.05rem;" tapmode onclick="">
+				<div class="box-wrap">
+					<table id="order-info" cellpadding="0" class="aui-text-black aui-font-size-14">
+						<tr>
+							<td class="aui-font-size-14">
+								<span id="paidText">已付：</span><span class="money-style-2">¥</span><span id="paid"></span>
+								<span id="orderPriceText" class="aui-margin-l-15">应付：</span><span class="money-style-2">¥</span><span id="orderPrice"></span>
+								<span class="aui-font-size-12">(共 </span><span class="aui-text-brown aui-font-size-14" id="goodsCount"></span><span class="aui-font-size-12"> 双)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span>状态：</span><span id="statusName"></span>
+								<span class="auto-receive aui-margin-l-15 aui-hide">自动收货：<span class="aui-font-size-12">剩余<span></span>
+								<span id="leftTime" class="aui-font-size-12"></span>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</section>
+
+		<!-- 用户信息 -->
+		<div class="user-info aui-card-list aui-margin-b-5">
+			<div class="aui-card-list-content-padded">
+				<div class="name-phone aui-margin-b-5 aui-margin-l-25">
+					<span class="aui-font-size-14 aui-margin-r-10" id="receiverName"></span>
+					<span class="aui-font-size-16" id="telephone"></span>
+				</div>
+				<div class="aui-font-size-12">
+					<i class="aui-iconfont aui-icon-location aui-margin-r-5"></i>
+					<span id="address"></span>
+				</div>
+			</div>
+		</div>
+
+		<!-- 订单时间, 留言 -->
+		<section class="order-time aui-padded-t-10 aui-padded-b-10 aui-bg-theme aui-margin-b-5">
+			<ul class="aui-list aui-list-in aui-list-noborder ">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner aui-font-size-14">
+						<div><span>下单时间：</span><span id="inputTime">2018/05/12 12:22:30</span></div>
+					</div>
+				</li>
+				<li class="aui-list-item paymentTime aui-hide">
+					<div class="aui-list-item-inner aui-font-size-14">
+						<div><span>付款时间：</span><span id="paymentTime"></span></div>
+					</div>
+				</li>
+				<li class="aui-list-item deliverTime aui-hide">
+					<div class="aui-list-item-inner aui-font-size-14">
+						<div><span>发货时间：</span><span id="deliverTime"></span></div>
+					</div>
+				</li>
+				<li class="aui-list-item receiveTime aui-hide">
+					<div class="aui-list-item-inner aui-font-size-14">
+						<div><span>收货时间：</span><span id="receiveTime"></span></div>
+					</div>
+				</li>
+				<!--<li class="aui-list-item">
+					<div class="aui-list-item-inner aui-font-size-14">
+						<div><span>要求到货：</span><span id="requireTime"></span></div>
+					</div>
+				</li>-->
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner aui-font-size-14">
+						<!--<div><span>留&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;言：</span><span id="suggestion"></span></div>-->
+						<table cellpadding="0" class="aui-text-left">
+							<tr>
+								<td style="vertical-align: baseline !important;"><span>留&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;言：</span></td>
+								<td><span id="suggestion"></span></td>
+							</tr>
+						</table>
+					</div>
+				</li>
+			</ul>
+		</section>
+		<div class="aui-content aui-margin-b-5 require-date">
+			<ul class="aui-list aui-form-list aui-list-noborder">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner aui-font-size-14">
+						<div class="aui-list-item-label require-date-name">
+							到货日期：
+						</div>
+						<div class="aui-list-item-input require-date-value box-wrap box-horizontal-center" id="requireTime" tapmode onclick="selectDate(this)">
+							—请选择—
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		<!-- 暂无物流 -->
+		<ul id="no-wlxq" class="aui-list aui-form-list aui-list-in aui-list-noborder aui-margin-b-5 aui-hide">
+			<li class="aui-list-item company-name">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label aui-font-size-14">
+						物流列表：暂无
+					</div>
+					<div class="aui-list-item-input aui-text-gray aui-font-size-14">
+						<input type="text" readonly="" value="暂无" class="aui-font-size-14">
+					</div>
+				</div>
+			</li>
+		</ul>
+
+		<!-- 物流列表(包括:"物流详情", "物流图片/物流跟踪") -->
+		<ul id="wl-info" class="aui-list aui-collapse aui-border aui-margin-b-5 aui-hide">
+			<!--<li class="aui-list-header flex-wrap aui-text-align-center"><span class="aui-font-size-14">物流列表</span></li>-->
+			<!-- 物流列表1 -->
+			<!--<div id="wl-list-1" class="aui-collapse-item aui-margin-t-1">
+				<li class="aui-list-item aui-collapse-header" tapmode>
+					<div class="aui-list-item-inner">
+						<span class="aui-font-size-14" style="color:#999; padding-right:0.5rem;">2018年06月10日 08时23分 </span>
+						<div class="aui-list-item-right">
+							<i class="aui-iconfont aui-icon-unfold aui-collapse-arrow"></i>
+						</div>
+					</div>
+				</li>
+				<div class="aui-collapse-content aui-padded-0 aui-border-b">
+					<div id="wlgz1" style="z-index:99; margin-top:-2.2rem;"></div>
+				</div>
+			</div>-->
+        </ul>
+
+		<!-- 上传物流信息 -->
+		<ul id="WL" class="aui-list aui-form-list aui-list-in aui-list-noborder aui-margin-b-5 aui-hide" style="z-index:100;">
+			<li class="aui-list-header flex-wrap aui-text-align-center"><span class="aui-font-size-14">上传物流信息&nbsp;</span>(图片和快递单勿同时上传)</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label aui-font-size-14">
+						运单号：
+					</div>
+					<div class="aui-list-item-input">
+						<input id="expressNo"  type="text" name="expressNo" placeholder="请扫描或填写运单号" class="aui-font-size-14">
+					</div>
+					<div class="aui-list-item-label-icon" tapmode onclick="openScanner()">
+                        <i class="aui-iconfont aui-icon-scan"></i>
+						<!--<img style="width: 2.4rem; height: 1.5rem;" tapmode onclick="openScanner()" src="../../../image/scan.png" />-->
+                    </div>
+				</div>
+			</li>
+			<li class="aui-list-item" tapmode onclick="openListDialogBox()">
+				<div class="aui-list-item-inner aui-list-item-arrow">
+					<div class="aui-list-item-label aui-font-size-14">
+						物流公司：
+					</div>
+					<div class="aui-list-item-input">
+						<!-- 属性name存放的是物流公司序号(主键) -->
+						<input id="expressCompany" type="text" name="-1" placeholder="—请选择—" readonly="" class="aui-font-size-14">
+					</div>
+				</div>
+			</li>
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label aui-font-size-14">
+						物流图片：
+					</div>
+					<div class="aui-list-item-input">
+						<input id="expressImg" type="text" name="expressImg" placeholder="请上传图片" readonly="" class="aui-font-size-14">
+					</div>
+					<div class="aui-list-item-label-icon" tapmode onclick="openActionShit(this,2)">
+                        <i class="aui-iconfont aui-icon-camera"></i>
+						<!--<img style="width: 2.4rem; height: 1.5rem;" tapmode onclick="openCamera()" src="../../../image/scan.png" />-->
+                    </div>
+				</div>
+			</li>
+			<div class="multiple-imgs">
+				<!--<div class="aui-padded-t-10 aui-padded-l-10 aui-padded-r-10">
+					<img class="express-img" data-url="../../../image/icon_header.png" src="../../../image/icon_header.png"/>
+				</div>-->
+			</div>
+		</ul>
+
+		<!-- 猜你喜欢 -->
+		<section id="cnxh" class="aui-grid aui-hide">
+			<div class="aui-text-center aui-padded-5">☛&nbsp;猜你喜欢&nbsp;☚</div>
+			<div class="aui-row">
+
+				<!--<div class='aui-col-xs-6 aui-bg-white aui-margin-b-4 aui-margin-l-4 aui-margin-r-2' tapmode onclick='toGoodsDetailWin(1)'>
+					<div class='contain'>
+				    	<div class='item'><div class='box'><img src='../../../image/icon_header.png' /></div></div>
+				    </div>
+					<div class='goods-title aui-padded-l-10 aui-padded-r-10 aui-text-left'>2018不爱干脆说更促使都集合备注上次和搞成缓存是</div>
+					<div class='attr-name aui-text-left aui-text-theme aui-padded-l-10'>
+						<span>￥</span><span class='aui-font-size-18'>223</span><span>.00</span>
+					</div>
+					<div class='goods-name aui-text-left aui-padded-l-10 aui-padded-b-5'>
+						<span>货号：</span><span>A54641635161</span>
+					</div>
+				</div>
+				<div class='aui-col-xs-6 aui-bg-white aui-margin-b-4 aui-margin-r-4 aui-margin-l-2' tapmode onclick='toGoodsDetailWin(1)'>
+					<div class='contain'>
+				    	<div class='item'><div class='box'><img src='../../../image/img_poster.png' /></div></div>
+				    </div>
+					<div class='goods-title aui-padded-l-10 aui-padded-r-10 aui-text-left'>2018不爱干脆说更促使都集合备注上次和搞成缓存是</div>
+					<div class='attr-name aui-text-left aui-text-theme aui-padded-l-10'>
+						<span>￥</span><span class='aui-font-size-18'>223</span><span>.00</span>
+					</div>
+					<div class='goods-name aui-text-left aui-padded-l-10 aui-padded-b-5'>
+						<span>货号：</span><span>A54641635161</span>
+					</div>
+				</div>-->
+
+			</div>
+		</section>
+
+		<!-- footer提示 -->
+		<div class="footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			到底了<i class="aui-iconfont aui-icon-activity aui-font-size-12"></i>
+		</div>
+		<div class="footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			暂无数据
+		</div>
+		<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			加载更多<i class="aui-iconfont aui-icon-more aui-font-size-12"></i>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../../script/api.js" ></script>
+	<script type="text/javascript" src="../../../script/common/common.js" ></script>
+	<script type="text/javascript" src="../../../script/common/my_common.js"></script>
+	<script type="text/javascript" src="../../../script/aui2x1/aui_collapse.js" ></script>
+	<script type="text/javascript" src="../../../script/order/upload_img.js" ></script>
+	<script type="text/javascript" src="../../../script/order/KDNWidget.js" ></script>
+	<script type="text/javascript" src="../../../script/aui2x1/aui_lazyload.js" ></script>
+	<script type="text/javascript">
+		//跳转商品详情页面, 参数:商品序号(主键)
+		function toGoodsDetailWin(_seq){
+			var pageParam = {
+				seq : _seq,
+				isSearch : 0
+			}
+			_openWin("goods_detail_win", "../../goods/detail/goods_detail_win.html", pageParam);
+		}
+
+		//跳转下单页("商家"再次预定)
+		function toFillOrderWin(){
+			console.log("该订单详情中商品信息:"+$api.jsonToStr(goodsOrderList));
+			var tempObj;
+			var _extraData = [];
+			if(!_isArrayNull(goodsOrderList)){
+				for(var i = 0; i < goodsOrderList.length; i++){
+					tempObj = {
+						shoesDataSeq : goodsOrderList[i].shoesDataSeq, //鞋子数据序号(表ShoesData)
+						buyCount : goodsOrderList[i].buyCount,//鞋子购买数量
+						totalPrice : totalPrice, //订单总价
+						img : goodsOrderList[i].img //鞋子图片
+					};
+					console.log("第"+(i+1)+"件商品:"+ $api.jsonToStr(tempObj));
+					_extraData.push(tempObj);
+				}
+			}
+			_openWin("fill_order_win", "../../order/fill_order_win.html", {
+				type : "order_detail",
+				extraData : _extraData
+			});
+		}
+
+		//选择到货日期
+		function selectDate(_obj) {
+//			console.log($api.trim($api.text(_obj)));
+			if($api.trim($api.text(_obj)) == "—请选择—" || $api.trim($api.text(_obj)) == ""){
+				var now = new Date();
+				var nowStr = now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate();
+				api.openPicker({
+					type : 'date',
+					date : nowStr,
+					title : "请选择到货日期"
+				}, function(ret, err) {
+					var year = ret.year;
+					var month = ret.month < 10? "0" + ret.month : ret.month;
+					var day = ret.day < 10? "0" + ret.day : ret.day;;
+					var requireDateStr = year + "年" + month + "月" + day + "日";//前台展示"要求到货日期":yyyy年MM月dd日
+					requireDate = year + "/" + month + "/" + day + " 00:00:00"; //参数"要求到货日期":yyyy/MM/dd 00:00:00
+					console.log("requireDateStr:" + requireDateStr);
+	//				console.log("requireDate:" + requireDate);
+					if (new Date(requireDate) > now) {
+						$api.text(_obj, requireDateStr);
+						if (!$api.hasCls(_obj, "active")) {
+							$api.addCls(_obj, "active");
+						}
+						_execScript("order_detail_win", "", "requireDateSelected('"+requireDate+"')");
+					} else {
+						_toast("所选日期必须大于当前日期，请重新选择。", 3000, "bottom");
+						$api.text(_obj, "—请选择—");
+						if ($api.hasCls(_obj, "active")) {
+							$api.removeCls(_obj, "active");
+						}
+					}
+				});
+			}
+		}
+
+		//打开二维码扫描器
+		function openScanner() {
+			FNScanner = api.require('FNScanner');
+			FNScanner.open({
+				autorotation : false, // 描述:可选项, 扫描页面是否自动旋转(横竖屏默认值：false)
+				encoding:1,
+			}, function(ret, err) {
+				if (ret) {
+					console.log(JSON.stringify(ret));
+					//1. eventType: 'cancel',   //字符串类型；扫码事件类型:show（模块显示）  cameraError（访问摄像头失败）   albumError（访问相册失败）  cancel（用户取消扫码）     selectImage（用户从系统相册选取二维码图片）    success（识别二维码/条码图片成功）   7.fail（扫码失败）
+					//2. imgPath: '',       //字符串类型；需要保存的二维码图片绝对路径（自定义路径）
+					//3. albumPath: '',     //字符串类型；需要保存的二维码图片绝对路径（相册路径）
+					//4. content: ''        //扫描的二维码/条形码信息
+					if(ret.eventType == "cameraError"){
+						_toast("访问摄像头失败", 3000, "bottom", function() {});
+					}else if(ret.eventType == "fail"){
+						_toast("扫码失败", 3000, "bottom", function() {});
+					}else if(ret.eventType == "success"){
+						$api.val($api.byId("expressNo"), ret.content);//显示扫描到的运单号(物流单号)
+					}
+				} else {
+					console.log(JSON.stringify(err));
+				}
+			});
+		}
+
+		/* 选择物流公司 */
+		function openListDialogBox(){
+			var eCompanyArr = new Array();
+			console.log("请选择物流公司~---->eCompanyDataList"+eCompanyDataList);
+			if(!_isArrayNull(eCompanyDataList)){
+				for(var i = 0; i < eCompanyDataList.length; i++){
+					var obj = new Object()
+					obj.text = eCompanyDataList[i].name;
+					eCompanyArr.push(obj);
+				}
+//				console.log($api.jsonToStr(eCompanyArr));
+				var dialogBox = api.require('dialogBox');
+				dialogBox.scene({
+					tapClose: true, //描述：（可选项）是否点击遮罩层关闭该对话框, 默认值：false
+				    rect: {
+				        w: 300,
+				        h: 240
+				    },
+				    texts: {
+				        title: '选择物流公司',
+				        okBtnTitle: ''
+				    },
+				    styles:{
+					    bg: '#fff',                        //（可选项）字符串类型；对话框整体背景颜色配置，支持#、rgb、rgba、img；默认：#fff
+					    corner: 8,                         //（可选项）数字类型；对话框背景圆角大小，本功能暂仅支持iOS平台；默认：2
+					    title:{                            //（可选项）JSON 对象；弹窗 title 样式配置，不传则不显示
+					        bg: '#cfa972',                    //（可选项）字符串类型；标题栏背景颜色配置，支持 #、rgb、rgba；默认：#aaa
+					        h: 44,                         //（可选项）数字类型；标题栏高度，默认：44
+					        size: 16,                       //（可选项）数字类型；标题字体大小；默认：14
+					        color: '#fff'                     //（可选项）字符串类型；标题字体颜色，支持#、rgb、rgba；默认：#000
+					    },
+					    cell: {                            //（可选项）JSON 对象；情景事件选项每一行的样式配置，与 optionDatas 搭配使用，若 optionDatas 不存在则此配置无效
+					        bg: '#fff',                    //（可选项）字符串类型；情景事件选项每一行的背景，支持rgb、rgba、#、img；默认：#fff
+					        h: 34,                         //（可选项）数字类型；情景事件选项每一行的高度；默认：48
+					        text: {
+					            interval:10,               //（可选项）数字类型；事件选项文本与左边图标的间距；默认：10
+					            size: 14,                  //（可选项）数字类型；事件选项文本字体大小；默认：14
+					            color: '#636363',          //（可选项）字符串类型；事件选项文本文字颜色，支持rgb、rgba、#；默认：#636363
+					            selectedColor: '#636363',  //（可选项）字符串类型；事件选项文本文字选中后颜色，支持rgb、rgba、#；默认：#636363
+					            align: 'center'              //（可选项）字符串类型；事件选项文本文字对齐方式，可为 left|center|right；默认：left
+					        },
+					        lineColor: '#eee'              //（可选项）字符串类型；分隔线的颜色，支持：rgb、rgba、#；默认：'#eee'
+					    },
+					    ok: {                              //（可选项）JSON 对象；底部确认按钮的样式配置，不传则不显示底部按钮
+					        h: 10,                         //（可选项）数字类型；底部按钮的高度；默认：20
+					        bg: '#fff',                    //（可选项）字符串类型；底部按钮的背景颜色，支持：rgb、rgba、#；默认：'#89a'
+					        titleColor: '#fff',            //（可选项）字符串类型；底部按钮 title 文字颜色，支持：rgb、rgba、#；默认：'#f00'
+					        titleSize: 0                  //（可选项）数字类型；底部按钮 title 文字大小；默认：14
+					    }
+					},
+				    optionDatas: eCompanyArr
+				}, function(ret, err) {
+				    if (ret) {
+//				        alert(JSON.stringify(ret));
+				    	//'eventType': 'ok',    //表示用户点击了确定按钮        cell：用户点击了 ell按钮
+    					//'eventType': 'cell', 'index':2  //表示用户点击了索引为2的选项(index从0开始)
+    					if(ret.eventType == "cell"){
+	    					eCompanyIndex = ret.index;
+	    					dialogBox.close({
+							    dialogName: 'scene'
+							});
+							$api.val($api.byId("expressCompany"), eCompanyDataList[eCompanyIndex].name);
+							$api.attr($api.byId("expressCompany"), "name", eCompanyDataList[eCompanyIndex].seq);
+    					}
+				    } else {
+				        console.log(JSON.stringify(err));
+				    }
+				});
+			}
+		}
+
+		/* 获取所有物流公司 */
+		function getAllECompany(){
+			var url = window.myServerUrl + "order/app/order/expressCompanyList?token="+token;
+			var currentAjaxTag = "getAllECompany";
+			var isRequesting = true;
+			console.log("获取所有物流公司:" + url);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				if (ret) {
+					console.log("ajax." + currentAjaxTag + ".ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						eCompanyDataList = ret.result;
+					} else {
+						_toast(ret.msg, 3000, "bottom", function() {
+						});
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "get");
+		}
+
+		/* 确认发货 */
+		function orderDeliverGoods(){
+			var url = window.myServerUrl + "order/app/order/orderDeliver";
+			var currentAjaxTag = "orderDeliverGoods";
+			var isRequesting = true;
+			console.log("ajaxData-----------------------"+$api.jsonToStr(ajaxData));
+			var productsNumArr = $api.getStorage("productsNumArrKey");
+			ajaxData.values.productsNumJsonArr = $api.jsonToStr(productsNumArr);
+			var method = 'post';
+			var timeout = 60;
+			console.log("确认发货:" + url);
+			console.log("ajax.data:" + $api.jsonToStr(ajaxData));
+			_myAlert("是否发货?", "否", "是", function() {
+					_ajax(url, currentAjaxTag, function(ret, err) {
+					isRequesting = false;
+					if (ret) {
+						console.log("ajax." + currentAjaxTag + ".ret:" + $api.jsonToStr(ret));
+						if (ret.code == 0) {
+							_sendEvent("orderStatusChangedEvent");
+							_toast(ret.msg, 1000, "bottom", function() {
+								$api.rmStorage("productsNumArrKey");
+								api.closeFrame({name:"fill_order_deliver_pop"});
+								api.closeWin({});
+							});
+						} else {
+							_toast(ret.msg, 3000, "bottom", function() {
+							});
+						}
+					} else {
+						_toast(window.ajaxErrorMessage);
+					}
+				}, method, ajaxData, timeout, "json");
+			})
+		}
+
+		//修改订单(商家)
+		function changeOrderGoods(orderPriceTotal){
+			var url = window.myServerUrl + "order/app/order/changeOrder";
+			var productsNumArr2 = $api.getStorage("productsNumArr2Key");
+			var data = {
+				values:{
+					token : token,
+					orderSeq : orderSeq,
+					orderProductBuyCountList : productsNumArr2,
+					orderPrice : orderPriceTotal
+				}
+			}
+			currentAjaxTag = "changeOrder";
+			isRequesting = true;
+			console.log("修改订单:" + url);
+			console.log("ajax.data:" + $api.jsonToStr(data));
+//			console.log("ajax.tag:" + currentAjaxTag);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				if (ret) {
+					console.log("_ajax.changeOrder.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+				    	_toast(ret.msg,1000,"bottom",function(){
+				    		$api.rmStorage("productsNumArr2Key");
+				    		_sendEvent("orderStatusChangedEvent");
+							api.closeFrame({name:"fill_order_change_pop"});
+							api.closeWin({});
+				    	});
+					}else{
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			}, "post", data);
+		}
+
+		var errWLInfo;
+		//是否已正确上传物流信息
+		function isFilledWL(){
+			var flag = false;//默认未填写
+			var expressCompanySeq = $api.attr($api.byId("expressCompany"), "name");//number
+			var expressNo = $api.val($api.byId("expressNo"));//String
+			console.log("物流单号expressNo-->"+expressNo+",  物流公司序号expressCompanySeq-->"+ parseInt(expressCompanySeq));
+			var imgFile = "";
+			if($api.dom(".express-img") != undefined){
+				imgFile = $api.attr($api.dom(".express-img"), "src"); //file对象
+				console.log("图片src为:"+imgFile);
+			}
+			//物流信息验证
+			if(_isStringNull(imgFile)){ //未上传图片
+				if(!_isStringNull(expressNo) && expressCompanySeq == -1){
+					errWLInfo = "请选择物流公司";
+					_toast(errWLInfo, 2000, "bottom", function() {});
+					return;
+				}else if(_isStringNull(expressNo) && expressCompanySeq != -1){
+					errWLInfo = "请扫一扫或填写运单号";
+					_toast(errWLInfo, 2000, "bottom", function() {});
+					return;
+				}else if(_isStringNull(expressNo) && expressCompanySeq == -1){
+					errWLInfo = "请先上传物流信息";
+					_toast(errWLInfo, 2000, "bottom", function() {});
+					return;
+				}else{
+					ajaxData = {
+						values : {
+							"token" : token,
+							"orderSeq" : orderSeq,
+							"expressCompanySeq": parseInt(expressCompanySeq),
+							"expressNo": expressNo
+						}
+					}
+					flag = true;
+				}
+
+			}else{//上传了图片
+				if(!_isStringNull(expressNo)){
+					errWLInfo = "图片和运单号不能同时上传";
+					$api.val($api.byId("expressNo"), "")
+					_toast(errWLInfo, 2000, "bottom", function() {});
+					return;
+				}else{
+					ajaxData = {
+						values : {
+							"token" : token,
+							"orderSeq" : orderSeq,
+						}, //以表单方式提交参数（JSON对象）, 如 {"field1": "value1", "field1": "value2"} (直接传JSON对像.)
+						files : {
+							"expressImg": imgFile
+						}
+					}
+					flag = true;
+				}
+			}
+			return flag;
+		}
+
+		//打开"发货清单"页面
+		function openProdectNumPop(){
+			if(isFilledWL()){//正确上传物流信息后, 才跳转页面
+				var rect = {
+					x : 0, //左上角x坐标
+					y : 0, //左上角y坐标
+					w : "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+					h : "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+					marginLeft : 0, //相对父 window 左外边距的距离
+					marginTop : 0, //相对父 window 上外边距的距离
+					marginBottom : 0, //相对父 window 下外边距的距离
+					marginRight : 0 //相对父 window 右外边距的距离
+				};
+				var animation = {
+					type : "movein", //动画类型（详见动画类型常量）
+					subType : "from_bottom", //动画子类型（详见动画子类型常量）
+					duration : 0
+				};
+				_openFrame("fill_order_deliver_pop", "../../order/order_detail/fill_order_deliver_pop.html", rect, {goodsOrderList : goodsOrderList, type : "deliverGoods"}, false, true, false, animation);
+			}else{
+				_toast(errWLInfo);
+			}
+		}
+
+		//打开"订货清单"页面
+		function openProdectNumPop2(){
+			var rect = {
+				x : 0, //左上角x坐标
+				y : 0, //左上角y坐标
+				w : "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+				h : "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+				marginLeft : 0, //相对父 window 左外边距的距离
+				marginTop : 0, //相对父 window 上外边距的距离
+				marginBottom : 0, //相对父 window 下外边距的距离
+				marginRight : 0 //相对父 window 右外边距的距离
+			};
+			var animation = {
+				type : "movein", //动画类型（详见动画类型常量）
+				subType : "from_bottom", //动画子类型（详见动画子类型常量）
+				duration : 0
+			};
+			_openFrame("fill_order_change_pop", "../../order/order_detail/fill_order_change_pop.html", rect, {goodsOrderList : goodsOrderList, type : "orderGoods"}, false, true, false, animation);
+		}
+
+		//是否显示"物流列表"
+		function isShowWL(flag){
+			if(flag){//显示物流信息(包括:"物流详情", "物流图片", "物流跟踪")
+				if($api.hasCls($api.byId("wl-info"), "aui-hide")){
+					$api.removeCls($api.byId("wl-info"), "aui-hide")
+				}
+			}else{//隐藏物流信息(包括:"物流详情", "物流图片", "物流跟踪")
+				if(!$api.hasCls($api.byId("wl-info"), "aui-hide")){
+					$api.addCls($api.byId("wl-info"), "aui-hide")
+				}
+			}
+		}
+
+		//根据订单"状态",显示或隐藏"物流列表"(0:待确认, 1:待审核/待支付, 2:待入库, 3:未/待发货, 4:部分发货, 5:已发货, 6:已到/收货, 7:已取消)
+		function showOrHidden(orderStatus){
+			switch(orderStatus){
+				case 0://待确认
+					isShowWL(false);//隐藏物流信息
+					break;
+				case 1://待支付
+					isShowWL(false);//隐藏物流信息
+					break;
+				case 2://待入库
+					if($api.hasCls($api.dom(".paymentTime"), "aui-hide")){ //显示付款时间
+						$api.removeCls($api.dom(".paymentTime"), "aui-hide");
+					}
+					isShowWL(false);//隐藏物流信息
+					break;
+				case 3://未发货
+					if((userInfo.attachType == 1 || userInfo.attachType == 4) && userInfo.saleType == 1){//厂家
+						if($api.hasCls($api.byId("WL"), "aui-hide")){//显示二维码扫描, 物流公司选择, 物流图片上传
+							$api.removeCls($api.byId("WL"), "aui-hide");
+						}
+					}
+					if($api.hasCls($api.dom(".paymentTime"), "aui-hide")){ //显示付款时间
+						$api.removeCls($api.dom(".paymentTime"), "aui-hide");
+					}
+					isShowWL(false);//隐藏物流信息
+					break;
+				case 4://部分发货
+					if((userInfo.attachType == 1 || userInfo.attachType == 4) && userInfo.saleType == 1){//厂家
+						if($api.hasCls($api.byId("WL"), "aui-hide")){//显示二维码扫描, 物流公司选择, 物流图片上传
+							$api.removeCls($api.byId("WL"), "aui-hide");
+						}
+					}
+					if($api.hasCls($api.dom(".paymentTime"), "aui-hide")){ //显示付款时间
+						$api.removeCls($api.dom(".paymentTime"), "aui-hide");
+					}
+					if($api.hasCls($api.dom(".deliverTime"), "aui-hide")){//显示发货时间
+						$api.removeCls($api.dom(".deliverTime"), "aui-hide");
+					}
+					isShowWL(true);//隐藏物流信息
+					break;
+				case 5://已发货
+					if($api.hasCls($api.dom(".paymentTime"), "aui-hide")){//显示付款时间
+						$api.removeCls($api.dom(".paymentTime"), "aui-hide");
+					}
+					if($api.hasCls($api.dom(".deliverTime"), "aui-hide")){//显示发货时间
+						$api.removeCls($api.dom(".deliverTime"), "aui-hide");
+					}
+					isShowWL(true);//显示"物流详情"
+					break;
+				case 6://已收货
+					if($api.hasCls($api.dom(".paymentTime"), "aui-hide")){//显示付款时间
+						$api.removeCls($api.dom(".paymentTime"), "aui-hide");
+					}
+					if($api.hasCls($api.dom(".deliverTime"), "aui-hide")){//显示发货时间
+						$api.removeCls($api.dom(".deliverTime"), "aui-hide");
+					}
+					if($api.hasCls($api.dom(".receiveTime"), "aui-hide")){//显示收货时间
+						$api.removeCls($api.dom(".receiveTime"), "aui-hide");
+					}
+					isShowWL(true);//显示"物流详情"
+					if(userInfo.saleType != 1){////显示"猜您喜欢"	(商家)
+						if($api.hasCls($api.byId("cnxh"), "aui-hide")){
+							$api.removeCls($api.byId("cnxh"), "aui-hide")
+						}
+					}
+					break;
+				case 7://已取消
+					isShowWL(false);//隐藏物流信息
+					break;
+			}
+		}
+
+		//根据"订单序号", 获取订单详情信息(只请求一次)
+		function getOrderDetail(){
+			var url = window.myServerUrl + "order/app/order/orderDetail?orderSeq="+orderSeq+"&token="+token;
+			var currentAjaxTag = "getOrderDetail";
+			var isRequesting = true;
+			console.log("获取订单详情, 参数:orderSeq:"+orderSeq+", url:" + url);
+//			console.log("ajax.Tag:" + currentAjaxTag);
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+				if (ret) {
+					console.log("ajax." + currentAjaxTag + ".ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						rederOrderDetail(ret.result);//渲染订单详情数据
+					} else {
+						setTimeout(function() {
+							api.refreshHeaderLoadDone();
+							closeUILoading();
+							_toast("获取订单详情失败！", 3000, "bottom", function() {
+							});
+						}, window.refreshLoadDoneTimeOut);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+			});
+		}
+
+		//渲染订单详情数据
+		function rederOrderDetail(data){
+			if(!_isArrayNull(data)){
+				var orderDetailData = data[0];
+				goodsOrderList = orderDetailData.orderProductsList; //数组(订单中商品数据)
+				//1.订单商品信息
+				if(!_isArrayNull(goodsOrderList)){
+					var goodIdArr = [];//该订单商品的货号集合(元素不重复)
+					for(var j = 0; j < goodsOrderList.length; j++){
+						goodIdArr.push(goodsOrderList[j].goodId);
+					}
+					goodIdArr = _unique(goodIdArr);
+
+					var orderProductsList = new Array();
+//					console.log("goodIdArr----->"+$api.jsonToStr(goodIdArr));
+					for(var k = 0; k < goodIdArr.length; k++){
+						var _obj  = new Object();
+						var goodsArr  = new Array();
+						var buyCountTotal = 0;
+						for(var m = 0; m < goodsOrderList.length; m++){
+							if(goodIdArr[k] == goodsOrderList[m].goodId){
+								if(_isStringNull(_obj.img)){
+									_obj.img = goodsOrderList[m].img;
+								}
+								buyCountTotal += goodsOrderList[m].buyCount;
+								goodsArr.push(goodsOrderList[m]);
+								_obj.buyCountTotal = buyCountTotal;
+								_obj.goodsArr = goodsArr;
+							}
+						}
+						_obj.goodId = goodIdArr[k];
+						orderProductsList.push(_obj);
+					}
+					console.log("订单商品数据,封装后:"+$api.jsonToStr(orderProductsList));
+					var goodsHTML = "";
+					for(var i = 0; i < orderProductsList.length; i++){
+						goodsCount += orderProductsList[i].buyCountTotal;//所有商品总数
+						goodsHTML += '<div class="aui-collapse-item">';
+						goodsHTML += 	'<li class="goods-info-list aui-list-item aui-collapse-header" tapmode>';
+						goodsHTML += 		'<div class="aui-list-item-inner flex-wrap">';
+						goodsHTML += 			'<span class="flex-1"><img data-src="' + orderProductsList[i].img + '" src="../../../image/load_small_img.png" /></span>';
+						goodsHTML += 			'<span class="flex-2">货号：'+ orderProductsList[i].goodId +'</span><span class="flex-1">数量：'+orderProductsList[i].buyCountTotal+'</span>';
+						goodsHTML += 			'<div class="aui-list-item-right">';
+						goodsHTML += 				'<i class="aui-iconfont aui-icon-unfold aui-collapse-arrow"></i>';
+						goodsHTML += 			'</div>';
+						goodsHTML += 		'</div>';
+						goodsHTML += 	'</li>';
+						goodsHTML += 	'\n';
+						goodsHTML += 	'<div class="aui-collapse-content aui-padded-0 aui-border-b">';
+						goodsHTML += 		'<ul class="aui-list aui-media-list aui-list-noborder">';
+						for(var j = 0; j < orderProductsList[i].goodsArr.length; j++){
+							categorySeqList.push(orderProductsList[i].goodsArr[j].categorySeq);//分类序号(重复)
+							goodsHTML += 		'<li class="aui-list-item aui-list-item-middle aui-padded-0" tapmode onclick="toGoodsDetailWin('+ orderProductsList[i].goodsArr[j].shoesSeq +')">';
+							goodsHTML += 			'<div class="aui-media-list-item-inner">';
+	//						console.log("第"+(i+1)+"张订单商品图片:"+orderProductsList[i].goodsArr[j].img);
+							goodsHTML += 				'<div class="aui-list-item-media wechat-avatar"><img data-src="' + orderProductsList[i].goodsArr[j].img + '" src="../../../image/load_small_img.png" /></div>';
+							if(j == orderProductsList[i].goodsArr.length - 1){
+								goodsHTML += 				'<div class="aui-list-item-inner">';
+							}else{
+								goodsHTML += 				'<div class="aui-list-item-inner aui-border-b">';
+							}
+							goodsHTML += 					'<div class="aui-list-item-text"><div class="aui-list-item-title goods-title aui-text-left">' + orderProductsList[i].goodsArr[j].introduce + '</div></div>';
+							goodsHTML += 					'<div class="aui-list-item-text"><div class="aui-list-item-title goods-name">货号：' + orderProductsList[i].goodsArr[j].goodId + '</div></div>';
+							goodsHTML += 					'<div class="aui-font-size-12 aui-padded-t-0 flex-wrap">';
+							goodsHTML += 						'<div class="flex-6"><span class="attr-name">颜色：</span><span class="attr-value aui-font-size-12">' + orderProductsList[i].goodsArr[j].colorName + '</span></div>';
+							goodsHTML += 						'<div class="flex-6"><span class="attr-name">尺码：</span><span class="attr-value">' + orderProductsList[i].goodsArr[j].size + '</span><span class="attr-value aui-font-size-12">&nbsp;' + orderProductsList[i].goodsArr[j].remark + '</span></div>';
+							goodsHTML += 					'</div>';
+							goodsHTML += 					'<div class="aui-font-size-12 aui-padded-t-0 flex-wrap">';
+							goodsHTML += 						'<div class="flex-6"><span class="attr-name">数量：</span><span class="attr-value">' + orderProductsList[i].goodsArr[j].buyCount + '</span></div>';
+							goodsHTML += 						'<div class="flex-6"><span class="attr-name">已发货量：</span><span data-order-products-seq="'+orderProductsList[i].goodsArr[j].orderProductsSeq+'" class="attr-value productsNum">' + orderProductsList[i].goodsArr[j].deliverNum + '</span></div>';
+							goodsHTML += 					'</div>';
+							goodsHTML += 				'</div>';
+							goodsHTML += 			'</div>';
+							goodsHTML += 		'</li>';
+						}
+						goodsHTML += 		'</ul>';
+						goodsHTML += 	'</div>';
+						goodsHTML += '</div>';
+					}
+//					console.log(goodsHTML);
+					$api.html($api.byId("goodsInfo"), goodsHTML);
+					collapse = new auiCollapse({
+						autoHide : true //是否自动隐藏已经展开的容器
+					});
+				}
+				//2.订单编号,价格,数量,状态信息
+				$api.text($api.byId("orderNum"), orderDetailData.orderNum);//订单号
+				var paidPrice = orderDetailData.paid.toFixed(2);
+				var paidPriceArr = paidPrice.split(".");
+				$api.html($api.byId("paid"), "<span class='money-style-1'>"+paidPriceArr[0]+"</span><span class='money-style-2'>."+paidPriceArr[1]+"</span>");//已付
+				totalPrice = orderDetailData.orderPrice.toFixed(2);
+				var totalPriceArr = totalPrice.split(".");
+				$api.html($api.byId("orderPrice"), "<span class='money-style-1'>"+totalPriceArr[0]+"</span><span class='money-style-2'>."+totalPriceArr[1]+"</span>");//应付
+				$api.text($api.byId("goodsCount"), goodsCount);
+				$api.text($api.byId("statusName"), orderDetailData.statusName);//状态(文本)
+				$api.addCls($api.byId("statusName"), getStatusColor(orderDetailData.orderStatus));//状态(颜色)
+				if(orderStatus == 5){//已发货
+					$api.removeCls($api.dom(".auto-receive"), "aui-hide");
+					_countDown(orderDetailData.receiveTime, "leftTime");//倒计时
+				}
+				//3.订单用户信息
+				$api.text($api.byId("receiverName"), orderDetailData.receiverName);//收货人
+				if((userInfo.attachType == 1 || userInfo.attachType == 4) && userInfo.saleType == 1){//工厂方
+					$api.text($api.byId("telephone"), orderDetailData.telephone);//手机号
+				}else{
+					$api.text($api.byId("telephone"), _hideCellphone(orderDetailData.telephone));//手机号
+				}
+				$api.text($api.byId("address"), orderDetailData.fullAddress);//收货地址
+				//4.订单时间, 备注
+				if(orderDetailData.requireTime != ""){
+					$api.text($api.byId("requireTime"), _getFormatedDate(orderDetailData.requireTime, "yyyy年MM月dd日"));//要求到货日期
+				}
+				$api.text($api.byId("suggestion"), orderDetailData.suggestion);//留言
+//				console.log("下单时间:"+orderDetailData.inputTime)	;
+				$api.text($api.byId("inputTime"), orderDetailData.inputTime);//下单时间
+//				console.log("付款时间:"+orderDetailData.paymentTime)
+				$api.text($api.byId("paymentTime"), orderDetailData.paymentTime);//付款时间
+//				console.log("发货时间:"+orderDetailData.deliverTime);
+				$api.text($api.byId("deliverTime"), orderDetailData.deliverTime);//发货时间
+//				console.log("收货时间:"+orderDetailData.receiveTime);
+				$api.text($api.byId("receiveTime"), orderDetailData.receiveTime);//收货时间
+
+				//5.订单物流列表
+				if(orderDetailData.orderExpressList == undefined){//暂无物流信息(还没发货)
+//					isShowWL(false);//隐藏物流信息(包括:"物流详情", "物流图片", "物流跟踪")
+				}else{//部分发货, 已发货,已收货
+//					isShowWL(true);//显示物流信息
+					var orderExpressList = orderDetailData.orderExpressList;
+//					console.log("物流列表数据:"+orderExpressList);
+					var wlInfoHTML = '<li class="wl-title aui-list-header flex-wrap aui-text-align-center"><span class="aui-font-size-14">物流列表</span></li>';
+					for(var j = 0; j < orderExpressList.length; j++){
+						//***********************************
+						var inputTime = orderExpressList[j].inputTime;//物流生成时间
+						var expressNo = orderExpressList[j].expressNo;//物流单号
+						var expressCode = orderExpressList[j].expressCompanyCode; //物流公司代码(快递鸟)
+						var expressImg = orderExpressList[j].expressImg; //物流图片
+
+						if($api.trim(expressImg) == "" && $api.trim(expressNo) == "") { //物流图片和物流单号都没有值(没有物流信息)
+							continue;
+						}else{
+						  	wlInfoHTML += '<div id="wl-list-'+(j+1)+'" class="aui-collapse-item aui-margin-t-1">';
+			                wlInfoHTML += 	'<li class="aui-list-item aui-collapse-header" tapmode>';
+			                wlInfoHTML += 		'<div class="aui-list-item-inner">';
+			                wlInfoHTML += 			'<span class="aui-font-size-12" style="color:#999; padding-right:0.5rem;">'+_getFormatedDate(inputTime, "yyyy年MM月dd日  HH时mm分")+'</span>';
+			                wlInfoHTML += 			'<div class="aui-list-item-right">';
+			                wlInfoHTML += 				'<i class="aui-iconfont aui-icon-unfold aui-collapse-arrow"></i>';
+			                wlInfoHTML += 			'</div>';
+			                wlInfoHTML += 		'</div>';
+			                wlInfoHTML += 	'</li>';
+			                wlInfoHTML += 	'\n';
+			                wlInfoHTML += 	'<div class="aui-collapse-content aui-padded-0 aui-border-b">';
+
+							if($api.trim(expressImg) != "" && $api.trim(expressNo) == ""){//只有物流图片有值
+								console.log("显示物流图片--->path:"+expressImg);
+				               	wlInfoHTML += 		'<div class="aui-padded-l-10 aui-padded-r-10">';
+								wlInfoHTML += 			'<img data-src="'+expressImg+'" src="'+expressImg+'"/>';
+								wlInfoHTML += 		'</div>';
+							}
+							if( $api.trim(expressNo) != "" && $api.trim(expressImg) == ""){//只有物流单号有值
+								console.log("显示物流跟踪--->快递公司编码:"+expressCode+", 快递单号:"+expressNo);
+								wlgzArr.push(j);//所有物流跟踪信息的容器标识(数组元素为number下标)
+								wlInfoHTML += 		'<div id="wlgz'+(j+1)+'" style="z-index:99; margin-top:-2.2rem;"> </div>';
+							}
+							wlInfoHTML += 	'</div>';
+			            	wlInfoHTML += '</div>';
+						}
+						//***********************************
+					}
+//					console.log(wlInfoHTML)
+					$api.html($api.byId("wl-info"), wlInfoHTML);
+
+					collapse = new auiCollapse({
+						autoHide : true //是否自动隐藏已经展开的容器
+					});
+
+					//渲染后, 加载物流跟踪信息
+					for(var k = 0; k < orderExpressList.length; k++){
+						for(var index = 0; index < wlgzArr.length; index++){
+							if(k == wlgzArr[index]){//过滤掉"物流图片"
+								var container = "wlgz"+(k+1);
+			//					var _containerID = document.getElementById(container);
+			//					console.log("渲染跟踪信息------>容器:"+container+"run()之前，获取容器元素为:"+_containerID);
+								//调取第三方api, 获取物流跟踪信息
+								KDNWidget.run({
+									serviceType: "B", //服务类型(勿改!)
+									expCode: orderExpressList[k].expressCompanyCode, //快递公司:ZTO
+									expNo: orderExpressList[k].expressNo, //快递单号:479900564885
+									showType:"normal", //显示类型(勿改!)
+									container: container //"物流跟踪"div容器(勿改!)
+					         	});
+							}
+						}
+					}
+
+				}
+
+				//6.获取"猜你推荐"数据, 并渲染(只限商家,且订单状态为"已收货")
+				if(userInfo.saleType != 1 && orderStatus == 6){//商家,已收货
+					initYouLike();
+				}
+
+				//../../../image/error_small_img.png
+				new auiLazyload({
+					errorImage : "../../../image/error_img_middle.png"
+				});
+
+				setTimeout(function() {
+					api.refreshHeaderLoadDone();
+					api.parseTapmode();
+					if ($api.hasCls($api.dom("body"), "aui-invisible")) {
+						$api.removeCls($api.dom("body"), "aui-invisible");
+					}
+					closeUILoading();
+				}, window.refreshLoadDoneTimeOut);
+			}
+		}
+
+
+		//*********************************************************************************************************
+
+		function initUI(data, type) {
+			switch(type) {
+				case "init":
+					if (_isArrayNull(data)) {
+						//第一页没数据，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						showEmptyMsg();//显示"暂无数据"
+					} else {
+						var htmlStr = getYouLikeHTML(data);
+//						console.log(htmlStr);
+						$api.html($api.dom("div.aui-row"), htmlStr);
+
+						if (data.length < num) {
+							//第一页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+							isAjaxing = true;
+							showOverMsg();//显示"到底了"
+						}else{
+							//第一页数据等于每页总数，false，用户向上滑动就再次请求服务器获取后面页数的数据
+							isAjaxing = false;
+							showMoreMsg();//显示"加载更多"
+						}
+					}
+					break;
+				case "up":
+					if (_isArrayNull(data)) {
+						//当前页没数据了，则将isAjaxing置为true，防止继续上滑频繁请求服务器
+						isAjaxing = true;
+						showOverMsg();//显示"到底了"
+					} else {
+						var htmlStr = getYouLikeHTML(data);
+//						console.log(htmlStr);
+						$api.append($api.dom("div.aui-row"), htmlStr);
+
+						if (data.length < num) {
+							//新获取页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+							isAjaxing = true;
+							showOverMsg();//显示"到底了"
+						}else{
+							isAjaxing = false;
+							showMoreMsg();//显示"加载更多"
+						}
+					}
+					break;
+			}
+
+			new auiLazyload({
+				errorImage : "../../../image/error_img_middle.png"
+			});
+			setTimeout(function() {
+				api.refreshHeaderLoadDone();
+			}, window.refreshLoadDoneTimeOut);
+		}
+
+		function getYouLikeHTML(data){
+			var youLikeHTML = "";
+			if(!_isArrayNull(data)){
+				for(var i = 0; i < data.length; i++){
+					if((i+1)%2 != 0){ //奇数
+						youLikeHTML +=  "<div class='aui-col-xs-6 aui-bg-white aui-margin-b-4 aui-margin-l-4 aui-margin-r-2' tapmode onclick='toGoodsDetailWin("+ data[i].seq +")'>";
+					}else{//偶数
+						youLikeHTML +=  "<div class='aui-col-xs-6 aui-bg-white aui-margin-b-4 aui-margin-r-4 aui-margin-l-2' tapmode onclick='toGoodsDetailWin("+ data[i].seq +")'>";
+					}
+//					youLikeHTML +=	 		"<div class='img-container'><img src='../../../image/load_img_middle.png' data-src='"+ data[i].img +"' /></div>";
+					youLikeHTML += 			"<div class='contain'>";
+				    youLikeHTML += 				"<div class='item'><div class='box'><img src='../../../image/load_img_middle.png' data-src='"+ data[i].img +"' /></div></div>";
+				    youLikeHTML += 			"</div>";
+
+					youLikeHTML +=	 		"<div class='goods-title aui-padded-l-10 aui-padded-r-10 aui-text-left'>"+ data[i].introduce +"</div>";
+					youLikeHTML +=	 		"<div class='attr-name aui-text-left aui-text-theme aui-padded-l-10'>";
+					//采购价, 包括:1.oemPrice(贴牌商价格), 2.wholesalerPrice(批发商价格), 3.storePrice(直营店价格)
+					var priceParts = data[i].purchasePrice.toFixed(2).split(".");
+					youLikeHTML +=		 		"<span>￥</span><span class='aui-font-size-18'>"+ priceParts[0] +"</span><span>."+ priceParts[1] +"</span>";
+					youLikeHTML +=	 		"</div>";
+					youLikeHTML +=	 		"<div class='goods-name aui-text-left aui-padded-l-10 aui-padded-b-5'>";
+					youLikeHTML +=		 		"<span>货号：</span><span>"+ data[i].goodId +"</span>";
+					youLikeHTML +=	 		"</div>";
+					youLikeHTML += 		"</div>";
+				}
+			}
+//			console.log(youLikeHTML);
+			return youLikeHTML;
+		}
+
+		//获取"猜你喜欢"数据
+		function getYouLike(call) {
+			var url = window.myServerUrl + "order/app/shoesInfo/shoesList";//以"订单排行","降序"排列
+			console.log("'猜你喜欢'鞋子分类序号集合(重复)"+$api.jsonToStr(categorySeqList));
+			var arr = _unique(categorySeqList);
+			console.log("'猜你喜欢'鞋子分类序号集合(不重复)"+$api.jsonToStr(arr));
+			var data = {
+				values : {
+					categorySeqList : arr.toString(),
+					start : start,
+					num : num,
+					token : token,
+					orderBy : 2,
+					orderDir : 0
+				} //以表单方式提交参数（JSON对象）,
+			}
+			var currAjaxTag = "getYouLike";
+			var isRequesting = true;
+//			console.log("ajax.url:" + url);
+//			console.log("ajax.Tag:" + currAjaxTag);
+//			console.log("ajax.data:" + $api.jsonToStr(data));
+			_ajax(url, currAjaxTag, function(ret, err) {
+				isRequesting = false;
+				var tempYouLikeList = [];
+				if (ret) {
+					console.log("ajax."+currAjaxTag+".ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						tempYouLikeList = ret.result;
+						//list数组
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+				call(tempYouLikeList);
+			}, "get", data);
+		}
+
+		//根据鞋子分类,获取对应商品数据(猜你喜欢)
+		function initYouLike(){
+			start = 1;
+			youLikeDataList = [];
+			getYouLike(function(ret) {
+				initUI(ret, "init");
+			});
+		}
+
+
+		function initText(){
+			$api.text($api.byId("paidText"), showTextBy(userInfo.attachType, userInfo.saleType, "已")); // 已收/已付
+			$api.text($api.byId("orderPriceText"), showTextBy(userInfo.attachType, userInfo.saleType, "应"));// 应收/应付
+		}
+
+
+		function initOrderDeatil(){
+			initText(); //根据登录用户角色(厂家或商家), 初始化文本
+
+			showOrHidden(orderStatus); //根据订单"状态",显示或隐藏"物流列表"
+
+			getOrderDetail(); //获取订单详情,并渲染
+
+		}
+		function closeUILoading() {
+			UILoading.closeKeyFrame();
+		}
+
+		function openUILoading() {
+			UILoading.keyFrame({
+				rect : {
+					w : 102,
+					h : 102
+				},
+				styles : {
+					bg : 'rgba(0,0,0,0)',
+					corner : 5,
+					interval : 50,
+					frame : {
+						w : 102,
+						h : 102
+					}
+				},
+				//				content : [{
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}, {
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}],
+				mask : "rgba(255,0,0,0)"
+			}, function(ret) {
+				//								alert(JSON.stringify(ret));
+				console.log(12345);
+			});
+		}
+
+		function initData(){
+			// 引入多选模块
+			uiMediaScanner = api.require('UIMediaScanner');
+			// 引入过滤压缩模块
+			imageFilter = api.require("imageFilter");
+			// 引入图片裁剪模块
+			FNImageClip = api.require("FNImageClip");
+
+			footerHeight = api.pageParam.footerHeight;
+			userInfo = $api.getStorage("userInfoKey");
+			token = $api.getStorage("tokenKey");
+			orderSeq = api.pageParam.orderSeq;
+			orderStatus = api.pageParam.orderStatus;
+			start = 1, num = 10;
+			UILoading = api.require('UILoading');
+		}
+
+		var FNScanner; //条形码/二维码扫描器
+		var footerHeight; //win中的footer高度
+		var userInfo;//用户信息
+		var start, num;//分页起止条数
+		var token;//令牌
+		var orderSeq; //订单序号
+		var orderStatus;//订单状态
+		var expressCode; //物流公司编码
+		var	expressNo;//物流单号
+		var	expressImg;//物流图片
+		var totalPrice; //订单总价
+		var eCompanyDataList = new Array(); //物流公司
+		var categorySeqList = new Array(); //该订单中商品的分类序号(可能多个, 也可能序号相同)
+		var goodsOrderList = new Array();//订单中商品数据
+		var youLikeDataList = new Array();//"猜你喜欢"商品数据
+		var eCompanyIndex = -1; //所选物流公司index下标,默认:-1(对于eCompanyDataList数组)
+		var isAjaxing = false;
+		var FNImageClip,  uiMediaScanner = null, imageFilter = null;
+		var UILoading;
+		var goodsCount = 0;
+		var collapse;
+		var ajaxData;
+		var wlgzArr = new Array(); //所有物流跟踪信息容器标识(数组元素为number下标)
+		apiready = function() {
+			api.parseTapmode();
+
+			initData();
+
+			if((userInfo.attachType == 1 || userInfo.attachType == 4) && userInfo.saleType == 1){//工厂方
+				if(orderStatus == 3 || orderStatus == 4){//订单状态为:未发货, 部分发货
+					getAllECompany();//获取所有物流公司
+				}
+			}else{
+				if(orderStatus == 0){//订单状态为:待确认
+					if(!$api.hasCls($api.dom(".require-date"), "aui-hide")){
+						$api.addCls($api.dom(".require-date"), "aui-hide");//隐藏"到货日期"
+					}
+				}
+			}
+
+			setTimeout(function() {
+				openUILoading();
+				initOrderDeatil();
+			}, 150);
+
+			//上拉加载
+			api.addEventListener({
+				name : 'scrolltobottom',
+				extra : {
+					threshold : 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+				}
+			}, function(ret, err) {
+//				console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+				if(userInfo.saleType != 1 && orderStatus == 4){//订货方,订单状态为:已收货
+					if (!isAjaxing) {
+						start += num;
+						getYouLike(function(ret) {
+							youLikeDataList = youLikeDataList.concat(ret);
+							initUI(ret, "up");
+						});
+					}
+				}
+			});
+
+		}
+	</script>
+</html>

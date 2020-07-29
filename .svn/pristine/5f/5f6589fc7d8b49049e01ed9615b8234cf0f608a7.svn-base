@@ -1,0 +1,221 @@
+<!-- 品牌管理页面 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>订货会货品</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../../plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="../../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+  <link rel="stylesheet" href="../../../plugins/ztree/css/metroStyle/metroStyle.css">
+  <link rel="stylesheet" href="../../../css/main.css">
+
+  <script src="../../../libs/jquery.min.js"></script>
+  <script src="../../../libs/jquery.form.js"></script>
+  <script src="../../../plugins/layer/layer.js"></script>
+  <script src="../../../libs/bootstrap.min.js"></script>
+  <script src="../../../libs/vue.min.js"></script>
+  <script src="../../../plugins/jqgrid/grid.locale-cn.js"></script>
+  <script src="../../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+  <script src="../../../plugins/ztree/jquery.ztree.all.min.js"></script>
+  <script src="../../../plugins/daterangepicker/moment.min.js"></script>
+  <script src="../../../plugins/daterangepicker/daterangepicker.js"></script>
+  <script src="../../../js/common.js"></script>
+  <style>
+
+    .dropdown-menu a {
+      cursor: pointer;
+    }
+
+    .select-wrapper {
+      display: inline-block;
+      /*font-size: 16px;*/
+    }
+
+    .select-wrapper span {
+      color: #3c8dbc;
+    }
+
+    .select-wrapper select {
+      background-color: #eee;
+      width: 160px;
+      height: 30px;
+      margin-right: 20px;
+    }
+  </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+  <div v-show="showList">
+
+    <div class="form-group col-sm-8">
+      <div class="col-sm-4 select-wrapper">
+        <span>年份选择:</span>&nbsp;&nbsp;
+        <select v-model="year">
+          <option value="-1">所有年份</option>
+          <option v-for="item in yearList" :value="item">{{item}}</option>
+        </select>
+      </div>
+      <div class="col-sm-4 select-wrapper">
+        <span>季节选择:</span>&nbsp;&nbsp;
+        <select v-model="seasonSeq">
+          <option value="-1">所有季节</option>
+          <option v-for="item in seasonList" :value="item.seq">{{item.seasonName}}</option>
+        </select>
+      </div>
+
+      <div class="col-xs-1 control-label">分类选择</div>
+      <div class="col-xs-2">
+        <div class="dropdown">
+          <a role="button" data-toggle="dropdown" class="btn btn-default" style="width: 100%;">
+            {{selectCategoryName || '分类选择'}}<span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+            <li>
+              <a tabindex="-1" @click="categorySelect({seq:-1, name: '所有分类'})">所有分类 </a>
+            </li>
+            <li class="dropdown-submenu" v-for="item in categoryArray" v-if="item.parentSeq==0">
+              <a tabindex="-1" @click="categorySelect(item)">{{item.name}}</a>
+              <ul class="dropdown-menu">
+                <li class="dropdown-submenu" v-for="secondItem in categoryArray"
+                    v-if="secondItem.parentSeq==item.seq">
+                  <a tabindex="-1" @click="categorySelect(secondItem)">{{secondItem.name}}</a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a tabindex="-1" v-for="thirdItem in categoryArray"
+                         v-if="thirdItem.parentSeq==secondItem.seq"
+                         @click="categorySelect(thirdItem)">{{thirdItem.name}}</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group col-sm-4">
+      <div class="col-xs-3 control-label">货品名称</div>
+      <div class="col-xs-6">
+        <input type="text" class="form-control" placeholder="货品名称" v-model.trim="keywords">
+      </div>
+      <div class="col-xs-3control-label"><a class="btn btn-default" @click="search">搜索</a></div>
+    </div>
+
+
+    <div class="form-group">
+
+      <!-- 分类选择 -->
+      <div class="col-xs-12">
+        <div class="grid-btn">
+          <!--<a class="btn btn-primary" style="margin-left: 10px;" @click="addGoods"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
+          <form method="POST" v-if="hasPermission('sys:goods:import')" enctype="multipart/form-data"
+                id="goodsExcelForm" style="display:none">
+            <input id="goodsExcelFile" type="file" name="goodsExcelFile" @change="uploadGoodsExcel"
+                   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+          </form>
+          <a class="btn btn-primary" onclick="$('input[id=goodsExcelFile]').click(); ">货品导入</a>
+          <a style="cursor: pointer" @click="exportTemplate">下载导入模板</a>
+          <a class="btn btn-link" @click="exportQRCode">下载货品二维码</a>
+          <form id="exportExcelForm" method="POST" style="display: none">
+            <input type="hidden" name="token">
+            <input type="hidden" name="year">
+            <input type="hidden" name="seasonSeq">
+          </form>
+        </div>
+
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div v-show="!showList">
+
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">货号</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" placeholder="请输入货号" v-model.trim="edit.goodID">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">年份</label>
+        <div class="col-sm-10">
+          <div class="dropdown">
+            <a role="button" data-toggle="dropdown" class="btn btn-default" style="width: 100%;">
+              {{edit.year || '年份选择'}}
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+              <li v-for="item in years">
+                <a tabindex="-1" @click="chooseYear(item)">{{item}}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">季节</label>
+        <div class="col-sm-10">
+          <div class="dropdown">
+            <a role="button" data-toggle="dropdown" class="btn btn-default" style="width: 100%;">
+              {{edit.seasonName || '季节选择'}}
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+              <li v-for="(item,index) in seasons">
+                <a tabindex="-1" @click="chooseSeason(index)">{{item.seasonName}}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">风格</label>
+        <div class="col-sm-10">
+          <div class="dropdown">
+            <a role="button" data-toggle="dropdown" class="btn btn-default" style="width: 100%;">
+              {{edit.categoryName || '分类选择'}}<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+              <li class="dropdown-submenu" v-for="item in categoryArray" v-if="item.parentSeq==0">
+                <a tabindex="-1" @click="chooseCategory(item)">{{item.name}}</a>
+                <ul class="dropdown-menu">
+                  <li class="dropdown-submenu" v-for="secondItem in categoryArray"
+                      v-if="secondItem.parentSeq==item.seq">
+                    <a tabindex="-1" @click="chooseCategory(secondItem)">{{secondItem.name}}</a>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a tabindex="-1" v-for="thirdItem in categoryArray"
+                           v-if="thirdItem.parentSeq==secondItem.seq"
+                           @click="chooseCategory(thirdItem)">{{thirdItem.name}}</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-4">
+          <button class="btn btn-warning" @click="saveOrUpdate">保存</button>
+        </div>
+        <div class="col-sm-4">
+          <button class="btn btn-default" @click="toMain">返回</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../../js/modules/system/order_platform/meeting_manager.js"></script>
+</body>
+</html>

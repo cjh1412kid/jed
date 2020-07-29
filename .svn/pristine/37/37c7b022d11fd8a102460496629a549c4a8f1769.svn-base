@@ -1,0 +1,25 @@
+.aui-bar-nav .aui-title {
+	min-height: 2.25rem;
+	position: absolute;
+	margin: 0;
+	text-align: center;
+	white-space: nowrap;
+	right: 2.5rem;
+	left: 2.5rem;
+	width: auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	z-index: 2;
+}
+.aui-tab {
+	position: relative;
+    background-color: #ffffff;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: nowrap;
+            flex-wrap: nowrap;
+    -webkit-align-self: center;
+            align-self: center;
+    border-bottom: 0px solid rgba(80, 80, 80, 0.1);
+}

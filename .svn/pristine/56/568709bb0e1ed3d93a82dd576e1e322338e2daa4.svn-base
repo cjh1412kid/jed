@@ -1,0 +1,40 @@
+.sub-header{
+	background-color: #f5f5f5
+}
+.bottom-btns{
+	position: fixed;
+	bottom: 0;
+	height: 2.5rem;
+	background-color: #FFFFFF;
+	width: 100%;
+	color: #FFFFFF;
+	line-height:2.5rem;
+	text-align: center;
+}
+.aui-radio{
+	width: 0.6rem;
+	height: 0.6rem;
+	margin-top: 0.35rem;
+	margin-right: 0.05rem;
+}
+.bottom-btn:active{
+	opacity: 0.9;
+}
+.bottom-btn-xn,.bottom-btn-fk{
+}
+.bottom-btn-cart{
+	background-image: linear-gradient(
+		#ff877e,
+		#ff877e),
+	linear-gradient(
+		#ff877e,
+		#ff877e);
+	background-blend-mode: normal,
+		normal;
+}
+.bottom-btn-xn{
+	background-color: #cfa972;
+}
+.bottom-btn-fk{
+	background-color: #f08a58;
+}

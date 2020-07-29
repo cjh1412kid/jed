@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>销售分析</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui_slide.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/sale/sale_analysis_win.css"/>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <a class="aui-pull-right aui-btn" tapmode onclick="openDrawerPane();"><img src="../../image/icon_filter.png" /></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16">
+            <div class="aui-tab" id="tab">
+                <div class="aui-tab-item aui-active">
+                    销售分析
+                </div>
+                <div class="aui-tab-item">
+                    店铺总销量
+                </div>
+            </div>
+        </div>
+    </header>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript">
+    function openDrawerPane() {
+        api.openDrawerPane({
+            type: 'right'
+        });
+    }
+    var tab = new auiTab({
+        element: document.getElementById("tab"),
+    }, function(ret) {
+        api.setFrameGroupIndex({
+            name: 'sale_analysis_group',
+            index: ret.index - 1
+        });
+        pageParam.subFlag = ret.index;
+    });
+    var pageParam ;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        pageParam= api.pageParam;
+        var headerPos = $api.offset(header);
+        var rect = {
+            x: 0,
+            y: 0,
+            w: 'auto',
+            h: 'auto',
+            marginLeft: 0, //相对父 window 左外边距的距离
+            marginTop: headerPos.h, //相对父 window 上外边距的距离
+            marginBottom: 0, //相对父 window 下外边距的距离
+            marginRight: 0 //相对父 window 右外边距的距离
+        };
+        var bounces = true;
+        var reload = true;
+        var allowEdit = false;
+        var animation = {
+            type: "none", //动画类型（详见动画类型常量）
+            //			subType : "from_right", //动画子类型（详见动画子类型常量）
+            duration: 0 //动画过渡时间，默认300毫秒
+        };
+        var frames = [{
+            name: 'single_product_frm',
+            url: 'single_product_frm.html',
+            bounces: false,
+            pageParam: pageParam
+        }, {
+            name: 'shop_frm',
+            url: 'shop_frm.html',
+            bounces: true,
+            pageParam: pageParam
+        }];
+        _openFrameGroup("sale_analysis_group", frames, function(ret, err) {
+            //				console.log("_openFrameGroup.ret:" + $api.jsonToStr(ret));
+            currentFrmName = ret.name;
+            if (ret.index == 2) {
+                setTimeout(function() {
+                    // _execScript("", "goods_suggest_frm", "clickSuggestTab()")
+                }, 50)
+            }
+            tab.setActive(ret.index + 1);
+        }, "", false, rect, 0, 0);
+    }
+</script>
+
+</html>

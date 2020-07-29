@@ -1,0 +1,993 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>商品详情</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/common.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/goods/goods_list_frm.css" />
+	<style>
+
+	</style>
+</head>
+
+<body class="aui-hide">
+	<div class="order-metting-tips flex-wrap">
+		<div class="shop1">总库存：<span class="totalNum"></span></div>
+		<div class="shop2">所有门店总库存：<span class="totalShopNum"></span></div>
+		<div class="shop3">总仓总库存：<span class="totalStockNum"></span></div>
+	</div>
+	<div class="data-box aui-hide">
+		<div class="skuNum">SKU量：<span class="sku-num"></span></div>
+		<div class="change-sallNum">总销量：<span class="changeNum"></span></div>
+		<div class="allShopNum">总库存：<span class="total-num"></span></div>
+		<div class="dataContent"></div>
+	</div>
+	<div class="data-box1 aui-hide">
+		<div class="skuNum1">SKU量：<span class="sku-num2"></span></div>
+		<div class="change-sallNum1">总销量：<span class="changeNum2"></span></div>
+		<div class="allShopNum1">总库存：<span class="total-num2"></span></div>
+		<div class="dataContent2"></div>
+		<!-- <div>SKU量：<span class="sku-num1"></span></div>
+		<div>断码SKU：<span class="cutsku"></span></div>
+		<div>缺码SKU：<span class="lostsku"></span></div>
+		<div>总库存：<span class="all-num"></span></div>
+		<div>门店库存：<span class="shop-num"></span></div> -->
+	</div>
+	<div class="data-box2 aui-hide">
+		<div><span class="express-title"></span><span class="cutsku2"></span></div>
+		<div>总仓库存：<span class="all-num2"></span></div>
+		<div>门店库存：<span class="shop-num2"></span></div>
+	</div>
+	<!-- 列表数据 -->
+	<ul class='aui-list aui-media-list aui-list-noborder aui-padded-l-10'>
+		<!-- <li class='aui-list-item aui-list-item-middle aui-padded-0' tapmode data-seq='59206' data-score='10' onclick='toGoodsDetailWin(this)'>
+			<div class='aui-media-list-item-inner'>
+				<div class='aui-list-item-media'><img data-src='http://192.168.2.146:8181/jed-picture/sr_base/Goods_Shoes/945BL-92118黑/null' src='../../image/load_img_middle.png' /></div>
+				<div class='aui-list-item-inner aui-padded-r-10 aui-border-b'>
+					<div class='aui-list-item-text aui-padded-l-10 aui-padded-b-5'>
+						<div class='aui-list-item-title goods-title-1'>945BL-92118黑</div>
+					</div>
+					<div class='aui-padded-l-10'>
+						<div class='goods-attr flex-wrap aui-margin-b-5'>
+							<div class='aui-text-theme spe-width'>平均成交价：<span class='aui-text-danger'><span>￥</span><span class='aui-font-size-16'>115</span><span>.7</span></span>
+							</div>
+						</div>
+						<div class='goods-attr flex-wrap aui-margin-b-5'>
+							<div class='flex-6 '><span>日均销量：</span><span>2.8</span></div>
+							<div class='flex-6'><span>评分：</span><span class='data-score'>10.0分</span></div>
+						</div>
+						<div class='goods-attr flex-wrap aui-margin-b-5'>
+							<div class='flex-6'><span>30天总销量：</span><span>83</span></div>
+							<div class='flex-6'><span>总库存：</span><span>122</span></div>
+						</div>
+						<div class='spe-dom'><img class='spe-img' src='../../image/flag_mdhp.png' alt='' /></div>
+					</div>
+				</div>
+		</li> -->
+
+	</ul>
+	<!-- 网格数据 -->
+	<section class="aui-grid aui-hide">
+		<!-- <section class="aui-grid"> -->
+		<div class="aui-row">
+
+		</div>
+	</section>
+
+	<!-- 悬浮按钮 -->
+	<div class="top aui-hide">
+		<img id="topArrow" src="../../image/back_top.png" />
+	</div>
+
+	<div class='footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		到底了<i class='aui-iconfont aui-icon-activity aui-font-size-12'></i>
+	</div>
+	<div class='footer-empty aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		暂无数据
+	</div>
+	<div class='footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-margin-5 aui-hide'>
+		<i class='aui-iconfont aui-icon-refresh refreshing aui-font-size-12 aui-margin-r-5'></i>加载更多
+	</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript">
+	function goShopsFrm(_seq) {
+		window.event ? window.event.cancelBubble = true : e.stopPropagation();
+		var rect = {
+			x: 0, //左上角x坐标
+			y: 0, //左上角y坐标
+			w: "auto", //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度
+			h: "auto", //高度，若传'auto'，页面从y位置开始自动充满父页面高度
+			marginLeft: 0, //相对父 window 左外边距的距离
+			marginTop: 0, //相对父 window 上外边距的距离
+			marginBottom: 0, //相对父 window 下外边距的距离
+			marginRight: 0 //相对父 window 右外边距的距离
+		};
+		var animation = {
+			type: "none", //动画类型（详见动画类型常量）
+			subType: "from_right", //动画子类型（详见动画子类型常量）
+			duration: 300 //动画过渡时间，默认300毫秒
+		};
+		var PageParam = {
+			seq: _seq,
+		}
+		if (pageParam.name == '调配仓') {
+			api.openFrame({
+				name: 'call_out_shops_frm',
+				url: 'call_out_shops_frm.html',
+				rect: rect,
+				pageParam: PageParam,
+				bounces: false,
+				bgColor: 'rgba(0, 0, 0, 0.54)',
+				reload: true,
+			});
+		} else if (pageParam.name == '主推款') {
+			api.openFrame({
+				name: 'goods_shops_frm',
+				url: 'goods_shops_frm.html',
+				rect: rect,
+				pageParam: PageParam,
+				bounces: false,
+				bgColor: 'rgba(0, 0, 0, 0.54)',
+				reload: true,
+				animation: animation
+			});
+		}
+	}
+
+	//获取所点击商品的详细信息, 参数isSearch:是否搜索(0:不是, 1:是)
+	function toGoodsDetailWin(_obj) {
+		if (isAjaxing) {
+			_toast("正在加载数据，请稍后");
+			return;
+		}
+		var _start = parseInt($api.attr(_obj, "data-start"));
+		var _index = parseInt($api.attr(_obj, "data-index"));
+		var _totalShopTransferOutNum = $api.attr(_obj, "data-totalShopTransferOutNum");
+		var index = (_start - 1) + _index;
+		var pageParams;
+		if (pageParam.name=='补货动态') {
+			pageParams = {
+			 seq: goodsList[index].shoesSeq,
+			 isSearch: 0,
+			 timeRange: '30',
+			 pageName: pageParam.name,
+		 };
+		}else {
+			if (times==0) {
+				pageParams = {
+				 seq: goodsList[index].seq,
+				 avgSore: goodsList[index].score,
+				 isSearch: 0,
+				 timeRange: times,
+				 pageName: pageParam.name,
+				 startDate:pageParam.saleTimeStart,
+				 endDate:pageParam.saleTimeEnd
+			 };
+			}else {
+				pageParams = {
+				 seq: goodsList[index].seq,
+				 avgSore: goodsList[index].score,
+				 isSearch: 0,
+				 timeRange: times,
+				 pageName: pageParam.name
+			 };
+			}
+		}
+
+		if (pageParam.name == '调配仓' && !userInfo.factoryUserFlag) {
+			if (!_isStringNull(_totalShopTransferOutNum) && _totalShopTransferOutNum > 0) {
+				pageParams.isAllocate = true;
+				pageParams.isAllocateTransfer = goodsList[index].isAllocateTransfer;
+			}
+		}
+		api.openDrawerLayout({
+			name: "goods_detail_win",
+			url: "detail/goods_detail_win.html",
+			pageParam: pageParams,
+			animation: {
+				type: "push", //动画类型（详见动画类型常量）
+				subType: "from_right", //动画子类型（详见动画子类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			},
+			softInputMode: "resize",
+			softInputBarEnabled: false,
+			overScrollMode: "always",
+			slidToOpenPane: false,
+			slidToClosePane: false,
+			rightPane: {
+				edge: 60,
+				pageParam: pageParam,
+				softInputMode: "resize",
+				softInputBarEnabled: false,
+				name: 'filter_sale_graph_win',
+				url: 'detail/filter_sale_graph_win.html'
+			}
+		});
+	}
+
+	function getGoodsHTML(data) {
+		var htmlArr = new Array();
+		var htmlStrList = "";
+		var htmlStrGrid = "";
+		for (var i = 0; i < data.length; i++) {
+			//组织htmlStrList
+			htmlStrList += "<li class='aui-list-item aui-list-item-middle aui-padded-0' tapmode data-index='" + i + "' data-start='" + start + "' data-totalShopTransferOutNum='"+data[i].totalShopTransferOutNum+"' onclick='toGoodsDetailWin(this)'>";
+			htmlStrList += "<div class='aui-media-list-item-inner'>";
+			htmlStrList += "<div class='aui-list-item-media'>";
+			if (pageParam.name == '畅销款') {
+				if (startNum == 0) {
+					if (i < 3) {
+						htmlStrList += "<img class='rankImg' src='../../image/rankImg" + i + ".png' />";
+					} else {
+						htmlStrList += "<div class='rankImg1'>" + parseInt((start - 1) + (i + 1)) + "</div>";
+					}
+				} else {
+					htmlStrList += "<div class='rankImg1'>" + parseInt((start - 1) + (i + 1)) + "</div>";
+				}
+			} else if (pageParam.name == '滞销款') {
+				if (startNum == 0) {
+					if (i < 3) {
+						htmlStrList += "<img class='rankImg' src='../../image/imgRank" + i + ".png' />";
+					} else {
+						htmlStrList += "<div class='rankImg1'>" + parseInt((start - 1) + (i + 1)) + "</div>";
+					}
+				} else {
+					htmlStrList += "<div class='rankImg1'>" + parseInt((start - 1) + (i + 1)) + "</div>";
+				}
+			} else if (pageParam.name == '主推款') {
+				htmlStrList += "<div class='type-content'>";
+				if (data[i].isSalable != 0) {
+					htmlStrList += "<img class='typeImg' src='../../image/up50.png' />";
+				}
+				if (data[i].isUnsalable != 0) {
+					htmlStrList += "<img class='typeImg' src='../../image/down50.png' />";
+				}
+				if (data[i].isSupplement != 0) {
+					htmlStrList += "<img class='typeImg' src='../../image/mend50.png' />";
+				}
+				htmlStrList += "</div>";
+			} else if (pageParam.name == '调配仓' && !userInfo.factoryUserFlag) {
+				if (!_isStringNull(data[i].totalShopTransferOutNum) && data[i].totalShopTransferOutNum > 0) {
+					htmlStrList += "<div class='deploy-lable'>本店</div>";
+				}
+			}
+			htmlStrList += "<img data-src='" + data[i].img + "' src='../../image/load_img_middle.png' />";
+			htmlStrList += "</div>";
+			htmlStrList += "<div class='aui-list-item-inner aui-padded-r-10 aui-border-b '>";
+			if (pageParam.name == '主推款') {
+				htmlStrList += "<div class='aui-list-item-text aui-padded-l-10 aui-padded-b-5 flex-wrap'>";
+				htmlStrList += "<div class='aui-list-item-title goods-title-1  spe-width'>" + data[i].goodId + "</div>";
+				if (_isArrayNull(pageParam.shopSeqList)) {
+					htmlStrList += "<div class='aui-list-item-title goods-title-1 flex-con'><span class='aui-font-size-12'>主推</span><span class='data-score'>" + data[i].number + "</span><span class='aui-font-size-12'>次</span></div>";
+				}
+				htmlStrList += "</div>";
+			} else {
+				htmlStrList += "<div class='aui-list-item-text aui-padded-l-10 aui-padded-b-5'>";
+				htmlStrList += "<div class='aui-list-item-title goods-title-1'>" + data[i].goodId + "</div>";
+				htmlStrList += "</div>";
+			}
+			htmlStrList += "<div class='aui-padded-l-10 inner-wrap'>";
+			if (pageParam.name == '畅销款' || pageParam.name == '滞销款') {
+				if (data[i].circleCompare > 0) {
+					htmlStrList += "<div class='rankBox'>";
+					htmlStrList += "<img src='../../image/up.png' class='direction'/>";
+					htmlStrList += "<span class='rankNum'>" + data[i].circleCompare + "</span>";
+					htmlStrList += "</div>";
+				} else if (data[i].circleCompare < 0) {
+					htmlStrList += "<div class='rankBox hots'>";
+					htmlStrList += "<img src='../../image/down.png' class='direction'/>";
+					htmlStrList += "<span class='rankNum'>" + Math.abs(data[i].circleCompare) + "</span>";
+					htmlStrList += "</div>";
+				} else {
+					htmlStrList += "<div class='rankBox'>";
+					htmlStrList += "<span class='rankNum'>—0</span>";
+					htmlStrList += "</div>";
+				}
+			}
+			htmlStrList += "<div class='goods-attr flex-wrap aui-margin-b-5'>";
+			if (pageParam.name == '补货动态') {
+				htmlStrList += "<div class='aui-text-theme spe-width'>补货数量：<span class=''>";
+				htmlStrList += "<span class='aui-font-size-16'>"+data[i].replenishNum+ "</span>";
+		  }else {
+				htmlStrList += "<div class='aui-text-theme spe-width'>平均成交价：<span class='aui-text-danger'>";
+				priceParts = _isStringNull(data[i].dealPrice) ? ["0", "0"] : data[i].dealPrice.toFixed(1).split(".");
+				htmlStrList += "<span>￥</span><span class='aui-font-size-16'>" + priceParts[0] + "</span><span>." + priceParts[1] + "</span></span>";
+		  }
+			htmlStrList += "</div>";
+			if (pageParam.name == '主推款') {
+				if (_isArrayNull(pageParam.shopSeqList)) {
+					htmlStrList += "<div class='aui-text-theme  shopBtn' tapmode onclick='goShopsFrm(" + data[i].seq + ")'>主推门店</div>";
+				}
+
+			} else if (pageParam.name == '调配仓') {
+				htmlStrList += "<div class='aui-text-theme  shopBtn' tapmode onclick='goShopsFrm(" + data[i].seq + ")'>调出门店</div>";
+			}
+			htmlStrList += "</div>";
+			htmlStrList += "<div class='goods-attr flex-wrap aui-margin-b-5'>";
+			if (pageParam.name=='补货动态') {
+
+					htmlStrList += "<div class='flex-6 '><span>到货数量：</span><span>" + data[i].arrivedNum + "</span></div>";
+
+			}else {
+				if (!_isStringNull(data[i].salesDayAvg)) {
+					htmlStrList += "<div class='flex-6 '><span>日均销量：</span><span>" + data[i].salesDayAvg.toFixed(1) + "</span></div>";
+				}
+			}
+
+			if (pageParam.name == '畅销款' || pageParam.name == '滞销款') {
+				htmlStrList += "<div class='flex-6'><span>在仓天数：</span><span>" + data[i].stockDays + "</span></div>";
+			} else {
+				if (!_isStringNull(data[i].score)) {
+					htmlStrList += "<div class='flex-6'><span>评分：</span><span class='data-score'>" + data[i].score.toFixed(1) + "分</span></div>";
+				}
+			}
+			htmlStrList += "</div>";
+			htmlStrList += "<div class='goods-attr flex-wrap aui-margin-b-5'>";
+			if (pageParam.name=='补货动态') {
+				htmlStrList += "<div class='flex-6'><span>补单时间：</span><span>" + _getShortTimeByTimeStr(data[i].inputTime)+ "</span></div>";
+			}else {
+				if (pageParam.timeRange == '30') {
+					htmlStrList += "<div class='flex-6'><span>30天总销量：</span><span>" + _getShortNum(data[i].salesNum) + "</span></div>";
+				} else if (pageParam.timeRange == '15') {
+					htmlStrList += "<div class='flex-6'><span>15天总销量：</span><span>" + _getShortNum(data[i].salesNum) + "</span></div>";
+				} else if (pageParam.timeRange == '7') {
+					htmlStrList += "<div class='flex-6'><span>7天总销量：</span><span>" + _getShortNum(data[i].salesNum) + "</span></div>";
+				} else if (pageParam.timeRange == '1') {
+					htmlStrList += "<div class='flex-6'><span>1天总销量：</span><span>" + _getShortNum(data[i].salesNum) + "</span></div>";
+				} else if (pageParam.timeRange == '999') {
+					htmlStrList += "<div class='flex-6'><span>累计总销量：</span><span>" + _getShortNum(data[i].salesNum) + "</span></div>";
+				} else {
+					htmlStrList += "<div class='flex-6'><span>总销量：</span><span>" + _getShortNum(data[i].salesNum) + "</span></div>";
+				}
+				htmlStrList += "<div class='flex-6'><span>总库存：</span><span>" + _getShortNum(data[i].stock) + "</span></div>";
+			}
+
+			htmlStrList += "</div>";
+
+			if (pageParam.name == '调配仓') {
+				//工厂帐号（总调出数量），门店帐号（总调出数量，本店调出数量）
+				htmlStrList += "<div class='goods-attr flex-wrap aui-margin-b-5'>";
+				htmlStrList += "<div class='flex-6'><span>总调出：</span><span>" + data[i].totalTransferOutNum + "</span></div>";
+				if (!userInfo.factoryUserFlag && !_isStringNull(data[i].totalShopTransferOutNum)) {
+					htmlStrList += "<div class='flex-6 '><span>本店调出：</span><span>" + data[i].totalShopTransferOutNum + "</span></div>";
+				}
+				htmlStrList += "</div>";
+			}
+
+			if (pageParam.name == '主推款' || pageParam.name == '调配仓'||pageParam.name =='补货动态') {} else {
+				if (userInfo.factoryUserFlag) {
+					if (data[i].newGood == '0' && data[i].shopPush == '0' && data[i].companyPush == '0') {
+						htmlStrList += "<div class='spe-dom aui-hide'>"
+					} else {
+						htmlStrList += "<div class='spe-dom'>"
+					}
+
+					//公司账号
+					if (data[i].newGood == '1') {
+						htmlStrList += "<img class='spe-img' src='../../image/flag_xp.png' alt=''/>"
+					}
+
+					if (data[i].companyPush == '1') {
+						htmlStrList += "<img class='spe-img' src='../../image/flag_gszt1.png' alt=''/>"
+					}
+					if (data[i].shopPush == '1') {
+						htmlStrList += "<img class='spe-img' src='../../image/flag_mdzt1.png' alt=''/>"
+					}
+					htmlStrList += "</div>"
+				} else {
+					if (data[i].newGood == '0' && data[i].shopPush == '0' && data[i].shopGood == '0' && data[i].companyPush == '0') {
+						htmlStrList += "<div class='spe-dom aui-hide'>"
+					} else {
+						htmlStrList += "<div class='spe-dom'>"
+					}
+					//门店账号
+					if (data[i].newGood == '1') {
+						htmlStrList += "<img class='spe-img' src='../../image/flag_xp.png' alt=''/>"
+					}
+					if (data[i].shopPush == '1') {
+						htmlStrList += "<img class='spe-img' src='../../image/flag_mdzt1.png' alt=''/>"
+					}
+					if (data[i].shopGood == '1') {
+						htmlStrList += "<img class='spe-img' src='../../image/flag_mdhp1.png' alt=''/>"
+					}
+					if (data[i].companyPush == '1') {
+						htmlStrList += "<img class='spe-img' src='../../image/flag_gszt1.png' alt=''/>"
+					}
+
+					htmlStrList += "</div>"
+				}
+			}
+			htmlStrList += "</div>";
+			htmlStrList += "</div>";
+			htmlStrList += "</li>";
+			//组织htmlStrGrid
+			if ((i + 1) % 2 != 0) {
+				//奇数
+				htmlStrGrid += '<div class="aui-col-xs-6 aui-bg-white aui-margin-r-10 aui-margin-t-10" tapmode data-index="' + i + '" data-start="' + start + '" data-totalShopTransferOutNum="'+data[i].totalShopTransferOutNum+'" onclick="toGoodsDetailWin(this)">';
+			} else {
+				//偶数
+				htmlStrGrid += '<div class="aui-col-xs-6 aui-bg-white aui-margin-t-10" tapmode data-index="' + i + '" data-start="' + start + '" data-totalShopTransferOutNum="'+data[i].totalShopTransferOutNum+'" onclick="toGoodsDetailWin(this)">';
+			}
+			htmlStrGrid += '<div class="contain">';
+			htmlStrGrid += '<div class="item"><div class="box">';
+			if (pageParam.name == '主推款') {
+				htmlStrGrid += "<div class='type-content'>";
+				if (data[i].isSalable != 0) {
+					htmlStrGrid += "<img class='typeImg' src='../../image/up50.png' />";
+				}
+				if (data[i].isUnsalable != 0) {
+					htmlStrGrid += "<img class='typeImg' src='../../image/down50.png' />";
+				}
+				if (data[i].isSupplement != 0) {
+					htmlStrGrid += "<img class='typeImg' src='../../image/mend50.png' />";
+				}
+				htmlStrGrid += "</div>";
+			} else if (pageParam.name == '调配仓' && !userInfo.factoryUserFlag) {
+				if (!_isStringNull(data[i].totalShopTransferOutNum) && data[i].totalShopTransferOutNum > 0) {
+					htmlStrGrid += "<div class='deploy-lable'>本店</div>";
+				}
+			}
+			htmlStrGrid += '<img src="../../image/load_img_middle.png" data-src="' + data[i].img + '" />';
+			htmlStrGrid += '</div></div></div>';
+			htmlStrGrid += '<div class="goods-title-2 aui-padded-l-10 aui-padded-r-10 aui-text-left aui-margin-b-5">' + data[i].goodId + '</div>';
+			htmlStrGrid += '<div class="goods-attr flex-wrap aui-text-left aui-text-theme aui-padded-l-10 aui-margin-b-5">';
+			//采购价, 包括:1.oemPrice(贴牌商价格), 2.wholesalerPrice(批发商价格), 3.storePrice(直营店价格)
+			if (_isArrayNull(priceParts)) {
+				htmlStrGrid += '<div class="flex-2">平均成交价:<span class="aui-text-danger"><span>￥</span><span class="aui-font-size-16"></span></span></div>';
+			}else {
+				htmlStrGrid += '<div class="flex-2">平均成交价:<span class="aui-text-danger"><span>￥</span><span class="aui-font-size-16">' + priceParts[0] + '</span><span>.' + priceParts[1] + '</span></span></div>';
+			}
+			htmlStrGrid += '</div>';
+			htmlStrGrid += '<div class="goods-attr flex-wrap aui-text-left aui-padded-l-10 aui-margin-b-5">';
+			if (!_isStringNull(data[i].salesDayAvg)) {
+				htmlStrGrid += '<div class="flex-6 "><span>日均销量:</span><span>' + data[i].salesDayAvg.toFixed(1) + '</span></div>';
+			}
+			if (pageParam.name == '畅销款' || pageParam.name == '滞销款') {
+				htmlStrGrid += '<div class="flex-6 "><span>在仓天数:</span><span>' + data[i].stockDays + '</span></div>';
+			} else {
+				if (!_isStringNull(data[i].score)) {
+					htmlStrGrid += '<div class="flex-6 "><span>评分:</span><span class="data-score">' + data[i].score.toFixed(1) + '分</span></div>';
+				}
+			}
+			htmlStrGrid += '</div>';
+			htmlStrGrid += '<div class="goods-attr flex-wrap aui-text-left aui-padded-l-10 aui-margin-b-5">';
+			if (pageParam.timeRange == '30') {
+				htmlStrGrid += '<div class="width2"><span>30天总销量:</span><span>' + _getShortNum(data[i].salesNum) + '</span></div>';
+			} else if (pageParam.timeRange == '15') {
+				htmlStrGrid += '<div class="width2"><span>15天总销量:</span><span>' + _getShortNum(data[i].salesNum) + '</span></div>';
+			} else if (pageParam.timeRange == '7') {
+				htmlStrGrid += '<div class="width2"><span>7天总销量:</span><span>' + _getShortNum(data[i].salesNum) + '</span></div>';
+			} else if (pageParam.timeRange == '1') {
+				htmlStrGrid += '<div class="width2"><span>1天总销量:</span><span>' + _getShortNum(data[i].salesNum) + '</span></div>';
+			} else if (pageParam.timeRange == '999') {
+				htmlStrGrid += '<div class="width2"><span>累计总销量:</span><span>' + _getShortNum(data[i].salesNum) + '</span></div>';
+			} else {
+				htmlStrGrid += '<div class="width2"><span>总销量:</span><span>' + _getShortNum(data[i].salesNum) + '</span></div>';
+			}
+			htmlStrGrid += '<div class="width1"><span>总库存:</span><span>' + _getShortNum(data[i].stock) + '</span></div>';
+			htmlStrGrid += '</div>';
+
+			if (pageParam.name == '调配仓') {
+				//工厂帐号（总调出数量），门店帐号（总调出数量，本店调出数量）
+				htmlStrGrid += "<div class='goods-attr flex-wrap aui-text-left aui-padded-l-10 aui-margin-b-5'>";
+				htmlStrGrid += "<div class='flex-6'><span>总调出：</span><span>" + data[i].totalTransferOutNum + "</span></div>";
+				if (!userInfo.factoryUserFlag && !_isStringNull(data[i].totalShopTransferOutNum)) {
+					htmlStrGrid += "<div class='flex-6 '><span>本店调出：</span><span>" + data[i].totalShopTransferOutNum + "</span></div>";
+				}
+				htmlStrGrid += "</div>";
+			}
+
+			if (pageParam.name == '主推款') {
+				htmlStrGrid += "<div class='aui-list-item-text aui-padded-l-10 aui-padded-b-5 flex-wrap grid-wrap'>";
+				if (_isArrayNull(pageParam.shopSeqList)) {
+					htmlStrGrid += "<div class='grid-wrap1'><span class='aui-font-size-12'>主推</span><span class='data-score'>" + data[i].number + "</span><span class='aui-font-size-12'>次</span></div>";
+					htmlStrGrid += "<div class='shopBtn  aui-margin-r-10' tapmode onclick='goShopsFrm(" + data[i].seq + ")'>主推门店</div>";
+				}
+				htmlStrGrid += "</div>";
+			} else if (pageParam.name == '调配仓') {
+				htmlStrGrid += "<div class='aui-list-item-text aui-padded-l-10 aui-padded-b-5 flex-wrap grid-wrap'>";
+				htmlStrGrid += "<div class='shopBtn aui-margin-r-10' tapmode onclick='goShopsFrm(" + data[i].seq + ")'>调出门店</div>";
+				htmlStrGrid += "</div>";
+			} else {
+				if (userInfo.factoryUserFlag) {
+					if (data[i].newGood == '0' && data[i].shopPush == '0' && data[i].companyPush == '0') {
+						htmlStrGrid += '<div class="goods-attr aui-padded-l-10 aui-margin-b-5 spe-dom aui-hide ">';
+					} else {
+						htmlStrGrid += '<div class="goods-attr aui-padded-l-10 aui-margin-b-5 spe-dom ">';
+					}
+					//公司账号
+					if (data[i].newGood == '1') {
+						htmlStrGrid += "<img class='spe-img' src='../../image/flag_xp.png' alt=''/>"
+					}
+
+					if (data[i].companyPush == '1') {
+						htmlStrGrid += "<img class='spe-img' src='../../image/flag_gszt1.png' alt=''/>"
+					}
+					if (data[i].shopPush == '1') {
+						htmlStrGrid += "<img class='spe-img' src='../../image/flag_mdzt1.png' alt=''/>"
+					}
+					htmlStrGrid += '</div>';
+				} else {
+					//门店账号
+					if (data[i].newGood == '0' && data[i].shopPush == '0' && data[i].shopGood == '0' && data[i].companyPush == '0') {
+						htmlStrGrid += '<div class="goods-attr aui-padded-l-10 aui-margin-b-5 spe-dom aui-hide">';
+					} else {
+						htmlStrGrid += '<div class="goods-attr aui-padded-l-10 aui-margin-b-5 spe-dom ">';
+					}
+					if (data[i].newGood == '1') {
+						htmlStrGrid += "<img class='spe-img1' src='../../image/flag_xp.png' alt=''/>"
+					}
+					if (data[i].shopPush == '1') {
+						htmlStrGrid += "<img class='spe-img' src='../../image/flag_mdzt1.png' alt=''/>"
+					}
+					if (data[i].shopGood == '1') {
+						htmlStrGrid += "<img class='spe-img' src='../../image/flag_mdhp1.png' alt=''/>"
+					}
+					if (data[i].companyPush == '1') {
+						htmlStrGrid += "<img class='spe-img' src='../../image/flag_gszt1.png' alt=''/>"
+					}
+
+
+					htmlStrGrid += '</div>';
+				}
+			}
+
+			htmlStrGrid += '</div>';
+		}
+		// console.log("htmlStrList:" + htmlStrList);
+		// console.log("htmlStrGrid:" + htmlStrGrid);
+		htmlArr.push(htmlStrList);
+		htmlArr.push(htmlStrGrid);
+		startNum = 1;
+		return htmlArr;
+	}
+
+	function initUI(data, type) {
+		switch (type) {
+			case "down":
+				startNum = 0;
+				if (_isArrayNull(data)) {
+					//第一页没数据，则将hasMoreDatas置为false，用户向上滑动就不会请求服务器获取后面页数的数据了
+					hasMoreDatas = false;
+					$api.text($api.dom(".totalNum"), '');
+					$api.text($api.dom(".totalShopNum"), '');
+					$api.text($api.dom(".totalStockNum "), '');
+					$('.sku-num').text('');
+					$('.total-num').text('');
+					$('.changeNum').text('');
+					$('.dataContent').text('（总仓：，所有门店：）');
+
+					$('.sku-num2').text('');
+					$('.total-num2').text('');
+					$('.changeNum2').text('');
+					$('.dataContent2').text('（总仓：，所有门店：）');
+
+					$('.cutsku2').text('');
+					$('.all-num2').text('');
+					$('.shop-num2').text('');
+
+					$api.html($api.dom("ul.aui-list"), "");
+					$api.html($api.dom("div.aui-row"), "");
+					showEmptyMsg(); //显示"暂无数据"
+				} else {
+					$api.text($api.dom(".totalNum"), data[0].totalNum);
+					$api.text($api.dom(".totalShopNum"), data[0].totalShopNum);
+					$api.text($api.dom(".totalStockNum "), data[0].totalStockNum);
+
+					$('.sku-num').text(data[0].totalSKUNum);
+					$('.total-num').text(data[0].totalNum);
+					$('.changeNum').text(data[0].totalSaleNum)
+					if (_isArrayNull(pageParam.shopSeqList)) {
+						$('.dataContent').text('（总仓：' + data[0].totalStockNum + '，所有门店：' + data[0].totalShopNum + '）');
+					} else if (userInfo.factoryUserFlag && !_isArrayNull(pageParam.shopSeqList)) {
+						$('.dataContent').text('（总仓：' + data[0].totalStockNum + '，所选门店：' + data[0].totalShopNum + '）');
+					} else if (!userInfo.factoryUserFlag && !_isArrayNull(pageParam.shopSeqList)) {
+						$('.dataContent').text('（总仓：' + data[0].totalStockNum + '，当前门店：' + data[0].totalShopNum + '）');
+					}
+
+					$('.sku-num2').text(data[0].totalSKUNum);
+					$('.total-num2').text(data[0].totalNum);
+					$('.changeNum2').text(data[0].totalSaleNum);
+					if (_isArrayNull(pageParam.shopSeqList)) {
+						$('.dataContent2').text('（总仓：' + data[0].totalStockNum + '，所有门店：' + data[0].totalShopNum + '）');
+					} else if (userInfo.factoryUserFlag && !_isArrayNull(pageParam.shopSeqList)) {
+						$('.dataContent2').text('（总仓：' + data[0].totalStockNum + '，所选门店：' + data[0].totalShopNum + '）');
+					} else if (!userInfo.factoryUserFlag && !_isArrayNull(pageParam.shopSeqList)) {
+						$('.dataContent2').text('（总仓：' + data[0].totalStockNum + '，当前门店：' + data[0].totalShopNum + '）');
+					}
+
+					$('.cutsku2').text(data[0].totalSKUNum);
+					$('.all-num2').text(data[0].totalStockNum);
+					$('.shop-num2').text(data[0].totalShopNum);
+
+					var htmlArr = getGoodsHTML(data);
+					//						console.log(htmlArr[0]);
+					$api.html($api.dom("ul.aui-list"), htmlArr[0]);
+					//						console.log(htmlArr[1]);
+					$api.html($api.dom("div.aui-row"), htmlArr[1]);
+
+					if (data.length < num) {
+						//第一页数据不够每页总数，则将hasMoreDatas置为false，用户向上滑动就不会请求服务器获取后面页数的数据了
+						hasMoreDatas = false;
+						showOverMsg(); //显示"到底了"
+					} else {
+						//第一页数据等于每页总数，则将hasMoreDatas置为true，用户向上滑动就再次请求服务器获取后面页数的数据
+						hasMoreDatas = true;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+			case "up":
+				if (_isArrayNull(data)) {
+					//当前页没数据了，则将hasMoreDatas置为false，防止继续上滑频繁请求服务器
+					hasMoreDatas = false;
+					showOverMsg(); //显示"到底了"
+				} else {
+					var htmlArr = getGoodsHTML(data);
+					//						console.log(htmlArr[0]);
+					$api.append($api.dom("ul.aui-list"), htmlArr[0]);
+					//						console.log(htmlArr[1]);
+					$api.append($api.dom("div.aui-row"), htmlArr[1]);
+
+					if (data.length < num) {
+						//新获取页数据不够每页总数，则将hasMoreDatas置为false，用户向上滑动就不会请求服务器获取后面页数的数据了
+						hasMoreDatas = false;
+						showOverMsg(); //显示"到底了"
+					} else {
+						//新获取页数据不够每页总数，则将hasMoreDatas置为true，用户向上滑动就再次请求服务器获取后面页数的数据
+						hasMoreDatas = true;
+						showMoreMsg(); //显示"加载更多"
+					}
+				}
+				break;
+		}
+
+		new auiLazyload({
+			errorImage: "../../image/error_img_middle.png"
+		});
+		api.parseTapmode();
+		setTimeout(function() {
+			if ($api.hasCls($api.dom("body"), "aui-hide")) {
+				$api.removeCls($api.dom("body"), "aui-hide");
+			}
+			closeUILoading();
+			api.refreshHeaderLoadDone();
+		}, window.refreshLoadDoneTimeOut);
+	}
+
+	/*
+	 *获取鞋子列表数据
+	 */
+	function getDatas(call) {
+		var url = window.myServerUrl;
+		if (pageParam.name == '主推款') {
+			url += "order/app/shoesInfo/selectMainPushShoes";
+			url += "?shopSeqList=" + pageParam.shopSeqList; //店铺序号
+			url += "&categorySeqList=" + pageParam.categorySeqList; //分类 数据类型：Array[integer]
+			url += "&orderBy=" + pageParam.orderBy; //排序字段(1:销量 2:库存 3:售罄率 4:评分) 数据类型：integer
+			url += "&orderDir=" + pageParam.orderDir; //排序方式(0:降序 1:升序) 数据类型：integer
+			url += "&start=" + start; //起始条数 数据类型：integer
+			url += "&num=" + num; //总条数 数据类型：integer
+		} else if (pageParam.name == '调配仓') {
+			url += "order/app/shoesInfo/selectExportOutShoes";
+			url += "?yearList=" + pageParam.yearList;
+			url += "&categorySeqList=" + pageParam.categorySeqList; //分类 数据类型：Array[integer]
+			url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+			url += "&isTransferOut=" + pageParam.isTransferOut; //0.全部，1.本店
+			url += "&orderBy=" + pageParam.orderBy; //排序字段(1:销量 2:库存 3:售罄率 4:评分) 数据类型：integer
+			url += "&orderDir=" + pageParam.orderDir; //排序方式(0:降序 1:升序) 数据类型：integer
+			url += "&start=" + start; //起始条数 数据类型：integer
+			url += "&num=" + num; //总条数 数据类型：integer
+		}else if (pageParam.name == '补货动态') {
+			url += "order/app/shoesreplenish/newReplenishList";
+			url += "?yearList=" + pageParam.yearList;
+			url += "&categorySeqList=" + pageParam.categorySeqList; //分类 数据类型：Array[integer]
+			url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+		} else if (pageParam.name == '滞销款') {
+			url += "order/app/shoesInfo/selectUnsaleableShoes";
+			url += "?shopSeqList=" + pageParam.shopSeqList;
+			url += "&yearList=" + pageParam.yearList;
+			url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+			url += "&categorySeqList=" + pageParam.categorySeqList; //分类 数据类型：Array[integer]
+			url += "&ranking=" + pageParam.ranking;
+			url += "&orderBy=" + pageParam.orderBy; //排序字段(1:销量 2:库存 3:售罄率 4:评分) 数据类型：integer
+			url += "&orderDir=" + pageParam.orderDir; //排序方式(0:降序 1:升序) 数据类型：integer
+			url += "&start=" + start; //起始条数 数据类型：integer
+			url += "&num=" + num; //总条数 数据类型：integer
+		} else if (pageParam.name == '畅销款') {
+			url += "order/app/shoesInfo/selectSaleableShoes";
+			url += "?shopSeqList=" + pageParam.shopSeqList;
+			url += "&yearList=" + pageParam.yearList;
+			url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+			url += "&categorySeqList=" + pageParam.categorySeqList; //分类 数据类型：Array[integer]
+			url += "&ranking=" + pageParam.ranking;
+			url += "&orderBy=" + pageParam.orderBy; //排序字段(1:销量 2:库存 3:售罄率 4:评分) 数据类型：integer
+			url += "&orderDir=" + pageParam.orderDir; //排序方式(0:降序 1:升序) 数据类型：integer
+			url += "&start=" + start; //起始条数 数据类型：integer
+			url += "&num=" + num; //总条数 数据类型：integer
+		} else if (pageParam.name == '老款') {
+			url += "order/app/shoesInfo/selectOldShoes";
+			url += "?shopSeqList=" + pageParam.shopSeqList; //店铺序号
+			url += "&yearList=" + pageParam.yearList; //年份 数据类型：Array[integer]
+			url += "&categorySeqList=" + pageParam.categorySeqList; //分类 数据类型：Array[integer]
+			url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+			url += "&start=" + start; //起始条数 数据类型：integer
+			url += "&num=" + num; //总条数 数据类型：integer
+		} else if (pageParam.name == '断缺码') {
+			url += "order/app/shoesInfo/selectBreakOrAbsenceShoes";
+			url += "?shopSeqList=" + pageParam.shopSeqList; //店铺序号
+			url += "&yearList=" + pageParam.yearList;
+			url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+
+			var type = api.frameName
+			if (type == 'break_frm') {
+				url += "&type=0";
+			} else {
+				url += "&type=1";
+			}
+			url += "&start=" + start; //起始条数 数据类型：integer
+			url += "&num=" + num; //总条数 数据类型：integer
+		} else {
+			url += "order/app/shoesInfo/shoesList";
+			url += "?rangeType=" + pageParam.rangeType; //范围（0:公司 1:本店）数据类型：integer
+			url += "&dataType=" + pageParam.dataType; //类型（0:全部货品 1:新品推荐 2:主推款）数据类型：integer
+			url += "&yearList=" + pageParam.yearList; //年份 数据类型：Array[integer]
+			url += "&seasonSeqList=" + pageParam.seasonSeqList; //季节 数据类型：Array[integer]
+			url += "&categorySeqList=" + pageParam.categorySeqList; //分类 数据类型：Array[integer]
+			url += "&colorSeqList=" + pageParam.colorSeqList; //颜色 数据类型：Array[integer]
+			url += "&sXMap=" + pageParam.sXMap; //自定义属性 数据类型：string
+			url += "&fuzzySearchParam=" + pageParam.fuzzySearchParam; //模糊查询条件（多个用空格隔开）【注意：仅在搜索商品时使用，不为空时，所有其他属性筛选条件失效】数据类型：string
+			url += "&sizeType=" + pageParam.sizeType; //尺码类型： 0:断码 1:缺码 2:自定义 数据类型：integer
+			url += "&sizeSeqStart=" + pageParam.sizeSeqStart; //尺码：起始 数据类型：integer
+			url += "&sizeSeqEnd=" + pageParam.sizeSeqEnd; //尺码：结束 数据类型：integer
+			url += "&orderBy=" + pageParam.orderBy; //排序字段(1:销量 2:库存 3:售罄率 4:评分) 数据类型：integer
+			url += "&orderDir=" + pageParam.orderDir; //排序方式(0:降序 1:升序) 数据类型：integer
+			// url += "&shopSeq=" + pageParam.shopList; //门店seq
+			url += "&supplement=" + pageParam.supplement; //有无补单 (0:无补单 1:有补单)
+			url += "&shopSeqList=" + pageParam.shopSeqList; //店铺序号
+			url += "&start=" + start; //起始条数 数据类型：integer
+			url += "&num=" + num; //总条数 数据类型：integer
+			url += "&stockMinNum=" + pageParam.stockMinNum; //最小库存
+			url += "&stockMaxNum=" + pageParam.stockMaxNum; //最大库存
+		}
+
+		if (pageParam.timeRange == '0') {
+			url += "&saleTimeStart=" + pageParam.saleTimeStart; //销售时间区间：起始时间 数据类型：date-time
+			url += "&saleTimeEnd=" + pageParam.saleTimeEnd; //销售时间区间：结束时间 数据类型：date-time
+		} else {
+			url += "&saleTimeStart=" + _getStartDateByNum(pageParam.timeRange); //销售时间区间：起始时间 数据类型：date-time
+			url += "&saleTimeEnd=" + pageParam.saleTimeEnd; //销售时间区间：结束时间 数据类型：date-time
+		}
+		times = pageParam.timeRange
+		console.log("获取鞋子列表数据-->url:" + url);
+		isAjaxing = true;
+		_ajax(url, "shoesList", function(ret, err) {
+			isAjaxing = false;
+			var tempGoodsList = [];
+			if (ret) {
+				console.log("获取鞋子列表数据-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					tempGoodsList = ret.result;
+					//list数组
+				} else {
+					_toast(ret.msg);
+				}
+			} else {
+				console.log("获取鞋子列表数据-->err:" + $api.jsonToStr(err));
+				_toast(window.ajaxErrorMessage);
+			}
+			call(tempGoodsList);
+		});
+	}
+
+	function closeUILoading() {
+		UILoading.closeKeyFrame();
+	}
+
+	function openUILoading() {
+		UILoading.keyFrame({
+			rect: {
+				w: 102,
+				h: 102
+			},
+			styles: {
+				bg: 'rgba(0,0,0,0)',
+				corner: 5,
+				interval: 50,
+				frame: {
+					w: 102,
+					h: 102
+				}
+			},
+			//				content : [{
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}, {
+			//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+			//				}],
+			mask: "rgba(255,0,0,0)"
+		}, function(ret) {
+			//								alert(JSON.stringify(ret));
+			console.log(12345);
+		});
+	}
+var priceParts;
+	function initData() {
+		start = 1;
+		num = 10;
+		UILoading = api.require('UILoading');
+		pageParam = api.pageParam;
+		if (pageParam.name == '本店货品') {
+			$api.addCls($api.dom('.shop2'), 'aui-hide');
+			$api.addCls($api.dom('.shop3'), 'aui-hide');
+			$api.css($api.dom('.order-metting-tips'), 'justify-content:center');
+		} else if (pageParam.name == '主推款' || pageParam.name == '调配仓') {
+			$('.order-metting-tips').addClass('aui-hide');
+			$('.data-box').removeClass('aui-hide');
+			$('.aui-list').css({
+				"margin-top": "1.58rem"
+			});
+		} else if (pageParam.name == '补货动态') {
+			$('.order-metting-tips').addClass('aui-hide');
+			$('.aui-list').css({
+				"margin-top": "0rem"
+			});
+		} else if (pageParam.name == '老款') {
+			$('.order-metting-tips').addClass('aui-hide');
+			$('.data-box1').removeClass('aui-hide');
+			$('.aui-list').css({
+				"margin-top": "1.58rem"
+			});
+		} else if (pageParam.name == '断缺码') {
+
+			if(api.frameName=='break_frm'){
+				$('.express-title').text('断码SKU：')
+			}else {
+				$('.express-title').text('缺码SKU：')
+			}
+			$('.order-metting-tips').addClass('aui-hide');
+			$('.data-box2').removeClass('aui-hide');
+			$('.aui-list').css({
+				"margin-top": "1.58rem"
+			});
+		} else if (pageParam.name == '畅销款' || pageParam.name == '滞销款') {
+			$('.order-metting-tips').addClass('aui-hide');
+			$('.aui-list').css({
+				"margin-top": ".5rem"
+			});
+		}
+		console.log("pageParam:" + $api.jsonToStr(pageParam));
+		goodsList = [];
+	}
+
+	var categorySeq; //0:全部鞋款, 其它:鞋子分类序号
+	var start;
+	var num;
+	var goodsList;
+	var hasMoreDatas = true; //是否还有下一页数据
+	var isAjaxing = false;
+	var UILoading;
+	var pageParam;
+	var userInfo = $api.getStorage('userInfoKey');
+	var startNum = 0;
+	var times;
+	var apiready = function() {
+		initData();
+		//下拉刷新
+		api.setRefreshHeaderInfo({
+			loadingImg: 'widget://image/loading_more.gif',
+			bgColor: 'rgba(255,255,255,0)',
+			textColor: '#212121',
+			textDown: '下拉刷新...',
+			textUp: '松开刷新...'
+		}, function(ret, err) {
+			//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+			if (!isAjaxing) {
+				start = 1;
+				goodsList = [];
+				getDatas(function(ret) {
+					goodsList = ret;
+					initUI(ret, "down");
+				});
+			} else {
+				api.refreshHeaderLoadDone();
+			}
+		});
+		//设置下拉刷新延迟时间
+		setTimeout(function() {
+			openUILoading();
+			getDatas(function(ret) {
+				goodsList = ret;
+				initUI(ret, "down");
+			});
+		}, 150);
+		//监听(广播)
+		api.addEventListener({
+			name: 'changeViewModeEvent',
+		}, function(ret, err) {
+			//				console.log("changeViewModeEvent.ret:" + $api.jsonToStr(ret));
+			console.log("商品布局为:" + ret.value.viewMode);
+			var viewMode = ret.value.viewMode;
+			if (viewMode == "list") {
+				//隐藏grid
+				if (!$api.hasCls($api.dom(".aui-grid"), "aui-hide")) {
+					$api.addCls($api.dom(".aui-grid"), "aui-hide");
+				}
+				//显示list
+				if ($api.hasCls($api.dom(".aui-list"), "aui-hide")) {
+					$api.removeCls($api.dom(".aui-list"), "aui-hide");
+				}
+			} else if (viewMode == "grid") {
+				//隐藏list
+				if (!$api.hasCls($api.dom(".aui-list"), "aui-hide")) {
+					$api.addCls($api.dom(".aui-list"), "aui-hide");
+				}
+				//显示grid
+				if ($api.hasCls($api.dom(".aui-grid"), "aui-hide")) {
+					$api.removeCls($api.dom(".aui-grid"), "aui-hide");
+				}
+			}
+		});
+
+		//上拉加载
+		api.addEventListener({
+			name: 'scrolltobottom',
+			extra: {
+				threshold: 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+			}
+		}, function(ret, err) {
+			console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+			if (!isAjaxing && hasMoreDatas) {
+				start += num;
+				getDatas(function(ret) {
+					goodsList = goodsList.concat(ret);
+					setTimeout(function() {
+						initUI(ret, "up");
+					}, 100);
+				});
+			}
+		});
+		_addEventListener("query_filter_changed_event", function(ret) {
+			console.log("query_filter_changed_event-->ret:" + $api.jsonToStr(ret));
+			pageParam = ret.value;
+			api.refreshHeaderLoading();
+		});
+		//悬浮按钮-点击回到顶部
+		var topArrow = document.getElementById('topArrow');
+		topArrow.onclick = function() {
+			document.scrollTop = document.body.scrollTop = 0;
+		}
+		_addEventListener('refreshGoodsListEvent', function() {
+			api.refreshHeaderLoading();
+
+		})
+
+		//监听滑动事件
+		window.onscroll = function() {
+			var sTop = document.documentElement.scrollTop || document.body.scrollTop;
+			if (sTop >= api.frameHeight * 1.5) {
+				//                  console.log("显示按钮");
+				if ($api.hasCls($api.dom(".top"), "aui-hide")) {
+					$api.removeCls($api.dom(".top"), "aui-hide");
+				}
+			} else {
+				//                  console.log("隐藏按钮");
+				if (!$api.hasCls($api.dom(".top"), "aui-hide")) {
+					$api.addCls($api.dom(".top"), "aui-hide");
+				}
+			}
+		}
+	}
+</script>
+
+</html>

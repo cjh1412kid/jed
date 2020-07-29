@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>订单汇总</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../../plugins/daterangepicker/daterangepicker.css">
+  <style>
+    .ths .label {
+      margin-right: 20px;
+      padding: 10px 10px;
+      cursor: pointer;
+      line-height: 30px;
+    }
+
+    #content .row div {
+      height: 395px;
+    }
+
+    #content .row select {
+      height: 350px;
+    }
+
+    th, #timeRange {
+      cursor: pointer;
+    }
+
+    .blue {
+      background-color: #337ab7;
+      color: white;
+    }
+
+    .blue2 {
+      color: blue;
+    }
+
+    .gray {
+      background-color: #aecc9a;
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        查询条件
+      </h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4 form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">当前模板</label>
+            <div class="col-sm-9">
+              <select class="form-control" v-model.number="modelSeqChecked">
+                <option value="-1">请选择模板</option>
+                <option :value="item.seq" v-for="item in orderModels">{{item.modelName}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">时间区间</label>
+            <div class="col-sm-9 input-group">
+              <input type="text" class="form-control" id="timeRange" placeholder="请选择时间区间" v-model.trim="timeRange"
+                     readonly>
+              <!--<i class="glyphicon glyphicon-calendar fa fa-calendar"
+                 style="position: relative;left:350px;top: -25px; z-index: 10"></i>-->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row form-horizontal">
+       <!-- <div class="col-md-4">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">账号类型</label>
+            <div class="col-sm-9">
+              <select class="form-control" v-model.number="attachTypeChecked">
+                <option value="-1">全部</option>
+                <option value="1">工厂</option>
+                <option value="2">分公司</option>
+                <option value="3">代理商</option>
+              </select>
+            </div>
+          </div>
+        </div>-->
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">订单状态</label>
+            <div class="col-sm-9">
+              <select class="form-control" v-model.number="orderStatusChecked">
+                <!--工厂方：0待确认、1待审核、2待入库、3未发货、4部分发货、5已发货、6已到货、7已取消
+                订货方：0待确认、1待支付、2待入库、3待发货、4部分发货、5已发货、6已收货、7已取消-->
+                <option value="-1">全部</option>
+                <option value="0">待确认</option>
+                <option value="1">待审核</option>
+                <option value="2">待入库</option>
+                <option value="3">未发货</option>
+                <option value="4">部分发货</option>
+                <option value="5">已发货</option>
+                <option value="6">已到货</option>
+                <option value="7">已取消</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">关键词</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" placeholder="关键词" v-model.trim="keywords">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-2">
+            <button type="button" class="btn btn-warning" onclick="queryOrderData()">查询</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!--标签列表-->
+  <div class="ths panel panel-default" style="margin-bottom: 20px;">
+    <div class="panel-body" style="overflow:auto;min-height: 30px">
+      <span class="label label-info">标签箱 </span>
+      <span class="label label-primary" :value="index" v-for="(item,index) in leftCols"
+            draggable="true">{{item.name}}</span>
+    </div>
+  </div>
+
+
+  <!--编辑表格按钮-->
+  <div style="margin-bottom: 20px;">
+    <div class="pull-right" style="margin-right: 80px;">
+      <button type="button" class="btn btn-primary" onclick="showLayer()" style="margin-right: 30px">编辑表格</button>
+      <button type="button" class="btn btn-warning" onclick="exportExcel()">导出表格</button>
+    </div>
+  </div>
+
+  <div class="clearfix" style="margin-bottom: 20px;"></div>
+
+  <!--表格区-->
+  <div class="table-responsive">
+    <table id="tbl" class="table table-bordered table-striped table-hover">
+      <thead>
+      <tr>
+        <th draggable="true" :class="item.color" v-for="item in thCols">{{item.name}}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="item in dataList">
+        <td v-for="cell in item" :rowSpan="cell.rowNum" :colSpan="cell.colNum" v-if="cell.visible == 1"
+            :class="cell.color">{{cell.value}}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!--编辑表格按钮打开的编辑窗口-->
+  <div id="content" style="display: none">
+    <div class="container-fluid">
+      <div class="row" style="padding-top: 10px">
+        <div class="col-xs-5">
+          <label>待选列</label>
+          <br>
+          <select multiple class="form-control" v-model="lChecked" id="leftList">
+            <option :value="index" v-for="(item, index) in leftCols">{{item.name}}</option>
+          </select>
+        </div>
+        <div class="col-xs-2" style="padding-top: 100px">
+          <button type="button" class="btn btn-default toLeft"><span class="glyphicon glyphicon-chevron-left"></span>
+          </button>
+          <br/><br/>
+          <button type="button" class="btn btn-default toRight"><span class="glyphicon glyphicon-chevron-right"></span>
+          </button>
+          <br/><br/>
+          <button type="button" class="btn btn-default toUp"><span class="glyphicon glyphicon-chevron-up"></span>
+          </button>
+          <br/><br/>
+          <button type="button" class="btn btn-default toDown"><span class="glyphicon glyphicon-chevron-down"></span>
+          </button>
+        </div>
+        <div class="col-xs-5">
+          <label>展示列</label>
+          <br>
+          <select multiple class="form-control" v-model="rChecked">
+            <option :value="index" v-for="(item, index) in rightCols" :class="item.color2">{{item.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="display: none;">
+  <form id="exportOrderExcelForm" method="POST">
+    <input type="hidden" name="token">
+    <input type="hidden" name="fieldsTitle">
+    <input type="hidden" name="fields">
+  </form>
+</div>
+</body>
+<script src="../../../libs/jquery.min.js"></script>
+<script src="../../../libs/bootstrap.min.js"></script>
+<script src="../../../plugins/daterangepicker/moment.js"></script>
+<script src="../../../plugins/daterangepicker/daterangepicker.js"></script>
+<script src="../../../plugins/layer/layer.js"></script>
+<script src="../../../libs/vue.min.js"></script>
+<script src="../../../js/common.js"></script>
+
+<script src="../../../js/modules/system/order_platform/order_statistic.js"></script>
+</html>

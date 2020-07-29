@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/replenishment/replenishment_list_win.css" />
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+		<a class="aui-pull-right aui-btn aui-hide" tapmode onclick="openRightPane();"><img src="../../image/icon_filter.png" /></a>
+		<div class="aui-title text-header-title aui-text-default aui-font-size-16">补货动态</div>
+	</header>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript">
+
+	apiready = function() {
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+    var headerPos = $api.offset(header);
+		var rect = {
+			x: 0,
+			y: 0,
+			w: 'auto',
+			h: 'auto',
+			marginLeft: 0, //相对父 window 左外边距的距离
+			marginTop: headerPos.h, //相对父 window 上外边距的距离
+			marginBottom: 0, //相对父 window 下外边距的距离
+			marginRight: 0 //相对父 window 右外边距的距离
+		};
+    var pageParam={
+
+    }
+		var animation = {
+			type: "none",
+		}
+		_openFrame("replenishment_list_frm", "replenishment_list_frm.html", rect, pageParam, false, true, false, animation);
+
+	};
+</script>
+
+</html>

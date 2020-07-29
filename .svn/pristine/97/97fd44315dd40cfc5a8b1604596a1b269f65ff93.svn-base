@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>Hello APP</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/order/fill_order_win.css" />
+		<style>
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav aui-bg-theme aui-border-b" id="aui-header">
+			<a class="aui-btn aui-pull-left" tapmode onclick="_closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+			<a class="aui-pull-right aui-btn aui-hide" onclick=""> <span class="aui-iconfont aui-icon-more aui-text-default"></span> </a>
+			<div class="aui-title aui-text-default">
+				填写订单
+			</div>
+		</header>
+		<div class="bottom-btns flex-wrap">
+			<div class="count-price aui-font-size-14 box-wrap flex-con">
+				<div class="flex-con box-wrap box-vertical-center box-horizontal-center">
+					<span>应付款</span><span class="aui-font-size-12 aui-margin-l-5 count-price-unit aui-text-theme">￥</span><span class="aui-font-size-12 order-total-price aui-text-theme"></span>
+				</div>
+			</div>
+			<div class="bottom-btn bottom-btn-fk" tapmode onclick="submit()">
+				提交订单
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript">
+		function submit() {
+			_execScript("", "fill_order_frm", "submitOrder()");
+		}
+
+		function _closeWin() {
+			api.closeWin();
+		}
+
+		apiready = function() {
+			api.parseTapmode();
+			var header = $api.byId('aui-header');
+			$api.fixStatusBar(header);
+			if (api.pageParam.type == "cart") {
+				var extraData = api.pageParam.extraData;
+				if (!_isArrayNull(extraData)) {
+					var checkedTotalPrice = 0;
+					for (var i = 0; i < extraData.length; i++) {
+						checkedTotalPrice += extraData[i].purchasePrice * extraData[i].buyCount;
+					}
+					var priceParts = checkedTotalPrice.toFixed(2).split(".");
+					$api.html($api.dom(".order-total-price"), "<span class='price-value-left aui-font-size-18'>" + priceParts[0] + "</span><span class='price-value-right'>." + priceParts[1] + "</span>");
+				}
+			} else if (api.pageParam.type == "goods_detail") {
+				var extraData = api.pageParam.extraData;				
+				if (!_isArrayNull(extraData)) {
+					var checkedTotalPrice = 0
+					for(var k = 0; k < extraData.length; k++){							
+						checkedTotalPrice += extraData[k].totalPrice;
+					}				
+					var priceParts = checkedTotalPrice.toFixed(2).split(".");
+					$api.html($api.dom(".order-total-price"), "<span class='price-value-left aui-font-size-18'>" + priceParts[0] + "</span><span class='price-value-right'>." + priceParts[1] + "</span>");
+				}
+			} else if (api.pageParam.type == "order_detail") {
+				var extraData = api.pageParam.extraData;
+//				console.log($api.jsonToStr(extraData));				
+				var priceParts = extraData[0].totalPrice.split(".");
+				$api.html($api.dom(".order-total-price"), "<span class='price-value-left aui-font-size-18'>" + priceParts[0] + "</span><span class='price-value-right'>." + priceParts[1] + "</span>");
+			}
+			var headerPos = $api.offset(header);
+			var rect = {
+				x : 0,
+				y : 0,
+				w : 'auto',
+				h : 'auto',
+				marginLeft : 0, //相对父 window 左外边距的距离
+				marginTop : headerPos.h, //相对父 window 上外边距的距离
+				marginBottom : $api.offset($api.dom(".bottom-btns")).h, //相对父 window 下外边距的距离
+				marginRight : 0 //相对父 window 右外边距的距离
+			};
+			var bounces = false;
+			var reload = true;
+			var allowEdit = false;
+			var animation = {
+				type : "none", //动画类型（详见动画类型常量）
+				//			subType : "from_right", //动画子类型（详见动画子类型常量）
+				duration : 0 //动画过渡时间，默认300毫秒
+			};
+			_openFrame("fill_order_frm", "fill_order_frm.html", rect, api.pageParam, bounces, reload, allowEdit, animation);
+			//			_addEventListener("keyback", function(ret) {
+			//			});
+			_addEventListener("pause", function(ret) {
+				console.log("pause");
+				//				alert("pause");
+			});
+			_addEventListener("viewdisappear", function(ret) {
+			});
+		};
+	</script>
+</html>

@@ -1,0 +1,38 @@
+.bottom-btns{
+	position: fixed;
+	bottom: 0;
+	height: 2.5rem;
+	background-color: #FFFFFF;
+	width: 100%;
+	color: #FFFFFF;
+	line-height:2.5rem;
+	text-align: center;
+}
+.count-price{
+	color: #212121;
+}
+.bottom-btn{
+	width: 6.5rem;
+}
+
+.bottom-btn:active{
+	opacity: 0.9;
+}
+.bottom-btn-xn,.bottom-btn-fk{
+}
+.bottom-btn-cart{
+	background-image: linear-gradient(
+		#ff877e, 
+		#ff877e), 
+	linear-gradient(
+		#ff877e, 
+		#ff877e);
+	background-blend-mode: normal, 
+		normal;
+}
+.bottom-btn-xn{
+	background-color: #cfa972;
+}
+.bottom-btn-fk{
+	background-color: #f08a58;
+}

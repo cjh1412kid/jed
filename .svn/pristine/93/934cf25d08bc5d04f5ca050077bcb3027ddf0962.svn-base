@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/filter_win.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/goods/goods_size_frm.css" />
+	<style>
+
+	</style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+	<div class="flex-1" tapmode onclick="api.closeFrame();">
+
+	</div>
+	<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick="api.closeFrame();"> <span class="aui-iconfont aui-icon-close aui-text-default"></span> </a>
+		<div class="aui-title text-header-title aui-text-default aui-font-size-16"></div>
+	</header>
+
+	<div class="flex-2 size-stock flex-wrap">
+		<!-- <div class="invTittle ">库存详情</div> -->
+		<div class="invWrap flex-con ">
+
+			<!-- <div class="repertory flex-wrap">
+				<div class="flex-1">库存</div>
+				<div class="flex-2">22双</div>
+
+			</div>
+
+      <div class="repertory flex-wrap">
+        <div class="flex-1">库存</div>
+        <div class="flex-2">22双</div>
+
+      </div> -->
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common/common.js"></script>
+<script type="text/javascript" src="../../../script/common/echarts_min.js"></script>
+<script type="text/javascript">
+   function renderSizeList(_datas){
+     console.log($api.jsonToStr(_datas));
+     $api.text($api.dom('.aui-title'), pageParam.size+"码库存分布");
+     var htmlStr ="";
+     for(var i =0;i<_datas.length;i++){
+       htmlStr+="<div class='repertory flex-wrap'>";
+       if(_datas[i].shopName==undefined){
+         htmlStr+="<div class='flex-1'></div>";
+       }else {
+          htmlStr+="<div class='flex-1'>"+_datas[i].shopName+"</div>";
+       }
+       htmlStr+="<div class='flex-2'>"+_datas[i].stock+"双</div>";
+       htmlStr+="</div>";
+     }
+     $api.html($api.dom('.invWrap'), htmlStr);
+
+   }
+	/*
+	 *获取获取鞋子在各店的库存
+	 */
+	function getSizeInfo() {
+		var url = window.myServerUrl + "/order/app/shoesInfo/selectShopStockByShoesSeq";
+		url += "?goodId=" + pageParam.goodId;
+		url += "&sizeSeq=" +pageParam.sizeSeq;
+
+		console.log("获取鞋子在各店的库存-->url:" + url);
+		_ajax(url, "selectShopStockByShoesSeq", function(ret, err) {
+			var datas = [];
+			if (ret) {
+				console.log("获取鞋子在各店的库存-->ret:" + $api.jsonToStr(ret));
+				if (ret.code == 0) {
+					datas = ret.result.result;
+          renderSizeList(datas);
+				} else {
+					_toast("获取鞋子在各店的库存失败！", 3000, "bottom", function() {});
+				}
+			} else {
+				_toast(window.ajaxErrorMessage);
+				console.log("获取鞋子在各店的库存-->err:" + $api.jsonToStr(err));
+			}
+			// call();
+		});
+	}
+
+
+	var pageParam;
+  var datas = [];
+	apiready = function() {
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		pageParam = api.pageParam;
+    getSizeInfo();
+
+	};
+</script>
+
+</html>

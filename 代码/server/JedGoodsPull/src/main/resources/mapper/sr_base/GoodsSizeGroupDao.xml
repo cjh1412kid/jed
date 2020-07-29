@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.GoodsSizeGroupDao">
+    <insert id="insertGoodsSizeGroup" parameterType="java.util.List">
+        INSERT INTO
+        [JedSmartRetail].[dbo].[YHSR_Goods_Size_Group](Name,Description,Company_Seq,InputTime,Del)
+        VALUES
+        <foreach collection="list" index="index" item="item" open="" close="" separator=",">
+            (#{item.name},#{item.description},#{item.companySeq},#{item.inputTime},#{item.del})
+        </foreach>
+    </insert>
+</mapper>

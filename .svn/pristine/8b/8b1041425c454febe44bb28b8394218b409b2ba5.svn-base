@@ -1,0 +1,459 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>我的订单</title>
+		<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/aui1x2x1/aui_iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/order/order_frm.css" />
+		<style type="text/css">
+		</style>
+	</head>
+	<body class="aui-hide">
+		<section id="order-container">
+
+			<!--<div class="aui-card-list">
+				<div class="aui-card-list-header">
+					<div class="aui-card-list-user-name" >
+						<div><span>单号：</span><span class="orderNum">FVS135463152 <div class="aui-label aui-margin-l-10 aui-font-size-12 aui-label-outlined" tapmode onclick="openAgreement('')">协议</div></span></div>
+						<div>
+							<span tapmode onclick="deleteOrder()"><i class="aui-iconfont aui-icon-delete"></i></span>
+							<span class="aui-margin-l-10 aui-text-red aui-font-size-12">待确认</span>
+						</div>
+					</div>
+				</div>
+				<div class="box-wrap product-container" tapmode onclick="openOrderDetailWin('FVS135463152')">
+					<img class="product-size" src="../../image/order/B7132667C19.jpg" />
+					<ul class="aui-list aui-list-noborder flex-wrap flex-vertical  aui-hide">
+						<li class="flex-con box-wrap box-horizontal-center"><div>2018年春季新款白色高跟鞋</div></li>
+						<li class="flex-con box-wrap box-horizontal-center"><div>数量：<span>10双</span></div></li>
+					</ul>
+				</div>
+				<div class="aui-card-list-footer">
+					<div class="aui-card-list-user-name aui-padded-l-10 aui-padded-r-10">
+						<div class="goods-count"><span>共 </span><span class="aui-font-size-16"></span><span> 双</span></div>
+						<div>
+							<span>已付：</span><span class="money-style-2">¥</span><span class="money-style-1">0</span><span class="money-style-2">.00</span>
+							<span class="aui-margin-l-15">应付：</span><span class="money-style-2">¥</span><span class="money-style-1">0</span><span class="money-style-2">.00</span>
+						</div>
+					</div>
+					<div class="aui-card-list-user-name aui-padded-l-10 aui-padded-r-10 aui-padded-b-5 aui-padded-t-5 aui-border-t">
+						<div></div>
+						<div class="order-time">03-11 19:43</div>
+					</div>
+				</div>
+			</div>-->
+
+		</section>
+
+
+		<div class="footer-over aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			到底了<i class="aui-iconfont aui-icon-activity aui-font-size-12"></i>
+		</div>
+		<div class="footer-empty aui-card-list-footer aui-text-center aui-font-size-16 no-order aui-hide" style="background-color: rgba(0,0,0,0)">
+			<div><img src="../../image/img_no_order.png"/><div>
+			<div class="aui-border box-wrap box-horizontal-center  box-vertical-center qgg" tapmode onclick="toGoodsListWin('all', '全部鞋款', 0)">去逛逛</div>
+		</div>
+		<div class="footer-more aui-card-list-footer aui-text-center aui-font-size-12 aui-hide">
+			加载更多<i class="aui-iconfont aui-icon-more aui-font-size-12"></i>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/api.js" ></script>
+	<script type="text/javascript" src="../../script/common/common.js"></script>
+	<script type="text/javascript" src="../../script/common/my_common.js"></script>
+	<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js" ></script>
+	<script type="text/javascript">
+
+
+		//打开订单详情页
+		function openOrderDetailWin(_orderSeq, _orderStatus, _paid, _orderPrice) {
+			var bounces = false, reload = true, delay = 0;
+			var pageParam = {
+				orderSeq : _orderSeq,
+				orderStatus : _orderStatus,
+				paid : _paid,
+				orderPrice : _orderPrice
+			}
+			var animation = {
+				type : "movein",
+				subType : "from_right",
+				duration : 300
+			}
+			_openWin("order_detail_win", "./order_detail/order_detail_win.html", pageParam);
+		}
+
+		//1.订货爆款seq为0, 2."新品推荐seq为0, 3.全部鞋款seq为0, 4.鞋子分类seq为鞋子分类序号(主键)
+		function toGoodsListWin(_type, _name, _seq) {
+			var pageParam = {
+				name : _name,
+				seq : _seq
+			}, bounces = false, reload = false;
+			if (_type == "all") {//全部鞋款
+				_openWin("all_goods_list_win", "../goods/list/all/all_goods_list_win.html", pageParam, bounces, reload);
+			} else if (_type == "bk") {//订货爆款
+				_openWin("bk_goods_grid_win", "../goods/list/bk/bk_goods_grid_win.html", pageParam, bounces, reload);
+			} else if (_type == "xp") {//新品推荐
+				_openWin("xp_goods_grid_win", "../goods/list/xp/xp_goods_grid_win.html", pageParam, bounces, reload);
+			}
+		}
+
+		//打开"订单协议"窗口
+		function openAgreement(agreementNo){
+			var _items = new Array();
+			var  _marginL,_marginB, _marginT; //100(默认10),139(默认10), 139(默认10) --->1.列表key值距离列表左边的距离     2.key,value值距离每项顶部的距离      3.key,value值距离每项底部的距离
+			if(_isStringNull(agreementNo)){
+				_items = [{ key: '暂无协议模板'}];
+				_marginL = 108, _marginT = 139, _marginB = 139;
+			}else{
+				_items = [{ key: 'key1', value: 'value1'},{ key: 'key1', value: 'value1'},{ key: 'key1', value: 'value1'}];
+				_marginL = 10, _marginT = 10, _marginB = 10;
+			}
+			var dialogBox = api.require('dialogBox');
+			dialogBox.receipt({
+				tapClose: true,//类型：布尔类型, 描述：（可选项）是否点击遮罩层关闭该对话框, 默认值：false
+			    rect: {
+			        w: 300,
+			        h: 400
+			    },
+			    //items:类型：JSON 数组类型, 描述：对话框列表的显示数据
+			    items: _items,
+			    //类型：JSON 对象类型, 描述：对话框按钮或标题的文本设置
+			    texts: {
+			        title: '订单协议',
+			        cancel: '确定'
+			    },
+			    //类型：JSON 对象类型, 描述：（可选项）对话框样式设置
+			    styles: {
+				     bg:'#FFF',                 //（可选项）字符串类型；对话框的背景色，支持#、rgb、rgba、img；默认：#FFF
+				     corner: 8,                 //（可选项）数字类型；对话框背景圆角大小；默认：2
+				     title:{                    //（可选项）JSON对象类型；对话框标题设置，若不传则不显示标题区域
+				         textColor: '#000',      //（可选项）字符串类型；标题的字体颜色；支持#、rgb、rgba；默认值：#000
+				         textSize: 18,           //（可选项）数字类型；标题的字体大小；默认值：18
+				         marginT: 17             //（可选项）数字类型；标题的距离对话框顶部的距离；默认值：18
+				     },
+				     topBorder:{                //（可选项）JSON对象类型；上分割线的设置
+				         borderColor: '#bc9761', //（可选项）字符串类型；边界线颜色，支持#、rgb、rgba；默认：#000
+				         borderWidth: 0,        //（可选项）数字类型；边界线的粗细，默认值：2
+				         marginT: 10            //（可选项）数字类型；边界线的距离标题的下边距的距离，默认值：10
+				     },
+				     listHeight: 300,           //（可选项）数字类型；列表的高度；默认值：200
+				     item:{                     //（可选项）JSON对象类型；列表项的设置
+				         textColor: '#000',     //（可选项）字符串类型；列表的字体颜色，支持#、rgb、rgba；默认值：#000
+				         textSize : 14,         //（可选项）数字类型；列表的字体大小；默认值：18
+				         marginL: _marginL,//108,    //（可选项）数字类型；列表key值距离列表左边的距离；默认值：10
+				         marginT: _marginT,//139,    //（可选项）数字类型；key,value值距离每项顶部的距离；默认值：10
+				         marginB: _marginB, //139,   //（可选项）数字类型；key,value值列表距离每项底部的距离；默认值：10
+				         marginR: '10',            //（可选项）数字类型；value值距离列表右边的距离；默认值：10
+				         bgColor: '#EEEEEE'         //（可选项）字符串类型；列表项的背景颜色，支持#、rgb、rgba；默认值：#FFF
+				     },
+				     bottomBorder:{             //（可选项）JSON对象类型；下分割线的设置
+				         borderColor: '#bc9761', //（可选项）字符串类型；边界线颜色，支持#、rgb、rgba；默认值：#000
+				         borderWidth: 0         //（可选项）数字类型；边界线的粗细；默认值：2
+				     },
+				     cancel:{                   //（可选项）取消按钮样式设置
+				        h: 26,                  //（可选项）数字类型；取消按钮高度；默认值：35
+				        textSize: 18,           //（可选项）数字类型；取消按钮字体大小；默认值：18
+				        textColor: '#007FFF',    //（可选项）字符串类型；取消按钮字体颜色，支持#、rgb、rgba；默认值：#000
+				        marginT: 8,           //（可选项）数字类型；取消按钮距离弹框下分割线的距离；默认值：10
+				        normal: '#FFF',      //（可选项）字符串类型；取消按钮的背景设置，支持rgb、rgba、#、img；默认：#ffffff
+				        highlight: '#FFF'    //（可选项）字符串类型；取消按钮的背景高亮设置，支持rgb、rgba、#、img；默认：#696969
+				     }
+				}
+			}, function(ret, err) {
+			    if (ret) {
+			        console.log(JSON.stringify(ret));
+			        if(ret.eventType == "cancel"){
+			        	dialogBox.close({
+						    dialogName: 'receipt'
+						});
+			        }
+			    } else {
+			        console.log(JSON.stringify(err));
+			    }
+			});
+		}
+
+		//删除订单(状态为“已取消”的订单才可删除)
+		function deleteOrder(_orderSeq){
+			_myAlert("确认删除此订单?", "取消", "删除", function(){
+				var url = window.myServerUrl + "order/app/order/deleteOrder?orderSeq="+_orderSeq+"&token="+token;
+				currentAjaxTag = "deleteOrder";
+				isRequesting = true;
+				console.log("ajax.url:" + url);
+				console.log("ajax.tag:" + currentAjaxTag);
+	//			_showProgress("删除订单中..", "", true);
+				_ajax(url, currentAjaxTag, function(ret, err) {
+					isRequesting = false;
+	//				api.hideProgress();
+					if (ret) {
+						console.log("_ajax.deleteOrder.ret:" + $api.jsonToStr(ret));
+							//设置下拉刷新延迟时间
+					    	_toast(ret.msg);
+							setTimeout(function() {
+								api.refreshHeaderLoading();
+							}, 200);
+
+					} else {
+						_toast(window.ajaxErrorMessage);
+					}
+				});
+			})
+		}
+
+
+		//*********************************************************************************************************
+		function initUI(data, type) {
+			switch(type) {
+				case "down":
+					if (_isArrayNull(data)) {
+						//第一页没数据，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+						isAjaxing = true;
+						$api.html($api.byId("order-container"), "");
+						showEmptyMsg();//显示"暂无数据"
+					} else {
+						var htmlStr = getOrderHTML(data);
+//						console.log(htmlStr);
+						$api.html($api.byId("order-container"), htmlStr);
+
+						if (data.length < num) {
+							//第一页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+							isAjaxing = true;
+							showOverMsg();//显示"到底了"
+						}else{
+							//第一页数据等于每页总数，false，用户向上滑动就再次请求服务器获取后面页数的数据
+							isAjaxing = false;
+							showMoreMsg();//显示"加载更多"
+						}
+					}
+					break;
+				case "up":
+					if (_isArrayNull(data)) {
+						//当前页没数据了，则将isAjaxing置为true，防止继续上滑频繁请求服务器
+						isAjaxing = true;
+						showOverMsg();//显示"到底了"
+					} else {
+						var htmlStr = getOrderHTML(data);
+//						console.log(htmlStr);
+						$api.append($api.byId("order-container"), htmlStr);
+
+						if (data.length < num) {
+							//新获取页数据不够每页总数，则将isAjaxing置为true，用户向上滑动就不会请求服务器获取后面页数的数据了
+							isAjaxing = true;
+							showOverMsg();//显示"到底了"
+						}else{
+							isAjaxing = false;
+							showMoreMsg();//显示"加载更多"
+						}
+					}
+					break;
+			}
+			new auiLazyload({
+				errorImage : "../../image/error_small_img.png"
+			});
+			setTimeout(function() {
+				api.refreshHeaderLoadDone();
+				api.parseTapmode();
+				if ($api.hasCls($api.dom("body"), "aui-hide")) {
+					$api.removeCls($api.dom("body"), "aui-hide");
+				}
+				closeUILoading();
+			}, window.refreshLoadDoneTimeOut);
+		}
+
+		function getOrderHTML(data){
+			var orderHTML = "";
+			for (var i = 0; i < data.length; i++) {
+				orderHTML += '<div class="aui-card-list">';
+				orderHTML += 	'<div class="aui-card-list-header">';
+				orderHTML += 		'<div class="aui-card-list-user-name" >';
+				orderHTML += 			'<div><span>单号：</span><span class="orderNum">'+data[i].orderNum+'<div class="aui-label aui-margin-l-10 aui-font-size-12 aui-label-outlined aui-hide" tapmode onclick="openAgreement()">协议</div></span></div>';
+				orderHTML += 			'<div>';
+				if(userInfo.saleType != 1 && data[i].orderStatus == 7){//如订单状态为"已取消",并且为商家, 则显示删除图标
+					orderHTML +=			'<span tapmode onclick="deleteOrder('+data[i].Seq+')"><i class="aui-iconfont aui-icon-delete"></i></span>';
+				}
+				orderHTML +=			 	'<span class="aui-margin-l-10 aui-font-size-12 '+getStatusColor(data[i].orderStatus)+'">'+data[i].statusName+'</span>';
+				orderHTML +=			'</div>';
+				orderHTML += 		'</div>';
+				orderHTML += 	'</div>';
+				orderHTML += 	'<div class="box-wrap product-container" tapmode onclick="openOrderDetailWin('+data[i].Seq+', '+data[i].orderStatus+', '+data[i].paid+', '+ data[i].orderPrice+')">';
+
+				if(_isArrayNull(data[i].photo)){
+						orderHTML += '<img class="product-size" src="../../image/error_small_img.png" />';
+				}else{
+					var photoArr = _unique(data[i].photo);
+					for(var j = 0; j < photoArr.length; j++){
+						orderHTML += '<img class="product-size" data-src="'+photoArr[j]+'" src="../../image/load_small_img.png" />';
+//						orderHTML += '<ul class="aui-list aui-list-noborder flex-wrap flex-vertical  aui-hide">';
+//						orderHTML += 	'<li class="flex-con box-wrap box-horizontal-center"><div>2018年春季新款白色高跟鞋</div></li>';
+//						orderHTML += 	'<li class="flex-con box-wrap box-horizontal-center"><div>数量：<span>10双</span></div></li>';
+//						orderHTML += '</ul>';
+					}
+				}
+				orderHTML += 	'</div>';
+				orderHTML += 	'<div class="aui-card-list-footer">';
+				orderHTML += 		'<div class="aui-card-list-user-name aui-padded-l-10 aui-padded-r-10">';
+				orderHTML += 			'<div class="goods-count"><span>共 </span><span class="aui-font-size-16">'+data[i].species+'</span><span> 双</span></div>';
+				orderHTML += 			'<div>';
+				var paidPriceArr = data[i].paid.toFixed(2).split(".");
+				orderHTML += 				'<span>'+showTextBy(userInfo.attachType, userInfo.saleType, "已")+'</span><span class="money-style-2">¥</span><span class="money-style-1">'+paidPriceArr[0]+'</span><span class="money-style-2">.'+paidPriceArr[1]+'</span>';
+				var orderPriceArr = data[i].orderPrice.toFixed(2).split(".");
+				orderHTML += 				'<span class="aui-margin-l-15">'+showTextBy(userInfo.attachType, userInfo.saleType, "应")+'</span><span class="money-style-2">¥</span><span class="money-style-1">'+orderPriceArr[0]+'</span><span class="money-style-2">.'+orderPriceArr[1]+'</span>';
+				orderHTML += 			'</div>';
+				orderHTML += 		'</div>';
+				orderHTML += 		'<div class="aui-card-list-user-name aui-padded-l-10 aui-padded-r-10 aui-padded-b-5 aui-padded-t-5 aui-border-t">';
+				orderHTML += 			'<div></div>';
+				orderHTML += 			'<div class="order-time">'+_getFormatedDate(data[i].inputTime, "yyyy年MM月dd日")+'</div>';
+				orderHTML += 		'</div>';
+				orderHTML += 	'</div>';
+				orderHTML += '</div>';
+			}
+			return orderHTML;
+		}
+
+		//获取订单列表, 参数:订单状态序号statusSeq(默认获取全部订单,statusSeq为0)
+		function getDatas(call) {
+			var url = window.myServerUrl + "order/app/order/orderList?start="+start+"&num="+num+"&token="+token+"&status="+statusSeq;
+			currentAjaxTag = "orderList";
+			isRequesting = true;
+			console.log("获取订单列表:" + url);
+//			console.log("ajax.tag:" + currentAjaxTag);
+//			_showProgress("获取订单列表...", "", true);
+			isAjaxing = true;
+			_ajax(url, currentAjaxTag, function(ret, err) {
+				isRequesting = false;
+//				api.hideProgress();
+				var tempOrderList = [];//存放临时数据
+				if (ret) {
+					console.log("_ajax.orderList.ret:" + $api.jsonToStr(ret));
+					if (ret.code == 0) {
+						tempOrderList = ret.result;
+						//list数组
+					} else {
+						_toast(ret.msg);
+					}
+				} else {
+					_toast(window.ajaxErrorMessage);
+				}
+				call(tempOrderList);
+			});
+		}
+
+		function closeUILoading() {
+			UILoading.closeKeyFrame();
+		}
+
+		function openUILoading() {
+			UILoading.keyFrame({
+				rect : {
+					w : 102,
+					h : 102
+				},
+				styles : {
+					bg : 'rgba(0,0,0,0)',
+					corner : 5,
+					interval : 50,
+					frame : {
+						w : 102,
+						h : 102
+					}
+				},
+				//				content : [{
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}, {
+				//					frame : 'widget://image/loading_more.gif' //字符串类型；加载状态动画的关键帧图片路径；
+				//				}],
+				mask : "rgba(255,0,0,0)"
+			}, function(ret) {
+				//								alert(JSON.stringify(ret));
+				console.log(12345);
+			});
+		}
+		function initData() {
+			start = 1;
+			num = 10;
+			token = $api.getStorage("tokenKey");
+			statusSeq = api.pageParam.statusSeq;
+			orderList = [];
+			userInfo = $api.getStorage("userInfoKey");
+			UILoading = api.require('UILoading');
+		}
+
+
+		var start; //起始条数
+		var num; //每页显示条数
+		var token; //令牌
+		var statusSeq; //订单状态下标(0~5)
+		var orderList; //订单列表
+		var userInfo; //用户信息
+		var isAjaxing = false;
+		var UILoading;
+		var isFirst=true;
+		var apiready = function() {
+			initData();
+
+			//下拉刷新
+			api.setRefreshHeaderInfo({
+				loadingImg : 'widget://image/loading_more.gif',
+				bgColor : 'rgba(255,255,255,0)',
+				textColor : '#505050',
+				textDown : '下拉刷新...',
+				textUp : '松开刷新...'
+			}, function(ret, err) {
+				//在这里从服务器加载数据，加载完成后调用api.refreshHeaderLoadDone()方法恢复组件到默认状态
+				start = 1;
+				orderList = [];
+				getDatas(function(result) {
+					orderList = result;
+					initUI(result, "down");
+				});
+			});
+
+			//设置下拉刷新延迟时间
+			setTimeout(function() {
+				getDatas(function(result) {
+					isFirst=false;
+					orderList = result;
+					initUI(result, "down");
+				});
+				openUILoading();
+			}, 200);
+
+			//上拉加载
+			api.addEventListener({
+				name : 'scrolltobottom',
+				extra : {
+					threshold : 0 //设置距离底部多少距离时触发，默认值为0，数字类型
+				}
+			}, function(ret, err) {
+				// console.log("scrolltobottom.ret:" + $api.jsonToStr(ret));
+				if (!isAjaxing) {
+					start += num;
+					getDatas(function(result) {
+						orderList = orderList.concat(result);
+						setTimeout(function(){
+							initUI(result, "up");
+						}, 100);
+					});
+				}
+			});
+
+			_addEventListener("orderStatusChangedEvent", function(ret) {
+				console.log("状态改变事件");
+				setTimeout(function() {
+					api.refreshHeaderLoading();
+				}, 200);
+			});
+			_addEventListener("resume", function(ret) {
+				if(!isFirst){
+					setTimeout(function() {
+						api.refreshHeaderLoading();
+					}, 200);
+				}
+			});
+
+		}
+	</script>
+</html>

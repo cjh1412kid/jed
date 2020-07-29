@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/goods/goods_list_win.css" />
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+		<a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+		<a class="aui-pull-right aui-btn aui-hide" tapmode onclick="openRightPane();"><img src="../../image/icon_filter.png" /></a>
+		<div class="aui-title text-header-title aui-text-default aui-font-size-16"></div>
+	</header>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript">
+	function openRightPane() {
+		api.openDrawerPane({
+			type: 'right'
+		});
+	}
+
+	var userInfo = $api.getStorage('userInfoKey');
+	var pageParam;
+	apiready = function() {
+		$api.html($api.dom(".aui-title"), api.pageParam.name); //顶部标题
+		api.parseTapmode();
+		var header = $api.byId('aui-header');
+		$api.fixStatusBar(header);
+		pageParam = api.pageParam;
+			var headerPos = $api.offset(header);
+			var rect = {
+				x: 0,
+				y: 0,
+				w: 'auto',
+				h: 'auto',
+				marginLeft: 0, //相对父 window 左外边距的距离
+				marginTop: headerPos.h, //相对父 window 上外边距的距离
+				marginBottom: 0, //相对父 window 下外边距的距离
+				marginRight: 0 //相对父 window 右外边距的距离
+			};
+			var animation = {
+				type: "none",
+			};
+			console.log($api.jsonToStr(pageParam));
+			_openFrame("developing_frm", "developing_frm.html", rect, pageParam, false, true, false, animation);
+
+
+		_addEventListener("pause", function(ret) {
+			// console.log("pause");
+			// alert('pause')
+		});
+		_addEventListener("viewappear", function(ret) {
+			// console.log("pause");
+			// alert('viewappear')
+			// _execScript('','goods_list_frm','refreshData();')
+		});
+		_addEventListener("viewdisappear", function(ret) {
+			// console.log("pause");
+			// alert('viewdisappear')
+		});
+	};
+</script>
+
+</html>

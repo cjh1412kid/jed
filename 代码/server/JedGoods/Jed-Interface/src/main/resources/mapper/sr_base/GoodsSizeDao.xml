@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.GoodsSizeDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.sr_base.entity.GoodsSizeEntity" id="goodsSizeMap">
+        <result property="seq" column="Seq"/>
+        <result property="companySeq" column="Company_Seq"/>
+        <result property="sizeCode" column="SizeCode"/>
+        <result property="sizeName" column="SizeName"/>
+        <result property="inputTime" column="InputTime"/>
+        <result property="del" column="Del"/>
+    </resultMap>
+
+
+    <select id="selectSizeSeqByCodeAndCompanySeq" resultType="java.lang.Integer">
+        SELECT  [Seq]
+        FROM [JedSmartRetail].[dbo].[YHSR_Goods_Size]
+        WHERE Company_Seq=#{companySeq} and SizeCode = #{code} and Del=0
+    </select>
+
+    <insert id="insertGoodsSize" parameterType="java.util.List">
+        INSERT INTO
+        [JedSmartRetail].[dbo].[YHSR_Goods_Size](Company_Seq,SizeCode,SizeName,InputTime,Del)
+        VALUES
+        <foreach collection="list" index="index" item="item" open="" close="" separator=",">
+            (#{item.companySeq},#{item.sizeCode},#{item.sizeName},#{item.inputTime},#{item.del})
+        </foreach>
+    </insert>
+</mapper>

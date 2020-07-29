@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.ShoesDataDailyDetailCopyDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.ShoesDataDailyDetailEntity" id="shoesDataDailyDetailMap">
+        <result property="seq" column="Seq"/>
+        <result property="erpOrderNum" column="ErpOrderNum"/>
+        <result property="shopSeq" column="Shop_Seq"/>
+        <result property="shopName" column="ShopName"/>
+        <result property="shoesSeq" column="Shoes_Seq"/>
+        <result property="shoesId" column="ShoesId"/>
+        <result property="type" column="Type"/>
+        <result property="color" column="Color"/>
+        <result property="size" column="Size"/>
+        <result property="count" column="Count"/>
+        <result property="updateTime" column="UpdateTime"/>
+        <result property="join" column="Join"/>
+        <result property="goodsType" column="goods_type"/>
+    </resultMap>
+
+    <insert id="insertShoesDataDailyDetailCopy" parameterType="java.util.List">
+        INSERT INTO
+        JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail_Copy(ErpOrderNum,Shop_Seq,ShopName,Shoes_Seq,ShoesId,[Type],Color,[Size],[Count],UpdateTime,Price,Input_ERP_Time,Tag_Price,Company_Seq,goods_type)
+        VALUES
+        <foreach collection="list" index="index" item="item" open="" close="" separator=",">
+            (#{item.erpOrderNum},#{item.shopSeq},#{item.shopName},#{item.shoesSeq},#{item.shoesId},#{item.type},#{item.color},#{item.size},#{item.count},#{item.updateTime},#{item.price},#{item.inputERPTime}
+            ,#{item.tagPrice},#{item.companySeq},#{item.goodsType})
+        </foreach>
+    </insert>
+
+    <delete id="deleteShoesDataDailyDetailCopy">
+        DELETE FROM JedOrderPlatform.dbo.YHSR_OP_ShoesData_Daily_Detail_Copy
+    </delete>
+</mapper>

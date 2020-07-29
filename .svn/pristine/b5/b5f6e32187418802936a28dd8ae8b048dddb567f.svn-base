@@ -1,0 +1,552 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>总销售指标分析</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/sale/sale_allindicator_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16" tapmode onclick="openSearchWin();">总销售指标分析</div>
+    </header>
+    <div class="flex-wrap flex-vertical">
+        <!-- <div> -->
+        <div class="tabWrap">
+            <div class="aui-tab" id="tab">
+                <!-- <div class='aui-tab-item' all-data=''>全年</div>
+                <div class="aui-tab-item aui-active" all-data="1">一月</div>
+                <div class="aui-tab-item" all-data="2">二月</div>
+                <div class="aui-tab-item" all-data="3">三月</div>
+                <div class="aui-tab-item" all-data="4">四月</div>
+                <div class="aui-tab-item" all-data="5">五月</div>
+                <div class="aui-tab-item" all-data="6">六月</div>
+                <div class="aui-tab-item" all-data="7">七月</div>
+                <div class="aui-tab-item" all-data="8">八月</div>
+                <div class="aui-tab-item" all-data="9">九月</div>
+                <div class="aui-tab-item" all-data="10">十月</div>
+                <div class="aui-tab-item" all-data="11">十一月</div>
+                <div class="aui-tab-item" all-data="12">十二月</div> -->
+
+            </div>
+        </div>
+        <div class="salMes">
+            <div class="salTittle flex-wrap flex-vertical">
+                <div class="salName sal-time"></div>
+                <div class="flex-wrap salMiddle">
+                  <img src="../../image/sale/img_card.png" alt="">
+                  <div class="flex-con flex-wrap flex-vertical">
+                    <div class="time flex-1 sal_flex2 sal-time1"></div>
+                    <div class="flex-1 sal_flex2 ">
+                      <span class="finish-text">实际完成:</span>
+                      <span class="finish-text1 text-spe actually-complete"></span>
+                      <span class="finish-text2">万</span>
+                    </div>
+                    <div class="flex-1 sal_flex2">
+                      <span class="finish-text3">去年同期:</span>
+                      <span class="finish-text4 text-spe actually-complete1"></span>
+                      <span class="finish-text5">万</span>
+                      <span class="finish-text4 text-spe persent-num aui-margin-l-5"></span>
+                      <span class="red persent text-spe persent-num1"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex-con aui-padded-l-10 flex-wrap flex-vertical">
+                  <div class="flex-1 flex-wrap">
+                    <div class="flex-1"></div>
+                    <div class="flex-1 finish-text6 sal_flex1">基准指标</div>
+                    <div class="flex-1 finish-text6 sal_flex1">中级指标</div>
+                    <div class="flex-1 finish-text6 sal_flex1">高级指标</div>
+                  </div>
+                  <div class="flex-1 flex-wrap">
+                    <div class="flex-1 finish-text6 sal_flex1">指标</div>
+                    <div class="flex-1 sal_flex1">
+                      <span class="finish-text7 basic-index"></span>
+                      <span class="finish-text8">万</span>
+                    </div>
+                    <div class="flex-1 sal_flex1">
+                      <span class="finish-text7 middle-index"></span>
+                      <span class="finish-text8">万</span>
+                    </div>
+                    <div class="flex-1 sal_flex1">
+                      <span class="finish-text7 advance-index"></span>
+                      <span class="finish-text8">万</span>
+                    </div>
+                  </div>
+                  <div class="flex-1 flex-wrap">
+                    <div class="finish-text6 sal_flex1 flex-1">完成率</div>
+                    <div class="flex-1 sal_flex1">
+                      <span class="finish-text9 basic-index1"></span>
+                      <span class="finish-text10">%</span>
+                    </div>
+                    <div class="flex-1 sal_flex1">
+                      <span class="finish-text9 middle-index1"></span>
+                      <span class="finish-text10">%</span>
+                    </div>
+                    <div class="flex-1 sal_flex1">
+                      <span class="finish-text9 advance-index1"></span>
+                      <span class="finish-text10">%</span>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="allShopContent aui-bg-info flex-con aui-bg-white aui-margin-10 aui-margin-t-0 flex-wrap flex-vertical">
+            <div class="sub-header flex-wrap allShopContent_t1 time-sale"></div>
+            <div class="sub-header flex-wrap allShopContent_t1 check">
+                <div class="flex-1 sal_flex1 check-btns btn1 hot" data-type="1" tapmode onclick="checkType(this)">基准指标</div>
+                <div class="flex-1 sal_flex1 check-btns btn2" data-type="2" tapmode onclick="checkType(this)">中级指标</div>
+                <div class="flex-1 sal_flex1 check-btns btn3" data-type="3" tapmode onclick="checkType(this)">高级指标</div>
+            </div>
+            <div class="sub-header flex-wrap allShopContent_t">
+                <div class="box-wrap box-horizontal-center box-vertical-center shop-tittle">
+                    门店名称
+                </div>
+                <div class="sort-btn box-wrap box-horizontal-center box-vertical-center " data-orderBy="totalMoney" tapmode onclick="sort(this)">
+                    指标<span>▼</span>
+                </div>
+                <div class="sort-btn box-wrap box-horizontal-center box-vertical-center shop-complete" data-orderBy="completeMoney" tapmode onclick="sort(this)">
+                    已完成<span>▼</span>
+                </div>
+                <div class="sort-btn box-wrap box-horizontal-center box-vertical-center active active-sort" data-orderBy="completePercent" tapmode onclick="sort(this)">
+                    完成率<span>▼</span>
+                </div>
+                <i class="aui-iconfont aui-icon-right aui-invisible sal_flex1"></i>
+            </div>
+            <div class="ulWrap flex-con">
+                <ul class="allShopContent_m">
+
+                    <!-- <li class='sal_flex aui-border-b' tapmode data-shop-seq='1' onclick='jumpWin(this)'>
+                        <div class='allShopName sal_flex1'><span class='shop-name'>温州门店1号</span></div>
+                        <div class='sal_flex1'><span class='total-money'>270</span><span class='allSpe'>万</span></div>
+                        <div class='sal_flex1 shop-complete'><span class='complete-money'>0</span><span class='allSpe'>万</span></div>
+                        <div class='sal_flex1'>0%</div>
+                        <i class='aui-iconfont aui-icon-right sal_flex1'></i>
+                    </li> -->
+
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/jquery_min.js"></script>
+<script type="text/javascript" src="../../script/common/echarts_min.js"></script>
+<script type="text/javascript" src="../../script/common/visitor_tips.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_toast.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_lazyload.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_tab.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript" src="../../script/common/linq.js"></script>
+<script type="text/javascript">
+    function checkType(_obj) {
+        if (!$api.hasCls(_obj, 'hot')) {
+            $api.removeCls($api.dom('.btn1'), 'hot');
+            $api.removeCls($api.dom('.btn2'), 'hot');
+            $api.removeCls($api.dom('.btn3'), 'hot');
+            $api.addCls(_obj, 'hot');
+            if($api.attr(_obj,'data-type')=='1'){
+              list = allshopData.StandardTargetShopEntity.totalShopCompleteList;
+              list = Enumerable.From(list).OrderByDescending("$." + "completePercent").ToArray();
+              initUI();
+            }else if ($api.attr(_obj,'data-type')=='2') {
+              list = allshopData.MiddleTargetShopEntity.totalShopCompleteList;
+              list = Enumerable.From(list).OrderByDescending("$." + "completePercent").ToArray();
+              initUI();
+            }else if($api.attr(_obj,'data-type')=='3') {
+              list = allshopData.AdvanceTargetShopEntity.totalShopCompleteList;
+              list = Enumerable.From(list).OrderByDescending("$." + "completePercent").ToArray();
+              initUI();
+            }
+        }
+    }
+
+    function animationTab(_obj) {
+        if (_obj <= 3) {
+            // $("#tab").animate({left:-(_obj*3.6-7.2)+"rem" }, "slow");
+            $(".tabWrap").scrollLeft(0);
+        }
+        if (_obj > 3) {
+            // $("#tab").animate({left:-(_obj*3.6-7.2)+"rem" }, "slow");
+            $(".tabWrap").scrollLeft((_obj * 3.6 - 3 * 3.6) * 20);
+        }
+
+    }
+
+
+    function renderMonth(obj) {
+        var monthList = "";
+
+        for (var i = 0; i < 13; i++) {
+
+            if (i == 0) {
+                monthList += "<div class='aui-tab-item' all-data='' tapmode> 全年</div>"
+            } else {
+                monthList += "<div class='aui-tab-item' tapmode all-data='" + i + "'>" + i + "月</div>"
+            }
+        }
+        $api.append($api.dom('#tab'), monthList);
+        api.parseTapmode();
+        console.log(monthList);
+        var listWidth = "width:" + (i * 3.6) + "rem"
+        $api.css($api.dom('#tab'), listWidth);
+        tab = new auiTab({
+            element: document.getElementById("tab"),
+        }, function(obj) {
+            //console.log(obj.dom)
+            //  console.log($api.attr(obj.dom,'all-data','0'));
+            var value = $api.attr(obj.dom, 'all-data');
+            if (!$api.attr(obj.dom, 'all-data')) {
+                monthValue = 0
+            } else {
+                monthValue = value
+            }
+            $api.removeCls($api.dom('.btn1'), 'hot');
+            $api.removeCls($api.dom('.btn2'), 'hot');
+            $api.removeCls($api.dom('.btn3'), 'hot');
+            $api.addCls($api.dom('.btn1'), 'hot');
+            getDatas(monthValue);
+
+        });
+        tab.setActive(obj + 1);
+        animationTab(obj + 1);
+    }
+
+    function sort(_obj) {
+        var dataOrderBy = $api.attr(_obj, "data-orderBy");
+        if ($api.hasCls(_obj, "active")) {
+            if ($api.hasCls(_obj, "active-sort")) {
+                $api.text($api.dom(_obj, "span"), '▲');
+                $api.removeCls(_obj, "active-sort");
+                // pageParam.orderDir = 1;
+                list = Enumerable.From(list).OrderBy("$." + dataOrderBy).ToArray();
+
+            } else {
+                $api.addCls(_obj, "active-sort");
+                $api.text($api.dom(_obj, "span"), '▼');
+                // pageParam.orderDir = 0;
+                list = Enumerable.From(list).OrderByDescending("$." + dataOrderBy).ToArray();
+
+            }
+        } else {
+            $api.removeCls($api.dom(".sort-btn.active"), "active-sort");
+            $api.text($api.dom($api.dom(".sort-btn.active"), "span"), "▼");
+            $api.text($api.dom(_obj, "span"), '▼');
+            $api.addCls(_obj, "active-sort");
+            // pageParam.orderDir = 0;
+            list = Enumerable.From(list).OrderByDescending("$." + dataOrderBy).ToArray();
+            $api.removeCls($api.dom(".sort-btn.active"), "active");
+            $api.addCls(_obj, "active");
+        }
+        //广播
+        // _sendEvent("query_filter_changed_event", pageParam);
+        initUI();
+    }
+
+    function jumpWin(_obj) {
+        var pageParam = {
+            shopName: $api.text($api.dom(_obj, ".shop-name")),
+            month: parseInt(monthValue),
+            shopSeq: $api.attr(_obj, 'data-shop-seq'),
+        }
+        console.log($api.jsonToStr(pageParam));
+        _openWin('sale_indicator_win', 'sale_indicator_win.html', pageParam)
+    }
+
+    function initUI() {
+        var listContent = ""
+        for (var i = 0; i < list.length; i++) {
+            if (_isStringNull(list[i].totalMoney)) {
+                list[i].totalMoney = 0
+            }
+            if (_isStringNull(list[i].completeMoney)) {
+                list[i].completeMoney = 0
+            }
+            if (_isStringNull(list[i].completePercent)) {
+                list[i].completePercent = 0
+            }
+            var totalMoney = ""
+            var completeMoney = ""
+            var completePercent = ""
+            listContent += "<li class='sal_flex aui-border-b' tapmode data-shop-seq='" + list[i].shopSeq + "' onclick='jumpWin(this)'>";
+            listContent += "<div class='num sal_flex1'>"
+                // listContent += "<img src='' alt=''>"
+            listContent += "<span>" + (i + 1) + "</span>"
+            listContent += "</div>"
+            listContent += "<div class='allShopName sal_flex1'>"
+                // listContent += "<img src='' alt=''>"
+            listContent += "<span class='shop-name'>" + list[i].shopName + "</span>"
+            listContent += "</div>"
+            listContent += " <div class='sal_flex1'>"
+            listContent += "<span class='total-money'>" + list[i].totalMoney + "</span>"
+            listContent += "<span class='allSpe'>万</span>"
+            listContent += "</div>"
+            listContent += " <div class='sal_flex1'>"
+            listContent += "<span class='complete-money'>" + list[i].completeMoney.toFixed(2) + "</span>"
+            listContent += "<span class='allSpe'>万</span>"
+            listContent += "</div>"
+            if(list[i].completePercent>1){
+              listContent += "<div class='sal_flex1'>100.0%</div>"
+            }else {
+              listContent += "<div class='sal_flex1'>" + (list[i].completePercent * 100).toFixed(1) + "%</div>"
+            }
+            listContent += " <i class='aui-iconfont aui-icon-right sal_flex1'></i>"
+            listContent += "</li>"
+        }
+        console.log(listContent);
+        $api.html($api.dom('.allShopContent_m'), listContent);
+    }
+
+    function getDatas(param) {
+        var url = window.myServerUrl + '/order/app/targetShop/selectTotalTargetAnalyze';
+        if (param == 0) {
+            url += '?targetYear=' + new Date().getFullYear();
+        } else {
+            url += '?targetYear=' + new Date().getFullYear();
+            url += '&targetMonth=' + param;
+        }
+        console.log("总销售指标分析接口-->url:" + url);
+        _showProgress('加载中...');
+        _ajax(url, "sale_allindicator_win", function(ret, err) {
+            api.hideProgress();
+            if (ret) {
+                console.log("获取总销售指标分析接口数据-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+
+                    var shopData;
+                    allshopData = ret.result;
+                    shopData = ret.result.StandardTargetShopEntity;
+                    // var allshoptotalMoney = 0;
+                    // var allshopcompleteMoney = 0;
+                    // var completePercent = 0;
+                    // if (shopData.totalMoney == undefined) {
+                    //     allshoptotalMoney = 0
+                    // } else {
+                    //     allshoptotalMoney = shopData.totalMoney
+                    // }
+                    // if (shopData.completeMoney == undefined) {
+                    //     allshopcompleteMoney = 0;
+                    // } else {
+                    //     allshopcompleteMoney = shopData.completeMoney
+                    // }
+                    //
+                    // if (shopData.completePercent == undefined) {
+                    //
+                    //     if(shopData.totalMoney == undefined&&shopData.completeMoney!=undefined){
+                    //       completePercent = 1;
+                    //     }else {
+                    //       completePercent = 0;
+                    //     }
+                    // } else {
+                    //     completePercent = shopData.completePercent
+                    //     if ((completePercent * 100) > 100) {
+                    //         completePercent = 1;
+                    //     }
+                    //
+                    // }
+                    if (param == 0) {
+                        $api.text($api.dom(".sal-time"),  "全年汇总");
+                        $api.text($api.dom('.time-sale'), '全年指标汇总');
+
+                        $api.text($api.dom('.sal-time1'),new Date().getFullYear()+"年全年");
+                    } else {
+                        $api.text($api.dom(".sal-time"),param + "月汇总");
+                        $api.text($api.dom('.time-sale'), param+'月指标汇总');
+                        $api.text($api.dom('.sal-time1'),new Date().getFullYear()+"年"+param+"月");
+                    }
+                    if(shopData.totalMoney==undefined){
+                      $api.text($api.dom('.basic-index'),'0');
+                    }else {
+                      $api.text($api.dom('.basic-index'), shopData.totalMoney);
+                    }
+                    if(shopData.completePercent==undefined){
+                      $api.text($api.dom('.basic-index1'), '0.00');
+                    }else {
+                      if (shopData.completePercent > 1) {
+                          $api.text($api.dom('.basic-index1'), '100');
+                      } else {
+                          $api.text($api.dom('.basic-index1'), (shopData.completePercent * 100).toFixed(2));
+                      }
+                    }
+                    if(_isStringNull(allshopData.compareLastYear)){
+                       $api.text($api.dom('.persent-num'), '');
+                       $api.text($api.dom('.persent-num1'), '');
+
+                    }else {
+                       if(allshopData.compareLastYear>0){
+                         $api.text($api.dom('.persent-num'),(allshopData.compareLastYear*100).toFixed(0)+"%");
+                         if($api.hasCls($api.dom('.persent-num1'),'green')){
+                           $api.removeCls($api.dom('.persent-num1'),'green');
+                         }
+                         $api.text($api.dom('.persent-num1'), '↑');
+                       }else {
+                         $api.text($api.dom('.persent-num'),(Math.abs(allshopData.compareLastYear)*100).toFixed(0)+"%");
+                         if(!$api.hasCls($api.dom('.persent-num1'),'green')){
+                           $api.addCls($api.dom('.persent-num1'),'green');
+                         }
+                         $api.text($api.dom('.persent-num1'), '↓');
+                       }
+                    }
+                    if(allshopData.MiddleTargetShopEntity.totalMoney==undefined){
+                      $api.text($api.dom('.middle-index'), '0');
+                    }else {
+                      $api.text($api.dom('.middle-index'), allshopData.MiddleTargetShopEntity.totalMoney);
+                    }
+                    if(allshopData.MiddleTargetShopEntity.completePercent==undefined){
+                      $api.text($api.dom('.middle-index1'), '0.00');
+                    }else {
+                      if(allshopData.MiddleTargetShopEntity.completePercent > 1){
+                          $api.text($api.dom('.middle-index1'), '100');
+                      }else {
+                          $api.text($api.dom('.middle-index1'),(allshopData.MiddleTargetShopEntity.completePercent*100).toFixed(2));
+                      }
+                    }
+                    if(allshopData.AdvanceTargetShopEntity.totalMoney==undefined){
+                      $api.text($api.dom('.advance-index'), '0');
+                    }else {
+                      $api.text($api.dom('.advance-index'), allshopData.AdvanceTargetShopEntity.totalMoney);
+                    }
+                    if(allshopData.AdvanceTargetShopEntity.completePercent==undefined){
+                      $api.text($api.dom('.advance-index1'), '0.00');
+                    }else {
+                      if(allshopData.AdvanceTargetShopEntity.completePercent>1){
+                          $api.text($api.dom('.advance-index1'), '100');
+                      }else {
+                          $api.text($api.dom('.advance-index1'),(allshopData.AdvanceTargetShopEntity.completePercent*100).toFixed(2));
+                      }
+                    }
+                    if(_isStringNull(allshopData.completeMoney)){
+                      $api.text($api.dom('.actually-complete'), "0");
+                    }else {
+                          $api.text($api.dom('.actually-complete'), allshopData.completeMoney.toFixed(2));
+                    }
+                    if(_isStringNull(allshopData.salesCount)){
+                      $api.text($api.dom('.actually-complete1'),"0" );
+                    }else {
+                      // console.log(allshopData.salesCount);
+                      $api.text($api.dom('.actually-complete1'),allshopData.salesCount.toFixed(2));
+                    }
+                    // option.series[0].data[1].value = (allshoptotalMoney - allshopcompleteMoney) < 0 ? 0 : allshoptotalMoney - allshopcompleteMoney;
+                    // option.series[0].data[0].value = allshopcompleteMoney;
+                    // option.series[0].data[0].name = '完成率\n' + (completePercent * 100).toFixed(0) + "%"
+                    // myChart.setOption(option);
+                    // var listData = []
+                    // listData.push(shopData.totalShopCompleteList)
+                    list = shopData.totalShopCompleteList;
+                    list = Enumerable.From(list).OrderByDescending("$." + "completePercent").ToArray();
+                    //  console.log($api.jsonToStr(shopData.totalShopCompleteList));
+                    initUI();
+                    // _toast(ret.msg);
+                }
+            } else {
+                console.log("获取总销售指标分析接口数据-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            //callback();
+        });
+    }
+
+    // function initChart() {
+    //     myChart = echarts.init(document.getElementById('mychart'));
+    //     option = {
+    //
+    //         color: ['#288CFF', '#F5A623'],
+    //         series: [{
+    //             name: '访问来源',
+    //             type: 'pie',
+    //             radius: ['70%', '100%'],
+    //             avoidLabelOverlap: false,
+    //             hoverOffset: 1,
+    //             startAngle: 180,
+    //             label: {
+    //                 normal: {
+    //                     show: true,
+    //                     position: 'center',
+    //                     textStyle: {
+    //                         fontSize: '12',
+    //                         fontWeight: 'bold'
+    //                     }
+    //                 },
+    //                 emphasis: {
+    //                     show: true,
+    //                     textStyle: {
+    //                         fontSize: '30',
+    //                         fontWeight: 'bold'
+    //                     }
+    //                 }
+    //             },
+    //             labelLine: {
+    //                 normal: {
+    //                     show: false
+    //                 }
+    //             },
+    //             data: [{
+    //                     value: 20,
+    //                     name: '',
+    //                     emphasis: {
+    //                         label: {
+    //                             // formatter: '完成率\n{d}%',
+    //                             color: '#288CFF',
+    //                             fontWeight: 900,
+    //                             fontSize: 8,
+    //                             fontFamily: 'Arial-Black',
+    //                         }
+    //                     },
+    //
+    //
+    //
+    //                 }, {
+    //                     value: 30,
+    //                     emphasis: {
+    //                         label: {
+    //                             // formatter: '未完成率\n{d}%',
+    //                             color: '#288CFF',
+    //                             fontWeight: 900,
+    //                             fontSize: 8,
+    //                             fontFamily: 'Arial-Black',
+    //                         }
+    //                     },
+    //
+    //                 },
+    //
+    //             ]
+    //         }]
+    //     };
+    //     // 使用刚指定的配置项和数据显示图表。
+    //     myChart.setOption(option);
+    // }
+    var tab;
+    // var myChart;
+    // 指定图表的配置项和数据
+    // var option;
+    var list = [];
+    var monthValue;
+  var allshopData;
+    apiready = function() {
+        renderMonth(new Date().getMonth() + 1);
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        // initChart();
+        monthValue = new Date().getMonth() + 1
+        getDatas(monthValue);
+    }
+</script>
+
+</html>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.sr_base.dao.BaseUserDao">
+
+  <!-- 可根据自己的需求，是否要使用 -->
+  <resultMap type="io.nuite.modules.sr_base.entity.BaseUserEntity" id="baseUserMap">
+    <result property="seq" column="Seq"/>
+    <result property="accountName" column="AccountName"/>
+    <result property="password" column="Password"/>
+    <result property="companySeq" column="Company_Seq"/>
+    <result property="brandSeq" column="Brand_Seq"/>
+    <result property="shopSeq" column="Shop_Seq"/>
+    <result property="userName" column="UserName"/>
+    <result property="telephone" column="Telephone"/>
+    <result property="address" column="Address"/>
+    <result property="headImg" column="HeadImg"/>
+    <result property="inputTime" column="InputTime"/>
+    <result property="attachType" column="AttachType"/>
+    <result property="attachSeq" column="Attach_Seq"/>
+    <result property="saleType" column="SaleType"/>
+    <result property="del" column="Del"/>
+  </resultMap>
+
+
+  <!-- 定义resultMap，type为HashMap -->
+  <resultMap id="userNameImgMap" type="java.util.HashMap">
+    <id column="Seq" property="seq" jdbcType="INTEGER"/>
+    <result column="AccountName" property="accountName" jdbcType="VARCHAR"/>
+    <result column="UserName" property="userName" jdbcType="VARCHAR"/>
+    <result column="HeadImg" property="headImg" jdbcType="VARCHAR"/>
+  </resultMap>
+
+
+  <!-- 根据seqs获取多个用户的基础信息，包括名字、公司、品牌、头像 -->
+  <select id="getBaseUserInfoBySeqs" resultMap="userNameImgMap">
+      SELECT
+        A.Seq, A.AccountName, A.UserName, A.HeadImg
+      FROM
+        JedSmartRetail.dbo.YHSR_Base_User A
+      WHERE
+        A.Seq IN (${userSeqs}) AND A.Del = 0
+  </select>
+
+
+  <select id="queryByUserName" resultType="io.nuite.modules.sr_base.entity.BaseUserEntity">
+      select * from [JedSmartRetail].[dbo].YHSR_Base_User where AccountName = #{username} and Del=0
+  </select>
+
+
+  <!-- 查询用户的所有菜单ID -->
+  <select id="queryAllMenuId" resultType="java.lang.Long">
+    select distinct um.Menu_Seq from [JedSmartRetail].[dbo].YHSR_System_User_Menu um
+    where um.User_Seq = #{userSeq}
+  </select>
+
+  <!-- 查询用户的所有权限 -->
+  <select id="queryAllPerms" resultType="java.lang.String">
+		select ysm.perms from [JedSmartRetail].[dbo].YHSR_System_User_Menu ysum
+			left join [JedSmartRetail].[dbo].YHSR_System_Menu ysm on ysum.Menu_Seq = ysm.Seq
+		where ysum.User_Seq = #{userId}
+	</select>
+
+  <select id="selectBySeqList" resultType="io.nuite.modules.sr_base.entity.BaseUserEntity">
+    SELECT 
+    	top ${num} bu.*
+    FROM
+    	[JedSmartRetail].[dbo].YHSR_Base_User bu
+
+    WHERE bu.Seq NOT IN(
+	    SELECT 
+	    	top ${start} bu.Seq
+	    FROM 
+	    	[JedSmartRetail].[dbo].YHSR_Base_User bu
+	    
+	    WHERE
+	    	bu.Del = 0 AND bu.Company_Seq = #{companySeq}
+    	)
+    	AND bu.Del = 0 AND bu.Company_Seq = #{companySeq}
+  </select>
+
+  <select id="getTotalCount" resultType="java.lang.Integer">
+    SELECT
+    	count(*)
+    FROM
+    	[JedSmartRetail].[dbo].YHSR_Base_User bu
+    
+    WHERE
+    	bu.Del = 0 AND ou.Del = 0 AND bu.Company_Seq = #{companySeq}
+  </select>
+
+
+  <select id="selectUserByCompanyAndAccountName" resultMap="baseUserMap">
+    SELECT  Seq
+      ,AccountName
+      ,AttachType
+      ,Attach_Seq
+      ,SaleType
+      ,UserName
+      ,Telephone
+      ,Address
+      ,Del
+  FROM JedSmartRetail.dbo.YHSR_Base_User
+  WHERE AccountName = #{accountName} AND Company_Seq = #{companySeq}
+  </select>
+
+
+  <update id="updateUserBySeq" parameterType="io.nuite.modules.sr_base.entity.BaseUserEntity">
+
+    UPDATE JedSmartRetail.dbo.YHSR_Base_User
+    <set>
+      <if test="attachType != null ">AttachType = #{attachType},</if>
+      <if test="attachSeq != null ">Attach_Seq = #{attachSeq},</if>
+      <if test="saleType != null ">SaleType = #{saleType},</if>
+      <if test="del != null ">Del = #{del},</if>
+      <if test="accountName != null ">AccountName = #{accountName},</if>
+      <if test="userName != null ">UserName = #{userName},</if>
+      <if test="telephone != null ">Telephone = #{telephone},</if>
+      <if test="address != null ">Address = #{address},</if>
+      <if test="inputTime != null ">InputTime = #{inputTime},</if>
+    </set>
+    WHERE Seq=#{seq}
+
+  </update>
+
+
+  <select id="selectUserPage" resultType="io.nuite.modules.sr_base.entity.BaseUserEntity">
+    select ybu.*,
+    shop.Name as shopName
+    from [JedSmartRetail].[dbo].[YHSR_Base_User] ybu
+    left join [JedSmartRetail].[dbo].[YHSR_Base_User_Role] ybur on ybur.User_Seq=ybu.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Role] ybr on ybur.Role_Seq=ybr.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Shop] shop on ybu.Shop_Seq=shop.Seq
+    where ybu.Del=0 and ybr.Code!='FACTORY_ADMIN'
+      and ybu.Company_Seq=#{CompanySeq}
+    <if test="UserName!=null">
+      and ybu.UserName like '%${UserName}%'
+    </if>
+  </select>
+
+  <select id="selectAdminUser" resultType="io.nuite.modules.sr_base.entity.BaseUserEntity">
+    select top(1) ybu.*
+    from [JedSmartRetail].[dbo].[YHSR_Base_User] ybu
+    left join [JedSmartRetail].[dbo].[YHSR_Base_User_Role] ybur on ybur.User_Seq=ybu.Seq
+    left join [JedSmartRetail].[dbo].[YHSR_Base_Role] ybr on ybur.Role_Seq=ybr.Seq
+    where ybu.Del=0 and ybr.Code='FACTORY_ADMIN'
+      and ybu.Company_Seq=#{companySeq}
+    <if test="brandSeq!=null">
+      and ybu.Brand_Seq=#{brandSeq}
+    </if>
+  </select>
+  <select id="selectUserByAccountName" resultType="io.nuite.modules.sr_base.entity.BaseUserEntity">
+
+  </select>
+
+  <select id="selectShopUser" parameterType="java.util.Map" resultType="io.nuite.modules.sr_base.entity.BaseUserEntity">
+    SELECT
+    Seq AS seq,
+    AccountName AS accountName,
+    UserName AS userName,
+    Telephone AS telephone,
+    Address AS address,
+    HeadImg AS headImg
+    FROM
+    [JedSmartRetail].[dbo].[YHSR_Base_User] u
+    LEFT JOIN
+    [JedSmartRetail].[dbo].[YHSR_Base_User_Role] ur
+    ON ur.User_Seq = u.Seq
+    WHERE u.Del = 0 AND ur.Role_Seq = 3 AND u.Company_Seq = #{companySeq} AND u.Brand_Seq = #{brandSeq}
+  </select>
+</mapper>

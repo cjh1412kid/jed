@@ -1,0 +1,77 @@
+.bottom-btns{
+	position: fixed;
+	bottom: 0;
+	height: 2.5rem;
+	background-color: #FFFFFF;
+	width: 100%;
+	color: #FFFFFF;
+	line-height:2.5rem;
+	text-align: center;
+}
+.count-price{
+	color: #212121;
+	position: relative;
+}
+.bottom-btn{
+	width: 6.5rem;
+}
+
+.bottom-btn:active{
+	opacity: 0.9;
+}
+.bottom-btn-xn,.bottom-btn-fk{
+}
+.bottom-btn-cart{
+	background-image: linear-gradient(
+		#ff877e,
+		#ff877e),
+	linear-gradient(
+		#ff877e,
+		#ff877e);
+	background-blend-mode: normal,
+		normal;
+}
+.bottom-btn-xn{
+	background-color: #cfa972;
+}
+.bottom-btn-fk{
+	background-color: #f08a58;
+}
+
+
+/*自定义radio,checkbox大小,位置*/
+.aui-radio,
+.aui-checkbox {
+    width: 1.0rem;
+    height: 1.0rem;
+//	vertical-align: sub;
+	position: relative;
+    margin-top: 0.7rem;
+}
+/* 自定义选中状态下radio,checkbox背景色 */
+.aui-radio:checked,
+.aui-radio.aui-checked,
+.aui-checkbox:checked,
+.aui-checkbox.aui-checked {
+    background-color: #bc9761;
+    border: solid 0px #bc9761;
+    text-align: center;
+    background-clip: padding-box;
+}
+/* 自定义禁用状态下radio,checkbox背景色 */
+.aui-radio:disabled,
+.aui-radio.aui-disabled,
+.aui-checkbox:disabled,
+.aui-checkbox.aui-disabled {
+    background-color: #FFFFFF;
+    border: solid 1px #dddddd;
+}
+/* 金额样式 */
+.money-style-1{
+	font-weight:450 !important;
+	font-size: 0.95rem !important;
+}
+.money-style-2{
+	font-weight:550 !important;
+	font-size: 0.7rem !important;
+}

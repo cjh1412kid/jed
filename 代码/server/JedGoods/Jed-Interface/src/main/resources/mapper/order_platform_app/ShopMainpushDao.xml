@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.order_platform_app.dao.ShopMainpushDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nuite.modules.order_platform_app.entity.ShopMainpushEntity" id="shopMainpushMap">
+        <result property="seq" column="Seq"/>
+        <result property="shopSeq" column="Shop_Seq"/>
+        <result property="shoesSeq" column="Shoes_Seq"/>
+    </resultMap>
+
+    <select id="getShopMainPushList" resultType="java.util.Map">
+        SELECT
+        COUNT(A.Shop_Seq) AS number ,
+	    B.GoodID
+        FROM
+        JedOrderPlatform.dbo.YHSR_OP_ShopMainpush A
+        LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes B ON B.Seq = A.Shoes_Seq
+        WHERE
+        A.Shoes_Seq = #{shoesSeq}
+        GROUP BY B.GoodID
+    </select>
+
+    <select id="selectMainPushShop" parameterType="java.util.Map" resultType="io.nuite.modules.order_platform_app.entity.ShopMainpushEntity">
+        SELECT
+        s.Name AS shopName
+        FROM
+        JedOrderPlatform.dbo.YHSR_OP_ShopMainpush sm
+        LEFT JOIN
+        JedSmartRetail.dbo.YHSR_Base_Shop s
+        ON s.Seq = sm.Shop_Seq
+        WHERE sm.Shoes_Seq = #{shoesSeq}
+        GROUP BY s.Name
+    </select>
+</mapper>

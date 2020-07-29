@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nuite.modules.system.dao.home_page_management.SystemSowingMapDao">
+
+	<!-- 定义鞋子列表的resultMap，type为HashMap -->
+	<resultMap id="shoesSeqListMap" type="java.util.HashMap">
+		<id column="Seq" property="seq" jdbcType="INTEGER"/>
+	    <result column="Img1" property="img1" jdbcType="VARCHAR"/>
+	    <result column="GoodName" property="goodName" jdbcType="VARCHAR"/>
+	    <result column="GoodID" property="goodID" jdbcType="VARCHAR"/>
+	    <result column="Introduce" property="introduce" jdbcType="VARCHAR"/>
+	    <result column="InputTime" property="inputTime" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	
+	<select id="selectGoodsList" resultMap="shoesSeqListMap">
+		SELECT
+			A.Seq, A.Img1, A.GoodName, A.GoodID, A.Introduce, A.InputTime
+		FROM
+			JedOrderPlatform.dbo.YHSR_OP_ShoesInfo B
+		LEFT JOIN JedSmartRetail.dbo.YHSR_Goods_Shoes A ON B.Shoes_Seq = A.Seq
+		
+		WHERE
+			A.Del = 0 AND B.Del = 0 AND 
+			B.OnSale = 1 AND (B.OffSaleTime IS NULL OR DateDiff(dd, GETDATE(), B.OffSaleTime) &gt;= 0) AND
+			A.Period_Seq IN (${periodSeq})
+  	</select>
+</mapper>

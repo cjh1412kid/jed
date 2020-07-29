@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>导购员</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/shopping/guider_win.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body class="flex-wrap flex-vertical">
+    <header class="aui-bar aui-bar-nav aui-bg-theme" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="api.closeWin();"> <span class="aui-iconfont aui-icon-left aui-text-default"></span> </a>
+        <!-- <i class="aui-icon-edit aui-iconfont aui-text-default"></i> -->
+        <!-- <i class="aui-icon-correct aui-iconfont aui-text-default"></i> -->
+        <a class="aui-pull-right aui-btn aui-hide" tapmode onclick="openGuiderWin(-1);"><i class="aui-icon-plus aui-iconfont aui-text-default"></i></a>
+        <div class="aui-title text-header-title aui-text-default aui-font-size-16"></div>
+    </header>
+    <div class="content flex-con">
+        <ul id="frm" class="addlist">
+            <li class="aui-border-b">
+                <span class="_flex">姓名</span>
+                <input type="text" name="name" value="" placeholder='请输入姓名' class="name" data-rule="*" data-nullmsg="姓名为必填项" data-errmsg="姓名格式不正确">
+            </li>
+            <li class="aui-border-b">
+                <span class="_flex">年龄</span>
+                <input type="number" name="age" value="" placeholder='请输入年龄' class="age" data-rule="*" data-nullmsg="年龄为必填项" data-errmsg="年龄格式不正确">
+            </li>
+            <li class="aui-border-b">
+                <span class="_flex">手机号</span>
+                <input type="number" name="tel" value="" placeholder='请输入手机号' class="tel" data-rule="tm" data-nullmsg="手机号为必填项" data-errmsg="手机号格式不正确">
+            </li>
+            <li class="aui-border-b">
+                <span class="_flex">籍贯</span>
+                <input type="text" name="nativePlace" value="" placeholder='请输入籍贯' class="nativePlace" data-rule="*" data-nullmsg="籍贯为必填项" data-errmsg="籍贯格式不正确">
+            </li>
+            <li class="aui-border-b">
+                <span class="_flex">身份证号</span>
+                <input type="number" name="idCardNo" value="" placeholder='请输入身份证号' class="idCardNo" data-rule="idcard" data-nullmsg="身份证号为必填项" data-errmsg="身份证号格式不正确">
+            </li>
+            <li class="aui-border-b">
+                <span class="_flex">入职时间</span>
+                <input type="text" name="hireDate" value="" placeholder='请输入入职时间' class="hireDate" data-rule="*" data-nullmsg="入职时间为必填项" data-errmsg="入职时间格式不正确" readonly="readonly" tapmode onclick="openPicker()">
+            </li>
+            <li class="aui-border-b">
+                <span class="_flex">性别</span>
+                <input type="text" name="sex" value="" placeholder='请输入性别' class="sex" data-rule="*" data-nullmsg="性别为必填项" data-errmsg="性别格式不正确">
+            </li>
+            <li>
+                <span class="_flex">职务</span>
+                <input type="text" name="duty" value="" placeholder='请输入职务' class="duty" data-rule="*" data-nullmsg="职务为必填项" data-errmsg="职务格式不正确">
+            </li>
+        </ul>
+        <div class="edit-btns flex-wrap">
+            <div class="update flex-con">修改</div>
+            <div class="del flex-con aui-margin-l-10" tapmode onclick="delGuider()">删除</div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/common/my_common.js"></script>
+<!--表单验证-->
+<script type="text/javascript" src="../../script/availdate_v1x0x2.js"></script>
+<script type="text/javascript">
+    //打开时间选择器
+    function openPicker() {
+        api.openPicker({
+            type: 'date',
+            date: _getFormatedDate('','yyyy/MM/dd'),
+            title: '选择日期'
+        }, function(ret, err) {
+            if (ret) {
+               $api.val($api.dom('.hireDate'), ret.year+"年"+ret.month+"月"+ret.day+"日");
+
+                // alert(JSON.stringify(ret));
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+    /**
+     *删除导购
+     */
+    function delGuider(_obj) {
+        var url = window.myServerUrl + "/order/app/sales/del/" + pageParam.guider.seq;
+        console.log("删除导购-->url:" + url);
+        _ajax(url, "delGuider", function(ret, err) {
+            if (ret) {
+                console.log("删除导购-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    _toast("删除导购成功", 1000, "bottom", function() {
+                        _execScript("guider_list_win", "", "getDatas();");
+                        api.closeWin();
+                    });
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("删除导购-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            //callback();
+        });
+    }
+    /**
+     *修改导购
+     */
+    function updateGuider(data) {
+        var url = window.myServerUrl + "/order/app/sales/update";
+        console.log("修改导购-->url:" + url);
+        console.log("修改导购-->data:" + $api.jsonToStr(data));
+        _ajax(url, "updateGuider", function(ret, err) {
+            if (ret) {
+                console.log("修改导购-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    _toast("修改导购成功", 1000, "bottom", function() {
+                        _execScript("guider_list_win", "", "getDatas();");
+                        api.closeWin();
+                    });
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("修改导购-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            //callback();
+        }, 'post', data);
+    }
+    /**
+     *新建导购
+     */
+    function addGuider(data) {
+        var url = window.myServerUrl + "/order/app/sales/add";
+        console.log("新建导购-->url:" + url);
+        console.log("新建导购-->data:" + $api.jsonToStr(data));
+        _ajax(url, "addGuider", function(ret, err) {
+            if (ret) {
+                console.log("新建导购-->url:" + $api.jsonToStr(ret));
+                if (ret.code == 0) {
+                    _toast("添加成功", 1000, "bottom", function() {
+                        _execScript("guider_list_win", "", "getDatas();");
+                        api.closeWin();
+                    });
+                } else {
+                    _toast(ret.msg);
+                }
+            } else {
+                console.log("新建导购-->err:" + $api.jsonToStr(err));
+                _toast(window.ajaxErrorMessage);
+            }
+            //callback();
+        }, 'post', data);
+    }
+
+    function initUI() {
+        if (pageParam.type == "edit") {
+            $api.text($api.dom(".aui-title"), "修改导购");
+            $api.val($api.dom(".name"), pageParam.guider.name);
+            $api.val($api.dom(".age"), pageParam.guider.age);
+            $api.val($api.dom(".tel"), pageParam.guider.tel);
+            $api.val($api.dom(".nativePlace"), pageParam.guider.nativePlace);
+            $api.val($api.dom(".idCardNo"), pageParam.guider.idCardNo);
+            $api.val($api.dom(".hireDate"), pageParam.guider.hireDate);
+            $api.val($api.dom(".sex"), pageParam.guider.sex);
+            $api.val($api.dom(".duty"), pageParam.guider.duty);
+            if ($api.hasCls($api.dom(".del"), "aui-hide")) {
+                $api.removeCls($api.dom(".del"), "aui-hide");
+            }
+            $api.text($api.dom(".update"), '修改');
+        } else {
+            $api.text($api.dom(".aui-title"), "新增导购");
+            if (!$api.hasCls($api.dom(".del"), "aui-hide")) {
+                $api.addCls($api.dom(".del"), "aui-hide");
+            }
+            $api.text($api.dom(".update"), '提交');
+        }
+    }
+
+    function initData() {
+        userInfo = $api.getStorage("userInfoKey");
+        pageParam = api.pageParam;
+    }
+    var userInfo;
+    var pageParam;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        $api.fixTabBar($api.dom("body"));
+        initData();
+        initUI();
+        console.log($api.jsonToStr(api.pageParam));
+        ac.form({
+            area: "#frm",
+            btn: ".update",
+            startCheck: function() {},
+            singleError: function(e, msg) {
+                _toast(msg);
+            },
+            endSuccess: function(data) {
+                console.log("data:" + $api.jsonToStr(data));
+                var bodyParam = {
+                    values: {
+                        name: data.name,
+                        age: data.age,
+                        tel: data.tel,
+                        nativePlace:data.nativePlace,
+                        idCardNo:data.idCardNo,
+                        hireDate:data.hireDate,
+                        sex:data.sex,
+                        duty:data.duty,
+                    }, //以表单方式提交参数（JSON对象）, 如 {"field1": "value1", "field1": "value2"} (直接传JSON对像.)
+                };
+                if (pageParam.type == "edit") {
+                    bodyParam.values.seq = pageParam.guider.seq;
+                    updateGuider(bodyParam);
+                } else {
+                    addGuider(bodyParam);
+                }
+                //					console.log("bodyParam:"+$api.jsonToStr(bodyParam));
+
+            }
+        });
+    }
+</script>
+
+</html>

@@ -1,0 +1,42 @@
+.flex-style{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body{
+  background: rgba(0, 0, 0, 0.38);
+}
+.btns{
+  width: 100%;
+  height: 17.75rem;
+  border-top-left-radius: .5rem;
+  border-top-right-radius: .5rem;
+  background: #fff;
+  padding: 0 2.15rem;
+}
+.time{
+
+font-size:0.8rem;
+font-family:PingFangSC-Semibold;
+font-weight:600;
+color:rgba(255,105,20,1);
+
+}
+.time-text{
+
+  font-size:0.8rem;
+  font-family:PingFangSC-Regular;
+  font-weight:400;
+  color:rgba(80,80,80,1);
+}
+.del{
+
+font-size:0.8rem;
+font-family:PingFangSC-Regular;
+font-weight:400;
+color:rgba(255,0,0,1);
+
+}
+ul li{
+  height: 2.55rem;
+}

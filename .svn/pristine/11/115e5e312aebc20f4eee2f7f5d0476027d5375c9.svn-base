@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>筛选条件</title>
+	<link rel="stylesheet" type="text/css" href="../../css/aui2x1/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/common/common.css" />
+	<style>
+       body{
+         position: relative;
+       }
+       img{
+         position: absolute;
+         left: 0;
+         right: 0;
+         top: 0;
+         bottom: 0;
+         width: 12.3rem;
+         height: 16.7rem;
+         margin: auto;
+       }
+	</style>
+</head>
+
+<body>
+  <img src="../../image/developing.png" alt="">
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common/common.js"></script>
+<script type="text/javascript" src="../../script/aui2x1/aui_collapse.js"></script>
+<script type="text/javascript">
+
+
+	apiready = function() {
+		api.parseTapmode();
+	};
+</script>
+
+</html>
